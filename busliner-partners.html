@@ -2045,8 +2045,7 @@
         <li><a href="#slide-start">Подключение</a></li>
       </ul>
       <div style="display: flex; gap: 8px; align-items: center;">
-        <a href="partner-auth.html#login" class="btn btn-accent" style="padding: 8px 18px; font-size: 12px; border-radius: 12px;">Вход</a>
-        <a href="partner-auth.html#onboard" class="btn btn-accent" style="padding: 8px 18px; font-size: 12px; border-radius: 12px;">Подключить парк &rarr;</a>
+        <a href="partner-auth.html" id="nav-carrier-portal-btn" class="btn btn-accent" style="padding: 9px 22px; font-size: 13px; border-radius: 12px; font-weight: 600;">Подключить парк &rarr;</a>
       </div>
     </div>
   </nav>
@@ -3365,6 +3364,31 @@
       alert('Спасибо! Заявка автопарка принята. Менеджер BusLiner Partners свяжется с вами в течение 15 минут.');
       window.closePartnerModal();
     };
+
+    // Интеграция логики входа и авторизации в кнопку «Подключить парк»
+    (function initCarrierNavPortal() {
+      function syncPortalBtn() {
+        const portalBtn = document.getElementById('nav-carrier-portal-btn');
+        if (!portalBtn) return;
+        try {
+          const stored = localStorage.getItem('busliner_google_user');
+          if (stored) {
+            const user = JSON.parse(stored);
+            if (user && user.name) {
+              const firstName = user.name.split(' ')[0];
+              portalBtn.innerHTML = `Кабинет: ${firstName} &rarr;`;
+              portalBtn.href = '#slide-schedule';
+              portalBtn.title = `Авторизован: ${user.email}. Открыть монитор рейсов`;
+            }
+          }
+        } catch (e) {}
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', syncPortalBtn);
+      } else {
+        syncPortalBtn();
+      }
+    })();
   </script>
 
   <!-- MODAL: PARTNER APPLICATION MONOLITH -->

@@ -920,6 +920,11 @@
                 Далее: Реквизиты юрлица &rarr;
               </button>
             </div>
+
+            <div style="margin-top: 20px; padding: 12px; background: var(--surface-subtle); border-radius: var(--radius-ctrl); border: 1px dashed var(--border-hairline); text-align: center; font-size: 13px; color: var(--text-muted);">
+              Уже подключили автопарк ранее? 
+              <a href="#login" onclick="switchView('login'); return false;" style="color: var(--accent-institutional); font-weight: 700; text-decoration: none; margin-left: 4px;">Войти в диспетчерскую &rarr;</a>
+            </div>
           </div>
 
           <!-- -------------------------------------------------------------
@@ -1104,18 +1109,6 @@
                 <label class="form-label" for="ob-fleet-size">Общий размер автопарка (машин) *</label>
                 <input type="number" id="ob-fleet-size" class="form-input" placeholder="6" min="1" max="500" required value="6">
                 <span class="form-hint">Количество активных бортов на маршрутах</span>
-              </div>
-            </div>
-
-            <!-- SUMMARY CARD -->
-            <div style="background: var(--surface-subtle); border: 1px solid var(--border-hairline); border-radius: var(--radius-ctrl); padding: 18px; margin-bottom: 24px;">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5;">
-                  <strong style="color: var(--text-primary);">Гарантия подключения за 24 часа:</strong> Договор-оферта, аккаунт в диспетчерской и выгрузка расписания в продажу без паузы в движении.
-                </div>
-                <div style="font-size: 16px; font-weight: 800; color: var(--accent-institutional); padding: 6px 12px; background: var(--accent-soft); border: 1px solid var(--accent-border); border-radius: 8px;">
-                  T+1 Клиринг
-                </div>
               </div>
             </div>
 
@@ -1532,10 +1525,10 @@
         } catch (e) {}
       }
 
-      if (window.location.hash === '#onboard' || window.location.hash === '#register') {
-        switchView('onboard');
-      } else {
+      if (window.location.hash === '#login') {
         switchView('login');
+      } else {
+        switchView('onboard');
       }
     });
   </script>
