@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BusLiner Partners — Платформа монетизации и диспетчеризации регулярных автопарков</title>
+  <title>BusLiner для перевозчиков — Монетизация и диспетчеризация автопарков</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
@@ -67,39 +67,6 @@
     .mono { font-family: var(--font-body); font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
     .serif { font-family: var(--font-display); }
     .hanging-quote { text-indent: -0.45em; padding-left: 0.45em; }
-
-    /* NAV PASSENGER BUTTON */
-    .nav-btn-passengers {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 5px 13px;
-      border-radius: 10px;
-      background: rgba(59, 130, 246, 0.16);
-      border: 1px solid rgba(147, 197, 253, 0.35);
-      color: #93C5FD !important;
-      font-weight: 600;
-      font-size: 13px;
-      text-decoration: none;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .nav-btn-passengers:hover {
-      background: rgba(59, 130, 246, 0.3);
-      border-color: #93C5FD;
-      color: #FFFFFF !important;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
-    }
-    .app-nav.on-light .nav-btn-passengers {
-      background: rgba(30, 58, 138, 0.08);
-      border-color: rgba(30, 58, 138, 0.25);
-      color: #1E3A8A !important;
-    }
-    .app-nav.on-light .nav-btn-passengers:hover {
-      background: #1E3A8A;
-      border-color: #1E3A8A;
-      color: #FFFFFF !important;
-    }
 
     /* FIXED NAVIGATION */
     nav.app-nav {
@@ -1648,58 +1615,39 @@
     }
   
     /* =========================================================================
-       CUSTOM B2B CARRIER COMPONENT STYLES
+       QUIET LUXURY B2B CARRIER DESIGN TOKENS
        ========================================================================= */
 
-    /* Comparison Cards */
+    /* Comparison Cards (20px radius, hairline border, soft luxury shadow) */
     .comparison-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 20px;
-      margin-top: 28px;
+      margin-top: 24px;
     }
     .comparison-card {
       background: #FFFFFF;
       border: 1px solid var(--border-hairline);
       border-radius: 20px;
-      padding: 24px 28px;
-      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      padding: 24px 26px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .comparison-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.09);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
     }
-    .comp-tag-bad {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 8px;
-      border-radius: 6px;
-      background: #FEF2F2;
-      color: #DC2626;
+    .comp-eyebrow {
       font-size: 11px;
       font-weight: 700;
-      font-family: var(--font-mono);
-      letter-spacing: 0.03em;
-      margin-bottom: 8px;
-    }
-    .comp-tag-good {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 8px;
-      border-radius: 6px;
-      background: #ECFDF5;
-      color: #15803D;
-      font-size: 11px;
-      font-weight: 700;
-      font-family: var(--font-mono);
-      letter-spacing: 0.03em;
-      margin-bottom: 8px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-family: var(--font-body);
+      margin-bottom: 6px;
     }
     .comp-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--text-primary);
       margin-bottom: 12px;
@@ -1708,266 +1656,65 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      font-size: 13.5px;
-      line-height: 20px;
     }
-    .comp-row-item {
+    .comp-item {
+      font-size: 13px;
+      line-height: 19px;
       padding: 8px 12px;
-      border-radius: 8px;
+      border-radius: 10px;
     }
-    .comp-row-item.bad {
-      background: #FFF5F5;
-      color: #7F1D1D;
-      border-left: 3px solid #EF4444;
+    .comp-item-bad {
+      background: #F8FAFC;
+      color: #64748B;
+      border: 1px solid #E2E8F0;
     }
-    .comp-row-item.good {
-      background: #F0FDF4;
-      color: #14532D;
-      border-left: 3px solid #22C55E;
-    }
-
-    /* Software Split */
-    .software-split {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 28px;
-      align-items: stretch;
-      margin-top: 24px;
-    }
-    .telemetry-dashboard-card {
-      background: #0F172A;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 24px;
-      padding: 24px 28px;
-      color: #FFFFFF;
-      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
-    }
-    .driver-phone-card {
-      background: #111827;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 24px;
-      padding: 24px 24px;
-      color: #FFFFFF;
-      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+    .comp-item-good {
+      background: #EFF6FF;
+      color: #1E3A8A;
+      border: 1px solid #BFDBFE;
+      font-weight: 500;
     }
 
-    /* Calculator Box */
+    /* Calculator (20px cards, 12px buttons) */
     .calc-container {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 28px;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
       margin-top: 24px;
     }
     .calc-inputs-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border-hairline);
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
-    }
-    .calc-results-card {
-      background: #0F172A;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 24px;
-      padding: 28px;
-      color: #FFFFFF;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-    .calc-pill-btn {
-      padding: 8px 16px;
-      border-radius: 10px;
-      border: 1px solid #CBD5E1;
-      background: #F8FAFC;
-      color: #1E293B;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .calc-pill-btn.active {
-      background: #1E3A8A;
-      color: #FFFFFF;
-      border-color: #1E3A8A;
-      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
-    }
-
-    /* Partner Form Monolith */
-    .partner-form-monolith {
-      background: #111827;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 24px;
-      padding: 28px 32px;
-      max-width: 760px;
-      margin: 0 auto 28px auto;
-      box-shadow: 0 20px 45px -10px rgba(0,0,0,0.5);
-    }
-    .form-grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-    .form-input-clean {
-      width: 100%;
-      height: 46px;
-      background: #1F2937;
-      border: 1px solid #374151;
-      border-radius: 12px;
-      padding: 0 16px;
-      color: #FFFFFF;
-      font-size: 14px;
-      font-family: var(--font-body);
-      outline: none;
-      transition: border-color 0.2s ease;
-    }
-    .form-input-clean:focus {
-      border-color: #38BDF8;
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
-    }
-
-  
-    /* =========================================================================
-       CUSTOM B2B CARRIER COMPONENT STYLES
-       ========================================================================= */
-
-    /* Comparison Cards */
-    .comparison-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      margin-top: 28px;
-    }
-    .comparison-card {
       background: #FFFFFF;
       border: 1px solid var(--border-hairline);
       border-radius: 20px;
-      padding: 24px 28px;
-      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .comparison-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.09);
-    }
-    .comp-tag-bad {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 8px;
-      border-radius: 6px;
-      background: #FEF2F2;
-      color: #DC2626;
-      font-size: 11px;
-      font-weight: 700;
-      font-family: var(--font-mono);
-      letter-spacing: 0.03em;
-      margin-bottom: 8px;
-    }
-    .comp-tag-good {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 8px;
-      border-radius: 6px;
-      background: #ECFDF5;
-      color: #15803D;
-      font-size: 11px;
-      font-weight: 700;
-      font-family: var(--font-mono);
-      letter-spacing: 0.03em;
-      margin-bottom: 8px;
-    }
-    .comp-title {
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 12px;
-    }
-    .comp-row {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      font-size: 13.5px;
-      line-height: 20px;
-    }
-    .comp-row-item {
-      padding: 8px 12px;
-      border-radius: 8px;
-    }
-    .comp-row-item.bad {
-      background: #FFF5F5;
-      color: #7F1D1D;
-      border-left: 3px solid #EF4444;
-    }
-    .comp-row-item.good {
-      background: #F0FDF4;
-      color: #14532D;
-      border-left: 3px solid #22C55E;
-    }
-
-    /* Software Split */
-    .software-split {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 28px;
-      align-items: stretch;
-      margin-top: 24px;
-    }
-    .telemetry-dashboard-card {
-      background: #0F172A;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 24px;
-      padding: 24px 28px;
-      color: #FFFFFF;
-      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
-    }
-    .driver-phone-card {
-      background: #111827;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 24px;
-      padding: 24px 24px;
-      color: #FFFFFF;
-      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
-    }
-
-    /* Calculator Box */
-    .calc-container {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 28px;
-      margin-top: 24px;
-    }
-    .calc-inputs-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border-hairline);
-      border-radius: 24px;
       padding: 28px;
-      box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
     }
     .calc-results-card {
       background: #0F172A;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 24px;
+      border-radius: 20px;
       padding: 28px;
       color: #FFFFFF;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
     }
     .calc-pill-btn {
       padding: 8px 16px;
-      border-radius: 10px;
-      border: 1px solid #CBD5E1;
+      border-radius: 12px;
+      border: 1px solid #E2E8F0;
       background: #F8FAFC;
-      color: #1E293B;
+      color: var(--text-primary);
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      font-family: var(--font-body);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .calc-pill-btn:hover {
+      border-color: #93C5FD;
+      background: #EFF6FF;
     }
     .calc-pill-btn.active {
       background: #1E3A8A;
@@ -1976,42 +1723,76 @@
       box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
     }
 
-    /* Partner Form Monolith */
+    /* Express Form Monolith (18px radius) */
     .partner-form-monolith {
-      background: #111827;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 24px;
-      padding: 28px 32px;
-      max-width: 760px;
-      margin: 0 auto 28px auto;
-      box-shadow: 0 20px 45px -10px rgba(0,0,0,0.5);
+      background: rgba(17, 24, 39, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 18px;
+      padding: 26px 30px;
+      max-width: 740px;
+      margin: 0 auto 22px auto;
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.5);
     }
     .form-grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 16px;
+      gap: 14px;
+      margin-bottom: 14px;
     }
     .form-input-clean {
       width: 100%;
-      height: 46px;
+      height: 44px;
       background: #1F2937;
       border: 1px solid #374151;
       border-radius: 12px;
-      padding: 0 16px;
+      padding: 0 14px;
       color: #FFFFFF;
-      font-size: 14px;
+      font-size: 13.5px;
       font-family: var(--font-body);
       outline: none;
       transition: border-color 0.2s ease;
     }
     .form-input-clean:focus {
-      border-color: #38BDF8;
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+      border-color: #60A5FA;
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+    }
+
+    /* Nav Passengers Button */
+    .nav-btn-passengers {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 13px;
+      border-radius: 10px;
+      background: rgba(59, 130, 246, 0.16);
+      border: 1px solid rgba(147, 197, 253, 0.35);
+      color: #93C5FD !important;
+      font-weight: 600;
+      font-size: 13px;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-btn-passengers:hover {
+      background: rgba(59, 130, 246, 0.3);
+      border-color: #93C5FD;
+      color: #FFFFFF !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
+    }
+    .app-nav.on-light .nav-btn-passengers {
+      background: rgba(30, 58, 138, 0.08);
+      border-color: rgba(30, 58, 138, 0.25);
+      color: #1E3A8A !important;
+    }
+    .app-nav.on-light .nav-btn-passengers:hover {
+      background: #1E3A8A;
+      border-color: #1E3A8A;
+      color: #FFFFFF !important;
     }
 
   </style>
-
 
 </head>
 <body>
@@ -2030,7 +1811,7 @@
       <ul class="nav-menu">
         <li><a href="#slide-hero">О платформе</a></li>
         <li><a href="#slide-comparison">Проблема & Выгода</a></li>
-        <li><a href="#slide-software">Софт для флота</a></li>
+        <li><a href="#slide-schedule">Монитор флота</a></li>
         <li><a href="#slide-sniper">Снайпер 2.0 B2B</a></li>
         <li><a href="#slide-calculator">Калькулятор прибыли</a></li>
         <li><a href="#slide-reviews">Кейсы автопарков</a></li>
@@ -2038,7 +1819,7 @@
         <li><a href="index.html" class="nav-btn-passengers" id="nav-btn-passengers" title="Перейти в сервис для пассажиров"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 4px;"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>Пассажирам &rarr;</a></li>
       </ul>
       <div>
-        <a href="#slide-start" class="btn btn-accent" style="padding: 8px 18px; font-size: 12px;">Подключить парк &rarr;</a>
+        <a href="#slide-start" class="btn btn-accent" style="padding: 8px 18px; font-size: 12px; border-radius: 12px;">Подключить парк &rarr;</a>
       </div>
     </div>
   </nav>
@@ -2055,7 +1836,7 @@
         <em>Без пустых выездов, диспетчеров и No-Show.</em>
       </h1>
       <p class="slide-lead">
-        Цифровая экосистема монетизации для регулярных междугородних автопарков: гарантированная 100% предоплата мест, мгновенный довыкуп отказных билетов алгоритмом «Снайпер 2.0», оцифровка багажников Smart Cargo и ежедневный клиринг T+1 на ваш расчетный счет.
+        Цифровая экосистема монетизации для регулярных междугородних автопарков: гарантированная 100% онлайн-предоплата мест, мгновенный довыкуп отказных билетов алгоритмом «Снайпер 2.0», оцифровка багажников Smart Cargo и ежедневный клиринг T+1 на ваш расчетный счет.
       </p>
 
       <!-- HERO B2B ACTIONS -->
@@ -2130,7 +1911,7 @@
   </section>
 
   <!-- ==========================================================================
-       SLIDE 2: PROBLEM VS SOLUTION (LIGHT SLIDE)
+       SLIDE 2: PROBLEM VS SOLUTION (LIGHT CANVAS SLIDE, 20PX RADIUS CARDS)
        ========================================================================== -->
   <section class="full-slide" id="slide-comparison">
     <div class="container">
@@ -2143,56 +1924,56 @@
         
         <!-- CARD 1 -->
         <div class="comparison-card">
-          <div class="comp-tag-bad">● ТЕЛЕФОННАЯ СХЕМА</div>
-          <div class="comp-title">1. Неявки пассажиров («No-Show»)</div>
+          <div class="comp-eyebrow">● ПРОБЛЕМА 01 // СРЫВЫ БРОНЕЙ</div>
+          <div class="comp-title">Неявки пассажиров («No-Show»)</div>
           <div class="comp-row">
-            <div class="comp-row-item bad">
-              <strong>Потери:</strong> Клиент записался по телефону сразу у 3 перевозчиков, сел в первый автобус, а вы везете 2-4 пустых кресла. Минус 80–120 BYN с каждого кругорейса.
+            <div class="comp-item comp-item-bad">
+              <strong>✕ Как сейчас:</strong> Пассажир записался по телефону сразу у 3 перевозчиков, сел в первую маршрутку, а вы везете 2-4 пустых кресла. Минус 80–120 BYN с каждого кругорейса.
             </div>
-            <div class="comp-row-item good">
-              <strong>С BusLiner:</strong> 100% предоплата картой онлайн. Место гарантировано. Не пришел на посадку — деньги за билет в полном объеме перечисляются автопарку.
+            <div class="comp-item comp-item-good">
+              <strong>✓ С BusLiner:</strong> 100% предоплата картой онлайн. Место гарантировано. Не явился — стоимость билета в полном объеме перечисляется на расчетный счет автопарка.
             </div>
           </div>
         </div>
 
         <!-- CARD 2 -->
         <div class="comparison-card">
-          <div class="comp-tag-bad">● РАСХОДЫ НА ДИСПЕТЧЕРОВ</div>
-          <div class="comp-title">2. Колл-центр и потерянные звонки</div>
+          <div class="comp-eyebrow">● ПРОБЛЕМА 02 // ЗАТРАТЫ НА СВЯЗЬ</div>
+          <div class="comp-title">Колл-центры и потерянные звонки</div>
           <div class="comp-row">
-            <div class="comp-row-item bad">
-              <strong>Потери:</strong> 3-4 диспетчера круглосуточно на телефоне. В пятницу линии перегружены, до 30% звонков срываются, списки путаются, пассажиры скандалят.
+            <div class="comp-item comp-item-bad">
+              <strong>✕ Как сейчас:</strong> 3-4 диспетчера круглосуточно на телефоне. В пятницу линии перегружены, до 30% звонков срываются, списки путаются, пассажиры скандалят.
             </div>
-            <div class="comp-row-item good">
-              <strong>С BusLiner:</strong> Облачная ведомость заполняется автоматически 24/7. Пассажиры выбирают места сами. Экономия на ФОТ диспетчеров от 3 000 BYN в месяц.
+            <div class="comp-item comp-item-good">
+              <strong>✓ С BusLiner:</strong> Облачная ведомость заполняется автоматически 24/7. Пассажиры выбирают места сами. Экономия на ФОТ диспетчеров от 3 000 BYN в месяц.
             </div>
           </div>
         </div>
 
         <!-- CARD 3 -->
         <div class="comparison-card">
-          <div class="comp-tag-bad">● НАЛИЧНЫЙ ХАОС</div>
-          <div class="comp-title">3. Оплата наличными «мимо кассы»</div>
+          <div class="comp-eyebrow">● ПРОБЛЕМА 03 // НАЛИЧНЫЙ ХАОС</div>
+          <div class="comp-title">Оплата наличными «мимо кассы»</div>
           <div class="comp-row">
-            <div class="comp-row-item bad">
-              <strong>Потери:</strong> Водитель в темноте отсчитывает сдачу на платформе, задерживает выезд, а часть выручки за багаж или попутчиков не попадает в кассу автопарка.
+            <div class="comp-item comp-item-bad">
+              <strong>✕ Как сейчас:</strong> Водитель в темноте отсчитывает сдачу на платформе, задерживает выезд, а часть выручки за багаж или попутчиков оседает в карманах.
             </div>
-            <div class="comp-row-item good">
-              <strong>С BusLiner:</strong> QR-посадка за 3 секунды с камеры смартфона водителя. Полная фискализация билетов по СТБ 1389-2003 и прозрачность перед налоговой.
+            <div class="comp-item comp-item-good">
+              <strong>✓ С BusLiner:</strong> QR-посадка за 3 секунды со смартфона водителя. Полная фискализация билетов по СТБ 1389-2003 и прозрачность перед налоговой.
             </div>
           </div>
         </div>
 
         <!-- CARD 4 -->
         <div class="comparison-card">
-          <div class="comp-tag-bad">● ПУСТЫЕ БАГАЖНИКИ</div>
-          <div class="comp-title">4. Багажное отделение возит воздух</div>
+          <div class="comp-eyebrow">● ПРОБЛЕМА 04 // ВОЗДУХ В БАГАЖНИКЕ</div>
+          <div class="comp-title">Багажное отделение без монетизации</div>
           <div class="comp-row">
-            <div class="comp-row-item bad">
-              <strong>Потери:</strong> Багажный отсек микроавтобуса пустует, либо водители неофициально берут чужие посылки в карман без ведома руководства.
+            <div class="comp-item comp-item-bad">
+              <strong>✕ Как сейчас:</strong> Багажный отсек микроавтобуса пустует, либо водители неофициально берут чужие коробки без ведома руководства автопарка.
             </div>
-            <div class="comp-row-item good">
-              <strong>С BusLiner:</strong> Smart Cargo: официальное онлайн-бронирование вело-мест и экспресс-отправлений. Дополнительные +35–50 BYN с кругорейса без нагрузки на подвеску.
+            <div class="comp-item comp-item-good">
+              <strong>✓ С BusLiner:</strong> Smart Cargo: официальное онлайн-бронирование вело-мест и экспресс-отправлений. Дополнительные +35–50 BYN с кругорейса без нагрузки на подвеску.
             </div>
           </div>
         </div>
@@ -2202,119 +1983,118 @@
   </section>
 
   <!-- ==========================================================================
-       SLIDE 3: SOFTWARE & TELEMETRY (DARK SLIDE)
+       SLIDE 3: LIVE FLEET MONITOR & TELEMETRY TABLE (LIGHT CANVAS SLIDE, 24PX TABLE)
        ========================================================================== -->
-  <section class="full-slide" id="slide-software" style="background: #0B1120;">
+  <section class="full-slide" id="slide-schedule">
     <div class="container">
-      <h2 class="slide-headline" style="color: #FFFFFF;">
-        Цифровой контроль автопарка: <em>диспетчерская панель и софт водителя</em>
-      </h2>
-      <p class="slide-lead" style="color: #94A3B8;">
-        Никаких дорогостоящих серверов или покупки спецоборудования. Всё работает в браузере директора и на обычных смартфонах ваших водителей.
+      <h2 class="slide-headline">Живой реестр отправлений: <em>ни одного пустого кресла</em> на выезде</h2>
+      <p class="slide-lead">
+        Данные загрузки и выручки автопарка в реальном времени. Статусы посадки по QR-коду водителя и автоматические реестры клиринга T+1.
       </p>
 
-      <div class="software-split">
-        
-        <!-- LEFT: DISPATCHER TELEMETRY DASHBOARD -->
-        <div class="telemetry-dashboard-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 14px; margin-bottom: 18px;">
-            <div>
-              <span class="mono" style="font-size: 11px; color: #38BDF8; letter-spacing: 0.05em; font-weight: 700;">BUSLINER FLEET CONTROL</span>
-              <div style="font-size: 16px; font-weight: 700; margin-top: 2px;">Линия: Гомель &mdash; Минск (Центральный)</div>
-            </div>
-            <div style="text-align: right;">
-              <span class="mono" style="font-size: 11px; color: #4ADE80; font-weight: 600;">● 18 БОРТОВ ОНЛАЙН</span>
-              <div class="mono" style="font-size: 13px; color: #94A3B8;">Выручка смены: <strong style="color: #FFFFFF;">8 460 BYN</strong></div>
-            </div>
-          </div>
-
-          <div style="overflow-x: auto;">
-            <table class="dispatch-table" style="background: transparent; color: #FFFFFF; font-size: 13px;">
-              <thead>
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); color: #94A3B8;">
-                  <th style="padding: 8px 10px;">Борт & Время</th>
-                  <th style="padding: 8px 10px;">Машина</th>
-                  <th style="padding: 8px 10px;">Smart Cargo</th>
-                  <th style="padding: 8px 10px;">Загрузка</th>
-                  <th style="padding: 8px 10px; text-align: right;">Выручка</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
-                  <td style="padding: 10px;"><strong>17:00</strong> (77-12 AX-3)</td>
-                  <td style="padding: 10px; color: #CBD5E1;">VW Crafter 2023</td>
-                  <td style="padding: 10px;"><span style="color: #38BDF8; font-size: 11px;">2 вело + 4 коробки</span></td>
-                  <td style="padding: 10px;"><span style="color: #4ADE80; font-weight: 700;">18 / 18 (100%)</span></td>
-                  <td style="padding: 10px; text-align: right;" class="mono"><strong>444.00 BYN</strong></td>
-                </tr>
-                <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
-                  <td style="padding: 10px;"><strong>18:15</strong> (02-45 ВЕ-3)</td>
-                  <td style="padding: 10px; color: #CBD5E1;">Sprinter 519</td>
-                  <td style="padding: 10px;"><span style="color: #38BDF8; font-size: 11px;">1 вело + 2 коробки</span></td>
-                  <td style="padding: 10px;"><span style="color: #FBBF24; font-weight: 700;">18 / 18 (Снайпер)</span></td>
-                  <td style="padding: 10px; text-align: right;" class="mono"><strong>458.00 BYN</strong></td>
-                </tr>
-                <tr>
-                  <td style="padding: 10px;"><strong>19:00</strong> (89-11 MI-7)</td>
-                  <td style="padding: 10px; color: #CBD5E1;">Sprinter 2022</td>
-                  <td style="padding: 10px;"><span style="color: #38BDF8; font-size: 11px;">3 вело-слота</span></td>
-                  <td style="padding: 10px;"><span style="color: #4ADE80; font-weight: 700;">17 / 18 (95%)</span></td>
-                  <td style="padding: 10px; text-align: right;" class="mono"><strong>401.00 BYN</strong></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 12px; color: #94A3B8;">Единый реестр клиринга T+1 формируется автоматически</span>
-            <span class="mono" style="font-size: 11.5px; color: #38BDF8;">Экспорт в 1С / Банк-Клиент ✓</span>
-          </div>
+      <div class="dispatch-table-wrap">
+        <div class="table-topbar">
+          Линия: Гомель &mdash; Минск (Центральный) &bull; 18 активных бортов &bull; Средняя загрузка 99.1% &bull; Выручка линии сегодня: 8 460 BYN
         </div>
+        <table class="dispatch-table">
+          <thead>
+            <tr>
+              <th>Время и борт</th>
+              <th>Перевозчик и машина</th>
+              <th>Багаж (Smart Cargo)</th>
+              <th>Загрузка салона</th>
+              <th>Выручка рейса</th>
+              <th style="text-align: right;">Действие</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="mono" style="font-size: 18px; font-weight: 600;">17:00 &mdash; 20:30</div>
+                <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Борт 77-12 AX-3 &bull; Гомель</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">ОДО «Бурлаки»</div>
+                <div class="mono" style="font-size: 11px; color: var(--text-muted);">VW Crafter (Свежий, 2023)</div>
+              </td>
+              <td>
+                <div class="amenities-bullet-list">
+                  <span class="amenity-bullet">2 вело-слота (+16 BYN)</span>
+                  <span class="amenity-bullet">4 коробки Cargo (+32 BYN)</span>
+                </div>
+              </td>
+              <td>
+                <div class="seats-minimalist available"><span class="seats-dot">●</span> 18 / 18 (100% Выкуп)</div>
+              </td>
+              <td>
+                <div class="mono" style="font-size: 19px; font-weight: 600;">444.00 BYN</div>
+              </td>
+              <td style="text-align: right;">
+                <a href="#slide-start" class="btn btn-accent" style="padding: 8px 18px; font-size: 12px; border-radius: 12px;">Отчет рейса &rarr;</a>
+              </td>
+            </tr>
 
-        <!-- RIGHT: DRIVER SMARTPHONE INTERFACE -->
-        <div class="driver-phone-card">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <div style="width: 10px; height: 10px; border-radius: 50%; background: #22C55E;"></div>
-              <span class="mono" style="font-size: 11px; color: #A7F3D0; font-weight: 700;">РЕЙС 17:00 &bull; ГОМЕЛЬ</span>
-            </div>
-            <span class="mono" style="font-size: 11px; color: #9CA3AF;">Водитель: Смирнов А.</span>
-          </div>
+            <tr>
+              <td>
+                <div class="mono" style="font-size: 18px; font-weight: 600; color: #1E3A8A;">18:15 &mdash; 21:40</div>
+                <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Борт 02-45 ВЕ-3 &bull; Гомель</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">ЧУП «АвтоСпутник»</div>
+                <div class="mono" style="font-size: 11px; color: var(--text-muted);">Mercedes Sprinter 519</div>
+              </td>
+              <td>
+                <div class="amenities-bullet-list">
+                  <span class="amenity-bullet">1 вело-слот (+8 BYN)</span>
+                  <span class="amenity-bullet">2 посылки (+18 BYN)</span>
+                </div>
+              </td>
+              <td>
+                <div class="seats-minimalist" style="color: #D97706; background: #FEF3C7;"><span class="seats-dot" style="color: #D97706;">●</span> 18 / 18 (Снайпер закрыл 2 кресла)</div>
+              </td>
+              <td>
+                <div class="mono" style="font-size: 19px; font-weight: 600;">458.00 BYN</div>
+              </td>
+              <td style="text-align: right;">
+                <a href="#slide-sniper" class="btn btn-secondary" style="padding: 8px 18px; font-size: 12px; border-radius: 12px; background: var(--status-radar-bg); color: var(--status-radar); border-color: #FCD34D;">
+                  Снайпер закрыл &rarr;
+                </a>
+              </td>
+            </tr>
 
-          <!-- QR SCAN ACTION -->
-          <div style="background: rgba(37, 99, 235, 0.15); border: 1px dashed #3B82F6; border-radius: 14px; padding: 18px; text-align: center; margin-bottom: 16px;">
-            <div style="font-size: 24px; margin-bottom: 6px;">📷</div>
-            <div style="font-size: 14px; font-weight: 700; color: #93C5FD;">Быстрый QR-сканер посадки</div>
-            <div style="font-size: 11.5px; color: #94A3B8; margin-top: 2px;">Наведите камеру на билет пассажира &bull; 2 сек</div>
-          </div>
-
-          <!-- SEAT OCCUPANCY MOCKUP -->
-          <div style="background: rgba(255,255,255,0.04); border-radius: 12px; padding: 12px 14px; margin-bottom: 16px;">
-            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px;">
-              <span style="color: #CBD5E1;">Занято кресел в салоне:</span>
-              <strong style="color: #4ADE80;">18 из 18 (100%)</strong>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px;">
-              <div style="background: #16A34A; height: 18px; border-radius: 4px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: 700;">01</div>
-              <div style="background: #16A34A; height: 18px; border-radius: 4px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: 700;">02</div>
-              <div style="background: #16A34A; height: 18px; border-radius: 4px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: 700;">03</div>
-              <div style="background: #16A34A; height: 18px; border-radius: 4px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: 700;">04</div>
-              <div style="background: #16A34A; height: 18px; border-radius: 4px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: 700;">05</div>
-              <div style="background: #16A34A; height: 18px; border-radius: 4px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: 700;">06</div>
-            </div>
-          </div>
-
-          <button type="button" class="btn btn-accent" style="width: 100%; justify-content: center; padding: 12px; font-size: 13px; border-radius: 10px;">
-            ✓ Посадка завершена &bull; Выезд
-          </button>
-        </div>
-
+            <tr>
+              <td>
+                <div class="mono" style="font-size: 18px; font-weight: 600;">19:00 &mdash; 22:30</div>
+                <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Борт 89-11 MI-7 &bull; Гомель</div>
+              </td>
+              <td>
+                <div style="font-weight: 600;">ООО «ЗападТрансАвто»</div>
+                <div class="mono" style="font-size: 11px; color: var(--text-muted);">Mercedes Sprinter 2022</div>
+              </td>
+              <td>
+                <div class="amenities-bullet-list">
+                  <span class="amenity-bullet">3 вело-слота (+24 BYN)</span>
+                  <span class="amenity-bullet">1 коробка (+10 BYN)</span>
+                </div>
+              </td>
+              <td>
+                <div class="seats-minimalist available"><span class="seats-dot">●</span> 17 / 18 (Осталось 1 кресло)</div>
+              </td>
+              <td>
+                <div class="mono" style="font-size: 19px; font-weight: 600;">401.00 BYN</div>
+              </td>
+              <td style="text-align: right;">
+                <a href="#slide-start" class="btn btn-accent" style="padding: 8px 18px; font-size: 12px; border-radius: 12px;">Догрузить рейс &rarr;</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
 
   <!-- ==========================================================================
-       SLIDE 4: SNIPER 2.0 B2B (SUPERSONIC BALLISTICS CANVAS & PROVABLE REVENUE)
+       SLIDE 4: SNIPER 2.0 B2B (SUPERSONIC BALLISTICS CANVAS & AUTHENTIC TICKET)
        ========================================================================== -->
   <section class="full-slide" id="slide-sniper">
     <!-- BALLISTICS CANVAS OVERLAY -->
@@ -2363,10 +2143,10 @@
             </div>
           </div>
 
-          <a href="#slide-start" class="btn btn-accent">Подключить Снайпер к автопарку &rarr;</a>
+          <a href="#slide-start" class="btn btn-accent" style="border-radius: 12px;">Подключить Снайпер к автопарку &rarr;</a>
         </div>
 
-        <!-- AUTHENTIC DISPATCH PAPER LEAF PIERCED BY SNIPER -->
+        <!-- AUTHENTIC DISPATCH PAPER LEAF PIERCED BY SNIPER (20PX RADIUS) -->
         <div class="sniper-paper-sheet" id="sniper-paper-target">
           
           <!-- STYLIZED GRAPHIC BULLET HOLE IN FREIGHT MONOLITH AESTHETIC -->
@@ -2474,15 +2254,13 @@
   </section>
 
   <!-- ==========================================================================
-       SLIDE 5: INTERACTIVE FLEET PROFIT CALCULATOR (DARK SLATE)
+       SLIDE 5: INTERACTIVE FLEET PROFIT CALCULATOR (LIGHT CANVAS SLIDE)
        ========================================================================== -->
-  <section class="full-slide" id="slide-calculator" style="background: #0F172A;">
+  <section class="full-slide" id="slide-calculator">
     <div class="container">
-      <h2 class="slide-headline" style="color: #FFFFFF;">
-        Калькулятор выгоды: <em>сколько денег теряет ваш автопарк прямо сейчас</em>
-      </h2>
-      <p class="slide-lead" style="color: #94A3B8;">
-        Выберите параметры вашего парка и посмотрите, сколько чистой прибыли вернет BusLiner за счет 100% выкупа кресел и Smart Cargo.
+      <h2 class="slide-headline">Калькулятор выгоды: <em>сколько денег вернет ваш автопарк</em></h2>
+      <p class="slide-lead">
+        Выберите параметры вашего флота и посмотрите расчет дополнительной прибыли от ликвидации No-Show и багажа Smart Cargo.
       </p>
 
       <div class="calc-container">
@@ -2526,7 +2304,7 @@
         <!-- RESULTS -->
         <div class="calc-results-card">
           <div>
-            <span class="mono" style="font-size: 11px; color: #38BDF8; letter-spacing: 0.05em; font-weight: 700;">ПРОГНОЗ ДОПОЛНИТЕЛЬНОЙ ВЫРУЧКИ</span>
+            <span class="mono" style="font-size: 11px; color: #93C5FD; letter-spacing: 0.05em; font-weight: 700;">ПРОГНОЗ ДОПОЛНИТЕЛЬНОЙ ВЫРУЧКИ</span>
             
             <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 14px;">
               <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
@@ -2535,11 +2313,11 @@
               </div>
               <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
                 <span style="font-size: 13px; color: #94A3B8;">Монетизация Smart Cargo:</span>
-                <strong class="mono" id="calc-cargo" style="color: #38BDF8; font-size: 15px;">+3 600 BYN / мес</strong>
+                <strong class="mono" id="calc-cargo" style="color: #93C5FD; font-size: 15px;">+3 600 BYN / мес</strong>
               </div>
               <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
                 <span style="font-size: 13px; color: #94A3B8;">Экономия на колл-центре:</span>
-                <strong class="mono" id="calc-disp" style="color: #FBBF24; font-size: 15px;">+2 500 BYN / мес</strong>
+                <strong class="mono" id="calc-disp" style="color: #FCD34D; font-size: 15px;">+2 500 BYN / мес</strong>
               </div>
             </div>
           </div>
@@ -2547,7 +2325,7 @@
           <div style="margin-top: 24px; padding-top: 18px; border-top: 2px solid rgba(255,255,255,0.14);">
             <div class="mono" style="font-size: 12px; color: #94A3B8; text-transform: uppercase;">Итого доп. прибыль парка:</div>
             <div class="mono" id="calc-total" style="font-size: 32px; font-weight: 800; color: #FFFFFF; margin: 4px 0 16px 0;">+14 740 BYN / мес</div>
-            <a href="#slide-start" class="btn btn-accent" style="width: 100%; justify-content: center; padding: 14px; font-size: 14px;">
+            <a href="#slide-start" class="btn btn-accent" style="width: 100%; justify-content: center; padding: 14px; font-size: 14px; border-radius: 12px;">
               Зафиксировать условия и подключить парк &rarr;
             </a>
           </div>
@@ -2558,7 +2336,7 @@
   </section>
 
   <!-- ==========================================================================
-       SLIDE 6: FLEET DIRECTORS REVIEWS & CASES (LIGHT SLIDE)
+       SLIDE 6: FLEET DIRECTORS REVIEWS & CASES (LIGHT CANVAS SLIDE, 20PX CARDS)
        ========================================================================== -->
   <section class="full-slide" id="slide-reviews">
     <div class="container">
@@ -2643,7 +2421,7 @@
         Без паузы в рейсах, без покупки дорогого оборудования и скрытых комиссий. Первые пассажиры и безналичные выплаты T+1 уже на завтрашних выездах.
       </p>
 
-      <!-- EXPRESS APPLICATION FORM MONOLITH -->
+      <!-- EXPRESS APPLICATION FORM MONOLITH (18PX RADIUS) -->
       <form class="partner-form-monolith" onsubmit="event.preventDefault(); alert('Спасибо! Заявка автопарка принята. Менеджер BusLiner Partners свяжется с вами в течение 15 минут.');">
         <div class="form-grid-2">
           <input type="text" class="form-input-clean" placeholder="Ваше имя и должность" required value="Сергей (Руководитель автопарка)">
@@ -2738,8 +2516,6 @@
 
     
 
-    
-
     <!-- 100% FULL-WIDTH (FULL-BLEED) MASTER FOOTER -->
     <footer class="master-footer-fullwidth">
       <div class="footer-fluid-container">
@@ -2768,7 +2544,7 @@
             <div class="footer-col-title">Перевозчикам</div>
             <ul class="footer-links">
               <li><a href="#slide-comparison">Проблема & Выгода</a></li>
-              <li><a href="#slide-software">Софт для флота онлайн</a></li>
+              <li><a href="#slide-schedule">Монитор флота онлайн</a></li>
               <li><a href="#slide-sniper">Алгоритм Снайпер B2B</a></li>
               <li><a href="#slide-calculator">Калькулятор прибыли</a></li>
               <li><a href="#slide-reviews">Кейсы автопарков</a></li>
@@ -2780,10 +2556,10 @@
           <div>
             <div class="footer-col-title">Маршрутная сеть</div>
             <ul class="footer-links">
-              <li><a href="#slide-software">Линия Гомель &mdash; Минск</a></li>
-              <li><a href="#slide-software">Линия Брест &mdash; Минск</a></li>
-              <li><a href="#slide-software">Линия Гродно &mdash; Минск</a></li>
-              <li><a href="#slide-software">Линия Могилев &mdash; Минск</a></li>
+              <li><a href="#slide-schedule">Линия Гомель &mdash; Минск</a></li>
+              <li><a href="#slide-schedule">Линия Брест &mdash; Минск</a></li>
+              <li><a href="#slide-schedule">Линия Гродно &mdash; Минск</a></li>
+              <li><a href="#slide-schedule">Линия Могилев &mdash; Минск</a></li>
             </ul>
           </div>
 
@@ -2908,9 +2684,9 @@
             }
           });
 
-          // Dark slides: hero, software, calculator, start
-          const darkSlides = ['slide-hero', 'slide-software', 'slide-calculator', 'slide-start'];
-          if (darkSlides.includes(id)) {
+          // Dark slides: hero, start
+          // Light slides: comparison, schedule, sniper, calculator, reviews
+          if (id === 'slide-hero' || id === 'slide-start') {
             nav.classList.add('on-dark');
             nav.classList.remove('on-light');
           } else {
@@ -2930,16 +2706,10 @@
       let ticketPrice = 24;
 
       function updateCalc() {
-        // No-show losses prevented (avg 2.5 seats lost per roundtrip saved by Sniper)
         const savedSeatsPerMonth = fleetSize * tripsPerDay * 30 * 2.4;
-        const noShowRevenue = Math.round(savedSeatsPerMonth * ticketPrice * 0.935); // minus 6.5% commission
-        
-        // Smart cargo revenue (avg 20 BYN per roundtrip)
+        const noShowRevenue = Math.round(savedSeatsPerMonth * ticketPrice * 0.935);
         const cargoRevenue = Math.round(fleetSize * tripsPerDay * 30 * 20 * 0.935);
-
-        // Dispatchers cost saved (scaled with fleet)
         const dispSavings = fleetSize <= 2 ? 800 : (fleetSize <= 6 ? 2500 : 4200);
-
         const totalAdditionalProfit = noShowRevenue + cargoRevenue + dispSavings;
 
         const elNoShow = document.getElementById('calc-noshow');
