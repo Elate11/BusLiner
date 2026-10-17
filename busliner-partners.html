@@ -3623,14 +3623,14 @@
         const portalBtn = document.getElementById('nav-carrier-portal-btn');
         if (!portalBtn) return;
         try {
-          const stored = localStorage.getItem('busliner_google_user');
+          const stored = localStorage.getItem('busliner_telegram_user');
           if (stored) {
             const user = JSON.parse(stored);
             if (user && user.name) {
               const firstName = user.name.split(' ')[0];
               portalBtn.innerHTML = `Кабинет: ${firstName} &rarr;`;
               portalBtn.href = '#slide-schedule';
-              portalBtn.title = `Авторизован: ${user.email}. Открыть монитор рейсов`;
+              portalBtn.title = `Авторизован: ${user.identifier || ''}. Открыть монитор рейсов`;
             }
           }
         } catch (e) {}
@@ -3689,7 +3689,7 @@
           Отправить заявку менеджеру подключений &rarr;
         </button>
         <div style="margin-top: 14px; text-align: center; font-size: 12.5px; color: #94A3B8;">
-          Или <a href="partner-auth.html#onboard" style="color: #93C5FD; font-weight: 500; text-decoration: underline;">войдите через Google Workspace для быстрой регистрации &rarr;</a>
+          Или <a href="partner-auth.html#onboard" style="color: #93C5FD; font-weight: 500; text-decoration: underline;">зарегистрируйте автопарк онлайн в кабинете перевозчика &rarr;</a>
         </div>
       </form>
     </div>

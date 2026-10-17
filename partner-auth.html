@@ -8,8 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Nunito:wght@700;800;900&family=Varela+Round&display=swap" rel="stylesheet">
-  <!-- Official Google Identity Services SDK -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     /* ==========================================================================
        BUSLINER PARTNERS — AUTH & FLEET ONBOARDING
@@ -307,16 +305,9 @@
     .btn-oauth:hover svg {
       transform: scale(1.15);
     }
-    .btn-oauth.google-primary {
-      border-color: #D1D5DB;
-    }
-    .btn-oauth.google-primary:hover {
-      border-color: #93C5FD;
-      background: var(--accent-soft);
-    }
 
     /* VERIFIED PROFILE BANNER WITH ANIMATION */
-    .google-profile-card {
+    .verified-profile-card {
       display: none;
       align-items: center;
       justify-content: space-between;
@@ -333,12 +324,16 @@
       0% { opacity: 0; transform: translateY(-10px) scale(0.97); }
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
-    .badge-verified-google {
+    .badge-verified-status {
       display: inline-flex;
       align-items: center;
       gap: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
     }
-    .badge-verified-google::before {
+    .badge-verified-status::before {
       content: '';
       display: inline-block;
       width: 6px;
@@ -351,7 +346,7 @@
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.35; transform: scale(0.8); }
     }
-    .google-avatar-img {
+    .verified-avatar-img {
       width: 44px;
       height: 44px;
       border-radius: 50%;
@@ -360,11 +355,11 @@
       object-fit: cover;
       flex-shrink: 0;
     }
-    .google-user-info {
+    .verified-user-info {
       flex: 1;
       min-width: 0;
     }
-    .google-user-name {
+    .verified-user-name {
       font-size: 14.5px;
       font-weight: 700;
       color: var(--text-primary);
@@ -372,7 +367,7 @@
       align-items: center;
       gap: 8px;
     }
-    .google-user-email {
+    .verified-user-email {
       font-size: 13px;
       color: var(--accent-institutional);
       font-weight: 500;
@@ -380,11 +375,6 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .badge-verified-google {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 7px;
-      background: #EAF7EE;
       border: 1px solid #A7F3D0;
       border-radius: 4px;
       color: var(--status-available);
@@ -767,81 +757,6 @@
       text-decoration: underline;
     }
 
-    /* ==========================================================================
-       AUTHENTIC GOOGLE ACCOUNT CHOOSER MODAL (OFFICIAL GOOGLE OAUTH SPEC)
-       ========================================================================== */
-    .google-modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.45);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .google-modal-card {
-      width: 100%;
-      max-width: 440px;
-      background: #FFFFFF;
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-      border: 1px solid #E2E8F0;
-      padding: 32px 28px 26px;
-      animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    @keyframes modalPop {
-      from { opacity: 0; transform: scale(0.96) translateY(8px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    .google-acc-list {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-top: 14px;
-    }
-    .google-acc-item {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background 0.15s ease;
-      border-bottom: 1px solid #F1F5F9;
-    }
-    .google-acc-item:last-child {
-      border-bottom: none;
-    }
-    .google-acc-item:hover {
-      background: #F8FAFC;
-    }
-    .google-acc-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 15px;
-      flex-shrink: 0;
-    }
-    .google-acc-info {
-      flex: 1;
-      min-width: 0;
-    }
-    .google-acc-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: #1E293B;
-    }
-    .google-acc-email {
-      font-size: 12.5px;
-      color: #64748B;
-    }
 
     @media (max-width: 640px) {
       .panel-body { padding: 24px 20px; }
@@ -892,40 +807,13 @@
           Управляйте выездами, мониторингом мест No-Show и ежедневным безналичным клирингом T+1.
         </p>
 
-        <!-- VERIFIED PROFILE BANNER (IF ACTIVE SESSION DETECTED) -->
-        <div id="login-google-badge" class="google-profile-card" style="display: none;">
-          <img id="login-avatar" class="google-avatar-img" src="" alt="Google Profile">
-          <div class="google-user-info">
-            <div class="google-user-name">
-              <span id="login-name"></span>
-              <span class="badge-verified-google">Google Verified</span>
-            </div>
-            <div class="google-user-email" id="login-email-badge"></div>
-          </div>
-          <button type="button" class="btn btn-secondary" style="padding: 7px 12px; font-size: 12px;" onclick="disconnectGoogle()">Сменить</button>
-        </div>
-
-        <!-- FAST OAUTH SIGN IN BUTTONS -->
-        <div class="oauth-grid">
-          <!-- REAL GOOGLE IDENTITY BUTTON -->
-          <button type="button" class="btn-oauth google-primary" id="btn-google-login" onclick="triggerRealGoogleAuth('login')">
-            <svg viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.15z"/>
-              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.36 7.36 24 12 24z"/>
-              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.15 0 9.99 0 12s.45 3.85 1.24 5.42l4.04-3.15z"/>
-              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-            </svg>
-            <span id="btn-google-text">Google Workspace</span>
-          </button>
-
-          <!-- TELEGRAM DISPATCHER AUTH -->
-          <button type="button" class="btn-oauth" onclick="handleTelegramLogin()">
-            <svg viewBox="0 0 24 24" fill="#2AABEE">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
-            </svg>
-            Telegram Войти
-          </button>
-        </div>
+        <!-- FAST TELEGRAM SIGN IN BUTTON -->
+        <button type="button" class="btn-oauth" onclick="handleTelegramLogin()" style="width: 100%; margin-bottom: 22px; padding: 14px 20px; font-size: 14px;">
+          <svg viewBox="0 0 24 24" fill="#2AABEE" style="width: 20px; height: 20px;">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+          </svg>
+          <span>Войти через Telegram</span>
+        </button>
 
         <div class="auth-divider">
           <span>или через корпоративную почту</span>
@@ -1006,40 +894,28 @@
           <div class="wizard-step-pane active" id="step-pane-1">
             <h2 class="panel-heading">Шаг 1: <em>Руководитель</em> или Диспетчер</h2>
             <p class="panel-subheading">
-              Создайте профиль владельца автопарка. Авторизация через Google Workspace заполнит данные и подтвердит email автоматически.
+              Создайте профиль владельца автопарка. Регистрация через Telegram мгновенно привяжет бота к диспетчерской.
             </p>
 
-            <!-- 1-CLICK REAL GOOGLE & TELEGRAM REGISTRATION -->
-            <div class="oauth-grid" style="margin-bottom: 20px;">
-              <button type="button" class="btn-oauth google-primary" onclick="triggerRealGoogleAuth('onboard')">
-                <svg viewBox="0 0 24 24">
-                  <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.15z"/>
-                  <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.36 7.36 24 12 24z"/>
-                  <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.15 0 9.99 0 12s.45 3.85 1.24 5.42l4.04-3.15z"/>
-                  <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-                </svg>
-                <span>Google Регистрация</span>
-              </button>
+            <!-- 1-CLICK TELEGRAM REGISTRATION -->
+            <button type="button" class="btn-oauth" onclick="handleTelegramOnboard()" style="width: 100%; margin-bottom: 22px; padding: 14px 20px; font-size: 14px;">
+              <svg viewBox="0 0 24 24" fill="#2AABEE" style="width: 20px; height: 20px;">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+              </svg>
+              <span>Быстрая регистрация через Telegram</span>
+            </button>
 
-              <button type="button" class="btn-oauth" onclick="handleTelegramOnboard()">
-                <svg viewBox="0 0 24 24" fill="#2AABEE">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
-                </svg>
-                <span>Telegram Регистрация</span>
-              </button>
-            </div>
-
-            <!-- GOOGLE VERIFIED STATUS BADGE IN ONBOARDING -->
-            <div id="onboard-google-badge" class="google-profile-card" style="display: none;">
-              <img id="onboard-avatar" class="google-avatar-img" src="" alt="Google Profile">
-              <div class="google-user-info">
-                <div class="google-user-name">
+            <!-- TELEGRAM VERIFIED STATUS BADGE IN ONBOARDING -->
+            <div id="onboard-telegram-badge" class="verified-profile-card" style="display: none;">
+              <img id="onboard-avatar" class="verified-avatar-img" src="" alt="Profile">
+              <div class="verified-user-info">
+                <div class="verified-user-name">
                   <span id="onboard-name-display"></span>
-                  <span class="badge-verified-google">Google ID Linked</span>
+                  <span class="badge-verified-status" style="background: rgba(42, 171, 238, 0.12); color: #0284C7;">Telegram Verified</span>
                 </div>
-                <div class="google-user-email" id="onboard-email-display"></div>
+                <div class="verified-user-email" id="onboard-email-display"></div>
               </div>
-              <button type="button" class="btn btn-secondary" style="padding: 7px 12px; font-size: 12px;" onclick="disconnectGoogle()">Отвязать</button>
+              <button type="button" class="btn btn-secondary" style="padding: 7px 12px; font-size: 12px;" onclick="disconnectTelegram()">Отвязать</button>
             </div>
 
             <div class="auth-divider"><span>или введите реквизиты вручную</span></div>
@@ -1369,7 +1245,7 @@
           <button type="button" class="btn btn-secondary" onclick="closeTelegramModal()" style="flex: 1; font-size: 13.5px; padding: 12px;">
             Отмена
           </button>
-          <button type="submit" class="btn btn-accent" style="flex: 2; font-size: 13.5px; padding: 12px; background: #2AABEE; border-color: #2AABEE;">
+          <button type="submit" class="btn btn-accent" style="flex: 2; font-size: 13.5px; padding: 12px;">
             Подтвердить &rarr;
           </button>
         </div>
@@ -1401,10 +1277,9 @@
   </footer>
 
   <!-- ==========================================================================
-       AUTHENTIC GOOGLE OAUTH & CONTROLLER JAVASCRIPT
+       BUSLINER PARTNERS — CONTROLLER JAVASCRIPT
        ========================================================================== -->
   <script>
-    let activeGoogleUser = null;
     // BANK AUTO-FILL BIC WITH INSTANT VISUAL FEEDBACK
     window.onBankSelected = function(selectEl) {
       if (!selectEl) return;
@@ -1539,112 +1414,18 @@
       }, 4000);
     };
 
-    // REAL GOOGLE OAUTH POPUP WINDOW INTEGRATION
-    let currentAuthMode = 'onboard';
-
-    window.triggerRealGoogleAuth = function(mode) {
-      currentAuthMode = mode;
-      const w = 480;
-      const h = 580;
-      const left = Math.max(0, (screen.width - w) / 2);
-      const top = Math.max(0, (screen.height - h) / 2);
-      try {
-        const popup = window.open(
-          'google-oauth.html?mode=' + encodeURIComponent(mode),
-          'GoogleSignInPopup',
-          `width=${w},height=${h},top=${top},left=${left},status=no,toolbar=no,menubar=no,location=no,resizable=yes`
-        );
-        if (popup) {
-          popup.focus();
-        } else {
-          window.location.href = 'google-oauth.html?mode=' + encodeURIComponent(mode);
-        }
-      } catch (err) {
-        window.location.href = 'google-oauth.html?mode=' + encodeURIComponent(mode);
-      }
-    };
-
-    function initGoogleClient() {
-      // Background hook
-    }
-
-    // Exposed globally so popup can call window.opener.applyGoogleProfile
-    window.applyGoogleProfile = function(user, isInitialLoad = false) {
-      if (!user) return;
-      activeGoogleUser = user;
-      localStorage.setItem('busliner_google_user', JSON.stringify(user));
-
-      // 1. Update In Login View
-      const loginBadge = document.getElementById('login-google-badge');
-      if (loginBadge) {
-        const loginAvatar = document.getElementById('login-avatar');
-        if (loginAvatar) loginAvatar.src = user.picture;
-        const loginName = document.getElementById('login-name');
-        if (loginName) loginName.innerText = user.name;
-        const loginEmailBadge = document.getElementById('login-email-badge');
-        if (loginEmailBadge) loginEmailBadge.innerText = user.email;
-        loginBadge.style.display = 'flex';
-      }
-      const loginEmail = document.getElementById('login-email');
-      if (loginEmail) loginEmail.value = user.email;
-
-      // 2. Update In Onboarding View
-      const onboardBadge = document.getElementById('onboard-google-badge');
-      if (onboardBadge) {
-        const onboardAvatar = document.getElementById('onboard-avatar');
-        if (onboardAvatar) onboardAvatar.src = user.picture;
-        const onboardName = document.getElementById('onboard-name-display');
-        if (onboardName) onboardName.innerText = user.name;
-        const onboardEmail = document.getElementById('onboard-email-display');
-        if (onboardEmail) onboardEmail.innerText = user.email;
-        onboardBadge.style.display = 'flex';
-      }
-      const obName = document.getElementById('ob-fullname');
-      if (obName) obName.value = user.name;
-      const obEmail = document.getElementById('ob-email');
-      if (obEmail) obEmail.value = user.email;
-
-      const btnText = document.getElementById('btn-google-text');
-      if (btnText) btnText.innerText = `Войти как ${user.name.split(' ')[0]}`;
-
-      // If this was an active OAuth login action (not initial page load restoration)
-      if (!isInitialLoad) {
-        if (currentAuthMode === 'login') {
-          showAuthToast('Google Workspace авторизован', `Добро пожаловать, ${user.name}! Выполняется вход в диспетчерскую...`);
-          setTimeout(() => {
-            window.location.href = 'busliner-partners.html#slide-schedule';
-          }, 900);
-        } else {
-          showAuthToast('Google аккаунт привязан', `${user.name} (${user.email}) подтвержден через Google OAuth. Заполняем реквизиты.`);
-          nextStep(2);
-        }
-      }
-    };
-
-    // Cross-window listeners for Google OAuth popup
-    window.addEventListener('message', (event) => {
-      if (event.data && event.data.type === 'BUSLINER_GOOGLE_AUTH' && event.data.user) {
-        window.applyGoogleProfile(event.data.user, false);
-      }
-    });
-
-    window.addEventListener('storage', (event) => {
-      if (event.key === 'busliner_google_sync_trigger') {
-        try {
-          const u = JSON.parse(localStorage.getItem('busliner_google_user'));
-          if (u) window.applyGoogleProfile(u, false);
-        } catch(e) {}
-      }
-    });
-
-    window.disconnectGoogle = function() {
-      activeGoogleUser = null;
-      localStorage.removeItem('busliner_google_user');
-      document.getElementById('login-google-badge').style.display = 'none';
-      document.getElementById('onboard-google-badge').style.display = 'none';
-      const btnText = document.getElementById('btn-google-text');
-      if (btnText) btnText.innerText = 'Google Workspace';
-      showAuthToast('Google отключен', 'Привязка аккаунта Google успешно удалена.', false);
+    // =========================================================================
+    // TELEGRAM SESSION MANAGEMENT
+    // =========================================================================
+    window.disconnectTelegram = function() {
+      localStorage.removeItem('busliner_telegram_user');
+      const badge = document.getElementById('onboard-telegram-badge');
+      if (badge) badge.style.display = 'none';
+      const pInput = document.getElementById('ob-phone');
+      if (pInput) pInput.value = '';
+      const fnInput = document.getElementById('ob-fullname');
+      if (fnInput) fnInput.value = '';
+      showAuthToast('Telegram отвязан', 'Привязка аккаунта Telegram успешно удалена.', false);
     };
 
     // =========================================================================
@@ -1708,13 +1489,17 @@
         const fnInput = document.getElementById('ob-fullname');
         if (fnInput) fnInput.value = defaultName;
 
-        const badge = document.getElementById('onboard-google-badge');
+        const badge = document.getElementById('onboard-telegram-badge');
         if (badge) {
-          document.getElementById('onboard-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(defaultName)}&background=2AABEE&color=fff&size=120`;
+          document.getElementById('onboard-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(defaultName)}&background=1E3A8A&color=fff&size=120`;
           document.getElementById('onboard-name-display').innerText = defaultName;
           document.getElementById('onboard-email-display').innerText = isPhone ? `Телефон: ${val}` : `Telegram: ${val}`;
           badge.style.display = 'flex';
         }
+
+        try {
+          localStorage.setItem('busliner_telegram_user', JSON.stringify({ identifier: val, name: defaultName }));
+        } catch(e) {}
 
         showAuthToast('Telegram привязан', `@BusLinerFleetBot синхронизирован с автопарком ${defaultName}.`);
         nextStep(2);
@@ -1824,7 +1609,6 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      initGoogleClient();
       renderAmenities();
       recalculateCommission();
 
@@ -1834,11 +1618,19 @@
         window.onBankSelected(bankSelect);
       }
 
-      const stored = localStorage.getItem('busliner_google_user');
-      if (stored) {
+      const storedTg = localStorage.getItem('busliner_telegram_user');
+      if (storedTg) {
         try {
-          const user = JSON.parse(stored);
-          window.applyGoogleProfile(user, true); // true = initial load restoration
+          const tgUser = JSON.parse(storedTg);
+          const badge = document.getElementById('onboard-telegram-badge');
+          if (badge) {
+            document.getElementById('onboard-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(tgUser.name)}&background=1E3A8A&color=fff&size=120`;
+            document.getElementById('onboard-name-display').innerText = tgUser.name;
+            document.getElementById('onboard-email-display').innerText = tgUser.identifier.startsWith('+') ? `Телефон: ${tgUser.identifier}` : `Telegram: ${tgUser.identifier}`;
+            badge.style.display = 'flex';
+          }
+          const fnInput = document.getElementById('ob-fullname');
+          if (fnInput && !fnInput.value) fnInput.value = tgUser.name;
         } catch (e) {}
       }
 
