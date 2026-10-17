@@ -1612,21 +1612,22 @@
        PASSENGER PORTAL — RICH MOTION & FLUID ANIMATIONS SYSTEM
        ========================================================================== */
 
-    /* 1. Global Scroll-Driven Slide Entrance Reveal */
+    /* 1. Global Scroll-Driven Slide Entrance Reveal (Bidirectional Up & Down) */
     .scroll-reveal {
       opacity: 0;
       transform: translateY(24px);
-      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.25s ease, transform 0.25s ease;
       will-change: opacity, transform;
     }
     .scroll-reveal.revealed {
       opacity: 1;
       transform: translateY(0);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .stagger-1 { transition-delay: 0.05s; }
-    .stagger-2 { transition-delay: 0.12s; }
-    .stagger-3 { transition-delay: 0.20s; }
-    .stagger-4 { transition-delay: 0.28s; }
+    .scroll-reveal.revealed.stagger-1 { transition-delay: 0.05s; }
+    .scroll-reveal.revealed.stagger-2 { transition-delay: 0.12s; }
+    .scroll-reveal.revealed.stagger-3 { transition-delay: 0.20s; }
+    .scroll-reveal.revealed.stagger-4 { transition-delay: 0.28s; }
 
     /* 2. Search Monolith Ambient Floating Glow */
     .search-monolith-bar {
@@ -2092,14 +2093,14 @@
     <div class="container">
       <div class="sniper-split">
         <div>
-          <h2 class="slide-headline">
+          <h2 class="slide-headline scroll-reveal stagger-1">
             Все билеты раскуплены?<br><em>Снайпер вырвет твой билет.</em>
           </h2>
-          <p class="slide-lead" style="margin-bottom: 24px;">
+          <p class="slide-lead scroll-reveal stagger-2" style="margin-bottom: 24px;">
             В пятницу вечером все паникуют, а ты спокоен. До 15% людей перед рейсом сдают билеты. Наш робот заберет первое освободившееся место быстрее любых перекупщиков.
           </p>
 
-          <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px;">
+          <div class="scroll-reveal stagger-3" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px;">
             <div style="display: flex; gap: 12px; align-items: baseline;">
               <span class="mono" style="font-weight: 700; color: var(--accent-institutional);">01.</span>
               <div style="font-size: 14px; line-height: 20px;">
@@ -2120,7 +2121,7 @@
             </div>
           </div>
 
-          <a href="aura-passenger-app.html" class="btn btn-accent">Включить Снайпер на нужный рейс &rarr;</a>
+          <a href="aura-passenger-app.html" class="btn btn-accent scroll-reveal stagger-4">Включить Снайпер на нужный рейс &rarr;</a>
         </div>
 
         <!-- AUTHENTIC DISPATCH PAPER LEAF / SHEET PIERCED BY SNIPER -->
@@ -2567,16 +2568,18 @@
     // PASSENGER PORTAL — FLUID ANIMATIONS & MICRO-INTERACTIONS
     // =========================================================================
 
-    // A. Global Scroll-Reveal with IntersectionObserver
+    // A. Global Scroll-Reveal with IntersectionObserver (Bidirectional Up & Down)
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('revealed');
+        } else {
+          entry.target.classList.remove('revealed');
         }
       });
     }, {
-      threshold: 0.15,
-      rootMargin: '0px 0px -40px 0px'
+      threshold: 0.12,
+      rootMargin: '0px 0px -20px 0px'
     });
 
     document.querySelectorAll('.scroll-reveal').forEach(el => {
