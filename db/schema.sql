@@ -64,6 +64,13 @@ CREATE TYPE clearing_status AS ENUM (
     'reconciled'            -- Закрыт актом сверки и подписан ЭЦП
 );
 
+CREATE TYPE auth_provider_type AS ENUM (
+    'google',               -- Google OAuth 2.0 / Workspace
+    'telegram',             -- Telegram Login Widget
+    'email_password',       -- Классический вход по email и паролю
+    'phone_otp'             -- Вход по номеру телефона и SMS-коду
+);
+
 -- =============================================================================
 -- 2. АВТОПАРКИ И ЮРИДИЧЕСКИЕ ЛИЦА (CARRIERS)
 -- =============================================================================
@@ -98,13 +105,16 @@ CREATE TRIGGER trg_carriers_updated_at
 
 CREATE TABLE carrier_users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    carrier_id UUID NOT NULL REFERENCES carriers(id) ON DELETE CASCADE,
-    role user_role NOT NULL DEFAULT 'dispatcher',
+    carrier_id UUID REFERENCES carriers(id) ON DELETE CASCADE, -- NULL на этапе онбординга
+    role user_role NOT NULL DEFAULT 'owner',
     full_name VARCHAR(150) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    phone VARCHAR(30) NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    phone VARCHAR(30) UNIQUE,
+    password_hash VARCHAR(255),                                -- NULL при входе через Google/Telegram
+    avatar_url TEXT,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    email_verified BOOLEAN NOT NULL DEFAULT FALSE,
+    phone_verified BOOLEAN NOT NULL DEFAULT FALSE,
     last_login_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -112,6 +122,35 @@ CREATE TABLE carrier_users (
 
 CREATE INDEX idx_carrier_users_carrier ON carrier_users(carrier_id);
 CREATE INDEX idx_carrier_users_email ON carrier_users(email);
+CREATE INDEX idx_carrier_users_phone ON carrier_users(phone);
+
+-- ПРИВЯЗКА СОЦИАЛЬНЫХ ПРОВАЙДЕРОВ ВХОДА (GOOGLE, TELEGRAM И ДР.)
+CREATE TABLE carrier_user_identities (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES carrier_users(id) ON DELETE CASCADE,
+    provider auth_provider_type NOT NULL,
+    provider_user_id VARCHAR(255) NOT NULL,                    -- Google sub ID / Telegram ID
+    provider_email VARCHAR(100),
+    raw_profile JSONB DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE(provider, provider_user_id)
+);
+
+CREATE INDEX idx_user_identities_user ON carrier_user_identities(user_id);
+
+-- ЧЕРНОВИКИ И ШАГИ ОНБОРДИНГА АВТОПАРКА (MULTI-STEP WIZARD)
+CREATE TABLE carrier_onboarding_drafts (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES carrier_users(id) ON DELETE CASCADE,
+    current_step SMALLINT NOT NULL DEFAULT 1,                  -- 1: Профиль, 2: Юрлицо, 3: Флот, 4: Маршрут, 5: Завершено
+    draft_data JSONB NOT NULL DEFAULT '{}'::jsonb,             -- Сохраненные поля каждого шага
+    is_completed BOOLEAN NOT NULL DEFAULT FALSE,
+    submitted_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_onboarding_drafts_user ON carrier_onboarding_drafts(user_id);
 
 -- =============================================================================
 -- 4. АВТОПАРК (VEHICLES / FLEET)

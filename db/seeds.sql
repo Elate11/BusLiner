@@ -18,9 +18,20 @@ INSERT INTO carriers (id, legal_name, brand_name, tax_id, iban, bank_name, bic, 
 ON CONFLICT (id) DO NOTHING;
 
 -- 3. СОТРУДНИКИ И ДИСПЕТЧЕРЫ
-INSERT INTO carrier_users (id, carrier_id, role, full_name, email, phone, password_hash) VALUES
-('33333333-3333-3333-3333-333333333301', '22222222-2222-2222-2222-222222222201', 'owner', 'Мельников Сергей Викторович', 'melnikov@burlaki.by', '+375 (29) 774-12-00', crypt('Password@2026', gen_salt('bf'))),
-('33333333-3333-3333-3333-333333333302', '22222222-2222-2222-2222-222222222201', 'dispatcher', 'Ковалева Елена', 'dispatcher@burlaki.by', '+375 (29) 774-12-01', crypt('Dispatcher@2026', gen_salt('bf')))
+INSERT INTO carrier_users (id, carrier_id, role, full_name, email, phone, password_hash, email_verified) VALUES
+('33333333-3333-3333-3333-333333333301', '22222222-2222-2222-2222-222222222201', 'owner', 'Мельников Сергей Викторович', 'melnikov@burlaki.by', '+375 (29) 774-12-00', crypt('Password@2026', gen_salt('bf')), TRUE),
+('33333333-3333-3333-3333-333333333302', '22222222-2222-2222-2222-222222222201', 'dispatcher', 'Ковалева Елена', 'dispatcher@burlaki.by', '+375 (29) 774-12-01', crypt('Dispatcher@2026', gen_salt('bf')), TRUE),
+('33333333-3333-3333-3333-333333333303', NULL, 'owner', 'Ковалев Виталий Николаевич', 'vitaly.kovalev@gmail.com', '+375 (33) 998-11-22', NULL, TRUE)
+ON CONFLICT (id) DO NOTHING;
+
+-- Привязка Google OAuth
+INSERT INTO carrier_user_identities (user_id, provider, provider_user_id, provider_email, raw_profile) VALUES
+('33333333-3333-3333-3333-333333333303', 'google', 'google-oauth2|109845729104859123847', 'vitaly.kovalev@gmail.com', '{"name": "Виталий Ковалев", "picture": "https://lh3.googleusercontent.com/a/default-user"}'::jsonb)
+ON CONFLICT (provider, provider_user_id) DO NOTHING;
+
+-- Пример активного черновика регистрации нового автопарка
+INSERT INTO carrier_onboarding_drafts (user_id, current_step, draft_data, is_completed) VALUES
+('33333333-3333-3333-3333-333333333303', 3, '{"company_name": "ИП Ковалев В.Н.", "tax_id": "291884512", "iban": "BY55BAPB30120000999900000000", "bic": "BAPBBY2X", "vehicle_gov_num": "44-18 AB-1", "vehicle_model": "Mercedes Sprinter 2021", "route": "Брест — Минск"}'::jsonb, FALSE)
 ON CONFLICT (id) DO NOTHING;
 
 -- 4. ТРАНСПОРТ (МИКРОАВТОБУСЫ)

@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход и регистрация автопарка — BusLiner Partners</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       BUSLINER PARTNERS — AUTH & FLEET ONBOARDING MONOLITH
+       Strictly adhering to Freight Monolith & Quiet Luxury design tokens
+       ========================================================================== */
+    :root {
+      --canvas: #090B0E;
+      --canvas-subtle: #0F1217;
+      --card-bg: #14171F;
+      --card-inner: #191E27;
+      --border-hairline: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(59, 130, 246, 0.28);
+      --border-focus: #3B82F6;
+      
+      --text-primary: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      
+      --accent-navy: #1E3A8A;
+      --accent-blue: #3B82F6;
+      --accent-sky: #93C5FD;
+      --accent-glow: rgba(59, 130, 246, 0.15);
+      
+      --status-success: #10B981;
+      --status-success-bg: rgba(16, 185, 129, 0.12);
+      
+      --font-display: 'Newsreader', Georgia, serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --radius-card: 20px;
+      --radius-ctrl: 12px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--canvas);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(30, 58, 138, 0.28) 0%, transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.6) 0%, transparent 50%),
+        linear-gradient(180deg, #090B0E 0%, #0D1016 100%);
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP BRAND BAR */
+    header.auth-header {
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-hairline);
+      background: rgba(9, 11, 14, 0.7);
+      backdrop-filter: blur(12px);
+    }
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .brand-title {
+      font-weight: 800;
+      font-size: 19px;
+      letter-spacing: -0.02em;
+      color: #FFFFFF;
+    }
+    .brand-title-thin {
+      font-weight: 300;
+      color: var(--accent-sky);
+    }
+    .badge-b2b {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      background: rgba(59, 130, 246, 0.16);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      border-radius: 6px;
+      color: var(--accent-sky);
+      letter-spacing: 0.05em;
+    }
+    .header-support {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .header-support a {
+      color: #FFFFFF;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+    .header-support a:hover {
+      color: var(--accent-sky);
+    }
+
+    /* MAIN CONTAINER */
+    main.auth-main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px 60px;
+    }
+
+    .auth-shell {
+      width: 100%;
+      max-width: 720px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-card);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.03);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* TABS TOGGLE (Вход / Регистрация автопарка) */
+    .view-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border-hairline);
+      background: rgba(15, 18, 23, 0.7);
+    }
+    .view-tab-btn {
+      flex: 1;
+      padding: 18px 24px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .view-tab-btn:hover {
+      color: #FFFFFF;
+    }
+    .view-tab-btn.active {
+      color: #FFFFFF;
+      background: var(--card-bg);
+    }
+    .view-tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent-blue);
+      box-shadow: 0 0 12px var(--accent-blue);
+    }
+
+    .panel-body {
+      padding: 40px;
+    }
+
+    /* EDITORIAL HEADINGS */
+    .panel-heading {
+      font-family: var(--font-display);
+      font-size: 28px;
+      line-height: 1.25;
+      font-weight: 400;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+    }
+    .panel-heading em {
+      font-style: italic;
+      color: var(--accent-sky);
+    }
+    .panel-subheading {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    /* OAUTH SOCIAL BUTTONS ROW */
+    .oauth-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .btn-oauth {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 18px;
+      background: var(--card-inner);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-ctrl);
+      color: #FFFFFF;
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-oauth:hover {
+      background: #202632;
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+    .btn-oauth svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    /* DIVIDER */
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 24px 0;
+      color: var(--text-dim);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+    .auth-divider span {
+      padding: 0 14px;
+    }
+
+    /* FORMS & INPUTS */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #CBD5E1;
+      margin-bottom: 8px;
+    }
+    .form-input {
+      width: 100%;
+      background: var(--card-inner);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-ctrl);
+      padding: 13px 16px;
+      color: #FFFFFF;
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .form-input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .form-input::placeholder {
+      color: #64748B;
+    }
+    .form-hint {
+      font-size: 11.5px;
+      color: var(--text-dim);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* PRIMARY BUTTONS */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 15px 24px;
+      background: var(--accent-navy);
+      background-image: linear-gradient(180deg, #2563EB 0%, #1D4ED8 100%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius-ctrl);
+      color: #FFFFFF;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      box-shadow: 0 8px 20px -4px rgba(29, 78, 216, 0.5);
+      transition: all 0.2s ease;
+    }
+    .btn-primary:hover {
+      background-image: linear-gradient(180deg, #3B82F6 0%, #2563EB 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px -4px rgba(29, 78, 216, 0.65);
+    }
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    /* MULTI-STEP WIZARD PROGRESS BAR */
+    .wizard-steps {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 32px;
+      padding: 0 8px;
+    }
+    .wizard-steps::before {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: 24px;
+      right: 24px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.08);
+      z-index: 1;
+    }
+    .wizard-step-item {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--card-inner);
+      border: 2px solid rgba(255, 255, 255, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dim);
+      transition: all 0.2s ease;
+    }
+    .wizard-step-item.active .step-circle {
+      background: var(--accent-blue);
+      border-color: #93C5FD;
+      color: #FFFFFF;
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+    }
+    .wizard-step-item.done .step-circle {
+      background: var(--status-success);
+      border-color: #6EE7B7;
+      color: #FFFFFF;
+    }
+    .step-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .wizard-step-item.active .step-title {
+      color: #FFFFFF;
+    }
+
+    /* CHIP SELECTORS (Fleet amenities, Vehicle types) */
+    .amenities-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .chip-checkbox {
+      position: relative;
+      cursor: pointer;
+    }
+    .chip-checkbox input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .chip-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--card-inner);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-ctrl);
+      font-size: 13px;
+      color: #CBD5E1;
+      transition: all 0.15s ease;
+    }
+    .chip-checkbox input:checked + .chip-box {
+      border-color: var(--accent-blue);
+      background: rgba(59, 130, 246, 0.1);
+      color: #FFFFFF;
+    }
+
+    /* BANNER INFO */
+    .info-callout {
+      display: flex;
+      gap: 12px;
+      padding: 14px 18px;
+      background: rgba(30, 58, 138, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: var(--radius-ctrl);
+      font-size: 13px;
+      line-height: 1.5;
+      color: #BFDBFE;
+      margin-bottom: 24px;
+    }
+
+    /* STEP WIZARD CONTAINERS */
+    .wizard-step-pane {
+      display: none;
+    }
+    .wizard-step-pane.active {
+      display: block;
+      animation: fadeIn 0.25s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* BUTTONS NAV IN WIZARD */
+    .wizard-nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-hairline);
+    }
+    .btn-secondary {
+      padding: 14px 24px;
+      background: var(--card-inner);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-ctrl);
+      color: #CBD5E1;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary:hover {
+      background: #202632;
+      color: #FFFFFF;
+    }
+
+    /* FOOTER */
+    footer.auth-footer {
+      padding: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+      border-top: 1px solid var(--border-hairline);
+    }
+    footer.auth-footer a {
+      color: var(--text-muted);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      .panel-body { padding: 24px 20px; }
+      .form-row, .oauth-grid, .amenities-grid { grid-template-columns: 1fr; }
+      .wizard-steps { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header class="auth-header">
+    <a href="busliner-partners.html" class="brand-link">
+      <svg width="26" height="26" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="28" height="28" rx="6" fill="#1E3A8A"/>
+        <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M6 9H11.5M6 19H11.5" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span class="brand-title">BUS<span class="brand-title-thin">LINER</span> <span class="badge-b2b">PARTNERS</span></span>
+    </a>
+    <div class="header-support">
+      <span>Поддержка автопарков:</span>
+      <a href="tel:+375297741200">+375 (29) 774-12-00</a>
+      <a href="busliner-partners.html" style="margin-left: 8px; color: var(--accent-sky);">← На сайт</a>
+    </div>
+  </header>
+
+  <!-- MAIN BODY -->
+  <main class="auth-main">
+    <div class="auth-shell">
+
+      <!-- TABS: SIGN IN vs ONBOARDING -->
+      <div class="view-tabs">
+        <button type="button" class="view-tab-btn active" id="tab-login" onclick="switchView('login')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+          Вход в диспетчерскую
+        </button>
+        <button type="button" class="view-tab-btn" id="tab-onboard" onclick="switchView('onboard')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+          Регистрация автопарка
+        </button>
+      </div>
+
+      <!-- ======================================================================
+           PANEL 1: ВХОД ДЛЯ ДЕЙСТВУЮЩИХ ПЕРЕВОЗЧИКОВ
+           ====================================================================== -->
+      <div id="view-login-panel" class="panel-body">
+        <h1 class="panel-heading">Вход для <em>партнеров</em></h1>
+        <p class="panel-subheading">
+          Управляйте выездами, мониторингом мест No-Show и ежедневным безналичным клирингом T+1.
+        </p>
+
+        <!-- FAST OAUTH SIGN IN -->
+        <div class="oauth-grid">
+          <!-- GOOGLE WORKSPACE AUTH -->
+          <button type="button" class="btn-oauth" onclick="handleGoogleLogin()">
+            <svg viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.15z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.36 7.36 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.15 0 9.99 0 12s.45 3.85 1.24 5.42l4.04-3.15z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+            </svg>
+            Google Workspace
+          </button>
+
+          <!-- TELEGRAM DISPATCHER AUTH -->
+          <button type="button" class="btn-oauth" onclick="handleTelegramLogin()">
+            <svg viewBox="0 0 24 24" fill="#2AABEE">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+            </svg>
+            Telegram Войти
+          </button>
+        </div>
+
+        <div class="auth-divider">
+          <span>или через корпоративную почту</span>
+        </div>
+
+        <!-- EMAIL / PASSWORD FORM -->
+        <form onsubmit="handleEmailLogin(event)">
+          <div class="form-group">
+            <label class="form-label" for="login-email">Рабочий Email</label>
+            <input type="email" id="login-email" class="form-input" placeholder="director@transport-leader.by" required value="dispatch@gomelliner.by">
+          </div>
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+              <label class="form-label" for="login-password" style="margin-bottom: 0;">Пароль</label>
+              <a href="#" onclick="alert('Ссылка для сброса пароля отправлена на указанный email.'); return false;" style="font-size: 11.5px; color: var(--accent-sky); text-decoration: none;">Забыли пароль?</a>
+            </div>
+            <input type="password" id="login-password" class="form-input" placeholder="••••••••••••" required value="demo-password-2026">
+          </div>
+
+          <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="remember-me" checked style="accent-color: var(--accent-blue);">
+            <label for="remember-me" style="font-size: 12.5px; color: var(--text-muted); cursor: pointer;">Запомнить рабочую сессию на 30 дней</label>
+          </div>
+
+          <button type="submit" class="btn-primary">
+            Войти в кабинет диспетчера &rarr;
+          </button>
+        </form>
+
+        <div style="margin-top: 24px; padding: 14px; background: var(--card-inner); border-radius: var(--radius-ctrl); border: 1px dashed var(--border-hairline); text-align: center; font-size: 13px; color: var(--text-muted);">
+          Еще не подключили автопарк? 
+          <a href="#onboard" onclick="switchView('onboard'); return false;" style="color: var(--accent-sky); font-weight: 600; text-decoration: none; margin-left: 4px;">Зарегистрировать компанию &rarr;</a>
+        </div>
+      </div>
+
+      <!-- ======================================================================
+           PANEL 2: РЕГИСТРАЦИЯ И ОНБОРДИНГ АВТОПАРКА (4 ШАГА СОГЛАСНО БД)
+           ====================================================================== -->
+      <div id="view-onboard-panel" class="panel-body" style="display: none;">
+        
+        <!-- STEP PROGRESS INDICATOR -->
+        <div class="wizard-steps">
+          <div class="wizard-step-item active" id="step-nav-1" onclick="goToStep(1)">
+            <div class="step-circle">1</div>
+            <div class="step-title">Руководитель</div>
+          </div>
+          <div class="wizard-step-item" id="step-nav-2" onclick="goToStep(2)">
+            <div class="step-circle">2</div>
+            <div class="step-title">Юрлицо & T+1</div>
+          </div>
+          <div class="wizard-step-item" id="step-nav-3" onclick="goToStep(3)">
+            <div class="step-circle">3</div>
+            <div class="step-title">Автопарк</div>
+          </div>
+          <div class="wizard-step-item" id="step-nav-4" onclick="goToStep(4)">
+            <div class="step-circle">4</div>
+            <div class="step-title">Маршрут</div>
+          </div>
+        </div>
+
+        <form id="onboarding-form" onsubmit="handleWizardSubmit(event)">
+
+          <!-- -------------------------------------------------------------
+               ШАГ 1: ПРОФИЛЬ РУКОВОДИТЕЛЯ / ДИСПЕТЧЕРА
+               ------------------------------------------------------------- -->
+          <div class="wizard-step-pane active" id="step-pane-1">
+            <h2 class="panel-heading">Шаг 1: <em>Руководитель</em> или Диспетчер</h2>
+            <p class="panel-subheading">
+              Создайте учетную запись владельца автопарка. Быстрый вход через Google свяжет профиль за 1 секунду.
+            </p>
+
+            <!-- 1-CLICK GOOGLE FILL -->
+            <div style="margin-bottom: 20px;">
+              <button type="button" class="btn-oauth" style="width: 100%; border-color: rgba(59, 130, 246, 0.4);" onclick="prefillWithGoogle()">
+                <svg viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.15z"/>
+                  <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.36 7.36 24 12 24z"/>
+                  <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.15 0 9.99 0 12s.45 3.85 1.24 5.42l4.04-3.15z"/>
+                  <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                </svg>
+                Заполнить данные через Google Workspace
+              </button>
+            </div>
+
+            <div class="auth-divider"><span>или заполните вручную</span></div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="ob-fullname">ФИО представителя *</label>
+                <input type="text" id="ob-fullname" class="form-input" placeholder="Ковалев Сергей Дмитриевич" required value="Ковалев Сергей Дмитриевич">
+                <span class="form-hint">Владелец / Главный диспетчер</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ob-phone">Мобильный телефон (OTP) *</label>
+                <input type="tel" id="ob-phone" class="form-input" placeholder="+375 (29) 774-12-00" required value="+375 (29) 774-12-00">
+                <span class="form-hint">Для срочных уведомлений о рейсах</span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="ob-email">Корпоративная почта *</label>
+                <input type="email" id="ob-email" class="form-input" placeholder="director@transport.by" required value="kovalev@gomelliner.by">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ob-password">Пароль учетной записи *</label>
+                <input type="password" id="ob-password" class="form-input" placeholder="Минимум 8 символов" required value="SuperSecure123!">
+              </div>
+            </div>
+
+            <div class="wizard-nav-buttons">
+              <div></div>
+              <button type="button" class="btn-primary" style="width: auto; padding: 14px 32px;" onclick="nextStep(2)">
+                Далее: Реквизиты юрлица &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- -------------------------------------------------------------
+               ШАГ 2: ЮРИДИЧЕСКОЕ ЛИЦО & КЛИРИНГ T+1 (БД: CARRIERS)
+               ------------------------------------------------------------- -->
+          <div class="wizard-step-pane" id="step-pane-2">
+            <h2 class="panel-heading">Шаг 2: Юрлицо и <em>клиринг T+1</em></h2>
+            <p class="panel-subheading">
+              Реквизиты юридического лица (ООО, ЧТУП, ИП) для ежедневных выплат выручки на расчетный счет.
+            </p>
+
+            <div class="info-callout">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              <div>
+                <strong>Безналичный клиринг T+1:</strong> Вся выручка от онлайн-билетов и Smart Cargo за минусом комиссии 6.5% перечисляется на ваш IBAN каждое утро в 09:00 без скрытых эквайринг-комиссий.
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="ob-legal-type">Форма собственности *</label>
+                <select id="ob-legal-type" class="form-input">
+                  <option value="LLC">ООО (Общество с ограниченной ответственностью)</option>
+                  <option value="PUE">ЧТУП (Частное торговое унитарное предприятие)</option>
+                  <option value="JSC">ЗАО / ОАО</option>
+                  <option value="IE">ИП (Индивидуальный предприниматель)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ob-company-name">Название компании / Бренд *</label>
+                <input type="text" id="ob-company-name" class="form-input" placeholder="ООО «ГомельЛайнТранс»" required value="ООО «ГомельЛайнТранс»">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="ob-tax-id">УНП / ИНН (9 цифр) *</label>
+                <input type="text" id="ob-tax-id" class="form-input" placeholder="490812345" maxlength="9" required value="490812345">
+                <span class="form-hint">Проверяется по ЕГР РБ автоматически</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ob-iban">Расчетный счет (IBAN РБ) *</label>
+                <input type="text" id="ob-iban" class="form-input" placeholder="BY24AKBB30120000123450000000" maxlength="28" required value="BY24AKBB30120000123450000000">
+                <span class="form-hint">Для безналичного клиринга выручки T+1</span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="ob-bic">БИК Банка *</label>
+                <input type="text" id="ob-bic" class="form-input" placeholder="AKBBBY2X" maxlength="11" required value="AKBBBY2X">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ob-bank-name">Обслуживающий банк</label>
+                <input type="text" id="ob-bank-name" class="form-input" placeholder="ОАО «АСБ Беларусбанк»" value="ОАО «АСБ Беларусбанк»">
+              </div>
+            </div>
+
+            <div class="wizard-nav-buttons">
+              <button type="button" class="btn-secondary" onclick="goToStep(1)">&larr; Назад</button>
+              <button type="button" class="btn-primary" style="width: auto; padding: 14px 32px;" onclick="nextStep(3)">
+                Далее: Первый борт автопарка &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- -------------------------------------------------------------
+               ШАГ 3: АВТОПАРК (БД: VEHICLES)
+               ------------------------------------------------------------- -->
+          <div class="wizard-step-pane" id="step-pane-3">
+            <h2 class="panel-heading">Шаг 3: Первый борт <em>автопарка</em></h2>
+            <p class="panel-subheading">
+              Зарегистрируйте головной микроавтобус. Остальной флот можно импортировать в кабинете через Excel / API.
+            </p>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="ob-veh-make">Марка и Модель *</label>
+                <select id="ob-veh-make" class="form-input">
+                  <option value="Mercedes-Benz Sprinter 519 CDI">Mercedes-Benz Sprinter 519 CDI (Tourist Lux)</option>
+                  <option value="Mercedes-Benz Sprinter 316 CDI">Mercedes-Benz Sprinter 316 CDI</option>
+                  <option value="Volkswagen Crafter 50">Volkswagen Crafter 50 Grand</option>
+                  <option value="Iveco Daily 50C">Iveco Daily 50C Tourliner</option>
+                  <option value="MAN TGE 5.180">MAN TGE 5.180</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ob-veh-plate">Госномер ТС *</label>
+                <input type="text" id="ob-veh-plate" class="form-input" placeholder="7 TAX 8124 или 1234 AB-7" required value="7 TAX 8124">
+                <span class="form-hint">Формат СТБ 1389-2003</span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="ob-veh-seats">Количество мест для пассажиров *</label>
+                <select id="ob-veh-seats" class="form-input">
+                  <option value="18">18 мест (Анатомические кресла)</option>
+                  <option value="15">15 мест (Бизнес-компоновка)</option>
+                  <option value="19">19 мест</option>
+                  <option value="21">21 место</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ob-veh-cargo">Smart Cargo (Объем багажника, л)</label>
+                <input type="number" id="ob-veh-cargo" class="form-input" placeholder="1850" value="1850">
+                <span class="form-hint">Дополнительная монетизация посылок</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Оснащение и комфорт салона</label>
+              <div class="amenities-grid">
+                <label class="chip-checkbox">
+                  <input type="checkbox" id="ob-wifi" checked>
+                  <div class="chip-box">
+                    <span>📡 Wi-Fi 5G на борту</span>
+                  </div>
+                </label>
+                <label class="chip-checkbox">
+                  <input type="checkbox" id="ob-usb" checked>
+                  <div class="chip-box">
+                    <span>⚡ 220V & USB зарядка</span>
+                  </div>
+                </label>
+                <label class="chip-checkbox">
+                  <input type="checkbox" id="ob-ac" checked>
+                  <div class="chip-box">
+                    <span>❄️ Климат-контроль (A/C)</span>
+                  </div>
+                </label>
+                <label class="chip-checkbox">
+                  <input type="checkbox" id="ob-cargo" checked>
+                  <div class="chip-box">
+                    <span>📦 Smart Cargo отсек</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="wizard-nav-buttons">
+              <button type="button" class="btn-secondary" onclick="goToStep(2)">&larr; Назад</button>
+              <button type="button" class="btn-primary" style="width: auto; padding: 14px 32px;" onclick="nextStep(4)">
+                Далее: Регулярный маршрут &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- -------------------------------------------------------------
+               ШАГ 4: ОСНОВНОЙ РЕГУЛЯРНЫЙ МАРШРУТ (БД: ROUTES & SCHEDULES)
+               ------------------------------------------------------------- -->
+          <div class="wizard-step-pane" id="step-pane-4">
+            <h2 class="panel-heading">Шаг 4: Основной <em>маршрут</em></h2>
+            <p class="panel-subheading">
+              Укажите направление первых рейсов. Вы сможете настроить расписание и остановки в личном кабинете.
+            </p>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="ob-route-from">Город отправления *</label>
+                <input type="text" id="ob-route-from" class="form-input" placeholder="Гомель" required value="Гомель (Автовокзал)">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ob-route-to">Город прибытия *</label>
+                <input type="text" id="ob-route-to" class="form-input" placeholder="Минск" required value="Минск (Центральный АВ / ст.м. Восток)">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="ob-ticket-price">Базовый тариф за пассажира (BYN) *</label>
+                <input type="number" id="ob-ticket-price" class="form-input" placeholder="28.00" step="0.5" required value="28.00">
+                <span class="form-hint">Комиссия BusLiner: 6.5% (1.82 BYN)</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ob-fleet-size">Общий размер автопарка (машин)</label>
+                <select id="ob-fleet-size" class="form-input">
+                  <option value="6">4–8 микроавтобусов</option>
+                  <option value="2">1–3 машины</option>
+                  <option value="12">9–15 машин</option>
+                  <option value="25">16+ машин (Автоколонна)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- SUMMARY CARD -->
+            <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-ctrl); padding: 16px; margin-bottom: 24px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-size: 13.5px; color: #E2E8F0;">
+                  <strong>Гарантия подключения за 24 часа:</strong> Договор-оферта, аккаунт в диспетчерской и выгрузка расписания в продажу без паузы в движении.
+                </div>
+                <div style="font-size: 18px; font-weight: 800; color: #10B981; font-family: var(--font-body);">
+                  T+1 Клиринг
+                </div>
+              </div>
+            </div>
+
+            <div class="wizard-nav-buttons">
+              <button type="button" class="btn-secondary" onclick="goToStep(3)">&larr; Назад</button>
+              <button type="submit" class="btn-primary" style="width: auto; padding: 14px 36px; background-image: linear-gradient(180deg, #10B981 0%, #059669 100%); border-color: rgba(52, 211, 153, 0.3); box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);">
+                Завершить регистрацию и запустить автопарк &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- -------------------------------------------------------------
+               ШАГ 5: ЭКРАН ПОДТВЕРЖДЕНИЯ (SUCCESS STATE)
+               ------------------------------------------------------------- -->
+          <div class="wizard-step-pane" id="step-pane-success">
+            <div style="text-align: center; padding: 24px 12px;">
+              <div style="width: 72px; height: 72px; background: rgba(16, 185, 129, 0.15); border: 2px solid #10B981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #10B981;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+              </div>
+              <h2 class="panel-heading">Автопарк успешно <em>зарегистрирован!</em></h2>
+              <p class="panel-subheading" style="max-width: 520px; margin: 0 auto 28px;">
+                Заявка внесена в реестр BusLiner Partners (статус: <span style="color: #6EE7B7; font-weight: 700;">pending_verification</span>). Ваш персональный менеджер верификации активирует клиринг T+1 в течение 15 минут.
+              </p>
+
+              <div style="background: var(--card-inner); border: 1px solid var(--border-hairline); border-radius: var(--radius-ctrl); padding: 20px; max-width: 480px; margin: 0 auto 28px; text-align: left; font-size: 13px; line-height: 1.8;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 8px;">
+                  <span style="color: var(--text-dim);">Организация:</span>
+                  <strong style="color: #FFFFFF;" id="succ-org">ООО «ГомельЛайнТранс»</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 8px 0;">
+                  <span style="color: var(--text-dim);">УНП:</span>
+                  <span style="color: #FFFFFF; font-variant-numeric: tabular-nums;" id="succ-tax">490812345</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 8px 0;">
+                  <span style="color: var(--text-dim);">Головной борт:</span>
+                  <span style="color: #FFFFFF;" id="succ-veh">7 TAX 8124 (Mercedes Sprinter)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding-top: 8px;">
+                  <span style="color: var(--text-dim);">Маршрут:</span>
+                  <strong style="color: var(--accent-sky);" id="succ-route">Гомель ➔ Минск</strong>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <button type="button" class="btn-primary" style="width: auto; padding: 14px 32px;" onclick="enterDemoDashboard()">
+                  Перейти в панель диспетчера (Live-демо) &rarr;
+                </button>
+                <a href="busliner-partners.html" class="btn-secondary" style="text-decoration: none; padding: 14px 24px;">
+                  Вернуться на презентацию
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="auth-footer">
+    <div style="max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div>
+        © 2026 BusLiner B2B Fleet Technologies. Все права защищены.
+      </div>
+      <div>
+        <a href="#">Оферта для перевозчиков</a> &bull; 
+        <a href="#">Регламент СТБ 1389-2003</a> &bull; 
+        <a href="#">Безопасность платежей</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       CLIENT CONTROLLER JAVASCRIPT
+       ========================================================================== -->
+  <script>
+    // Tab switcher
+    function switchView(viewName) {
+      const tabLogin = document.getElementById('tab-login');
+      const tabOnboard = document.getElementById('tab-onboard');
+      const panelLogin = document.getElementById('view-login-panel');
+      const panelOnboard = document.getElementById('view-onboard-panel');
+
+      if (viewName === 'login') {
+        tabLogin.classList.add('active');
+        tabOnboard.classList.remove('active');
+        panelLogin.style.display = 'block';
+        panelOnboard.style.display = 'none';
+        window.location.hash = 'login';
+      } else {
+        tabOnboard.classList.add('active');
+        tabLogin.classList.remove('active');
+        panelLogin.style.display = 'none';
+        panelOnboard.style.display = 'block';
+        window.location.hash = 'onboard';
+      }
+    }
+
+    // Step navigation
+    function goToStep(stepNumber) {
+      for (let i = 1; i <= 4; i++) {
+        const pane = document.getElementById(`step-pane-${i}`);
+        const nav = document.getElementById(`step-nav-${i}`);
+        if (pane) pane.classList.remove('active');
+        if (nav) {
+          nav.classList.remove('active');
+          if (i < stepNumber) {
+            nav.classList.add('done');
+          } else {
+            nav.classList.remove('done');
+          }
+        }
+      }
+      const targetPane = document.getElementById(`step-pane-${stepNumber}`);
+      const targetNav = document.getElementById(`step-nav-${stepNumber}`);
+      if (targetPane) targetPane.classList.add('active');
+      if (targetNav) targetNav.classList.add('active');
+    }
+
+    function nextStep(stepNumber) {
+      goToStep(stepNumber);
+    }
+
+    // Google Workspace OAuth Simulation
+    function handleGoogleLogin() {
+      // Simulate real OAuth popup & response
+      const sampleEmail = 'kovalev.partner@gmail.com';
+      const sampleName = 'Сергей Ковалев';
+      
+      const confirmAuth = confirm(`Войти через Google Workspace / Gmail?\n\nАккаунт: ${sampleEmail}\nБудет выполнен вход в BusLiner Partners по протоколу OAuth 2.0.`);
+      if (confirmAuth) {
+        alert(`Авторизация Google успешна!\nДобро пожаловать, ${sampleName}.\nПеренаправление в диспетчерский монитор...`);
+        window.location.href = 'busliner-partners.html#slide-schedule';
+      }
+    }
+
+    // Telegram Login Simulation
+    function handleTelegramLogin() {
+      const tgNick = prompt('Введите номер телефона или Telegram @username для привязки диспетчерской:', '+375 29 774-12-00');
+      if (tgNick) {
+        alert(`Telegram код подтверждения отправлен в бот @BusLinerFleetBot.\nСессия авторизована.`);
+        window.location.href = 'busliner-partners.html#slide-schedule';
+      }
+    }
+
+    // Prefill form with Google OAuth profile
+    function prefillWithGoogle() {
+      document.getElementById('ob-fullname').value = 'Сергей Ковалев (Google Account)';
+      document.getElementById('ob-email').value = 'kovalev.fleet@gmail.com';
+      document.getElementById('ob-phone').value = '+375 (29) 774-12-00';
+      alert('Данные руководителя успешно импортированы из Google Workspace: kovalev.fleet@gmail.com');
+      nextStep(2);
+    }
+
+    // Email login handler
+    function handleEmailLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      alert(`Успешный вход в диспетчерскую BusLiner для ${email}.\nЗагрузка расписания и радара No-Show...`);
+      window.location.href = 'busliner-partners.html#slide-schedule';
+    }
+
+    // Onboarding Form Submit
+    function handleWizardSubmit(e) {
+      e.preventDefault();
+      
+      // Update success card details
+      document.getElementById('succ-org').innerText = document.getElementById('ob-company-name').value || 'ООО «ГомельЛайнТранс»';
+      document.getElementById('succ-tax').innerText = document.getElementById('ob-tax-id').value || '490812345';
+      document.getElementById('succ-veh').innerText = `${document.getElementById('ob-veh-plate').value} (${document.getElementById('ob-veh-make').value})`;
+      document.getElementById('succ-route').innerText = `${document.getElementById('ob-route-from').value} ➔ ${document.getElementById('ob-route-to').value}`;
+
+      // Hide all panes and show success pane
+      for (let i = 1; i <= 4; i++) {
+        const pane = document.getElementById(`step-pane-${i}`);
+        if (pane) pane.classList.remove('active');
+        const nav = document.getElementById(`step-nav-${i}`);
+        if (nav) nav.classList.add('done');
+      }
+      document.getElementById('step-pane-success').classList.add('active');
+    }
+
+    function enterDemoDashboard() {
+      alert('Запуск виртуального диспетчерского терминала BusLiner Fleet Console...');
+      window.location.href = 'busliner-partners.html#slide-schedule';
+    }
+
+    // Check hash on load
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.location.hash === '#onboard' || window.location.hash === '#register') {
+        switchView('onboard');
+      } else {
+        switchView('login');
+      }
+    });
+  </script>
+</body>
+</html>
