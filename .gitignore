@@ -1,0 +1,11 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation / Office binaries
+*.docx
+*.doc
+
+# Environment & secrets
+.env
+.env.local
