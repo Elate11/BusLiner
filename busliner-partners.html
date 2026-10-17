@@ -68,6 +68,39 @@
     .serif { font-family: var(--font-display); }
     .hanging-quote { text-indent: -0.45em; padding-left: 0.45em; }
 
+    /* NAV PASSENGER BUTTON */
+    .nav-btn-passengers {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 13px;
+      border-radius: 10px;
+      background: rgba(59, 130, 246, 0.16);
+      border: 1px solid rgba(147, 197, 253, 0.35);
+      color: #93C5FD !important;
+      font-weight: 600;
+      font-size: 13px;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-btn-passengers:hover {
+      background: rgba(59, 130, 246, 0.3);
+      border-color: #93C5FD;
+      color: #FFFFFF !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
+    }
+    .app-nav.on-light .nav-btn-passengers {
+      background: rgba(30, 58, 138, 0.08);
+      border-color: rgba(30, 58, 138, 0.25);
+      color: #1E3A8A !important;
+    }
+    .app-nav.on-light .nav-btn-passengers:hover {
+      background: #1E3A8A;
+      border-color: #1E3A8A;
+      color: #FFFFFF !important;
+    }
+
     /* FIXED NAVIGATION */
     nav.app-nav {
       position: fixed;
@@ -1634,7 +1667,7 @@
         <li><a href="#slide-sniper">Снайпер B2B</a></li>
         <li><a href="#slide-reviews">Автопарки</a></li>
         <li><a href="#slide-cta">Подключение</a></li>
-        <li><a href="index.html" style="color: #93C5FD; font-weight: 600;">Пассажирам &rarr;</a></li>
+        <li><a href="index.html" class="nav-btn-passengers" id="nav-btn-passengers" title="Перейти в сервис для пассажиров"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 4px;"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>Пассажирам &rarr;</a></li>
       </ul>
       <div>
         <a href="#slide-cta" class="btn btn-accent" style="padding: 8px 18px; font-size: 12px;">Подключить парк &rarr;</a>
@@ -2265,6 +2298,28 @@
   </section>
 
   <script>
+    // =========================================================================
+    // LOGIC FOR "ПАССАЖИРАМ" BUTTON (SMART TRANSITION & NAVIGATION)
+    // =========================================================================
+    (function initPassengerNavLogic() {
+      const passengerLinks = document.querySelectorAll('a[href*="index.html"], .nav-btn-passengers, #nav-btn-passengers');
+      
+      passengerLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          // Visual click feedback
+          link.style.opacity = '0.6';
+          link.style.transform = 'scale(0.96)';
+          
+          // Safe navigation
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 60);
+        });
+      });
+    })();
+
     // 1. Force reload to always start at the very top (Slide 1 Hero)
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
