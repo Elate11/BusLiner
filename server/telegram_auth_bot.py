@@ -36,6 +36,7 @@ AUTH_SESSION_TTL_SECONDS = 300  # 5 minutes maximum lifetime for challenge nonce
 # In-memory cryptographically verified active sessions store
 # Structure: { session_token: { created_at, status, user_agent, client_ip, telegram_user, consumed } }
 ACTIVE_AUTH_SESSIONS: Dict[str, Dict[str, Any]] = {}
+USER_ROLES: Dict[int, str] = {}
 
 
 # ==============================================================================
@@ -154,18 +155,40 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
         msg = update["message"]
         chat_id = msg.get("chat", {}).get("id")
         user = msg.get("from", {})
+        user_id = user.get("id", 0)
         text = msg.get("text", "").strip()
+        first_name = user.get("first_name", "Партнер")
+        clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Партнер")
 
-        if text.startswith("/start auth_"):
+        if text.startswith("/start driver_") or text == "/driver":
+            USER_ROLES[user_id] = "driver"
+            driver_welcome = (
+                f"*Профиль водителя подтвержден*\n\n"
+                f"Здравствуйте, {first_name}.\n"
+                f"Вы успешно привязаны к автопарку как водитель рейсов BusLiner.\n\n"
+                f"Ваш рабочий функционал:\n"
+                f"- Посадочная ведомость и список пассажиров\n"
+                f"- Сканирование билетов со смартфона на посадке\n"
+                f"- Отметка неявившихся (No-Show)\n\n"
+                f"Команды:\n"
+                f"/trip — открыть список пассажиров на рейс\n"
+                f"/status — статус смены и автобус\n"
+                f"/help — оперативная поддержка в рейсе"
+            )
+            send_telegram_api_request("sendMessage", {
+                "chat_id": chat_id,
+                "text": driver_welcome,
+                "parse_mode": "Markdown"
+            })
+
+        elif text.startswith("/start auth_"):
             token = text.replace("/start auth_", "").strip()
             session = ACTIVE_AUTH_SESSIONS.get(token)
-            clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Перевозчик")
-            first_name = user.get("first_name", "Перевозчик")
             
             if session and not session.get("consumed"):
                 session["status"] = "authorized"
                 session["telegram_user"] = {
-                    "id": user.get("id"),
+                    "id": user_id,
                     "first_name": first_name,
                     "last_name": user.get("last_name", ""),
                     "username": clean_username,
@@ -178,7 +201,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     if s.get("status") == "pending" and not s.get("consumed") and (now - s.get("created_at", 0) <= AUTH_SESSION_TTL_SECONDS):
                         s["status"] = "authorized"
                         s["telegram_user"] = {
-                            "id": user.get("id"),
+                            "id": user_id,
                             "first_name": first_name,
                             "last_name": user.get("last_name", ""),
                             "username": clean_username,
@@ -187,35 +210,87 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                         }
                         break
 
-            reply = (
-                f"*Регистрация автопарка подтверждена*\n\n"
-                f"Здравствуйте, {first_name}.\n"
-                f"Ваш аккаунт в Telegram успешно привязан к системе BusLiner Partners.\n\n"
-                f"Статус: Активен\n"
-                f"Автопарк: Зарегистрирован\n"
-                f"Доступ к управлению автопарком: Открыт\n"
-                f"Выплаты за рейсы: Каждый рабочий день на расчетный счет (T+1)\n\n"
-                f"Окно в браузере уже открыло панель управления автопарком."
-            )
+            user_role = USER_ROLES.get(user_id, "owner")
+            if user_role == "driver":
+                reply = (
+                    f"*Вход водителя подтвержден*\n\n"
+                    f"Здравствуйте, {first_name}.\n"
+                    f"Ваш аккаунт водителя привязан к терминалу рейса.\n\n"
+                    f"Команда /trip открывает список пассажиров на рейс."
+                )
+            else:
+                reply = (
+                    f"*Регистрация автопарка подтверждена*\n\n"
+                    f"Здравствуйте, {first_name}.\n"
+                    f"Ваш аккаунт в Telegram успешно привязан к системе BusLiner Partners.\n\n"
+                    f"Статус: Активен\n"
+                    f"Автопарк: Зарегистрирован\n"
+                    f"Доступ к управлению автопарком: Открыт\n"
+                    f"Выплаты за рейсы: Каждый рабочий день на расчетный счет (T+1)\n\n"
+                    f"Окно в браузере уже открыло панель управления автопарком."
+                )
+
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
                 "text": reply,
                 "parse_mode": "Markdown"
             })
 
-        elif text.startswith("/status"):
-            clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Перевозчик")
-            first_name = user.get("first_name", "Перевозчик")
-
-            status_msg = (
-                f"*Статус регистрации автопарка*\n\n"
-                f"Владелец: {first_name} ({clean_username})\n"
-                f"Регистрация в BusLiner: Подтверждена\n"
-                f"Статус аккаунта: Активен\n"
-                f"Доступ к управлению автопарком: Открыт\n"
-                f"Выплаты за рейсы: Каждый рабочий день на расчетный счет (T+1)\n\n"
-                f"Для управления рейсами и автобусами перейдите в открытую вкладку на сайте."
+        elif text.startswith("/drivers"):
+            drivers_msg = (
+                f"*Подключение водителей к автопарку*\n\n"
+                f"Чтобы привязать водителя к вашему автопарку, отправьте ему эту ссылку:\n"
+                f"https://t.me/{BOT_USERNAME}?start=driver_invite\n\n"
+                f"Водитель получит доступ только к посадочной ведомости и сканеру билетов без доступа к вашей выручке и финансовым отчетам."
             )
+            send_telegram_api_request("sendMessage", {
+                "chat_id": chat_id,
+                "text": drivers_msg,
+                "parse_mode": "Markdown"
+            })
+
+        elif text.startswith("/trip"):
+            trip_msg = (
+                f"*Посадочная ведомость рейса*\n\n"
+                f"Маршрут: Гомель — Минск (17:00)\n"
+                f"Машина: VW Crafter (2023, 5192 AB-3)\n"
+                f"Всего мест: 16 | Занято: 13 | Свободно: 3\n\n"
+                f"Пассажиры на посадку:\n"
+                f"1. Смирнов Илья — Место 04 (у окна) [Оплачено онлайн]\n"
+                f"2. Громов Максим — Место 07 (Тихая зона) [Оплачено онлайн]\n"
+                f"3. Ковалева Анна — Место 11 (+1 Велосипед) [Оплачено онлайн]\n\n"
+                f"Для сканирования QR-билетов используйте камеру телефона на сайте."
+            )
+            send_telegram_api_request("sendMessage", {
+                "chat_id": chat_id,
+                "text": trip_msg,
+                "parse_mode": "Markdown"
+            })
+
+        elif text.startswith("/status"):
+            user_role = USER_ROLES.get(user_id, "owner")
+            if user_role == "driver":
+                status_msg = (
+                    f"*Статус водителя рейса*\n\n"
+                    f"Водитель: {first_name} ({clean_username})\n"
+                    f"Роль: Водитель\n"
+                    f"Статус смены: Активен\n"
+                    f"Автопарк: ОДО «Бурлаки»\n"
+                    f"Закрепленный борт: VW Crafter (5192 AB-3)\n"
+                    f"Ближайший рейс: 17:00 Гомель — Минск\n\n"
+                    f"Команда /trip показывает ведомость пассажиров."
+                )
+            else:
+                status_msg = (
+                    f"*Статус регистрации автопарка*\n\n"
+                    f"Владелец: {first_name} ({clean_username})\n"
+                    f"Роль: Владелец автопарка\n"
+                    f"Регистрация в BusLiner: Подтверждена\n"
+                    f"Статус аккаунта: Активен\n"
+                    f"Доступ к управлению автопарком: Открыт\n"
+                    f"Выплаты за рейсы: Каждый рабочий день на расчетный счет (T+1)\n\n"
+                    f"Команда /drivers дает ссылку для подключения водителей."
+                )
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
                 "text": status_msg,
@@ -224,14 +299,15 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
 
         elif text.startswith("/help"):
             help_msg = (
-                f"*Помощь для перевозчиков BusLiner*\n\n"
-                f"Этот бот подтверждает регистрацию и вход в кабинет автопарка без логинов и паролей, а также передает уведомления по броням.\n\n"
-                f"*Как пользоваться:*\n"
-                f"1. Откройте сайт BusLiner и нажмите «Войти через Telegram».\n"
-                f"2. Бот автоматически подтверждает ваш вход, и сайт открывает панель управления автопарком.\n\n"
-                f"*Команды бота:*\n"
-                f"/status — проверить статус регистрации и кабинета\n"
-                f"/help — контакты круглосуточной поддержки\n\n"
+                f"*Помощь для партнеров BusLiner*\n\n"
+                f"Этот бот подтверждает вход в систему, связывает автопарк и передает ведомости водителям.\n\n"
+                f"*Команды для владельцев автопарков:*\n"
+                f"/status — статус автопарка и реквизиты\n"
+                f"/drivers — ссылка для подключения водителей\n"
+                f"/help — контакты поддержки\n\n"
+                f"*Команды для водителей:*\n"
+                f"/trip — ведомость текущего рейса и список мест\n"
+                f"/status — статус смены и автобус\n\n"
                 f"*Служба поддержки:*\n"
                 f"Почта: support@busliner.by"
             )
@@ -242,16 +318,13 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             })
 
         elif text.startswith("/start"):
-            first_name = user.get("first_name", "Перевозчик")
-            clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Перевозчик")
-
             # Check if there is an active pending session waiting from the website
             now = time.time()
             for token, session in reversed(list(ACTIVE_AUTH_SESSIONS.items())):
                 if session.get("status") == "pending" and not session.get("consumed") and (now - session.get("created_at", 0) <= AUTH_SESSION_TTL_SECONDS):
                     session["status"] = "authorized"
                     session["telegram_user"] = {
-                        "id": user.get("id"),
+                        "id": user_id,
                         "first_name": first_name,
                         "last_name": user.get("last_name", ""),
                         "username": clean_username,
@@ -261,32 +334,34 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     break
 
             welcome = (
-                f"*Регистрация автопарка подтверждена*\n\n"
+                f"*Система BusLiner Partners*\n\n"
                 f"Здравствуйте, {first_name}.\n"
-                f"Ваш аккаунт в Telegram успешно привязан к системе BusLiner Partners.\n\n"
-                f"Статус: Активен\n"
-                f"Автопарк: Зарегистрирован\n"
-                f"Доступ к управлению автопарком: Открыт\n"
-                f"Выплаты за рейсы: Каждый рабочий день на расчетный счет (T+1)\n\n"
-                f"Если у вас открыта вкладка входа на сайте, панель управления рейсами уже загружена.\n\n"
-                f"Команды:\n"
-                f"/status — проверить статус аккаунта и связь\n"
-                f"/help — контакты круглосуточной поддержки"
+                f"Выберите вашу роль для входа в систему:"
             )
+            keyboard = {
+                "inline_keyboard": [
+                    [
+                        {"text": "👑 Владелец автопарка", "callback_data": "role_owner"},
+                        {"text": "🚍 Водитель рейса", "callback_data": "role_driver"}
+                    ]
+                ]
+            }
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
                 "text": welcome,
-                "parse_mode": "Markdown"
+                "parse_mode": "Markdown",
+                "reply_markup": keyboard
             })
 
         else:
             fallback_msg = (
-                f"*Регистрация автопарка подтверждена*\n\n"
-                f"Статус: Активен\n"
-                f"Ваш Telegram привязан к BusLiner Partners.\n\n"
+                f"*BusLiner Partners*\n\n"
+                f"Ваш Telegram привязан к системе.\n\n"
                 f"Команды:\n"
-                f"/status — проверить статус аккаунта\n"
-                f"/help — контакты круглосуточной поддержки"
+                f"/status — статус аккаунта\n"
+                f"/trip — ведомость рейса (для водителей)\n"
+                f"/drivers — добавление водителей (для владельцев)\n"
+                f"/help — поддержка"
             )
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
@@ -299,17 +374,69 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
         cb_id = cb.get("id")
         cb_data = cb.get("data", "")
         user = cb.get("from", {})
+        user_id = user.get("id", 0)
         chat_id = cb.get("message", {}).get("chat", {}).get("id")
+        first_name = user.get("first_name", "Партнер")
 
-        if cb_data.startswith("auth_confirm:"):
+        if cb_data == "role_owner":
+            USER_ROLES[user_id] = "owner"
+            send_telegram_api_request("answerCallbackQuery", {
+                "callback_query_id": cb_id,
+                "text": "Роль: Владелец автопарка"
+            })
+            owner_text = (
+                f"*Режим: Владелец автопарка*\n\n"
+                f"Здравствуйте, {first_name}.\n"
+                f"Ваш аккаунт подтвержден как владелец автопарка.\n\n"
+                f"Доступные функции:\n"
+                f"- Управление автобусами и расписанием\n"
+                f"- Мониторинг выручки и ежедневные выплаты T+1 на расчетный счет\n"
+                f"- Добавление водителей и контроль рейсов\n\n"
+                f"Команды:\n"
+                f"/status — проверить статус автопарка\n"
+                f"/drivers — ссылка для подключения водителей\n"
+                f"/help — поддержка"
+            )
+            send_telegram_api_request("sendMessage", {
+                "chat_id": chat_id,
+                "text": owner_text,
+                "parse_mode": "Markdown"
+            })
+
+        elif cb_data == "role_driver":
+            USER_ROLES[user_id] = "driver"
+            send_telegram_api_request("answerCallbackQuery", {
+                "callback_query_id": cb_id,
+                "text": "Роль: Водитель рейса"
+            })
+            driver_text = (
+                f"*Режим: Водитель рейса*\n\n"
+                f"Здравствуйте, {first_name}.\n"
+                f"Вы подключены к посадочному терминалу BusLiner.\n\n"
+                f"Ваш рабочий функционал:\n"
+                f"- Посадочная ведомость и список пассажиров\n"
+                f"- Отметка пассажиров («Сел» / «Не явился»)\n"
+                f"- Сканирование QR-билетов на посадке\n\n"
+                f"Команды:\n"
+                f"/trip — открыть ведомость текущего рейса\n"
+                f"/status — статус смены и автобус\n"
+                f"/help — оперативная поддержка в рейсе"
+            )
+            send_telegram_api_request("sendMessage", {
+                "chat_id": chat_id,
+                "text": driver_text,
+                "parse_mode": "Markdown"
+            })
+
+        elif cb_data.startswith("auth_confirm:"):
             token = cb_data.replace("auth_confirm:", "").strip()
             session = ACTIVE_AUTH_SESSIONS.get(token)
             if session:
                 clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Перевозчик")
                 session["status"] = "authorized"
                 session["telegram_user"] = {
-                    "id": user.get("id"),
-                    "first_name": user.get("first_name", "Перевозчик"),
+                    "id": user_id,
+                    "first_name": first_name,
                     "last_name": user.get("last_name", ""),
                     "username": clean_username,
                     "auth_date": int(time.time()),

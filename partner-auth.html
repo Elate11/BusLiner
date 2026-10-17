@@ -223,6 +223,99 @@
       transform: scale(1.12);
     }
 
+    /* ROLE SELECTOR (FLEET OWNER VS DRIVER) */
+    .role-selector-wrapper {
+      padding: 24px 32px 14px 32px;
+      background: var(--surface-card);
+      border-bottom: 1px solid var(--border-hairline);
+    }
+    .role-selector-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .role-selector-pills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .role-card-btn {
+      padding: 12px 16px;
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-hairline);
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+    .role-card-btn:hover {
+      border-color: #93C5FD;
+      background: rgba(147, 197, 253, 0.05);
+      transform: translateY(-1px);
+    }
+    .role-card-btn.active {
+      border-color: var(--accent-institutional);
+      background: var(--accent-soft);
+      box-shadow: 0 4px 14px rgba(30, 58, 138, 0.12);
+    }
+    .role-icon-box {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--surface-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    .role-card-btn.active .role-icon-box {
+      background: var(--accent-institutional);
+      color: #FFFFFF;
+    }
+    .role-info-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: block;
+    }
+    .role-card-btn.active .role-info-title {
+      color: var(--accent-institutional);
+    }
+    .role-info-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 2px;
+    }
+    .driver-trip-card {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-ctrl);
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+    .passenger-row-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-hairline);
+      font-size: 13px;
+    }
+    .passenger-row-item:last-child {
+      border-bottom: none;
+    }
+
     .panel-body {
       padding: 32px 36px 40px;
       animation: panelFadeSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -806,8 +899,40 @@
   <main class="auth-main">
     <div class="auth-shell">
 
+      <!-- ROLE SELECTOR: FLEET OWNER VS DRIVER -->
+      <div class="role-selector-wrapper">
+        <span class="role-selector-title">Ваша роль в системе</span>
+        <div class="role-selector-pills">
+          <button type="button" class="role-card-btn active" id="btn-role-owner" onclick="setPartnerRole('owner')">
+            <div class="role-icon-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 21h18M3 7v14M21 7v14M6 7V3h12v4M9 11h2v2H9zM13 11h2v2h-2zM9 15h2v2H9zM13 15h2v2h-2z"/>
+              </svg>
+            </div>
+            <div>
+              <span class="role-info-title">Владелец автопарка</span>
+              <span class="role-info-desc">Машины, маршруты, T+1</span>
+            </div>
+          </button>
+
+          <button type="button" class="role-card-btn" id="btn-role-driver" onclick="setPartnerRole('driver')">
+            <div class="role-icon-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/>
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 3v6M12 15v6M3 12h6M15 12h6"/>
+              </svg>
+            </div>
+            <div>
+              <span class="role-info-title">Водитель</span>
+              <span class="role-info-desc">Посадка, QR-билеты, рейсы</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
       <!-- TABS: PILL SWITCHER -->
-      <div class="view-tabs-wrapper">
+      <div class="view-tabs-wrapper" id="owner-tabs-wrapper">
         <div class="view-tabs-pill">
           <button type="button" class="view-tab-btn active" id="tab-login" onclick="switchView('login')">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
@@ -1230,6 +1355,86 @@
           </div>
 
         </form>
+      </div>
+
+      <!-- ======================================================================
+           PANEL 3: ТЕРМИНАЛ И РЕГИСТРАЦИЯ ВОДИТЕЛЯ
+           ====================================================================== -->
+      <div id="view-driver-panel" class="panel-body" style="display: none;">
+        <h1 class="panel-heading">Кабинет <em>водителя</em></h1>
+        <p class="panel-subheading">
+          Посадочные ведомости, список пассажиров рейса и сканирование билетов со смартфона без диспетчеров.
+        </p>
+
+        <!-- FAST TELEGRAM SIGN IN FOR DRIVER -->
+        <button type="button" class="btn-oauth" onclick="handleDriverTelegramLogin()" style="width: 100%; margin-bottom: 22px; padding: 14px 20px; font-size: 14px;">
+          <svg viewBox="0 0 24 24" fill="#2AABEE" style="width: 20px; height: 20px;">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+          </svg>
+          <span>Войти через Telegram как водитель</span>
+        </button>
+
+        <div class="auth-divider">
+          <span>или вход по коду рейса / приглашению</span>
+        </div>
+
+        <form onsubmit="handleDriverCodeLogin(event)">
+          <div class="form-group">
+            <label class="form-label" for="driver-phone">Номер телефона водителя</label>
+            <input type="tel" id="driver-phone" class="form-input" placeholder="+375 (29) 000-00-00" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="driver-invite-code">Код автопарка или номер рейса</label>
+            <input type="text" id="driver-invite-code" class="form-input" placeholder="Например: FLEET-771 или BL-1700" style="text-transform: uppercase;">
+            <span class="form-hint">Код выдает владелец автопарка при добавлении вас на рейс.</span>
+          </div>
+
+          <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
+            Открыть ведомость рейса &rarr;
+          </button>
+        </form>
+
+        <!-- LIVE DEMO TRIP MANIFEST PREVIEW -->
+        <div style="margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border-hairline);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.05em;">Пример терминала водителя</span>
+            <span class="badge-verified-status" style="background: var(--status-available-bg); color: var(--status-available);">Рейс активен</span>
+          </div>
+
+          <div class="driver-trip-card">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+              <strong style="font-size: 16px; color: var(--text-primary);">17:00 Гомель &rarr; Минск</strong>
+              <span class="mono" style="font-size: 12px; color: var(--accent-institutional); font-weight: 600;">VW Crafter • 5192 AB-3</span>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
+              Посадка: Автовокзал, Платформа 3 &bull; Занято: 13 из 16 мест
+            </div>
+
+            <div style="background: #FFFFFF; border-radius: 8px; padding: 0 12px; border: 1px solid var(--border-hairline);">
+              <div class="passenger-row-item">
+                <div>
+                  <strong>Место 04</strong>: Смирнов Илья
+                  <div style="font-size: 11px; color: var(--text-muted);">Без багажа &bull; Оплачено картой</div>
+                </div>
+                <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="togglePassengerBoarded(this)">Посажен ✓</button>
+              </div>
+              <div class="passenger-row-item">
+                <div>
+                  <strong>Место 07</strong>: Громов Максим
+                  <div style="font-size: 11px; color: var(--text-muted);">Тихая зона &bull; Оплачено картой</div>
+                </div>
+                <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="togglePassengerBoarded(this)">Отметить</button>
+              </div>
+              <div class="passenger-row-item">
+                <div>
+                  <strong>Место 11</strong>: Ковалева Анна
+                  <div style="font-size: 11px; color: var(--accent-institutional);">+1 Слот под велосипед</div>
+                </div>
+                <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="togglePassengerBoarded(this)">Отметить</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -1680,7 +1885,10 @@
       const name = userData.name || 'Перевозчик';
       const isPhone = val.startsWith('+') || /^\d/.test(val);
 
-      if (currentTelegramMode === 'login') {
+      if (currentTelegramMode === 'driver') {
+        showAuthToast('Водитель авторизован', `Водитель ${name} подключен. Открываем посадочную ведомость...`);
+        setPartnerRole('driver');
+      } else if (currentTelegramMode === 'login') {
         showAuthToast('Telegram авторизован', `Криптографическая сессия ${val} верифицирована. Вход в систему...`);
         setTimeout(() => {
           window.location.href = 'busliner-partners.html#slide-schedule';
@@ -1710,6 +1918,61 @@
       }
     }
 
+    let currentPartnerRole = 'owner';
+
+    window.setPartnerRole = function(role) {
+      currentPartnerRole = role;
+      const btnOwner = document.getElementById('btn-role-owner');
+      const btnDriver = document.getElementById('btn-role-driver');
+      const ownerTabs = document.getElementById('owner-tabs-wrapper');
+      const panelLogin = document.getElementById('view-login-panel');
+      const panelOnboard = document.getElementById('view-onboard-panel');
+      const panelDriver = document.getElementById('view-driver-panel');
+
+      if (role === 'driver') {
+        if (btnDriver) btnDriver.classList.add('active');
+        if (btnOwner) btnOwner.classList.remove('active');
+        if (ownerTabs) ownerTabs.style.display = 'none';
+        if (panelLogin) panelLogin.style.display = 'none';
+        if (panelOnboard) panelOnboard.style.display = 'none';
+        if (panelDriver) panelDriver.style.display = 'block';
+        window.location.hash = 'driver';
+      } else {
+        if (btnOwner) btnOwner.classList.add('active');
+        if (btnDriver) btnDriver.classList.remove('active');
+        if (ownerTabs) ownerTabs.style.display = 'block';
+        if (panelDriver) panelDriver.style.display = 'none';
+        switchView('login');
+      }
+    };
+
+    window.handleDriverTelegramLogin = function() {
+      openTelegramModal('driver');
+    };
+
+    window.handleDriverCodeLogin = function(e) {
+      e.preventDefault();
+      const phone = document.getElementById('driver-phone').value;
+      const code = document.getElementById('driver-invite-code').value || 'FLEET-771';
+      showAuthToast('Вход водителя подтвержден', `Водитель ${phone} подключен к рейсу ${code}. Загрузка ведомости...`);
+      setTimeout(() => {
+        showAuthToast('Терминал активен', 'Посадка открыта: 13 пассажиров подтверждены.');
+      }, 850);
+    };
+
+    window.togglePassengerBoarded = function(btn) {
+      if (btn.innerText.includes('Посажен')) {
+        btn.innerText = 'Отметить';
+        btn.style.background = '#FFFFFF';
+        btn.style.color = 'var(--text-primary)';
+      } else {
+        btn.innerText = 'Посажен ✓';
+        btn.style.background = 'var(--status-available-bg)';
+        btn.style.color = 'var(--status-available)';
+        btn.style.borderColor = 'var(--status-available)';
+      }
+    };
+
     window.handleTelegramLogin = function() {
       openTelegramModal('login');
     };
@@ -1723,6 +1986,9 @@
       const tabOnboard = document.getElementById('tab-onboard');
       const panelLogin = document.getElementById('view-login-panel');
       const panelOnboard = document.getElementById('view-onboard-panel');
+      const panelDriver = document.getElementById('view-driver-panel');
+
+      if (panelDriver) panelDriver.style.display = 'none';
 
       if (viewName === 'login') {
         tabLogin.classList.add('active');
