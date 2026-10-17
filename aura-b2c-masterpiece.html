@@ -194,52 +194,6 @@
       align-items: center;
     }
 
-    /* FLOATING SLIDE PAGINATOR DOTS */
-    .slide-dots {
-      position: fixed;
-      right: 28px;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 999;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .dot-link {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #A3A39A;
-      opacity: 0.45;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      text-decoration: none;
-      position: relative;
-    }
-    .dot-link:hover, .dot-link.active {
-      opacity: 1;
-      background: var(--accent-institutional);
-      transform: scale(1.4);
-    }
-    .dot-link .dot-label {
-      position: absolute;
-      right: 18px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: var(--font-mono);
-      font-size: 10px;
-      white-space: nowrap;
-      background: #FFFFFF;
-      padding: 2px 6px;
-      border: 1px solid var(--border-hairline);
-      border-radius: 2px;
-      color: var(--text-primary);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.15s ease;
-    }
-    .dot-link:hover .dot-label { opacity: 1; }
-
     /* FULLSCREEN SLIDE BLUEPRINT */
     .full-slide {
       width: 100%;
@@ -1266,9 +1220,6 @@
         padding: 0 14px;
         margin-top: 14px;
       }
-      .slide-dots {
-        display: none !important;
-      }
       .nav-menu {
         display: none !important;
       }
@@ -1689,15 +1640,6 @@
       </div>
     </div>
   </nav>
-
-  <!-- FLOATING SLIDE PAGINATOR DOTS -->
-  <div class="slide-dots">
-    <a href="#slide-hero" class="dot-link active" title="01. Поиск"><span class="dot-label">01 // Поиск</span></a>
-    <a href="#slide-schedule" class="dot-link" title="02. Расписание"><span class="dot-label">02 // Расписание</span></a>
-    <a href="#slide-sniper" class="dot-link" title="03. Снайпер"><span class="dot-label">03 // Снайпер</span></a>
-    <a href="#slide-reviews" class="dot-link" title="04. Отзывы"><span class="dot-label">04 // Отзывы</span></a>
-    <a href="#slide-cta" class="dot-link" title="05. Подвал"><span class="dot-label">05 // Подвал</span></a>
-  </div>
 
   <!-- ==========================================================================
        SLIDE 1: HERO
@@ -2413,7 +2355,6 @@
     });
 
     const slides = document.querySelectorAll('.full-slide');
-    const dots = document.querySelectorAll('.dot-link');
     const nav = document.getElementById('top-nav');
     const navLinks = document.querySelectorAll('.nav-menu a');
 
@@ -2421,13 +2362,6 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const id = entry.target.id;
-          dots.forEach(dot => {
-            if (dot.getAttribute('href') === '#' + id) {
-              dot.classList.add('active');
-            } else {
-              dot.classList.remove('active');
-            }
-          });
 
           navLinks.forEach(link => {
             if (link.getAttribute('href') === '#' + id) {
