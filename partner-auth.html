@@ -106,7 +106,7 @@
       padding: 0 4px;
       background: none;
       border: none;
-      color: #00AFF0;
+      color: var(--accent-institutional);
       letter-spacing: -0.02em;
       text-transform: lowercase;
       display: inline-block;
@@ -731,7 +731,7 @@
            PANEL 1: ВХОД ДЛЯ ДЕЙСТВУЮЩИХ ПЕРЕВОЗЧИКОВ
            ====================================================================== -->
       <div id="view-login-panel" class="panel-body">
-        <h1 class="panel-heading">Вход для <em class="font-onlyfans" style="font-style: normal; color: #00AFF0;">partners</em></h1>
+        <h1 class="panel-heading">Вход для <em class="font-onlyfans" style="font-style: normal; color: var(--accent-institutional);">partners</em></h1>
         <p class="panel-subheading">
           Управляйте выездами, мониторингом мест No-Show и ежедневным безналичным клирингом T+1.
         </p>
@@ -1142,7 +1142,7 @@
               </div>
               <h2 class="panel-heading">Автопарк успешно <em>зарегистрирован!</em></h2>
               <p class="panel-subheading" style="max-width: 520px; margin: 0 auto 26px;">
-                Заявка внесена в реестр BusLiner <span class="font-onlyfans" style="color: #00AFF0;">partners</span> (статус: <span style="color: var(--status-available); font-weight: 700;">pending_verification</span>). Ваш персональный менеджер верификации активирует клиринг T+1 в течение 15 минут.
+                Заявка внесена в реестр BusLiner <span class="font-onlyfans" style="color: var(--accent-institutional);">partners</span> (статус: <span style="color: var(--status-available); font-weight: 700;">pending_verification</span>). Ваш персональный менеджер верификации активирует клиринг T+1 в течение 15 минут.
               </p>
 
               <div style="background: var(--surface-subtle); border: 1px solid var(--border-hairline); border-radius: var(--radius-ctrl); padding: 20px; max-width: 480px; margin: 0 auto 28px; text-align: left; font-size: 13.5px; line-height: 1.8;">
@@ -1234,7 +1234,7 @@
     </div>
     <div style="max-width: 800px; margin: 0 auto; padding-top: 16px; border-top: 1px solid var(--border-hairline); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--text-dim);">
       <div>
-        © 2026 BusLiner <span class="font-onlyfans" style="color: #00AFF0;">partners</span> Fleet Technologies. Все права защищены.
+        © 2026 BusLiner <span class="font-onlyfans" style="color: var(--accent-institutional);">partners</span> Fleet Technologies. Все права защищены.
       </div>
       <div>
         <a href="#" style="color: var(--text-dim); text-decoration: underline;">Оферта для перевозчиков</a> &bull; 
@@ -1392,13 +1392,19 @@
       const h = 580;
       const left = Math.max(0, (screen.width - w) / 2);
       const top = Math.max(0, (screen.height - h) / 2);
-      const popup = window.open(
-        'google-oauth.html?mode=' + encodeURIComponent(mode),
-        'GoogleSignInPopup',
-        `width=${w},height=${h},top=${top},left=${left},status=no,toolbar=no,menubar=no,location=no,resizable=yes`
-      );
-      if (popup) {
-        popup.focus();
+      try {
+        const popup = window.open(
+          'google-oauth.html?mode=' + encodeURIComponent(mode),
+          'GoogleSignInPopup',
+          `width=${w},height=${h},top=${top},left=${left},status=no,toolbar=no,menubar=no,location=no,resizable=yes`
+        );
+        if (popup) {
+          popup.focus();
+        } else {
+          window.location.href = 'google-oauth.html?mode=' + encodeURIComponent(mode);
+        }
+      } catch (err) {
+        window.location.href = 'google-oauth.html?mode=' + encodeURIComponent(mode);
       }
     };
 
