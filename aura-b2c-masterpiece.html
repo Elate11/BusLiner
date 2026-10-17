@@ -1010,14 +1010,31 @@
       max-width: 640px;
     }
 
-    /* ANIMATED HIGHWAY & CRUISING BUS ON SLIDE 5 */
+    /* ANIMATED HIGHWAY, CITY & FOREST LANDSCAPE ON SLIDE 5 */
     .highway-track-wrapper {
       width: 100%;
       position: relative;
       overflow: hidden;
-      margin-top: 18px;
-      padding-top: 26px;
+      margin-top: 10px;
+      padding-top: 54px;
       pointer-events: none;
+    }
+    /* Distant Nocturnal Skyline + Pine Forest Silhouette */
+    .highway-backdrop-landscape {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 54px;
+      background-repeat: repeat-x;
+      background-size: 1400px 54px;
+      opacity: 0.38;
+      animation: landscapeParallax 70s linear infinite;
+      z-index: 1;
+    }
+    @keyframes landscapeParallax {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
     .highway-grey-line {
       width: 100%;
@@ -1031,6 +1048,7 @@
         rgba(255, 255, 255, 0.05) 100%
       );
       position: relative;
+      z-index: 3;
     }
     .highway-dashed-marking {
       position: absolute;
@@ -1057,7 +1075,7 @@
       align-items: flex-end;
       filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
       animation: busHighwayCruise 14s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
-      z-index: 5;
+      z-index: 6;
     }
     /* Headlight beam illuminating the road ahead */
     .bus-headlight-beam {
@@ -2174,8 +2192,22 @@
       </div>
     </div>
 
-    <!-- ANIMATED HIGHWAY & CRUISING BUS SPRITE ALONG THE GREY LINE -->
+    <!-- ANIMATED HIGHWAY, CITY & FOREST LANDSCAPE ALONG THE GREY LINE -->
     <div class="highway-track-wrapper" aria-hidden="true">
+      <!-- Continuous Nocturnal City & Forest Skyline Backdrop (Seamless SVG repeating pattern) -->
+      <div class="highway-backdrop-landscape" style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='54' viewBox='0 0 1400 54' fill='none'%3E%3C!-- DISTANT CITY SKYLINE (LEFT & CENTER-LEFT) --%3E%3Cpath d='M0 54V40H20V28H38V40H48V20H52V14H56V20H72V40H90V34H110V40H125V24H155V40H170V16H185V10H188V4H190V10H193V16H208V40H220V32H240V40H260V18H285V40H310V54H0Z' fill='%231E293B' opacity='0.7'/%3E%3C!-- Skyscraper glowing windows --%3E%3Crect x='24' y='30' width='2' height='2' fill='%23FEF08A' opacity='0.7'/%3E%3Crect x='30' y='32' width='2' height='2' fill='%2338BDF8' opacity='0.8'/%3E%3Crect x='58' y='24' width='2' height='2' fill='%23FEF08A' opacity='0.7'/%3E%3Crect x='64' y='28' width='2' height='2' fill='%23FEF08A' opacity='0.6'/%3E%3Crect x='130' y='28' width='2' height='2' fill='%2338BDF8' opacity='0.8'/%3E%3Crect x='140' y='30' width='2' height='2' fill='%23FEF08A' opacity='0.7'/%3E%3Crect x='176' y='20' width='2' height='2' fill='%23FEF08A' opacity='0.9'/%3E%3Crect x='198' y='24' width='2' height='2' fill='%2338BDF8' opacity='0.8'/%3E%3C!-- Radio Antenna with Red Warning Light --%3E%3Cline x1='189' y1='4' x2='189' y2='1' stroke='%2394A3B8' stroke-width='1'/%3E%3Ccircle cx='189' cy='1' r='1.2' fill='%23EF4444'/%3E%3C!-- MIDGROUND TRANSITION TO FOREST (CENTER) --%3E%3Cpath d='M310 54V42H330V34H345V42H360V48H380V54Z' fill='%231E293B' opacity='0.6'/%3E%3C!-- DENSE PINE FOREST SILHOUETTE (CENTER & RIGHT) --%3E%3C!-- Tree 1 --%3E%3Cpolygon points='390,54 397,32 404,54' fill='%230F172A'/%3E%3Cpolygon points='392,44 397,26 402,44' fill='%231E293B'/%3E%3C!-- Tree 2 --%3E%3Cpolygon points='408,54 416,22 424,54' fill='%230F172A'/%3E%3Cpolygon points='410,34 416,16 422,34' fill='%231E293B'/%3E%3C!-- Tree 3 --%3E%3Cpolygon points='426,54 433,36 440,54' fill='%230F172A'/%3E%3C!-- Group of tall pines --%3E%3Cpolygon points='445,54 455,18 465,54' fill='%230F172A'/%3E%3Cpolygon points='448,32 455,12 462,32' fill='%231E293B'/%3E%3Cpolygon points='468,54 476,28 484,54' fill='%230F172A'/%3E%3Cpolygon points='486,54 496,20 506,54' fill='%230F172A'/%3E%3Cpolygon points='508,54 516,30 524,54' fill='%230F172A'/%3E%3Cpolygon points='526,54 538,14 550,54' fill='%230F172A'/%3E%3Cpolygon points='530,26 538,8 546,26' fill='%231E293B'/%3E%3Cpolygon points='552,54 560,26 568,54' fill='%230F172A'/%3E%3Cpolygon points='570,54 582,18 594,54' fill='%230F172A'/%3E%3Cpolygon points='596,54 604,32 612,54' fill='%230F172A'/%3E%3Cpolygon points='615,54 628,12 641,54' fill='%230F172A'/%3E%3Cpolygon points='619,24 628,6 637,24' fill='%231E293B'/%3E%3Cpolygon points='643,54 652,28 661,54' fill='%230F172A'/%3E%3Cpolygon points='663,54 675,16 687,54' fill='%230F172A'/%3E%3Cpolygon points='689,54 697,34 705,54' fill='%230F172A'/%3E%3C!-- DISTANT TV TOWER ON HORIZON --%3E%3Cpolygon points='715,54 718,12 721,54' fill='%23334155' opacity='0.7'/%3E%3Cline x1='718' y1='12' x2='718' y2='3' stroke='%2394A3B8' stroke-width='1'/%3E%3Ccircle cx='718' cy='3' r='1.5' fill='%23EF4444'/%3E%3C!-- CONTINUOUS MIXED FOREST & SUBURBAN OUTLINE TO 1400px --%3E%3Cpolygon points='725,54 734,22 743,54' fill='%230F172A'/%3E%3Cpolygon points='745,54 756,14 767,54' fill='%230F172A'/%3E%3Cpolygon points='769,54 778,30 787,54' fill='%230F172A'/%3E%3Cpolygon points='790,54 802,18 814,54' fill='%230F172A'/%3E%3Cpolygon points='816,54 825,32 834,54' fill='%230F172A'/%3E%3Cpolygon points='836,54 848,16 860,54' fill='%230F172A'/%3E%3Cpolygon points='862,54 872,26 882,54' fill='%230F172A'/%3E%3Cpolygon points='885,54 897,12 909,54' fill='%230F172A'/%3E%3Cpolygon points='912,54 922,28 932,54' fill='%230F172A'/%3E%3C!-- APPROACHING NEXT CITY LIGHTS --%3E%3Cpath d='M940 54V44H960V32H980V44H995V22H1025V44H1040V16H1070V44H1090V30H1120V44H1140V54H940Z' fill='%231E293B' opacity='0.7'/%3E%3Crect x='966' y='36' width='2' height='2' fill='%23FEF08A' opacity='0.7'/%3E%3Crect x='1005' y='28' width='2' height='2' fill='%2338BDF8' opacity='0.8'/%3E%3Crect x='1050' y='22' width='2' height='2' fill='%23FEF08A' opacity='0.8'/%3E%3C!-- Forest tail back to 1400px --%3E%3Cpolygon points='1150,54 1162,18 1174,54' fill='%230F172A'/%3E%3Cpolygon points='1176,54 1188,14 1200,54' fill='%230F172A'/%3E%3Cpolygon points='1203,54 1215,28 1227,54' fill='%230F172A'/%3E%3Cpolygon points='1230,54 1242,16 1254,54' fill='%230F172A'/%3E%3Cpolygon points='1258,54 1270,30 1282,54' fill='%230F172A'/%3E%3Cpolygon points='1285,54 1298,12 1311,54' fill='%230F172A'/%3E%3Cpolygon points='1315,54 1327,24 1339,54' fill='%230F172A'/%3E%3Cpolygon points='1342,54 1354,18 1366,54' fill='%230F172A'/%3E%3Cpolygon points='1370,54 1382,28 1394,54' fill='%230F172A'/%3E%3Cpolygon points='1395,54 1400,20 1405,54' fill='%230F172A'/%3E%3C/svg%3E&quot;);"></div>
+
+      <!-- Highway Street Lanterns along the road -->
+      <div style="position: absolute; bottom: 2px; left: 18%; width: 20px; height: 38px; z-index: 2; pointer-events: none; opacity: 0.65;">
+        <svg width="20" height="38" viewBox="0 0 20 38" fill="none"><path d="M4 38V6C4 3 6 1 10 1H15C17 1 18 2 18 4V6" stroke="%2364748B" stroke-width="1.5"/><circle cx="18" cy="6" r="2" fill="%23FEF08A"/><ellipse cx="18" cy="9" rx="6" ry="3" fill="%23FEF08A" fill-opacity="0.25"/></svg>
+      </div>
+      <div style="position: absolute; bottom: 2px; left: 52%; width: 20px; height: 38px; z-index: 2; pointer-events: none; opacity: 0.65;">
+        <svg width="20" height="38" viewBox="0 0 20 38" fill="none"><path d="M4 38V6C4 3 6 1 10 1H15C17 1 18 2 18 4V6" stroke="%2364748B" stroke-width="1.5"/><circle cx="18" cy="6" r="2" fill="%23FEF08A"/><ellipse cx="18" cy="9" rx="6" ry="3" fill="%23FEF08A" fill-opacity="0.25"/></svg>
+      </div>
+      <div style="position: absolute; bottom: 2px; left: 84%; width: 20px; height: 38px; z-index: 2; pointer-events: none; opacity: 0.65;">
+        <svg width="20" height="38" viewBox="0 0 20 38" fill="none"><path d="M4 38V6C4 3 6 1 10 1H15C17 1 18 2 18 4V6" stroke="%2364748B" stroke-width="1.5"/><circle cx="18" cy="6" r="2" fill="%23FEF08A"/><ellipse cx="18" cy="9" rx="6" ry="3" fill="%23FEF08A" fill-opacity="0.25"/></svg>
+      </div>
+
       <div class="cruising-bus-sprite">
         <!-- Trail glow -->
         <div class="bus-speed-trail"></div>
