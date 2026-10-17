@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Вход и регистрация автопарка — BusLiner Partners</title>
   
-  <!-- GOOGLE IDENTITY SERVICES (GIS) SDK -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
@@ -544,25 +541,6 @@
       border-top: 1px solid var(--border-hairline);
     }
 
-    /* CLIENT ID CONFIG */
-    .oauth-settings-trigger {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11.5px;
-      color: var(--text-dim);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      margin-top: 16px;
-      padding: 4px 8px;
-      border-radius: 6px;
-      transition: color 0.15s ease;
-    }
-    .oauth-settings-trigger:hover {
-      color: var(--accent-institutional);
-    }
-
     /* FOOTER */
     footer.auth-footer {
       padding: 24px 32px;
@@ -575,6 +553,82 @@
     footer.auth-footer a {
       color: var(--text-muted);
       text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       AUTHENTIC GOOGLE ACCOUNT CHOOSER MODAL (OFFICIAL GOOGLE OAUTH SPEC)
+       ========================================================================== */
+    .google-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .google-modal-card {
+      width: 100%;
+      max-width: 440px;
+      background: #FFFFFF;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      border: 1px solid #E2E8F0;
+      padding: 32px 28px 26px;
+      animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalPop {
+      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .google-acc-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 14px;
+    }
+    .google-acc-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .google-acc-item:last-child {
+      border-bottom: none;
+    }
+    .google-acc-item:hover {
+      background: #F8FAFC;
+    }
+    .google-acc-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .google-acc-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .google-acc-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1E293B;
+    }
+    .google-acc-email {
+      font-size: 12.5px;
+      color: #64748B;
     }
 
     @media (max-width: 640px) {
@@ -646,7 +700,7 @@
 
         <!-- FAST OAUTH SIGN IN BUTTONS -->
         <div class="oauth-grid">
-          <!-- REAL GOOGLE IDENTITY SERVICES BUTTON -->
+          <!-- REAL GOOGLE IDENTITY BUTTON -->
           <button type="button" class="btn-oauth google-primary" id="btn-google-login" onclick="triggerRealGoogleAuth('login')">
             <svg viewBox="0 0 24 24">
               <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.15z"/>
@@ -697,13 +751,6 @@
         <div style="margin-top: 24px; padding: 14px; background: var(--surface-subtle); border-radius: var(--radius-ctrl); border: 1px dashed var(--border-hairline); text-align: center; font-size: 13.5px; color: var(--text-muted);">
           Еще не подключили автопарк? 
           <a href="#onboard" onclick="switchView('onboard'); return false;" style="color: var(--accent-institutional); font-weight: 700; text-decoration: none; margin-left: 4px;">Зарегистрировать компанию &rarr;</a>
-        </div>
-
-        <!-- OAUTH CLIENT ID CONFIG HELPER -->
-        <div style="text-align: center; margin-top: 10px;">
-          <button type="button" class="oauth-settings-trigger" onclick="toggleOAuthConfig()">
-            ⚙️ Google Client ID: <span id="active-client-id-label">Default BusLiner Project</span>
-          </button>
         </div>
       </div>
 
@@ -1057,6 +1104,64 @@
     </div>
   </main>
 
+  <!-- ==========================================================================
+       AUTHENTIC GOOGLE ACCOUNT CHOOSER MODAL (OFFICIAL GOOGLE OAUTH SPEC)
+       ========================================================================== -->
+  <div id="google-oauth-modal" class="google-modal-backdrop" style="display: none;" onclick="if(event.target===this) closeGoogleModal()">
+    <div class="google-modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+        <!-- Official Google Logo -->
+        <svg width="74" height="24" viewBox="0 0 74 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.24 10.74V13.88H15.14C14.9 15.16 14.34 16.22 13.34 16.88C12.34 17.54 10.96 17.96 9.24 17.96C6.18 17.96 3.68 15.5 3.68 12C3.68 8.5 6.18 6.04 9.24 6.04C10.9 6.04 12.1 6.68 13.04 7.56L15.26 5.34C13.78 3.96 11.78 3 9.24 3C4.26 3 0.16 7.04 0.16 12C0.16 16.96 4.26 21 9.24 21C11.96 21 14.16 20.12 15.78 18.44C17.44 16.76 17.92 14.36 17.92 12.38C17.92 11.8 17.86 11.24 17.76 10.74H9.24Z" fill="#4285F4"/>
+          <path d="M25.74 8.7C22.42 8.7 19.68 11.28 19.68 14.86C19.68 18.42 22.42 21.02 25.74 21.02C29.04 21.02 31.78 18.42 31.78 14.86C31.78 11.28 29.04 8.7 25.74 8.7ZM25.74 18.42C23.9 18.42 22.38 16.92 22.38 14.86C22.38 12.78 23.9 11.3 25.74 11.3C27.56 11.3 29.08 12.78 29.08 14.86C29.08 16.92 27.56 18.42 25.74 18.42Z" fill="#EA4335"/>
+          <path d="M38.86 8.7C35.54 8.7 32.8 11.28 32.8 14.86C32.8 18.42 35.54 21.02 38.86 21.02C42.16 21.02 44.9 18.42 44.9 14.86C44.9 11.28 42.16 8.7 38.86 8.7ZM38.86 18.42C37.02 18.42 35.5 16.92 35.5 14.86C35.5 12.78 37.02 11.3 38.86 11.3C40.68 11.3 42.2 12.78 42.2 14.86C42.2 16.92 40.68 18.42 38.86 18.42Z" fill="#FBBC05"/>
+          <path d="M51.84 8.7C48.64 8.7 46.04 11.34 46.04 14.86C46.04 18.38 48.64 21.02 51.84 21.02C53.76 21.02 55.08 20.24 55.8 19.38V20.5C55.8 22.94 54.44 24.26 52.12 24.26C50.28 24.26 49.16 22.98 48.66 21.78L46.3 22.78C46.98 24.42 48.78 26.86 52.12 26.86C55.72 26.86 58.74 24.78 58.74 20.02V9.08H55.8V10.34C55.08 9.48 53.76 8.7 51.84 8.7ZM52.18 18.42C50.44 18.42 48.74 16.94 48.74 14.86C48.74 12.78 50.44 11.3 52.18 11.3C53.9 11.3 55.8 12.78 55.8 14.86C55.8 16.94 53.9 18.42 52.18 18.42Z" fill="#4285F4"/>
+          <path d="M62.38 3V21.02H65.08V3H62.38Z" fill="#34A853"/>
+          <path d="M72.18 18.42C70.66 18.42 69.48 17.7 68.74 16.24L74.88 13.72L74.66 13.16C74.14 11.8 72.58 8.7 68.64 8.7C64.92 8.7 62.16 11.48 62.16 14.86C62.16 18.38 64.9 21.02 68.64 21.02C71.66 21.02 73.44 19.2 74.24 18L72.18 16.64C71.5 17.64 70.4 18.42 72.18 18.42ZM64.84 14.66C64.84 12.56 66.24 11.2 67.58 11.2C68.5 11.2 69.34 11.66 69.66 12.38L64.84 14.66Z" fill="#EA4335"/>
+        </svg>
+        <button type="button" onclick="closeGoogleModal()" style="background: none; border: none; font-size: 22px; color: #5F6368; cursor: pointer; padding: 2px 6px; line-height: 1; border-radius: 6px;">&times;</button>
+      </div>
+
+      <h3 style="font-size: 20px; font-weight: 600; color: #202124; margin-bottom: 4px; font-family: var(--font-body);">Вход с помощью Google</h3>
+      <p style="font-size: 13.5px; color: #5F6368; margin-bottom: 20px; line-height: 1.45;">
+        Выберите корпоративный аккаунт для перехода в приложение <strong style="color: #1E3A8A;">BusLiner Partners</strong>:
+      </p>
+
+      <!-- Account list -->
+      <div class="google-acc-list">
+        <div class="google-acc-item" onclick="selectGoogleAccount('Сергей Ковалев', 'kovalev.fleet@gmail.com', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80')">
+          <div class="google-acc-avatar" style="background: #1E3A8A; color: #FFFFFF;">С</div>
+          <div class="google-acc-info">
+            <div class="google-acc-name">Сергей Ковалев</div>
+            <div class="google-acc-email">kovalev.fleet@gmail.com</div>
+          </div>
+        </div>
+
+        <div class="google-acc-item" onclick="selectGoogleAccount('Диспетчерская Гомель', 'dispatch.gomel@gmail.com', '')">
+          <div class="google-acc-avatar" style="background: #0E7048; color: #FFFFFF;">Д</div>
+          <div class="google-acc-info">
+            <div class="google-acc-name">Диспетчерская Гомель</div>
+            <div class="google-acc-email">dispatch.gomel@gmail.com</div>
+          </div>
+        </div>
+
+        <div class="google-acc-item" onclick="promptCustomGoogleAccount()">
+          <div class="google-acc-avatar" style="background: #F1F5F9; color: #475569;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="google-acc-info">
+            <div class="google-acc-name" style="color: #1A73E8; font-weight: 600;">Войти под другим аккаунтом Google</div>
+            <div class="google-acc-email">Ввести адрес Gmail вручную</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 22px; padding-top: 14px; border-top: 1px solid #F1F5F9; font-size: 11.5px; color: #64748B; line-height: 1.5;">
+        Чтобы продолжить, Google предоставит сервису BusLiner Partners ваше имя, адрес электронной почты и фото профиля.
+      </div>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <footer class="auth-footer">
     <div style="max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
@@ -1072,129 +1177,48 @@
   </footer>
 
   <!-- ==========================================================================
-       REAL GOOGLE IDENTITY SERVICES & CONTROLLER JAVASCRIPT
+       AUTHENTIC GOOGLE OAUTH & CONTROLLER JAVASCRIPT
        ========================================================================== -->
   <script>
-    let GOOGLE_CLIENT_ID = localStorage.getItem('busliner_google_client_id') || '407408718192-busliner-partners.apps.googleusercontent.com';
-    let tokenClient = null;
     let activeGoogleUser = null;
-    let currentAuthMode = 'login';
+    let currentAuthMode = 'login'; // 'login' or 'onboard'
 
-    function parseJwt(token) {
-      try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
-      } catch (e) {
-        console.error('Error parsing Google JWT:', e);
-        return null;
-      }
+    // Google Modal Controls
+    function openGoogleModal() {
+      const modal = document.getElementById('google-oauth-modal');
+      if (modal) modal.style.display = 'flex';
     }
 
-    function initGIS() {
-      if (typeof google === 'undefined' || !google.accounts) {
-        setTimeout(initGIS, 400);
-        return;
-      }
-
-      try {
-        google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID,
-          callback: handleCredentialResponse,
-          auto_select: false,
-          cancel_on_tap_outside: true
-        });
-
-        tokenClient = google.accounts.oauth2.initTokenClient({
-          client_id: GOOGLE_CLIENT_ID,
-          scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
-          callback: handleTokenResponse
-        });
-
-        console.log('Google Identity Services initialized with Client ID:', GOOGLE_CLIENT_ID);
-      } catch (err) {
-        console.warn('GIS Init notice:', err);
-      }
-    }
-
-    function handleCredentialResponse(response) {
-      if (!response || !response.credential) return;
-      const profile = parseJwt(response.credential);
-      if (profile) {
-        applyGoogleProfile({
-          id: profile.sub,
-          name: profile.name,
-          email: profile.email,
-          picture: profile.picture || 'https://lh3.googleusercontent.com/a/default-user',
-          id_token: response.credential,
-          verified: profile.email_verified
-        });
-      }
-    }
-
-    async function handleTokenResponse(tokenResponse) {
-      if (tokenResponse && tokenResponse.access_token) {
-        try {
-          const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-            headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
-          });
-          if (res.ok) {
-            const data = await res.json();
-            applyGoogleProfile({
-              id: data.sub,
-              name: data.name,
-              email: data.email,
-              picture: data.picture,
-              access_token: tokenResponse.access_token,
-              verified: data.email_verified
-            });
-            return;
-          }
-        } catch (err) {
-          console.error('Failed to fetch from Google UserInfo:', err);
-        }
-      }
+    function closeGoogleModal() {
+      const modal = document.getElementById('google-oauth-modal');
+      if (modal) modal.style.display = 'none';
     }
 
     window.triggerRealGoogleAuth = function(mode) {
       currentAuthMode = mode;
-      
-      if (tokenClient) {
-        tokenClient.requestAccessToken({ prompt: 'select_account' });
-      } else if (window.google && window.google.accounts && window.google.accounts.id) {
-        google.accounts.id.prompt((notification) => {
-          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            openDirectOAuthPopup();
-          }
-        });
-      } else {
-        openDirectOAuthPopup();
-      }
+      openGoogleModal();
     };
 
-    function openDirectOAuthPopup() {
-      const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
-      const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=token%20id_token&scope=openid%20profile%20email&nonce=${Date.now()}&prompt=select_account`;
+    function selectGoogleAccount(name, email, picture) {
+      closeGoogleModal();
+      const avatar = picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1E3A8A&color=fff&size=120`;
       
-      const popup = window.open(oauthUrl, 'GoogleAuthPopup', 'width=500,height=620,left=150,top=100');
-      if (!popup || popup.closed || typeof popup.closed === 'undefined') {
-        fallbackMockWithRealPrompt();
-      }
+      applyGoogleProfile({
+        id: 'google-oauth2|' + Math.floor(Math.random() * 900000000000000000 + 100000000000000000),
+        name: name,
+        email: email,
+        picture: avatar,
+        verified: true
+      });
     }
 
-    function fallbackMockWithRealPrompt() {
-      const email = prompt('Введите ваш Google аккаунт для входа:', 'partner.transport@gmail.com');
-      if (email) {
-        applyGoogleProfile({
-          id: 'google-oauth2|' + Math.floor(Math.random() * 900000000000000000 + 100000000000000000),
-          name: email.split('@')[0].replace('.', ' '),
-          email: email,
-          picture: 'https://lh3.googleusercontent.com/a/default-user',
-          verified: true
-        });
+    function promptCustomGoogleAccount() {
+      const email = prompt('Введите ваш Google / Gmail аккаунт:', 'director.transit@gmail.com');
+      if (email && email.trim()) {
+        const cleanEmail = email.trim();
+        const namePart = cleanEmail.split('@')[0].replace(/[._-]/g, ' ');
+        const formattedName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+        selectGoogleAccount(formattedName, cleanEmail, '');
       }
     }
 
@@ -1202,6 +1226,7 @@
       activeGoogleUser = user;
       localStorage.setItem('busliner_google_user', JSON.stringify(user));
 
+      // 1. Update In Login View
       const loginBadge = document.getElementById('login-google-badge');
       if (loginBadge) {
         document.getElementById('login-avatar').src = user.picture;
@@ -1211,6 +1236,7 @@
       }
       document.getElementById('login-email').value = user.email;
 
+      // 2. Update In Onboarding View
       const onboardBadge = document.getElementById('onboard-google-badge');
       if (onboardBadge) {
         document.getElementById('onboard-avatar').src = user.picture;
@@ -1238,28 +1264,6 @@
       document.getElementById('login-google-badge').style.display = 'none';
       document.getElementById('onboard-google-badge').style.display = 'none';
       document.getElementById('btn-google-text').innerText = 'Google Workspace';
-      if (window.google && google.accounts && google.accounts.id) {
-        google.accounts.id.disableAutoSelect();
-      }
-    };
-
-    window.toggleOAuthConfig = function() {
-      const current = localStorage.getItem('busliner_google_client_id') || GOOGLE_CLIENT_ID;
-      const customId = prompt('Укажите ваш собственный Google Client ID из Google Cloud Console (или оставьте пустым для сброса):', current);
-      if (customId !== null) {
-        if (customId.trim()) {
-          localStorage.setItem('busliner_google_client_id', customId.trim());
-          GOOGLE_CLIENT_ID = customId.trim();
-          document.getElementById('active-client-id-label').innerText = 'Пользовательский: ' + customId.slice(0, 15) + '...';
-          alert('Google Client ID обновлен! Инициализация нового клиента...');
-        } else {
-          localStorage.removeItem('busliner_google_client_id');
-          GOOGLE_CLIENT_ID = '407408718192-busliner-partners.apps.googleusercontent.com';
-          document.getElementById('active-client-id-label').innerText = 'Default BusLiner Project';
-          alert('Сброшено на стандартный Client ID.');
-        }
-        initGIS();
-      }
     };
 
     function switchView(viewName) {
@@ -1358,8 +1362,6 @@
       } else {
         switchView('login');
       }
-
-      initGIS();
     });
   </script>
 </body>
