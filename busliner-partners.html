@@ -1792,6 +1792,96 @@
       color: #FFFFFF !important;
     }
 
+    /* Table on Slide 2 - Perfect Fit for all screen sizes */
+    #slide-schedule {
+      justify-content: center;
+      padding-top: 56px;
+      padding-bottom: 20px;
+    }
+    #slide-schedule .slide-headline {
+      font-size: 38px;
+      line-height: 44px;
+      margin-bottom: 8px;
+    }
+    #slide-schedule .slide-lead {
+      font-size: 14px;
+      line-height: 20px;
+      margin-bottom: 14px;
+      max-width: 820px;
+    }
+    .dispatch-table-wrap {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      position: relative;
+      width: 100%;
+    }
+    .table-topbar {
+      padding: 9px 18px;
+      background: #F8FAFC;
+      border-bottom: 1px solid var(--border-hairline);
+      font-size: 11.5px;
+      font-weight: 500;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .dispatch-table {
+      width: 100% !important;
+      min-width: 0 !important;
+      table-layout: auto !important;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .dispatch-table th {
+      padding: 9px 12px !important;
+      font-family: var(--font-mono);
+      font-size: 11px !important;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #64748B;
+      background: #F1F5F9 !important;
+      border-bottom: 1px solid var(--border-hairline);
+      white-space: nowrap !important;
+    }
+    .dispatch-table td {
+      padding: 10px 12px !important;
+      border-bottom: 1px solid var(--border-hairline);
+      vertical-align: middle;
+      font-size: 13px !important;
+    }
+    .dispatch-table th:nth-child(1),
+    .dispatch-table td:nth-child(1),
+    .dispatch-table th:nth-child(2),
+    .dispatch-table td:nth-child(2),
+    .dispatch-table th:nth-child(3),
+    .dispatch-table td:nth-child(3),
+    .dispatch-table th:nth-child(4),
+    .dispatch-table td:nth-child(4),
+    .dispatch-table th:nth-child(5),
+    .dispatch-table td:nth-child(5),
+    .dispatch-table th:nth-child(6),
+    .dispatch-table td:nth-child(6) {
+      white-space: normal !important;
+    }
+    .dispatch-table tr:last-child td {
+      border-bottom: none;
+    }
+    .dispatch-table tr:hover td {
+      background: rgba(30, 58, 138, 0.02);
+    }
+    .amenities-bullet-list {
+      gap: 2px !important;
+      font-size: 11.5px !important;
+      line-height: 15px !important;
+    }
+
     /* Slide 7: Dark Freight Monolith CTA */
     #slide-start {
       background: var(--surface-dark) !important;
@@ -1947,8 +2037,8 @@
       </a>
       <ul class="nav-menu">
         <li><a href="#slide-hero">О платформе</a></li>
-        <li><a href="#slide-comparison">Проблема & Выгода</a></li>
         <li><a href="#slide-schedule">Монитор флота</a></li>
+        <li><a href="#slide-comparison">Проблема & Выгода</a></li>
         <li><a href="#slide-sniper">Снайпер 2.0 B2B</a></li>
         <li><a href="#slide-calculator">Калькулятор прибыли</a></li>
         <li><a href="#slide-reviews">Кейсы автопарков</a></li>
@@ -2047,7 +2137,127 @@
   </section>
 
   <!-- ==========================================================================
-       SLIDE 2: PROBLEM VS SOLUTION (LIGHT CANVAS SLIDE, 20PX RADIUS CARDS)
+       SLIDE 2: LIVE FLEET MONITOR & TELEMETRY TABLE (LIGHT CANVAS SLIDE, 20PX TABLE)
+       ========================================================================== -->
+  <section class="full-slide" id="slide-schedule">
+    <div class="container">
+      <h2 class="slide-headline">Живой реестр отправлений: <em>ни одного пустого кресла</em> на выезде</h2>
+      <p class="slide-lead">
+        Данные загрузки и выручки автопарка в реальном времени. Статусы посадки по QR-коду водителя и автоматические реестры клиринга T+1.
+      </p>
+
+      <div class="dispatch-table-wrap">
+        <div class="table-topbar">
+          <div><strong style="color: var(--text-primary);">Маршрут:</strong> Гомель &mdash; Минск (Центральный)</div>
+          <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+            <span><strong style="color: var(--text-primary);">В рейсе:</strong> 18 активных бортов</span>
+            <span><strong style="color: #059669;">Загрузка:</strong> 99.1%</span>
+            <span><strong style="color: #1E3A8A;">Выручка за сутки:</strong> 8 460 BYN</span>
+          </div>
+        </div>
+        <table class="dispatch-table">
+          <thead>
+            <tr>
+              <th style="width: 17%;">Время и борт</th>
+              <th style="width: 22%;">Перевозчик и машина</th>
+              <th style="width: 21%;">Багаж (Smart Cargo)</th>
+              <th style="width: 16%;">Загрузка салона</th>
+              <th style="width: 12%;">Выручка T+1</th>
+              <th style="width: 12%; text-align: right;">Действие</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="mono" style="font-size: 16px; font-weight: 700; color: #0F172A;">17:00 &mdash; 20:30</div>
+                <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Борт 77-12 AX-3 &bull; Гомель</div>
+              </td>
+              <td>
+                <div style="font-weight: 600; font-size: 13.5px; color: var(--text-primary);">ОДО «Бурлаки-Авто»</div>
+                <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 1px;">VW Crafter (Свежий, 2023)</div>
+              </td>
+              <td>
+                <div class="amenities-bullet-list">
+                  <span class="amenity-bullet">2 вело-слота (+16 BYN)</span>
+                  <span class="amenity-bullet">4 коробки Cargo (+32 BYN)</span>
+                </div>
+              </td>
+              <td>
+                <div class="seats-minimalist available"><span class="seats-dot">●</span> 18 / 18</div>
+                <div style="font-size: 11px; color: #059669; font-weight: 500; margin-top: 2px;">100% выкуп мест</div>
+              </td>
+              <td>
+                <div class="mono" style="font-size: 17px; font-weight: 700; color: #1E3A8A;">444.00 BYN</div>
+                <div class="mono" style="font-size: 10px; color: #059669; font-weight: 600;">выплата T+1</div>
+              </td>
+              <td style="text-align: right;">
+                <a href="#slide-start" class="btn btn-accent" style="padding: 7px 14px; font-size: 12px; border-radius: 10px; white-space: nowrap;">Отчет &rarr;</a>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="mono" style="font-size: 16px; font-weight: 700; color: #1E3A8A;">18:15 &mdash; 21:40</div>
+                <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Борт 02-45 ВЕ-3 &bull; Гомель</div>
+              </td>
+              <td>
+                <div style="font-weight: 600; font-size: 13.5px; color: var(--text-primary);">ЧУП «АвтоСпутник»</div>
+                <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 1px;">Mercedes Sprinter 519</div>
+              </td>
+              <td>
+                <div class="amenities-bullet-list">
+                  <span class="amenity-bullet">1 вело-слот (+8 BYN)</span>
+                  <span class="amenity-bullet">2 посылки Cargo (+18 BYN)</span>
+                </div>
+              </td>
+              <td>
+                <div class="seats-minimalist" style="color: #D97706;"><span class="seats-dot">●</span> 18 / 18</div>
+                <div style="font-size: 11px; color: #D97706; font-weight: 500; margin-top: 2px;">Снайпер закрыл 2 кресла</div>
+              </td>
+              <td>
+                <div class="mono" style="font-size: 17px; font-weight: 700; color: #1E3A8A;">458.00 BYN</div>
+                <div class="mono" style="font-size: 10px; color: #059669; font-weight: 600;">выплата T+1</div>
+              </td>
+              <td style="text-align: right;">
+                <a href="#slide-sniper" class="btn btn-secondary" style="padding: 7px 14px; font-size: 12px; border-radius: 10px; background: var(--status-radar-bg); color: var(--status-radar); border-color: #FCD34D; white-space: nowrap;">Снайпер 2.0 &rarr;</a>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="mono" style="font-size: 16px; font-weight: 700; color: #0F172A;">19:00 &mdash; 22:30</div>
+                <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Борт 89-11 MI-7 &bull; Гомель</div>
+              </td>
+              <td>
+                <div style="font-weight: 600; font-size: 13.5px; color: var(--text-primary);">ООО «ЗападТрансАвто»</div>
+                <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 1px;">Mercedes Sprinter 2022</div>
+              </td>
+              <td>
+                <div class="amenities-bullet-list">
+                  <span class="amenity-bullet">3 вело-слота (+24 BYN)</span>
+                  <span class="amenity-bullet">1 коробка Cargo (+10 BYN)</span>
+                </div>
+              </td>
+              <td>
+                <div class="seats-minimalist available"><span class="seats-dot">●</span> 17 / 18</div>
+                <div style="font-size: 11px; color: #2563EB; font-weight: 500; margin-top: 2px;">Осталось 1 место</div>
+              </td>
+              <td>
+                <div class="mono" style="font-size: 17px; font-weight: 700; color: #1E3A8A;">401.00 BYN</div>
+                <div class="mono" style="font-size: 10px; color: #059669; font-weight: 600;">выплата T+1</div>
+              </td>
+              <td style="text-align: right;">
+                <a href="#slide-start" class="btn btn-accent" style="padding: 7px 14px; font-size: 12px; border-radius: 10px; white-space: nowrap;">Догрузить &rarr;</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SLIDE 3: PROBLEM VS SOLUTION (LIGHT CANVAS SLIDE, 20PX RADIUS CARDS)
        ========================================================================== -->
   <section class="full-slide" id="slide-comparison">
     <div class="container">
@@ -2114,117 +2324,6 @@
           </div>
         </div>
 
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================================================
-       SLIDE 3: LIVE FLEET MONITOR & TELEMETRY TABLE (LIGHT CANVAS SLIDE, 24PX TABLE)
-       ========================================================================== -->
-  <section class="full-slide" id="slide-schedule">
-    <div class="container">
-      <h2 class="slide-headline">Живой реестр отправлений: <em>ни одного пустого кресла</em> на выезде</h2>
-      <p class="slide-lead">
-        Данные загрузки и выручки автопарка в реальном времени. Статусы посадки по QR-коду водителя и автоматические реестры клиринга T+1.
-      </p>
-
-      <div class="dispatch-table-wrap">
-        <div class="table-topbar">
-          Линия: Гомель &mdash; Минск (Центральный) &bull; 18 активных бортов &bull; Средняя загрузка 99.1% &bull; Выручка линии сегодня: 8 460 BYN
-        </div>
-        <table class="dispatch-table">
-          <thead>
-            <tr>
-              <th>Время и борт</th>
-              <th>Перевозчик и машина</th>
-              <th>Багаж (Smart Cargo)</th>
-              <th>Загрузка салона</th>
-              <th>Выручка рейса</th>
-              <th style="text-align: right;">Действие</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="mono" style="font-size: 18px; font-weight: 600;">17:00 &mdash; 20:30</div>
-                <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Борт 77-12 AX-3 &bull; Гомель</div>
-              </td>
-              <td>
-                <div style="font-weight: 600;">ОДО «Бурлаки»</div>
-                <div class="mono" style="font-size: 11px; color: var(--text-muted);">VW Crafter (Свежий, 2023)</div>
-              </td>
-              <td>
-                <div class="amenities-bullet-list">
-                  <span class="amenity-bullet">2 вело-слота (+16 BYN)</span>
-                  <span class="amenity-bullet">4 коробки Cargo (+32 BYN)</span>
-                </div>
-              </td>
-              <td>
-                <div class="seats-minimalist available"><span class="seats-dot">●</span> 18 / 18 (100% Выкуп)</div>
-              </td>
-              <td>
-                <div class="mono" style="font-size: 19px; font-weight: 600;">444.00 BYN</div>
-              </td>
-              <td style="text-align: right;">
-                <a href="#slide-start" class="btn btn-accent" style="padding: 8px 18px; font-size: 12px; border-radius: 12px;">Отчет рейса &rarr;</a>
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                <div class="mono" style="font-size: 18px; font-weight: 600; color: #1E3A8A;">18:15 &mdash; 21:40</div>
-                <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Борт 02-45 ВЕ-3 &bull; Гомель</div>
-              </td>
-              <td>
-                <div style="font-weight: 600;">ЧУП «АвтоСпутник»</div>
-                <div class="mono" style="font-size: 11px; color: var(--text-muted);">Mercedes Sprinter 519</div>
-              </td>
-              <td>
-                <div class="amenities-bullet-list">
-                  <span class="amenity-bullet">1 вело-слот (+8 BYN)</span>
-                  <span class="amenity-bullet">2 посылки (+18 BYN)</span>
-                </div>
-              </td>
-              <td>
-                <div class="seats-minimalist" style="color: #D97706; background: #FEF3C7;"><span class="seats-dot" style="color: #D97706;">●</span> 18 / 18 (Снайпер закрыл 2 кресла)</div>
-              </td>
-              <td>
-                <div class="mono" style="font-size: 19px; font-weight: 600;">458.00 BYN</div>
-              </td>
-              <td style="text-align: right;">
-                <a href="#slide-sniper" class="btn btn-secondary" style="padding: 8px 18px; font-size: 12px; border-radius: 12px; background: var(--status-radar-bg); color: var(--status-radar); border-color: #FCD34D;">
-                  Снайпер закрыл &rarr;
-                </a>
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                <div class="mono" style="font-size: 18px; font-weight: 600;">19:00 &mdash; 22:30</div>
-                <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Борт 89-11 MI-7 &bull; Гомель</div>
-              </td>
-              <td>
-                <div style="font-weight: 600;">ООО «ЗападТрансАвто»</div>
-                <div class="mono" style="font-size: 11px; color: var(--text-muted);">Mercedes Sprinter 2022</div>
-              </td>
-              <td>
-                <div class="amenities-bullet-list">
-                  <span class="amenity-bullet">3 вело-слота (+24 BYN)</span>
-                  <span class="amenity-bullet">1 коробка (+10 BYN)</span>
-                </div>
-              </td>
-              <td>
-                <div class="seats-minimalist available"><span class="seats-dot">●</span> 17 / 18 (Осталось 1 кресло)</div>
-              </td>
-              <td>
-                <div class="mono" style="font-size: 19px; font-weight: 600;">401.00 BYN</div>
-              </td>
-              <td style="text-align: right;">
-                <a href="#slide-start" class="btn btn-accent" style="padding: 8px 18px; font-size: 12px; border-radius: 12px;">Догрузить рейс &rarr;</a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
   </section>
