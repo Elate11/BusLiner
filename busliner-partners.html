@@ -2094,24 +2094,6 @@
       50% { transform: translateY(-5px); }
     }
 
-    /* Live Fleet Scanner Line */
-    .radar-sweep-bar {
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #22C55E, transparent);
-      box-shadow: 0 0 14px #22C55E;
-      pointer-events: none;
-      z-index: 5;
-      animation: radarScanSweep 4.5s ease-in-out infinite;
-    }
-    @keyframes radarScanSweep {
-      0% { top: 0%; opacity: 0; }
-      12% { opacity: 0.85; }
-      88% { opacity: 0.85; }
-      100% { top: 100%; opacity: 0; }
-    }
 
     /* Live Pulsing Green Dot */
     .pulse-dot-live {
@@ -3594,26 +3576,12 @@
         document.querySelectorAll('.scroll-reveal').forEach(el => revealObserver.observe(el));
       }
 
-      // Live Radar Scanner in #slide-schedule
-      function setupRadarBar() {
-        const scheduleContainer = document.querySelector('#slide-schedule .schedule-container, #slide-schedule .schedule-table-wrap, #slide-schedule');
-        if (scheduleContainer && !document.getElementById('radar-sweep-scanner')) {
-          const radarBar = document.createElement('div');
-          radarBar.id = 'radar-sweep-scanner';
-          radarBar.className = 'radar-sweep-bar';
-          scheduleContainer.style.position = 'relative';
-          scheduleContainer.appendChild(radarBar);
-        }
-      }
-
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
           setupObserver();
-          setupRadarBar();
         });
       } else {
         setupObserver();
-        setupRadarBar();
       }
     })();
 

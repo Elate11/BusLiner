@@ -232,8 +232,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"*Команды бота:*\n"
                 f"/status — проверить статус регистрации и кабинета\n"
                 f"/help — контакты круглосуточной поддержки\n\n"
-                f"*Круглосуточная служба поддержки:*\n"
-                f"Телефон: +375 (29) 774-12-00\n"
+                f"*Служба поддержки:*\n"
                 f"Почта: support@busliner.by"
             )
             send_telegram_api_request("sendMessage", {

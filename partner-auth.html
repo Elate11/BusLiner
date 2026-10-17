@@ -1274,21 +1274,6 @@
           <span>Открыть Telegram &rarr;</span>
         </a>
 
-        <!-- SESSION VERIFICATION CARD -->
-        <div style="background: var(--surface-subtle); border: 1px solid var(--border-hairline); border-radius: 10px; padding: 12px 14px; margin-bottom: 14px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <span style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600;">Одноразовый PIN сессии</span>
-            <span id="tg-countdown-timer" style="font-size: 12px; font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums;">05:00</span>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: baseline;">
-            <span id="tg-otp-display" style="font-size: 22px; font-weight: 800; letter-spacing: 4px; color: var(--accent-institutional); font-family: monospace;">--- ---</span>
-            <div style="display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-muted);">
-              <span class="tg-radar-pulse"></span>
-              <span>Ожидание ответа...</span>
-            </div>
-          </div>
-        </div>
-
         <button type="button" class="btn btn-secondary" onclick="confirmBotSession()" style="width: 100%; font-size: 13px; padding: 11px;">
           Я подтвердил в Telegram боте &rarr;
         </button>
@@ -1299,7 +1284,7 @@
         <form onsubmit="submitTelegramModal(event)">
           <div class="form-group" style="margin-bottom: 14px;">
             <label class="form-label" for="tg-input-identifier">Номер телефона или @username *</label>
-            <input type="text" id="tg-input-identifier" class="form-input" placeholder="+375 (29) 000-00-00 или @dispatcher" required>
+            <input type="text" id="tg-input-identifier" class="form-input" placeholder="+375 (29) 000-00-00 или @fleet_owner" required>
           </div>
 
           <div id="tg-name-row" class="form-group" style="margin-bottom: 14px;">
@@ -1322,22 +1307,12 @@
           </div>
         </form>
       </div>
-
-      <!-- FOOTER SUPPORT NOTE -->
-      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border-hairline); display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--text-dim);">
-        <span>Поддержка автопарков:</span>
-        <a href="tel:+375297741200" style="color: var(--text-primary); font-weight: 600; text-decoration: none;">+375 (29) 774-12-00</a>
-      </div>
     </div>
   </div>
 
   <!-- FOOTER -->
   <footer class="auth-footer">
-    <div style="max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 18px;">
-      <div style="display: flex; align-items: center; gap: 10px; font-size: 13.5px; flex-wrap: wrap;">
-        <span style="color: var(--text-muted);">Поддержка автопарков:</span>
-        <a href="tel:+375297741200" style="color: var(--text-primary); font-weight: 700; text-decoration: none;">+375 (29) 774-12-00</a>
-      </div>
+    <div style="max-width: 800px; margin: 0 auto; display: flex; justify-content: flex-end; align-items: center; margin-bottom: 18px;">
       <div>
         <a href="busliner-partners.html" style="color: var(--accent-institutional); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">&larr; На сайт</a>
       </div>
