@@ -1071,17 +1071,15 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="ob-ticket-price">Базовый тариф за пассажира (BYN) *</label>
-                <input type="number" id="ob-ticket-price" class="form-input" placeholder="28.00" step="0.5" required value="28.00">
-                <span class="form-hint">Комиссия BusLiner: 6.5% (1.82 BYN)</span>
+                <input type="number" id="ob-ticket-price" class="form-input" placeholder="28.00" step="0.5" min="1" required value="28.00" oninput="recalculateCommission()">
+                <span class="form-hint" id="commission-breakdown">
+                  Комиссия BusLiner (6.5%): <strong id="val-busliner-fee" style="color: var(--accent-institutional);">1.82 BYN</strong> &bull; Выплата парку (T+1): <strong id="val-carrier-net" style="color: var(--status-available);">26.18 BYN</strong>
+                </span>
               </div>
               <div class="form-group">
-                <label class="form-label" for="ob-fleet-size">Общий размер автопарка (машин)</label>
-                <select id="ob-fleet-size" class="form-input">
-                  <option value="6">4–8 микроавтобусов</option>
-                  <option value="2">1–3 машины</option>
-                  <option value="12">9–15 машин</option>
-                  <option value="25">16+ машин (Автоколонна)</option>
-                </select>
+                <label class="form-label" for="ob-fleet-size">Общий размер автопарка (машин) *</label>
+                <input type="number" id="ob-fleet-size" class="form-input" placeholder="6" min="1" max="500" required value="6">
+                <span class="form-hint">Количество активных бортов на маршрутах</span>
               </div>
             </div>
 
@@ -1459,8 +1457,21 @@
       window.location.href = 'busliner-partners.html#slide-schedule';
     }
 
+    function recalculateCommission() {
+      const priceInput = document.getElementById('ob-ticket-price');
+      const feeEl = document.getElementById('val-busliner-fee');
+      const netEl = document.getElementById('val-carrier-net');
+      if (!priceInput || !feeEl || !netEl) return;
+      const price = parseFloat(priceInput.value) || 0;
+      const fee = price * 0.065;
+      const net = price - fee;
+      feeEl.innerText = fee.toFixed(2) + ' BYN';
+      netEl.innerText = net.toFixed(2) + ' BYN';
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       renderAmenities();
+      recalculateCommission();
 
       const stored = localStorage.getItem('busliner_google_user');
       if (stored) {
