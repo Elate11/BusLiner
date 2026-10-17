@@ -1665,83 +1665,24 @@
         Подключите микроавтобусы к BusLiner: ликвидируйте неявку пассажиров алгоритмом Снайпер 2.0, оцифруйте багажные отсеки под Smart Cargo и получайте ежедневные безналичные выплаты T+1 на расчетный счет.
       </p>
 
-      <!-- ROCK-SOLID CARRIER SEARCH / FLEET SPEC BAR -->
-      <form class="search-monolith-bar" onsubmit="event.preventDefault(); document.getElementById('slide-cta').scrollIntoView({behavior:'smooth'});">
-        
-        <!-- BASE CITY -->
-        <div class="search-cell cell-from">
-          <span class="cell-tag">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="8"/>
-              <circle cx="12" cy="12" r="3" fill="currentColor"/>
-            </svg>
-            База автопарка
-          </span>
-          <input type="text" id="input-from" class="cell-val" value="Гомель" autocomplete="off" placeholder="Город базы">
-          <button type="button" class="swap-trigger" id="btn-swap" title="Поменять направление">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/>
-            </svg>
-          </button>
+      <!-- HERO B2B ACTIONS -->
+      <div class="hero-actions-row" style="display: flex; gap: 16px; align-items: center; margin-bottom: 40px; flex-wrap: wrap;">
+        <a href="#slide-cta" class="btn btn-accent" style="padding: 16px 36px; font-size: 15px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(29, 78, 216, 0.4);">
+          <span>Подключить автопарк к BusLiner</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px; vertical-align: middle;">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+        <a href="#slide-schedule" class="btn btn-secondary" style="padding: 16px 28px; font-size: 14px; border-radius: 12px; color: #FFFFFF; border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.06); backdrop-filter: blur(8px);">
+          <span>Смотреть реестр рейсов</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px; vertical-align: middle;">
+            <path d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+          </svg>
+        </a>
+        <div class="mono" style="font-size: 12px; color: #94A3B8; margin-left: 8px;">
+          ● Подключение за 24 часа &bull; Без покупки оборудования &bull; Клиринг T+1
         </div>
-
-        <!-- MAIN ROUTE -->
-        <div class="search-cell cell-to">
-          <span class="cell-tag">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
-            Основная линия
-          </span>
-          <input type="text" id="input-to" class="cell-val" value="Минск" autocomplete="off" placeholder="Ключевой маршрут">
-        </div>
-
-        <!-- FLEET SIZE -->
-        <div class="search-cell cell-date">
-          <span class="cell-tag">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="4" width="20" height="16" rx="2"/>
-              <path d="M7 15h10M9 9h6"/>
-            </svg>
-            Машин в парке
-          </span>
-          <select class="cell-val cell-val-select">
-            <option>1 &ndash; 3 микроавтобуса</option>
-            <option selected>4 &ndash; 8 микроавтобусов</option>
-            <option>9 &ndash; 15 микроавтобусов</option>
-            <option>16+ автоколонна</option>
-          </select>
-        </div>
-
-        <!-- FLEET VEHICLE -->
-        <div class="search-cell cell-luggage">
-          <span class="cell-tag">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="7" width="20" height="14" rx="2"/>
-              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-            </svg>
-            Тип техники
-          </span>
-          <select class="cell-val cell-val-select">
-            <option selected>Mercedes Sprinter</option>
-            <option>VW Crafter</option>
-            <option>Iveco Daily</option>
-            <option>Смешанный автопарк</option>
-          </select>
-        </div>
-
-        <!-- SUBMIT -->
-        <div class="search-cell-btn">
-          <a href="#slide-cta" class="search-submit-btn">
-            <span>Подключить парк</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </a>
-        </div>
-
-      </form>
+      </div>
 
       <!-- 4 PUNCHY PROMISES (HORIZONTAL MODULAR GRID) -->
       <div class="features-hero-row">
