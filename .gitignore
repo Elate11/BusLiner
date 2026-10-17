@@ -9,3 +9,4 @@ Thumbs.db
 # Environment & secrets
 .env
 .env.local
+__pycache__/

@@ -17,6 +17,7 @@ import time
 import hmac
 import hashlib
 import secrets
+import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 from urllib.request import Request, urlopen
@@ -26,7 +27,7 @@ from typing import Dict, Any, Optional
 # ==============================================================================
 # CONFIGURATION & SECURITY PARAMS
 # ==============================================================================
-TELEGRAM_BOT_TOKEN = os.getenv("BUSLINER_TELEGRAM_BOT_TOKEN", "7980123456:AAFl33t-BusLinerCarrierAuthTokenMock_XYZ")
+TELEGRAM_BOT_TOKEN = os.getenv("BUSLINER_TELEGRAM_BOT_TOKEN", "8750251587:AAG78r9fxqKNwPxa_LazTNv-h54mHJOJquI")
 BOT_USERNAME = os.getenv("BUSLINER_BOT_USERNAME", "BusLinerFleetBot")
 SERVER_HOST = os.getenv("BUSLINER_AUTH_HOST", "0.0.0.0")
 SERVER_PORT = int(os.getenv("BUSLINER_AUTH_PORT", "8080"))
@@ -146,6 +147,126 @@ def send_login_prompt_to_telegram(chat_id: int, session_token: str, device_hint:
         "parse_mode": "Markdown",
         "reply_markup": keyboard
     })
+
+
+def handle_telegram_update(update: Dict[str, Any]) -> None:
+    """Processes inbound Telegram updates (commands and callback queries)."""
+    if "message" in update:
+        msg = update["message"]
+        chat_id = msg.get("chat", {}).get("id")
+        user = msg.get("from", {})
+        text = msg.get("text", "").strip()
+
+        if text.startswith("/start auth_"):
+            token = text.replace("/start auth_", "").strip()
+            session = ACTIVE_AUTH_SESSIONS.get(token)
+            if session and not session.get("consumed"):
+                clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Диспетчер")
+                first_name = user.get("first_name", "Диспетчер")
+                session["status"] = "authorized"
+                session["telegram_user"] = {
+                    "id": user.get("id"),
+                    "first_name": first_name,
+                    "last_name": user.get("last_name", ""),
+                    "username": clean_username,
+                    "auth_date": int(time.time()),
+                    "auth_method": "telegram_bot_challenge"
+                }
+                reply = (
+                    f"✅ *Вход успешно подтвержден!*\n\n"
+                    f"Здравствуйте, {first_name}!\n"
+                    f"Вы авторизованы в диспетчерской *BusLiner Partners*.\n\n"
+                    f"💻 Окно браузера автоматически перейдет в рабочую консоль.\n"
+                    f"🔒 Сессия верифицирована (СТБ 1389-2003)."
+                )
+                send_telegram_api_request("sendMessage", {
+                    "chat_id": chat_id,
+                    "text": reply,
+                    "parse_mode": "Markdown"
+                })
+            else:
+                send_telegram_api_request("sendMessage", {
+                    "chat_id": chat_id,
+                    "text": "⚠️ *Срок действия ссылки истек.*\nПожалуйста, нажмите «Войти через Telegram» на сайте еще раз.",
+                    "parse_mode": "Markdown"
+                })
+
+        elif text.startswith("/start"):
+            first_name = user.get("first_name", "Перевозчик")
+            welcome = (
+                f"👋 *Здравствуйте, {first_name}!*\n\n"
+                f"Это официальный бот диспетчерской платформы *BusLiner Partners* (@{BOT_USERNAME}).\n\n"
+                f"🔑 Бот используется для мгновенной 2FA-авторизации, уведомлений о рейсах и клиринге T+1.\n"
+                f"Чтобы войти в систему, нажмите *«Войти через Telegram»* на портале перевозчиков."
+            )
+            send_telegram_api_request("sendMessage", {
+                "chat_id": chat_id,
+                "text": welcome,
+                "parse_mode": "Markdown"
+            })
+
+    elif "callback_query" in update:
+        cb = update["callback_query"]
+        cb_id = cb.get("id")
+        cb_data = cb.get("data", "")
+        user = cb.get("from", {})
+        chat_id = cb.get("message", {}).get("chat", {}).get("id")
+
+        if cb_data.startswith("auth_confirm:"):
+            token = cb_data.replace("auth_confirm:", "").strip()
+            session = ACTIVE_AUTH_SESSIONS.get(token)
+            if session:
+                clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Диспетчер")
+                session["status"] = "authorized"
+                session["telegram_user"] = {
+                    "id": user.get("id"),
+                    "first_name": user.get("first_name", "Диспетчер"),
+                    "last_name": user.get("last_name", ""),
+                    "username": clean_username,
+                    "auth_date": int(time.time()),
+                    "auth_method": "telegram_callback"
+                }
+                send_telegram_api_request("answerCallbackQuery", {
+                    "callback_query_id": cb_id,
+                    "text": "✅ Вход в BusLiner подтвержден!"
+                })
+                send_telegram_api_request("sendMessage", {
+                    "chat_id": chat_id,
+                    "text": "✅ *Авторизация подтверждена.* Окно браузера входит в консоль.",
+                    "parse_mode": "Markdown"
+                })
+        elif cb_data.startswith("auth_deny:"):
+            token = cb_data.replace("auth_deny:", "").strip()
+            session = ACTIVE_AUTH_SESSIONS.get(token)
+            if session:
+                session["status"] = "denied"
+            send_telegram_api_request("answerCallbackQuery", {
+                "callback_query_id": cb_id,
+                "text": "🚫 Вход отклонен."
+            })
+
+
+def telegram_polling_worker():
+    """Background worker continuously pulling updates from Telegram Bot API."""
+    print("🤖 Telegram Bot Polling worker started...")
+    last_update_id = 0
+    while True:
+        try:
+            url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/getUpdates?offset={last_update_id + 1}&timeout=20"
+            req = Request(url, headers={"User-Agent": "BusLinerFleetBot/2.0"})
+            with urlopen(req, timeout=25) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                if not data.get("ok"):
+                    time.sleep(2)
+                    continue
+                for update in data.get("result", []):
+                    last_update_id = update["update_id"]
+                    try:
+                        handle_telegram_update(update)
+                    except Exception as ex:
+                        print(f"[Update Error] {ex}", file=sys.stderr)
+        except Exception as e:
+            time.sleep(2)
 
 
 # ==============================================================================
@@ -342,6 +463,10 @@ class TelegramAuthHTTPHandler(BaseHTTPRequestHandler):
 # MAIN ENTRYPOINT & DAEMON RUNNER
 # ==============================================================================
 def run_auth_server(host: str = SERVER_HOST, port: int = SERVER_PORT):
+    # Start Telegram background polling thread
+    polling_thread = threading.Thread(target=telegram_polling_worker, daemon=True)
+    polling_thread.start()
+
     server_address = (host, port)
     httpd = HTTPServer(server_address, TelegramAuthHTTPHandler)
     print(f"==================================================================")
