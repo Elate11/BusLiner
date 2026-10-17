@@ -68,39 +68,6 @@
     .serif { font-family: var(--font-display); }
     .hanging-quote { text-indent: -0.45em; padding-left: 0.45em; }
 
-    /* NAV PARTNERS/ROLE BUTTON */
-    .nav-btn-passengers {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 5px 13px;
-      border-radius: 10px;
-      background: rgba(59, 130, 246, 0.16);
-      border: 1px solid rgba(147, 197, 253, 0.35);
-      color: #93C5FD !important;
-      font-weight: 600;
-      font-size: 13px;
-      text-decoration: none;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .nav-btn-passengers:hover {
-      background: rgba(59, 130, 246, 0.3);
-      border-color: #93C5FD;
-      color: #FFFFFF !important;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
-    }
-    .app-nav.on-light .nav-btn-passengers {
-      background: rgba(30, 58, 138, 0.08);
-      border-color: rgba(30, 58, 138, 0.25);
-      color: #1E3A8A !important;
-    }
-    .app-nav.on-light .nav-btn-passengers:hover {
-      background: #1E3A8A;
-      border-color: #1E3A8A;
-      color: #FFFFFF !important;
-    }
-
     /* FIXED NAVIGATION */
     nav.app-nav {
       position: fixed;
@@ -1667,7 +1634,6 @@
         <li><a href="#slide-sniper">Снайпер</a></li>
         <li><a href="#slide-reviews">Отзывы</a></li>
         <li><a href="#slide-cta">Контакты</a></li>
-        <li><a href="busliner-partners.html" class="nav-btn-passengers" id="nav-btn-partners" title="Перейти в раздел для автопарков и перевозчиков"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -1px; margin-right: 4px;"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h10M9 9h6"/></svg>Перевозчикам &rarr;</a></li>
       </ul>
       <div>
         <a href="aura-passenger-app.html" class="btn btn-accent" style="padding: 8px 18px; font-size: 12px;">Выбрать билет &rarr;</a>
@@ -2274,7 +2240,6 @@
               <li><a href="aura-passenger-app.html">Выбор места в салоне</a></li>
               <li><a href="#slide-sniper">Автовыкуп «Снайпер»</a></li>
               <li><a href="aura-passenger-app.html">Офлайн QR-билет</a></li>
-              <li><a href="busliner-partners.html" style="color: #93C5FD; font-weight: 600;">Перевозчикам и автопаркам &rarr;</a></li>
             </ul>
           </div>
 
@@ -2358,22 +2323,6 @@
   </section>
 
   <script>
-    // =========================================================================
-    // LOGIC FOR "ПЕРЕВОЗЧИКАМ" BUTTON
-    // =========================================================================
-    (function initPartnerNavLogic() {
-      const partnerLinks = document.querySelectorAll('a[href*="busliner-partners.html"], #nav-btn-partners');
-      partnerLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          link.style.opacity = '0.6';
-          link.style.transform = 'scale(0.96)';
-          setTimeout(() => {
-            window.location.href = 'busliner-partners.html';
-          }, 60);
-        });
-      });
-    })();
 
     // 1. Force reload to always start at the very top (Slide 1 Hero)
     if ('scrollRestoration' in history) {
