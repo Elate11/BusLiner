@@ -2037,13 +2037,146 @@
       background: rgba(255, 255, 255, 0.18);
       color: #FFFFFF;
     }
-    .form-label-subtle {
-      display: block;
-      font-size: 11.5px;
-      color: #94A3B8;
-      margin-bottom: 6px;
-      font-weight: 500;
-      letter-spacing: 0.03em;
+    /* ==========================================================================
+       COMPREHENSIVE MOTION & INTERACTION SUITE (ANIMATIONS FOR EVERYTHING)
+       ========================================================================== */
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .scroll-reveal.revealed {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+    .stagger-1 { transition-delay: 0.1s !important; }
+    .stagger-2 { transition-delay: 0.2s !important; }
+    .stagger-3 { transition-delay: 0.3s !important; }
+    .stagger-4 { transition-delay: 0.4s !important; }
+    .stagger-5 { transition-delay: 0.5s !important; }
+
+    /* Universal Button Micro-interactions & Shimmer */
+    .btn, .btn-accent, .btn-primary, .btn-secondary, a.btn {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .btn:hover, .btn-accent:hover, .btn-primary:hover, a.btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(30, 58, 138, 0.32) !important;
+    }
+    .btn:active, .btn-accent:active, .btn-primary:active, a.btn:active {
+      transform: translateY(0) scale(0.985);
+    }
+    .btn-accent::after, .btn-primary::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 70%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.26), transparent);
+      transform: skewX(-20deg);
+      transition: none;
+    }
+    .btn-accent:hover::after, .btn-primary:hover::after {
+      left: 140%;
+      transition: left 0.85s ease-in-out;
+    }
+
+    /* Floating Badges */
+    .floating-pill {
+      animation: subtleFloat 3.8s ease-in-out infinite;
+    }
+    @keyframes subtleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    /* Live Fleet Scanner Line */
+    .radar-sweep-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #22C55E, transparent);
+      box-shadow: 0 0 14px #22C55E;
+      pointer-events: none;
+      z-index: 5;
+      animation: radarScanSweep 4.5s ease-in-out infinite;
+    }
+    @keyframes radarScanSweep {
+      0% { top: 0%; opacity: 0; }
+      12% { opacity: 0.85; }
+      88% { opacity: 0.85; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    /* Live Pulsing Green Dot */
+    .pulse-dot-live {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22C55E;
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+      animation: livePulseRing 2s infinite cubic-bezier(0.66, 0, 0, 1);
+    }
+    @keyframes livePulseRing {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+
+    /* Table Rows Elevation & Highlight */
+    .table-interactive tbody tr,
+    #fleet-schedule-tbody tr {
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .table-interactive tbody tr:hover,
+    #fleet-schedule-tbody tr:hover {
+      background-color: #F8FAFC !important;
+      transform: scale(1.003) translateX(4px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Card 3D Hover Elevations */
+    .hover-lift-card {
+      transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .hover-lift-card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.09) !important;
+    }
+
+    /* Sniper Crosshair Motion */
+    .sniper-crosshair-anim {
+      animation: crosshairPulse 3.2s ease-in-out infinite;
+    }
+    @keyframes crosshairPulse {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.05) rotate(2deg); }
+    }
+
+    /* Slider track hover glow */
+    input[type=range] {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    input[type=range]:hover {
+      filter: brightness(1.12);
+    }
+
+    /* Step Connector Flow Line */
+    .flow-connector-line {
+      background: linear-gradient(90deg, #1E3A8A, #60A5FA, #1E3A8A) !important;
+      background-size: 200% 200% !important;
+      animation: gradientFlowLine 3s linear infinite !important;
+    }
+    @keyframes gradientFlowLine {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
     }
 
   </style>
@@ -3386,11 +3519,103 @@
       }
     };
 
+    window.showPartnerToast = function(title, message) {
+      let toast = document.getElementById('partner-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'partner-toast';
+        toast.style.cssText = `
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          background: #0F172A;
+          color: #FFFFFF;
+          padding: 16px 22px;
+          border-radius: 12px;
+          box-shadow: 0 20px 45px rgba(0,0,0,0.3);
+          border: 1px solid rgba(255,255,255,0.12);
+          z-index: 999999;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-family: var(--font-body);
+          max-width: 440px;
+          transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+          transform: translateY(20px);
+          opacity: 0;
+        `;
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `
+        <div style="flex-shrink: 0; width: 24px; height: 24px; background: #22C55E; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 14px;">✓</div>
+        <div>
+          <div style="font-weight: 700; font-size: 14px; color: #FFFFFF; margin-bottom: 2px;">${title}</div>
+          <div style="font-size: 12.5px; color: #94A3B8; line-height: 1.4;">${message}</div>
+        </div>
+      `;
+      toast.style.transform = 'translateY(0)';
+      toast.style.opacity = '1';
+
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(() => {
+        toast.style.transform = 'translateY(20px)';
+        toast.style.opacity = '0';
+      }, 4000);
+    };
+
     window.handlePartnerSubmit = function(e) {
       e.preventDefault();
-      alert('Спасибо! Заявка автопарка принята. Менеджер BusLiner partners свяжется с вами в течение 15 минут.');
       window.closePartnerModal();
+      showPartnerToast('Заявка автопарка принята', 'Менеджер верификации BusLiner Partners свяжется с вами в течение 15 минут.');
     };
+
+    // Universal Scroll Reveal & Micro-Interactions (Animations for Everything)
+    (function initUniversalAnimations() {
+      function setupObserver() {
+        const targets = document.querySelectorAll(
+          '.full-slide h2, .full-slide p, .comparison-card, .review-card, .step-item, .calc-card, .schedule-container, .nav-menu a'
+        );
+        targets.forEach((el, idx) => {
+          if (!el.classList.contains('scroll-reveal')) {
+            el.classList.add('scroll-reveal');
+            const delayClass = `stagger-${(idx % 4) + 1}`;
+            el.classList.add(delayClass);
+          }
+        });
+
+        const revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => revealObserver.observe(el));
+      }
+
+      // Live Radar Scanner in #slide-schedule
+      function setupRadarBar() {
+        const scheduleContainer = document.querySelector('#slide-schedule .schedule-container, #slide-schedule .schedule-table-wrap, #slide-schedule');
+        if (scheduleContainer && !document.getElementById('radar-sweep-scanner')) {
+          const radarBar = document.createElement('div');
+          radarBar.id = 'radar-sweep-scanner';
+          radarBar.className = 'radar-sweep-bar';
+          scheduleContainer.style.position = 'relative';
+          scheduleContainer.appendChild(radarBar);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          setupObserver();
+          setupRadarBar();
+        });
+      } else {
+        setupObserver();
+        setupRadarBar();
+      }
+    })();
 
     // Интеграция логики входа и авторизации в кнопку «Подключить парк»
     (function initCarrierNavPortal() {

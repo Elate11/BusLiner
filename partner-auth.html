@@ -82,6 +82,16 @@
       align-items: center;
       gap: 10px;
       text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    .brand-link:hover {
+      opacity: 0.92;
+    }
+    .brand-link svg {
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .brand-link:hover svg {
+      transform: scale(1.08) rotate(-1deg);
     }
     .brand-title {
       font-weight: 800;
@@ -111,6 +121,10 @@
       text-transform: lowercase;
       display: inline-block;
       vertical-align: baseline;
+      transition: transform 0.2s ease;
+    }
+    .brand-link:hover .badge-b2b {
+      transform: scale(1.05);
     }
     .header-support {
       font-size: 13px;
@@ -123,13 +137,15 @@
       color: var(--text-primary);
       text-decoration: none;
       font-weight: 600;
-      transition: color 0.15s ease;
+      transition: color 0.15s ease, transform 0.15s ease;
+      display: inline-block;
     }
     .header-support a:hover {
       color: var(--accent-institutional);
+      transform: translateY(-1px);
     }
 
-    /* MAIN CONTAINER */
+    /* MAIN CONTAINER WITH SMOOTH ENTRANCE */
     main.auth-main {
       flex: 1;
       display: flex;
@@ -147,6 +163,17 @@
       box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.02);
       overflow: hidden;
       position: relative;
+      animation: authCardEntrance 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes authCardEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(24px) scale(0.985);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     /* PILL-SWITCHER TABS (QUIET LUXURY) */
@@ -176,20 +203,41 @@
       justify-content: center;
       gap: 8px;
       border-radius: 10px;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
     }
-    .view-tab-btn:hover {
+    .view-tab-btn:hover:not(.active) {
       color: var(--text-primary);
+      background: rgba(30, 58, 138, 0.04);
+      transform: translateY(-1px);
     }
     .view-tab-btn.active {
       background: #FFFFFF;
       color: var(--accent-institutional);
       font-weight: 700;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.04);
+      transform: scale(1.01);
+    }
+    .view-tab-btn svg {
+      transition: transform 0.25s ease;
+    }
+    .view-tab-btn:hover svg {
+      transform: scale(1.12);
     }
 
     .panel-body {
       padding: 32px 36px 40px;
+      animation: panelFadeSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes panelFadeSlide {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* EDITORIAL HEADINGS */
@@ -201,6 +249,7 @@
       color: var(--text-primary);
       letter-spacing: -0.02em;
       margin-bottom: 8px;
+      transition: transform 0.3s ease;
     }
     .panel-heading em {
       font-style: italic;
@@ -236,18 +285,27 @@
       text-decoration: none;
       cursor: pointer;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-      transition: all 0.15s ease;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
     }
     .btn-oauth:hover {
-      background: #FDFDFB;
-      border-color: #CBD5E1;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
-      transform: translateY(-1px);
+      background: #FFFFFF;
+      border-color: #94A3B8;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+    .btn-oauth:active {
+      transform: translateY(0) scale(0.985);
     }
     .btn-oauth svg {
       width: 18px;
       height: 18px;
       flex-shrink: 0;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-oauth:hover svg {
+      transform: scale(1.15);
     }
     .btn-oauth.google-primary {
       border-color: #D1D5DB;
@@ -257,7 +315,7 @@
       background: var(--accent-soft);
     }
 
-    /* VERIFIED PROFILE BANNER */
+    /* VERIFIED PROFILE BANNER WITH ANIMATION */
     .google-profile-card {
       display: none;
       align-items: center;
@@ -268,6 +326,30 @@
       border: 1px solid var(--accent-border);
       border-radius: var(--radius-ctrl);
       margin-bottom: 24px;
+      animation: profileSlideIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      transition: all 0.25s ease;
+    }
+    @keyframes profileSlideIn {
+      0% { opacity: 0; transform: translateY(-10px) scale(0.97); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .badge-verified-google {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .badge-verified-google::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: #22C55E;
+      border-radius: 50%;
+      animation: greenBlink 2s infinite ease-in-out;
+    }
+    @keyframes greenBlink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.8); }
     }
     .google-avatar-img {
       width: 44px;
@@ -359,11 +441,17 @@
       font-family: var(--font-body);
       font-size: 14px;
       outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .form-input:hover {
+      border-color: #94A3B8;
+      background-color: #FAFAFA;
     }
     .form-input:focus {
       border-color: var(--accent-institutional);
-      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+      background-color: #FFFFFF;
+      box-shadow: 0 0 0 3.5px rgba(30, 58, 138, 0.12), 0 2px 6px rgba(0, 0, 0, 0.03);
+      transform: translateY(-1px);
     }
     .form-input::placeholder {
       color: var(--text-dim);
@@ -375,6 +463,10 @@
       display: flex;
       align-items: center;
       gap: 5px;
+      transition: color 0.2s ease;
+    }
+    .form-group:focus-within .form-hint {
+      color: var(--text-muted);
     }
 
     /* PASSWORD INPUT WITH EYE TOGGLE */
@@ -401,13 +493,14 @@
       align-items: center;
       justify-content: center;
       border-radius: 6px;
-      transition: color 0.15s ease;
+      transition: color 0.18s ease, transform 0.18s ease;
     }
     .btn-eye-toggle:hover {
       color: var(--accent-institutional);
+      transform: translateY(-50%) scale(1.12);
     }
 
-    /* BUTTONS EXACT MATCH TO BUSLINER DESIGN SYSTEM */
+    /* BUTTONS EXACT MATCH TO BUSLINER DESIGN SYSTEM + INTERACTIVE MOTION */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -419,23 +512,41 @@
       border-radius: var(--radius-ctrl);
       text-decoration: none;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       white-space: nowrap;
+      position: relative;
     }
     .btn-accent {
       background: var(--accent-institutional);
       color: #FFFFFF;
       border: 1px solid var(--accent-institutional);
       box-shadow: 0 4px 14px rgba(30, 58, 138, 0.2);
+      overflow: hidden;
     }
     .btn-accent:hover {
       background: var(--accent-hover);
       border-color: var(--accent-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(30, 58, 138, 0.28);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(30, 58, 138, 0.32);
     }
     .btn-accent:active {
-      transform: translateY(0);
+      transform: translateY(0) scale(0.985);
+      box-shadow: 0 3px 10px rgba(30, 58, 138, 0.2);
+    }
+    .btn-accent::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 70%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.24), transparent);
+      transform: skewX(-20deg);
+      transition: none;
+    }
+    .btn-accent:hover::after {
+      left: 140%;
+      transition: left 0.8s ease-in-out;
     }
     .btn-secondary {
       background: #FFFFFF;
@@ -444,10 +555,15 @@
     }
     .btn-secondary:hover {
       background: var(--surface-subtle);
-      border-color: #CBD5E1;
+      border-color: #94A3B8;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+    .btn-secondary:active {
+      transform: translateY(0) scale(0.985);
     }
 
-    /* MULTI-STEP WIZARD PROGRESS BAR (QUIET LUXURY) */
+    /* MULTI-STEP WIZARD PROGRESS BAR (ANIMATED) */
     .wizard-steps {
       display: flex;
       justify-content: space-between;
@@ -473,6 +589,11 @@
       align-items: center;
       gap: 6px;
       cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .wizard-step-item:hover .step-circle {
+      transform: scale(1.12);
+      border-color: var(--accent-institutional);
     }
     .step-circle {
       width: 32px;
@@ -486,18 +607,33 @@
       font-size: 12px;
       font-weight: 700;
       color: var(--text-dim);
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .wizard-step-item.active .step-circle {
       background: var(--accent-institutional);
       border-color: var(--accent-institutional);
       color: #FFFFFF;
       box-shadow: 0 0 0 4px var(--accent-soft);
+      animation: pulseActiveStep 2.4s infinite ease-in-out;
+    }
+    @keyframes pulseActiveStep {
+      0%, 100% {
+        box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.18);
+      }
+      50% {
+        box-shadow: 0 0 0 9px rgba(30, 58, 138, 0.05);
+      }
     }
     .wizard-step-item.done .step-circle {
       background: var(--status-available);
       border-color: var(--status-available);
       color: #FFFFFF;
+      animation: popDoneStep 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popDoneStep {
+      0% { transform: scale(0.7); }
+      60% { transform: scale(1.22); }
+      100% { transform: scale(1); }
     }
     .step-title {
       font-size: 11px;
@@ -505,13 +641,14 @@
       color: var(--text-dim);
       text-transform: uppercase;
       letter-spacing: 0.04em;
+      transition: color 0.2s ease;
     }
     .wizard-step-item.active .step-title {
       color: var(--accent-institutional);
       font-weight: 700;
     }
 
-    /* DYNAMIC AMENITIES CHIPS WRAPPER & ADDER */
+    /* DYNAMIC AMENITIES CHIPS WRAPPER & ADDER WITH POP-IN */
     .amenities-chips-wrap {
       display: flex;
       flex-wrap: wrap;
@@ -529,7 +666,16 @@
       font-size: 13px;
       color: var(--text-primary);
       font-weight: 500;
-      transition: all 0.15s ease;
+      transition: all 0.2s ease;
+      animation: chipPopIn 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes chipPopIn {
+      0% { opacity: 0; transform: scale(0.6) translateY(6px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .amenity-chip:hover {
+      background: #E2E8F0;
+      transform: translateY(-1px);
     }
     .amenity-chip.active {
       background: var(--accent-soft);
@@ -549,10 +695,11 @@
       line-height: 1;
       padding: 0 2px;
       border-radius: 50%;
-      transition: color 0.15s ease;
+      transition: all 0.18s ease;
     }
     .amenity-chip-remove:hover {
       color: #DC2626;
+      transform: scale(1.25);
     }
     .amenity-add-row {
       display: flex;
@@ -572,20 +719,29 @@
       line-height: 1.5;
       color: var(--accent-institutional);
       margin-bottom: 22px;
+      transition: transform 0.25s ease;
+    }
+    .info-callout:hover {
+      transform: translateY(-1px);
     }
 
-    /* WIZARD PANES */
+    /* WIZARD PANES WITH BUTTERY SMOOTH SLIDE TRANSITION */
     .wizard-step-pane {
       display: none;
     }
     .wizard-step-pane.active {
       display: block;
-      animation: fadeIn 0.25s ease forwards;
+      animation: wizardPaneSlideIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes wizardPaneSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateX(18px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
     .wizard-nav-buttons {
