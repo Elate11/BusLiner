@@ -13,33 +13,34 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
   <style>
     /* ==========================================================================
-       BUSLINER PARTNERS — AUTH & FLEET ONBOARDING MONOLITH
-       Strictly adhering to Freight Monolith & Quiet Luxury design tokens
+       BUSLINER PARTNERS — AUTH & FLEET ONBOARDING
+       Strict adherence to Quiet Luxury / Freight Monolith design tokens
+       Warm Noble Canvas (#F7F6F2) + Crisp White Card (#FFFFFF) + Institutional Navy (#1E3A8A)
        ========================================================================== */
     :root {
-      --canvas: #090B0E;
-      --canvas-subtle: #0F1217;
-      --card-bg: #14171F;
-      --card-inner: #191E27;
-      --border-hairline: rgba(255, 255, 255, 0.08);
-      --border-accent: rgba(59, 130, 246, 0.28);
-      --border-focus: #3B82F6;
+      --canvas: #F7F6F2;
+      --surface-card: #FFFFFF;
+      --surface-subtle: #F0EFEA;
+      --surface-elevated: #FAFAF8;
+      --border-hairline: #E2E2DC;
+      --border-focus: #1E3A8A;
       
-      --text-primary: #F8FAFC;
-      --text-muted: #94A3B8;
-      --text-dim: #64748B;
+      --text-primary: #141518;
+      --text-muted: #525660;
+      --text-dim: #8E929B;
       
-      --accent-navy: #1E3A8A;
-      --accent-blue: #3B82F6;
+      --accent-institutional: #1E3A8A;
+      --accent-hover: #152A68;
+      --accent-soft: #EEF4FF;
+      --accent-border: #BCD0FA;
       --accent-sky: #93C5FD;
-      --accent-glow: rgba(59, 130, 246, 0.15);
       
-      --status-success: #10B981;
-      --status-success-bg: rgba(16, 185, 129, 0.12);
+      --status-available: #0E7048;
+      --status-available-bg: #EAF7EE;
       
       --font-display: 'Newsreader', Georgia, serif;
       --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --radius-card: 20px;
+      --radius-card: 24px;
       --radius-ctrl: 12px;
     }
 
@@ -53,9 +54,8 @@
       min-height: 100vh;
       background-color: var(--canvas);
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(30, 58, 138, 0.28) 0%, transparent 60%),
-        radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.6) 0%, transparent 50%),
-        linear-gradient(180deg, #090B0E 0%, #0D1016 100%);
+        radial-gradient(circle at 50% 0%, rgba(30, 58, 138, 0.04) 0%, transparent 60%),
+        linear-gradient(180deg, #FBFBF9 0%, #F5F4EE 100%);
       font-family: var(--font-body);
       color: var(--text-primary);
       -webkit-font-smoothing: antialiased;
@@ -63,15 +63,20 @@
       flex-direction: column;
     }
 
-    /* TOP BRAND BAR */
-    header.auth-header {
-      padding: 20px 32px;
+    /* FIXED TOP NAVIGATION (MATCHES BUSLINER ON-LIGHT THEME) */
+    header.app-nav {
+      height: 64px;
+      padding: 0 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--border-hairline);
-      background: rgba(9, 11, 14, 0.7);
+      background: rgba(247, 246, 242, 0.88);
       backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-hairline);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
     .brand-link {
       display: inline-flex;
@@ -83,20 +88,20 @@
       font-weight: 800;
       font-size: 19px;
       letter-spacing: -0.02em;
-      color: #FFFFFF;
+      color: var(--text-primary);
     }
     .brand-title-thin {
-      font-weight: 300;
-      color: var(--accent-sky);
+      font-weight: 400;
+      color: var(--accent-institutional);
     }
     .badge-b2b {
       font-size: 10px;
       font-weight: 700;
       padding: 3px 8px;
-      background: rgba(59, 130, 246, 0.16);
-      border: 1px solid rgba(59, 130, 246, 0.35);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-border);
       border-radius: 6px;
-      color: var(--accent-sky);
+      color: var(--accent-institutional);
       letter-spacing: 0.05em;
     }
     .header-support {
@@ -107,13 +112,13 @@
       gap: 16px;
     }
     .header-support a {
-      color: #FFFFFF;
+      color: var(--text-primary);
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
       transition: color 0.15s ease;
     }
     .header-support a:hover {
-      color: var(--accent-sky);
+      color: var(--accent-institutional);
     }
 
     /* MAIN CONTAINER */
@@ -122,91 +127,90 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 36px 20px 60px;
+      padding: 48px 20px 72px;
     }
 
     .auth-shell {
       width: 100%;
-      max-width: 720px;
-      background: var(--card-bg);
+      max-width: 700px;
+      background: var(--surface-card);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-card);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.03);
+      box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.02);
       overflow: hidden;
       position: relative;
     }
 
-    /* TABS TOGGLE (Вход / Регистрация автопарка) */
-    .view-tabs {
+    /* PILL-SWITCHER TABS (QUIET LUXURY) */
+    .view-tabs-wrapper {
+      padding: 20px 32px 0 32px;
+      background: var(--surface-card);
+    }
+    .view-tabs-pill {
       display: flex;
-      border-bottom: 1px solid var(--border-hairline);
-      background: rgba(15, 18, 23, 0.7);
+      background: var(--surface-subtle);
+      padding: 4px;
+      border-radius: 14px;
+      border: 1px solid var(--border-hairline);
     }
     .view-tab-btn {
       flex: 1;
-      padding: 18px 24px;
+      padding: 12px 20px;
       background: transparent;
       border: none;
       color: var(--text-muted);
       font-family: var(--font-body);
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      position: relative;
-      transition: all 0.2s ease;
+      border-radius: 10px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .view-tab-btn:hover {
-      color: #FFFFFF;
+      color: var(--text-primary);
     }
     .view-tab-btn.active {
-      color: #FFFFFF;
-      background: var(--card-bg);
-    }
-    .view-tab-btn.active::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--accent-blue);
-      box-shadow: 0 0 12px var(--accent-blue);
+      background: #FFFFFF;
+      color: var(--accent-institutional);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
     }
 
     .panel-body {
-      padding: 36px 40px;
+      padding: 32px 36px 40px;
     }
 
     /* EDITORIAL HEADINGS */
     .panel-heading {
       font-family: var(--font-display);
-      font-size: 28px;
-      line-height: 1.25;
+      font-size: 32px;
+      line-height: 1.2;
       font-weight: 400;
-      color: #FFFFFF;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
       margin-bottom: 8px;
     }
     .panel-heading em {
       font-style: italic;
-      color: var(--accent-sky);
+      color: var(--accent-institutional);
     }
     .panel-subheading {
-      font-size: 14px;
+      font-size: 14.5px;
       color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 26px;
+      line-height: 1.55;
+      margin-bottom: 28px;
     }
 
-    /* REAL GOOGLE AUTH CARD & BUTTONS */
+    /* REAL GOOGLE & TELEGRAM OAUTH BUTTONS */
     .oauth-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
     .btn-oauth {
       display: inline-flex;
@@ -214,22 +218,22 @@
       justify-content: center;
       gap: 10px;
       padding: 13px 18px;
-      background: var(--card-inner);
+      background: #FFFFFF;
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-ctrl);
-      color: #FFFFFF;
+      color: var(--text-primary);
       font-family: var(--font-body);
       font-size: 13.5px;
       font-weight: 600;
       text-decoration: none;
       cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+      transition: all 0.15s ease;
     }
     .btn-oauth:hover {
-      background: #202632;
-      border-color: rgba(255, 255, 255, 0.25);
+      background: #FDFDFB;
+      border-color: #CBD5E1;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
       transform: translateY(-1px);
     }
     .btn-oauth svg {
@@ -238,25 +242,22 @@
       flex-shrink: 0;
     }
     .btn-oauth.google-primary {
-      background: #182030;
-      border-color: rgba(66, 133, 244, 0.35);
-      box-shadow: 0 2px 10px rgba(66, 133, 244, 0.12);
+      border-color: #D1D5DB;
     }
     .btn-oauth.google-primary:hover {
-      background: #1E283D;
-      border-color: rgba(66, 133, 244, 0.6);
-      box-shadow: 0 4px 14px rgba(66, 133, 244, 0.2);
+      border-color: #93C5FD;
+      background: var(--accent-soft);
     }
 
-    /* VERIFIED GOOGLE IDENTITY CARD (AFTER SIGN-IN) */
+    /* VERIFIED PROFILE BANNER */
     .google-profile-card {
       display: none;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
       padding: 16px 20px;
-      background: rgba(30, 58, 138, 0.18);
-      border: 1px solid rgba(59, 130, 246, 0.35);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-border);
       border-radius: var(--radius-ctrl);
       margin-bottom: 24px;
     }
@@ -264,7 +265,8 @@
       width: 44px;
       height: 44px;
       border-radius: 50%;
-      border: 2px solid #3B82F6;
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       object-fit: cover;
       flex-shrink: 0;
     }
@@ -275,14 +277,15 @@
     .google-user-name {
       font-size: 14.5px;
       font-weight: 700;
-      color: #FFFFFF;
+      color: var(--text-primary);
       display: flex;
       align-items: center;
       gap: 8px;
     }
     .google-user-email {
-      font-size: 12.5px;
-      color: var(--accent-sky);
+      font-size: 13px;
+      color: var(--accent-institutional);
+      font-weight: 500;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -290,11 +293,11 @@
     .badge-verified-google {
       font-size: 10px;
       font-weight: 700;
-      padding: 2px 6px;
-      background: rgba(16, 185, 129, 0.18);
-      border: 1px solid #10B981;
+      padding: 2px 7px;
+      background: #EAF7EE;
+      border: 1px solid #A7F3D0;
       border-radius: 4px;
-      color: #6EE7B7;
+      color: var(--status-available);
     }
 
     /* DIVIDER */
@@ -304,9 +307,10 @@
       text-align: center;
       margin: 22px 0;
       color: var(--text-dim);
-      font-size: 11.5px;
+      font-size: 12px;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
+      font-weight: 500;
     }
     .auth-divider::before,
     .auth-divider::after {
@@ -320,7 +324,7 @@
 
     /* FORMS & INPUTS */
     .form-group {
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
     .form-row {
       display: grid;
@@ -332,31 +336,32 @@
       font-size: 12px;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #CBD5E1;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
       margin-bottom: 8px;
     }
     .form-input {
       width: 100%;
-      background: var(--card-inner);
+      height: 48px;
+      background: #FFFFFF;
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-ctrl);
-      padding: 13px 16px;
-      color: #FFFFFF;
+      padding: 0 16px;
+      color: var(--text-primary);
       font-family: var(--font-body);
       font-size: 14px;
       outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
     .form-input:focus {
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px var(--accent-glow);
+      border-color: var(--accent-institutional);
+      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
     }
     .form-input::placeholder {
-      color: #64748B;
+      color: var(--text-dim);
     }
     .form-hint {
-      font-size: 11.5px;
+      font-size: 12px;
       color: var(--text-dim);
       margin-top: 6px;
       display: flex;
@@ -364,51 +369,62 @@
       gap: 5px;
     }
 
-    /* PRIMARY BUTTONS */
-    .btn-primary {
+    /* BUTTONS EXACT MATCH TO BUSLINER DESIGN SYSTEM */
+    .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 100%;
-      padding: 15px 24px;
-      background: var(--accent-navy);
-      background-image: linear-gradient(180deg, #2563EB 0%, #1D4ED8 100%);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: var(--radius-ctrl);
-      color: #FFFFFF;
       font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+      font-size: 13.5px;
+      font-weight: 600;
+      padding: 13px 26px;
+      border-radius: var(--radius-ctrl);
+      text-decoration: none;
       cursor: pointer;
-      box-shadow: 0 8px 20px -4px rgba(29, 78, 216, 0.5);
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
+      white-space: nowrap;
     }
-    .btn-primary:hover {
-      background-image: linear-gradient(180deg, #3B82F6 0%, #2563EB 100%);
+    .btn-accent {
+      background: var(--accent-institutional);
+      color: #FFFFFF;
+      border: 1px solid var(--accent-institutional);
+      box-shadow: 0 4px 14px rgba(30, 58, 138, 0.2);
+    }
+    .btn-accent:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
       transform: translateY(-1px);
-      box-shadow: 0 12px 24px -4px rgba(29, 78, 216, 0.65);
+      box-shadow: 0 6px 18px rgba(30, 58, 138, 0.28);
     }
-    .btn-primary:active {
+    .btn-accent:active {
       transform: translateY(0);
     }
+    .btn-secondary {
+      background: #FFFFFF;
+      color: var(--text-primary);
+      border: 1px solid var(--border-hairline);
+    }
+    .btn-secondary:hover {
+      background: var(--surface-subtle);
+      border-color: #CBD5E1;
+    }
 
-    /* MULTI-STEP WIZARD PROGRESS BAR */
+    /* MULTI-STEP WIZARD PROGRESS BAR (QUIET LUXURY) */
     .wizard-steps {
       display: flex;
       justify-content: space-between;
       position: relative;
-      margin-bottom: 28px;
+      margin-bottom: 30px;
       padding: 0 8px;
     }
     .wizard-steps::before {
       content: '';
       position: absolute;
       top: 15px;
-      left: 24px;
-      right: 24px;
+      left: 28px;
+      right: 28px;
       height: 2px;
-      background: rgba(255, 255, 255, 0.08);
+      background: var(--border-hairline);
       z-index: 1;
     }
     .wizard-step-item {
@@ -424,8 +440,8 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: var(--card-inner);
-      border: 2px solid rgba(255, 255, 255, 0.14);
+      background: var(--surface-card);
+      border: 2px solid var(--border-hairline);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -435,14 +451,14 @@
       transition: all 0.2s ease;
     }
     .wizard-step-item.active .step-circle {
-      background: var(--accent-blue);
-      border-color: #93C5FD;
+      background: var(--accent-institutional);
+      border-color: var(--accent-institutional);
       color: #FFFFFF;
-      box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+      box-shadow: 0 0 0 4px var(--accent-soft);
     }
     .wizard-step-item.done .step-circle {
-      background: var(--status-success);
-      border-color: #6EE7B7;
+      background: var(--status-available);
+      border-color: var(--status-available);
       color: #FFFFFF;
     }
     .step-title {
@@ -453,7 +469,8 @@
       letter-spacing: 0.04em;
     }
     .wizard-step-item.active .step-title {
-      color: #FFFFFF;
+      color: var(--accent-institutional);
+      font-weight: 700;
     }
 
     /* AMENITIES CHIPS */
@@ -476,17 +493,18 @@
       align-items: center;
       gap: 10px;
       padding: 12px 14px;
-      background: var(--card-inner);
+      background: var(--surface-elevated);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-ctrl);
-      font-size: 13px;
-      color: #CBD5E1;
+      font-size: 13.5px;
+      color: var(--text-primary);
       transition: all 0.15s ease;
     }
     .chip-checkbox input:checked + .chip-box {
-      border-color: var(--accent-blue);
-      background: rgba(59, 130, 246, 0.1);
-      color: #FFFFFF;
+      border-color: var(--accent-border);
+      background: var(--accent-soft);
+      color: var(--accent-institutional);
+      font-weight: 600;
     }
 
     /* CALLOUT INFO */
@@ -494,12 +512,12 @@
       display: flex;
       gap: 12px;
       padding: 14px 18px;
-      background: rgba(30, 58, 138, 0.2);
-      border: 1px solid rgba(59, 130, 246, 0.3);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-border);
       border-radius: var(--radius-ctrl);
-      font-size: 13px;
+      font-size: 13.5px;
       line-height: 1.5;
-      color: #BFDBFE;
+      color: var(--accent-institutional);
       margin-bottom: 22px;
     }
 
@@ -525,29 +543,13 @@
       padding-top: 22px;
       border-top: 1px solid var(--border-hairline);
     }
-    .btn-secondary {
-      padding: 14px 24px;
-      background: var(--card-inner);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-ctrl);
-      color: #CBD5E1;
-      font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .btn-secondary:hover {
-      background: #202632;
-      color: #FFFFFF;
-    }
 
-    /* CLIENT ID CONFIG DRAWER */
+    /* CLIENT ID CONFIG */
     .oauth-settings-trigger {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 11px;
+      font-size: 11.5px;
       color: var(--text-dim);
       background: transparent;
       border: none;
@@ -555,19 +557,20 @@
       margin-top: 16px;
       padding: 4px 8px;
       border-radius: 6px;
+      transition: color 0.15s ease;
     }
     .oauth-settings-trigger:hover {
-      color: var(--accent-sky);
-      background: rgba(255, 255, 255, 0.05);
+      color: var(--accent-institutional);
     }
 
     /* FOOTER */
     footer.auth-footer {
-      padding: 24px;
+      padding: 24px 32px;
       text-align: center;
-      font-size: 12px;
+      font-size: 12.5px;
       color: var(--text-dim);
       border-top: 1px solid var(--border-hairline);
+      background: var(--canvas);
     }
     footer.auth-footer a {
       color: var(--text-muted);
@@ -578,13 +581,14 @@
       .panel-body { padding: 24px 20px; }
       .form-row, .oauth-grid, .amenities-grid { grid-template-columns: 1fr; }
       .wizard-steps { display: none; }
+      .view-tabs-wrapper { padding: 16px 20px 0; }
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP HEADER -->
-  <header class="auth-header">
+  <!-- FIXED TOP NAVIGATION (MATCHES BUSLINER ON-LIGHT) -->
+  <header class="app-nav">
     <a href="busliner-partners.html" class="brand-link">
       <svg width="26" height="26" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="28" height="28" rx="6" fill="#1E3A8A"/>
@@ -594,9 +598,9 @@
       <span class="brand-title">BUS<span class="brand-title-thin">LINER</span> <span class="badge-b2b">PARTNERS</span></span>
     </a>
     <div class="header-support">
-      <span>Диспетчерская поддержка:</span>
+      <span>Поддержка автопарков:</span>
       <a href="tel:+375297741200">+375 (29) 774-12-00</a>
-      <a href="busliner-partners.html" style="margin-left: 8px; color: var(--accent-sky);">← На сайт</a>
+      <a href="busliner-partners.html" style="color: var(--accent-institutional);">← На сайт</a>
     </div>
   </header>
 
@@ -604,16 +608,18 @@
   <main class="auth-main">
     <div class="auth-shell">
 
-      <!-- TABS: SIGN IN vs ONBOARDING -->
-      <div class="view-tabs">
-        <button type="button" class="view-tab-btn active" id="tab-login" onclick="switchView('login')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
-          Вход в диспетчерскую
-        </button>
-        <button type="button" class="view-tab-btn" id="tab-onboard" onclick="switchView('onboard')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-          Регистрация автопарка
-        </button>
+      <!-- TABS: PILL SWITCHER -->
+      <div class="view-tabs-wrapper">
+        <div class="view-tabs-pill">
+          <button type="button" class="view-tab-btn active" id="tab-login" onclick="switchView('login')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+            Вход в диспетчерскую
+          </button>
+          <button type="button" class="view-tab-btn" id="tab-onboard" onclick="switchView('onboard')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            Регистрация автопарка
+          </button>
+        </div>
       </div>
 
       <!-- ======================================================================
@@ -635,7 +641,7 @@
             </div>
             <div class="google-user-email" id="login-email-badge">director@transport.by</div>
           </div>
-          <button type="button" class="btn-secondary" style="padding: 8px 14px; font-size: 12px;" onclick="disconnectGoogle()">Сменить</button>
+          <button type="button" class="btn btn-secondary" style="padding: 7px 12px; font-size: 12px;" onclick="disconnectGoogle()">Сменить</button>
         </div>
 
         <!-- FAST OAUTH SIGN IN BUTTONS -->
@@ -660,13 +666,6 @@
           </button>
         </div>
 
-        <!-- Google GSI Hidden Auto Container for One Tap -->
-        <div id="g_id_onload"
-             data-client_id="407408718192-busliner-partners.apps.googleusercontent.com"
-             data-callback="handleCredentialResponse"
-             data-auto_prompt="false">
-        </div>
-
         <div class="auth-divider">
           <span>или через корпоративную почту</span>
         </div>
@@ -680,28 +679,28 @@
           <div class="form-group">
             <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
               <label class="form-label" for="login-password" style="margin-bottom: 0;">Пароль</label>
-              <a href="#" onclick="alert('Ссылка для сброса пароля отправлена на указанный email.'); return false;" style="font-size: 11.5px; color: var(--accent-sky); text-decoration: none;">Забыли пароль?</a>
+              <a href="#" onclick="alert('Ссылка для сброса пароля отправлена на указанный email.'); return false;" style="font-size: 12px; color: var(--accent-institutional); text-decoration: none; font-weight: 500;">Забыли пароль?</a>
             </div>
             <input type="password" id="login-password" class="form-input" placeholder="••••••••••••" required value="demo-password-2026">
           </div>
 
           <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" id="remember-me" checked style="accent-color: var(--accent-blue);">
-            <label for="remember-me" style="font-size: 12.5px; color: var(--text-muted); cursor: pointer;">Запомнить рабочую сессию на 30 дней</label>
+            <input type="checkbox" id="remember-me" checked style="accent-color: var(--accent-institutional); width: 16px; height: 16px;">
+            <label for="remember-me" style="font-size: 13px; color: var(--text-muted); cursor: pointer;">Запомнить рабочую сессию на 30 дней</label>
           </div>
 
-          <button type="submit" class="btn-primary" id="btn-submit-login">
+          <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
             Войти в кабинет диспетчера &rarr;
           </button>
         </form>
 
-        <div style="margin-top: 24px; padding: 14px; background: var(--card-inner); border-radius: var(--radius-ctrl); border: 1px dashed var(--border-hairline); text-align: center; font-size: 13px; color: var(--text-muted);">
+        <div style="margin-top: 24px; padding: 14px; background: var(--surface-subtle); border-radius: var(--radius-ctrl); border: 1px dashed var(--border-hairline); text-align: center; font-size: 13.5px; color: var(--text-muted);">
           Еще не подключили автопарк? 
-          <a href="#onboard" onclick="switchView('onboard'); return false;" style="color: var(--accent-sky); font-weight: 600; text-decoration: none; margin-left: 4px;">Зарегистрировать компанию &rarr;</a>
+          <a href="#onboard" onclick="switchView('onboard'); return false;" style="color: var(--accent-institutional); font-weight: 700; text-decoration: none; margin-left: 4px;">Зарегистрировать компанию &rarr;</a>
         </div>
 
         <!-- OAUTH CLIENT ID CONFIG HELPER -->
-        <div style="text-align: center; margin-top: 8px;">
+        <div style="text-align: center; margin-top: 10px;">
           <button type="button" class="oauth-settings-trigger" onclick="toggleOAuthConfig()">
             ⚙️ Google Client ID: <span id="active-client-id-label">Default BusLiner Project</span>
           </button>
@@ -741,7 +740,7 @@
           <div class="wizard-step-pane active" id="step-pane-1">
             <h2 class="panel-heading">Шаг 1: <em>Руководитель</em> или Диспетчер</h2>
             <p class="panel-subheading">
-              Создайте профиль владельца автопарка. Настоящая авторизация через Google Workspace заполнит данные и подтвердит email автоматически.
+              Создайте профиль владельца автопарка. Авторизация через Google Workspace заполнит данные и подтвердит email автоматически.
             </p>
 
             <!-- 1-CLICK REAL GOOGLE AUTH -->
@@ -767,7 +766,7 @@
                 </div>
                 <div class="google-user-email" id="onboard-email-display">director@transport.by</div>
               </div>
-              <span style="font-size: 11.5px; color: #6EE7B7; font-weight: 600;">✓ Email подтвержден</span>
+              <span style="font-size: 12px; color: var(--status-available); font-weight: 700;">✓ Email подтвержден</span>
             </div>
 
             <div class="auth-divider"><span>или введите реквизиты вручную</span></div>
@@ -798,7 +797,7 @@
 
             <div class="wizard-nav-buttons">
               <div></div>
-              <button type="button" class="btn-primary" style="width: auto; padding: 14px 32px;" onclick="nextStep(2)">
+              <button type="button" class="btn btn-accent" style="padding: 13px 28px;" onclick="nextStep(2)">
                 Далее: Реквизиты юрлица &rarr;
               </button>
             </div>
@@ -861,8 +860,8 @@
             </div>
 
             <div class="wizard-nav-buttons">
-              <button type="button" class="btn-secondary" onclick="goToStep(1)">&larr; Назад</button>
-              <button type="button" class="btn-primary" style="width: auto; padding: 14px 32px;" onclick="nextStep(3)">
+              <button type="button" class="btn btn-secondary" onclick="goToStep(1)">&larr; Назад</button>
+              <button type="button" class="btn btn-accent" style="padding: 13px 28px;" onclick="nextStep(3)">
                 Далее: Первый борт автопарка &rarr;
               </button>
             </div>
@@ -943,8 +942,8 @@
             </div>
 
             <div class="wizard-nav-buttons">
-              <button type="button" class="btn-secondary" onclick="goToStep(2)">&larr; Назад</button>
-              <button type="button" class="btn-primary" style="width: auto; padding: 14px 32px;" onclick="nextStep(4)">
+              <button type="button" class="btn btn-secondary" onclick="goToStep(2)">&larr; Назад</button>
+              <button type="button" class="btn btn-accent" style="padding: 13px 28px;" onclick="nextStep(4)">
                 Далее: Регулярный маршрут &rarr;
               </button>
             </div>
@@ -988,20 +987,20 @@
             </div>
 
             <!-- SUMMARY CARD -->
-            <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-ctrl); padding: 16px; margin-bottom: 24px;">
+            <div style="background: var(--surface-subtle); border: 1px solid var(--border-hairline); border-radius: var(--radius-ctrl); padding: 18px; margin-bottom: 24px;">
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="font-size: 13.5px; color: #E2E8F0;">
-                  <strong>Гарантия подключения за 24 часа:</strong> Договор-оферта, аккаунт в диспетчерской и выгрузка расписания в продажу без паузы в движении.
+                <div style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5;">
+                  <strong style="color: var(--text-primary);">Гарантия подключения за 24 часа:</strong> Договор-оферта, аккаунт в диспетчерской и выгрузка расписания в продажу без паузы в движении.
                 </div>
-                <div style="font-size: 18px; font-weight: 800; color: #10B981; font-family: var(--font-body);">
+                <div style="font-size: 16px; font-weight: 800; color: var(--accent-institutional); padding: 6px 12px; background: var(--accent-soft); border: 1px solid var(--accent-border); border-radius: 8px;">
                   T+1 Клиринг
                 </div>
               </div>
             </div>
 
             <div class="wizard-nav-buttons">
-              <button type="button" class="btn-secondary" onclick="goToStep(3)">&larr; Назад</button>
-              <button type="submit" class="btn-primary" style="width: auto; padding: 14px 36px; background-image: linear-gradient(180deg, #10B981 0%, #059669 100%); border-color: rgba(52, 211, 153, 0.3); box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);">
+              <button type="button" class="btn btn-secondary" onclick="goToStep(3)">&larr; Назад</button>
+              <button type="submit" class="btn btn-accent" style="padding: 13px 32px;">
                 Завершить регистрацию и запустить автопарк &rarr;
               </button>
             </div>
@@ -1011,41 +1010,41 @@
                ШАГ 5: ЭКРАН ПОДТВЕРЖДЕНИЯ (SUCCESS STATE)
                ------------------------------------------------------------- -->
           <div class="wizard-step-pane" id="step-pane-success">
-            <div style="text-align: center; padding: 24px 12px;">
-              <div style="width: 72px; height: 72px; background: rgba(16, 185, 129, 0.15); border: 2px solid #10B981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: #10B981;">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <div style="text-align: center; padding: 16px 8px;">
+              <div style="width: 64px; height: 64px; background: var(--status-available-bg); border: 2px solid var(--status-available); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; color: var(--status-available);">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 6L9 17l-5-5"/>
                 </svg>
               </div>
               <h2 class="panel-heading">Автопарк успешно <em>зарегистрирован!</em></h2>
-              <p class="panel-subheading" style="max-width: 520px; margin: 0 auto 28px;">
-                Заявка внесена в реестр BusLiner Partners (статус: <span style="color: #6EE7B7; font-weight: 700;">pending_verification</span>). Ваш персональный менеджер верификации активирует клиринг T+1 в течение 15 минут.
+              <p class="panel-subheading" style="max-width: 520px; margin: 0 auto 26px;">
+                Заявка внесена в реестр BusLiner Partners (статус: <span style="color: var(--status-available); font-weight: 700;">pending_verification</span>). Ваш персональный менеджер верификации активирует клиринг T+1 в течение 15 минут.
               </p>
 
-              <div style="background: var(--card-inner); border: 1px solid var(--border-hairline); border-radius: var(--radius-ctrl); padding: 20px; max-width: 480px; margin: 0 auto 28px; text-align: left; font-size: 13px; line-height: 1.8;">
-                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 8px;">
-                  <span style="color: var(--text-dim);">Организация:</span>
-                  <strong style="color: #FFFFFF;" id="succ-org">ООО «ГомельЛайнТранс»</strong>
+              <div style="background: var(--surface-subtle); border: 1px solid var(--border-hairline); border-radius: var(--radius-ctrl); padding: 20px; max-width: 480px; margin: 0 auto 28px; text-align: left; font-size: 13.5px; line-height: 1.8;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-hairline); padding-bottom: 8px;">
+                  <span style="color: var(--text-muted);">Организация:</span>
+                  <strong style="color: var(--text-primary);" id="succ-org">ООО «ГомельЛайнТранс»</strong>
                 </div>
-                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 8px 0;">
-                  <span style="color: var(--text-dim);">УНП:</span>
-                  <span style="color: #FFFFFF; font-variant-numeric: tabular-nums;" id="succ-tax">490812345</span>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-hairline); padding: 8px 0;">
+                  <span style="color: var(--text-muted);">УНП:</span>
+                  <span style="color: var(--text-primary); font-variant-numeric: tabular-nums; font-weight: 600;" id="succ-tax">490812345</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 8px 0;">
-                  <span style="color: var(--text-dim);">Головной борт:</span>
-                  <span style="color: #FFFFFF;" id="succ-veh">7 TAX 8124 (Mercedes Sprinter)</span>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-hairline); padding: 8px 0;">
+                  <span style="color: var(--text-muted);">Головной борт:</span>
+                  <span style="color: var(--text-primary);" id="succ-veh">7 TAX 8124 (Mercedes Sprinter)</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; padding-top: 8px;">
-                  <span style="color: var(--text-dim);">Маршрут:</span>
-                  <strong style="color: var(--accent-sky);" id="succ-route">Гомель ➔ Минск</strong>
+                  <span style="color: var(--text-muted);">Маршрут:</span>
+                  <strong style="color: var(--accent-institutional);" id="succ-route">Гомель ➔ Минск</strong>
                 </div>
               </div>
 
               <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-                <button type="button" class="btn-primary" style="width: auto; padding: 14px 32px;" onclick="enterDemoDashboard()">
+                <button type="button" class="btn btn-accent" style="padding: 13px 28px;" onclick="enterDemoDashboard()">
                   Перейти в панель диспетчера (Live-демо) &rarr;
                 </button>
-                <a href="busliner-partners.html" class="btn-secondary" style="text-decoration: none; padding: 14px 24px;">
+                <a href="busliner-partners.html" class="btn btn-secondary" style="padding: 13px 24px;">
                   Вернуться на презентацию
                 </a>
               </div>
@@ -1067,7 +1066,7 @@
       <div>
         <a href="#">Оферта для перевозчиков</a> &bull; 
         <a href="#">Регламент СТБ 1389-2003</a> &bull; 
-        <a href="#">Безопасность платежей</a>
+        <a href="#">Безопасность платежей T+1</a>
       </div>
     </div>
   </footer>
@@ -1076,15 +1075,11 @@
        REAL GOOGLE IDENTITY SERVICES & CONTROLLER JAVASCRIPT
        ========================================================================== -->
   <script>
-    // --------------------------------------------------------------------------
-    // 1. Google OAuth Configuration & State
-    // --------------------------------------------------------------------------
     let GOOGLE_CLIENT_ID = localStorage.getItem('busliner_google_client_id') || '407408718192-busliner-partners.apps.googleusercontent.com';
     let tokenClient = null;
     let activeGoogleUser = null;
-    let currentAuthMode = 'login'; // 'login' or 'onboard'
+    let currentAuthMode = 'login';
 
-    // Parse Google JWT ID Token (Base64URL decode)
     function parseJwt(token) {
       try {
         const base64Url = token.split('.')[1];
@@ -1099,16 +1094,13 @@
       }
     }
 
-    // Initialize Google Identity Services
     function initGIS() {
       if (typeof google === 'undefined' || !google.accounts) {
-        console.warn('Google Identity Services not yet loaded, retrying...');
         setTimeout(initGIS, 400);
         return;
       }
 
       try {
-        // One Tap & Credential Response
         google.accounts.id.initialize({
           client_id: GOOGLE_CLIENT_ID,
           callback: handleCredentialResponse,
@@ -1116,20 +1108,18 @@
           cancel_on_tap_outside: true
         });
 
-        // Initialize OAuth 2.0 Token Client for real interactive popup
         tokenClient = google.accounts.oauth2.initTokenClient({
           client_id: GOOGLE_CLIENT_ID,
           scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
           callback: handleTokenResponse
         });
 
-        console.log('Google Identity Services initialized successfully with Client ID:', GOOGLE_CLIENT_ID);
+        console.log('Google Identity Services initialized with Client ID:', GOOGLE_CLIENT_ID);
       } catch (err) {
         console.warn('GIS Init notice:', err);
       }
     }
 
-    // Triggered when Google ID Token is returned via One Tap or GIS Button
     function handleCredentialResponse(response) {
       if (!response || !response.credential) return;
       const profile = parseJwt(response.credential);
@@ -1145,11 +1135,9 @@
       }
     }
 
-    // Triggered when OAuth 2.0 Token Client returns access_token from real Google Popup
     async function handleTokenResponse(tokenResponse) {
       if (tokenResponse && tokenResponse.access_token) {
         try {
-          // Fetch real user profile from Google UserInfo API
           const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
             headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
           });
@@ -1171,12 +1159,10 @@
       }
     }
 
-    // Real Google Auth Trigger
     window.triggerRealGoogleAuth = function(mode) {
       currentAuthMode = mode;
       
       if (tokenClient) {
-        // Open real Google Account chooser popup
         tokenClient.requestAccessToken({ prompt: 'select_account' });
       } else if (window.google && window.google.accounts && window.google.accounts.id) {
         google.accounts.id.prompt((notification) => {
@@ -1189,14 +1175,12 @@
       }
     };
 
-    // Direct Google OAuth Popup Fallback (Standard OAuth 2.0 RFC 6749)
     function openDirectOAuthPopup() {
       const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
       const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=token%20id_token&scope=openid%20profile%20email&nonce=${Date.now()}&prompt=select_account`;
       
       const popup = window.open(oauthUrl, 'GoogleAuthPopup', 'width=500,height=620,left=150,top=100');
       if (!popup || popup.closed || typeof popup.closed === 'undefined') {
-        // Popup blocked or mock requested
         fallbackMockWithRealPrompt();
       }
     }
@@ -1214,12 +1198,10 @@
       }
     }
 
-    // Apply Verified Google Profile to UI and Form
     function applyGoogleProfile(user) {
       activeGoogleUser = user;
       localStorage.setItem('busliner_google_user', JSON.stringify(user));
 
-      // 1. Update In Login View
       const loginBadge = document.getElementById('login-google-badge');
       if (loginBadge) {
         document.getElementById('login-avatar').src = user.picture;
@@ -1229,7 +1211,6 @@
       }
       document.getElementById('login-email').value = user.email;
 
-      // 2. Update In Onboarding View
       const onboardBadge = document.getElementById('onboard-google-badge');
       if (onboardBadge) {
         document.getElementById('onboard-avatar').src = user.picture;
@@ -1240,7 +1221,6 @@
       document.getElementById('ob-fullname').value = user.name;
       document.getElementById('ob-email').value = user.email;
 
-      // Success notification & flow transition
       if (currentAuthMode === 'login') {
         const btnText = document.getElementById('btn-google-text');
         if (btnText) btnText.innerText = `Войти как ${user.name.split(' ')[0]}`;
@@ -1252,7 +1232,6 @@
       }
     }
 
-    // Disconnect active Google user
     window.disconnectGoogle = function() {
       activeGoogleUser = null;
       localStorage.removeItem('busliner_google_user');
@@ -1264,7 +1243,6 @@
       }
     };
 
-    // Configure Custom Google Client ID
     window.toggleOAuthConfig = function() {
       const current = localStorage.getItem('busliner_google_client_id') || GOOGLE_CLIENT_ID;
       const customId = prompt('Укажите ваш собственный Google Client ID из Google Cloud Console (или оставьте пустым для сброса):', current);
@@ -1284,9 +1262,6 @@
       }
     };
 
-    // --------------------------------------------------------------------------
-    // 2. Tab switcher & Wizard Navigation
-    // --------------------------------------------------------------------------
     function switchView(viewName) {
       const tabLogin = document.getElementById('tab-login');
       const tabOnboard = document.getElementById('tab-onboard');
@@ -1332,7 +1307,6 @@
       goToStep(stepNumber);
     }
 
-    // Telegram Login
     function handleTelegramLogin() {
       const tgNick = prompt('Введите номер телефона или Telegram @username диспетчерской:', '+375 29 774-12-00');
       if (tgNick) {
@@ -1341,7 +1315,6 @@
       }
     }
 
-    // Email login handler
     function handleEmailLogin(e) {
       e.preventDefault();
       const email = document.getElementById('login-email').value;
@@ -1349,7 +1322,6 @@
       window.location.href = 'busliner-partners.html#slide-schedule';
     }
 
-    // Onboarding Form Submit
     function handleWizardSubmit(e) {
       e.preventDefault();
       
@@ -1372,9 +1344,7 @@
       window.location.href = 'busliner-partners.html#slide-schedule';
     }
 
-    // Restore cached session & init GIS on load
     window.addEventListener('DOMContentLoaded', () => {
-      // Check stored user
       const stored = localStorage.getItem('busliner_google_user');
       if (stored) {
         try {
@@ -1383,14 +1353,12 @@
         } catch (e) {}
       }
 
-      // Check hash
       if (window.location.hash === '#onboard' || window.location.hash === '#register') {
         switchView('onboard');
       } else {
         switchView('login');
       }
 
-      // Init GIS
       initGIS();
     });
   </script>
