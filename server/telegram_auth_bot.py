@@ -191,18 +191,83 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     "parse_mode": "Markdown"
                 })
 
+        elif text.startswith("/status"):
+            clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Диспетчер")
+            first_name = user.get("first_name", "Диспетчер")
+            user_id = user.get("id", "—")
+            active_count = len([s for s in ACTIVE_AUTH_SESSIONS.values() if time.time() - s.get("created_at", 0) <= AUTH_SESSION_TTL_SECONDS])
+            
+            # Check if this user recently authorized a session
+            has_auth = any(
+                s.get("telegram_user", {}).get("id") == user_id and s.get("status") == "authorized"
+                for s in ACTIVE_AUTH_SESSIONS.values()
+            )
+            session_state = "✅ Авторизована" if has_auth else "⏳ Ожидание запроса на сайте"
+
+            status_msg = (
+                f"📊 *Статус диспетчерской BusLiner Partners*\n\n"
+                f"👤 *Представитель:* {first_name} ({clean_username})\n"
+                f"🆔 *Telegram ID:* `{user_id}`\n"
+                f"💻 *Веб-сессия:* {session_state}\n"
+                f"🟢 *Шлюз авторизации:* Онлайн (порт {SERVER_PORT})\n"
+                f"🔒 *Безопасность:* 256-bit Challenge Nonce (СТБ 1389-2003)\n"
+                f"⚡ *Активных сессий:* {active_count}\n"
+                f"💳 *Клиринг:* T+1 Активен\n\n"
+                f"Для входа перейдите на сайт и нажмите кнопку *«Войти через Telegram»*."
+            )
+            send_telegram_api_request("sendMessage", {
+                "chat_id": chat_id,
+                "text": status_msg,
+                "parse_mode": "Markdown"
+            })
+
+        elif text.startswith("/help"):
+            help_msg = (
+                f"ℹ️ *Справка BusLiner Fleet Bot (@{BOT_USERNAME})*\n\n"
+                f"Официальный бот двухфакторной аутентификации и оперативных уведомлений платформы *BusLiner Partners*.\n\n"
+                f"*Доступные команды:*\n"
+                f"• /start — Начало работы и привязка сессии\n"
+                f"• /status — Проверка статуса соединения и учетной записи\n"
+                f"• /help — Инструкция и поддержка автопарков\n\n"
+                f"*Как войти в панель диспетчера:*\n"
+                f"1. Нажмите на сайте *«Войти через Telegram»*\n"
+                f"2. Перейдите по ссылке в бота и нажмите *«Start»*\n"
+                f"3. Окно браузера мгновенно авторизует вас\n\n"
+                f"📞 *Круглосуточная поддержка перевозчиков:*\n"
+                f"+375 (29) 774-12-00"
+            )
+            send_telegram_api_request("sendMessage", {
+                "chat_id": chat_id,
+                "text": help_msg,
+                "parse_mode": "Markdown"
+            })
+
         elif text.startswith("/start"):
             first_name = user.get("first_name", "Перевозчик")
             welcome = (
                 f"👋 *Здравствуйте, {first_name}!*\n\n"
                 f"Это официальный бот диспетчерской платформы *BusLiner Partners* (@{BOT_USERNAME}).\n\n"
                 f"🔑 Бот используется для мгновенной 2FA-авторизации, уведомлений о рейсах и клиринге T+1.\n"
-                f"Чтобы войти в систему, нажмите *«Войти через Telegram»* на портале перевозчиков."
+                f"Чтобы войти в систему, нажмите *«Войти через Telegram»* на портале перевозчиков.\n\n"
+                f"Введите /status для проверки соединения или /help для справки."
             )
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
                 "text": welcome,
                 "parse_mode": "Markdown"
+            })
+
+        else:
+            # Fallback for arbitrary messages
+            fallback_msg = (
+                "ℹ️ Команда не распознана.\n\n"
+                "• Введите /status для проверки состояния учетной записи\n"
+                "• Введите /help для получения справки\n"
+                "• Для авторизации используйте кнопку входа на сайте"
+            )
+            send_telegram_api_request("sendMessage", {
+                "chat_id": chat_id,
+                "text": fallback_msg
             })
 
     elif "callback_query" in update:
