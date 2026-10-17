@@ -969,12 +969,35 @@
 
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label" for="ob-bic">БИК Банка *</label>
-                <input type="text" id="ob-bic" class="form-input" placeholder="AKBBBY2X" maxlength="11" required value="AKBBBY2X">
+                <label class="form-label" for="ob-bank-name">Обслуживающий банк РБ *</label>
+                <select id="ob-bank-name" class="form-input" onchange="onBankSelected(this)">
+                  <option value="ОАО «АСБ Беларусбанк»" data-bic="AKBBBY2X" selected>ОАО «АСБ Беларусбанк» (БИК: AKBBBY2X)</option>
+                  <option value="ОАО «Белагропромбанк»" data-bic="BAPBBY2X">ОАО «Белагропромбанк» (БИК: BAPBBY2X)</option>
+                  <option value="ОАО «Приорбанк»" data-bic="PJCBBY2X">ОАО «Приорбанк» (БИК: PJCBBY2X)</option>
+                  <option value="ОАО «Сбер Банк»" data-bic="BPSBBY2X">ОАО «Сбер Банк» (БИК: BPSBBY2X)</option>
+                  <option value="ОАО «Белгазпромбанк»" data-bic="OLMPBY2X">ОАО «Белгазпромбанк» (БИК: OLMPBY2X)</option>
+                  <option value="ЗАО «Альфа-Банк»" data-bic="ALFABY2X">ЗАО «Альфа-Банк» (БИК: ALFABY2X)</option>
+                  <option value="ОАО «Банк БелВЭБ»" data-bic="BELBBY2X">ОАО «Банк БелВЭБ» (БИК: BELBBY2X)</option>
+                  <option value="ОАО «Банк Дабрабыт»" data-bic="MMBNBY22">ОАО «Банк Дабрабыт» (БИК: MMBNBY22)</option>
+                  <option value="ЗАО «МТБанк»" data-bic="MTBKBY22">ЗАО «МТБанк» (БИК: MTBKBY22)</option>
+                  <option value="ЗАО «Банк ВТБ» (Беларусь)" data-bic="SLANBY22">ЗАО «Банк ВТБ» (Беларусь) (БИК: SLANBY22)</option>
+                  <option value="ОАО «Паритетбанк»" data-bic="PARIBY22">ОАО «Паритетбанк» (БИК: PARIBY22)</option>
+                  <option value="ЗАО «БНБ-Банк»" data-bic="BLBBBY2X">ЗАО «БНБ-Банк» (БИК: BLBBBY2X)</option>
+                  <option value="ЗАО «БСБ Банк»" data-bic="UNBSBY2X">ЗАО «БСБ Банк» (БИК: UNBSBY2X)</option>
+                  <option value="ЗАО «РРБ-Банк»" data-bic="RRBBBY22">ЗАО «РРБ-Банк» (БИК: RRBBBY22)</option>
+                  <option value="ЗАО «БТА Банк»" data-bic="BTABBY22">ЗАО «БТА Банк» (БИК: BTABBY22)</option>
+                  <option value="ОАО «СтатусБанк»" data-bic="STBKBY22">ОАО «СтатусБанк» (БИК: STBKBY22)</option>
+                  <option value="ЗАО «Цептер Банк»" data-bic="ZEPBBY22">ЗАО «Цептер Банк» (БИК: ZEPBBY22)</option>
+                  <option value="ЗАО «ТК Банк»" data-bic="TKBBBY22">ЗАО «ТК Банк» (БИК: TKBBBY22)</option>
+                  <option value="ЗАО «Нео Банк Азия»" data-bic="FRBKBY22">ЗАО «Нео Банк Азия» (БИК: FRBKBY22)</option>
+                  <option value="Другой банк" data-bic="">Другой банк (ввести БИК вручную)</option>
+                </select>
+                <span class="form-hint">Клиринг T+1 доступен во все банки РБ</span>
               </div>
               <div class="form-group">
-                <label class="form-label" for="ob-bank-name">Обслуживающий банк</label>
-                <input type="text" id="ob-bank-name" class="form-input" placeholder="ОАО «АСБ Беларусбанк»" value="ОАО «АСБ Беларусбанк»">
+                <label class="form-label" for="ob-bic">БИК Банка *</label>
+                <input type="text" id="ob-bic" class="form-input" placeholder="AKBBBY2X" maxlength="11" required value="AKBBBY2X">
+                <span class="form-hint">Подставляется автоматически при выборе банка</span>
               </div>
             </div>
 
@@ -1231,7 +1254,16 @@
        ========================================================================== -->
   <script>
     let activeGoogleUser = null;
-    let currentAuthMode = 'login'; // 'login' or 'onboard'
+    // BANK AUTO-FILL BIC
+    window.onBankSelected = function(selectEl) {
+      if (!selectEl) return;
+      const selectedOption = selectEl.options[selectEl.selectedIndex];
+      const bic = selectedOption.getAttribute('data-bic');
+      const bicInput = document.getElementById('ob-bic');
+      if (bicInput && bic) {
+        bicInput.value = bic;
+      }
+    };
 
     // DYNAMIC AMENITIES LIST
     let activeAmenities = [
