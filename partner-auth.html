@@ -1254,14 +1254,26 @@
        ========================================================================== -->
   <script>
     let activeGoogleUser = null;
-    // BANK AUTO-FILL BIC
+    // BANK AUTO-FILL BIC WITH INSTANT VISUAL FEEDBACK
     window.onBankSelected = function(selectEl) {
       if (!selectEl) return;
       const selectedOption = selectEl.options[selectEl.selectedIndex];
+      if (!selectedOption) return;
       const bic = selectedOption.getAttribute('data-bic');
       const bicInput = document.getElementById('ob-bic');
-      if (bicInput && bic) {
-        bicInput.value = bic;
+      if (bicInput) {
+        bicInput.value = bic || '';
+        if (bic) {
+          bicInput.style.transition = 'all 0.25s ease';
+          bicInput.style.backgroundColor = '#EFF6FF';
+          bicInput.style.borderColor = '#1E3A8A';
+          setTimeout(() => {
+            bicInput.style.backgroundColor = '#FFFFFF';
+            bicInput.style.borderColor = '#E2E2DC';
+          }, 400);
+        } else {
+          bicInput.focus();
+        }
       }
     };
 
@@ -1504,6 +1516,12 @@
     window.addEventListener('DOMContentLoaded', () => {
       renderAmenities();
       recalculateCommission();
+
+      const bankSelect = document.getElementById('ob-bank-name');
+      if (bankSelect) {
+        bankSelect.addEventListener('change', () => window.onBankSelected(bankSelect));
+        window.onBankSelected(bankSelect);
+      }
 
       const stored = localStorage.getItem('busliner_google_user');
       if (stored) {
