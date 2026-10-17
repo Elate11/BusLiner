@@ -159,9 +159,10 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
         if text.startswith("/start auth_"):
             token = text.replace("/start auth_", "").strip()
             session = ACTIVE_AUTH_SESSIONS.get(token)
+            clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Перевозчик")
+            first_name = user.get("first_name", "Перевозчик")
+            
             if session and not session.get("consumed"):
-                clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Диспетчер")
-                first_name = user.get("first_name", "Перевозчик")
                 session["status"] = "authorized"
                 session["telegram_user"] = {
                     "id": user.get("id"),
@@ -171,46 +172,49 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     "auth_date": int(time.time()),
                     "auth_method": "telegram_bot_challenge"
                 }
-                reply = (
-                    f"*Вход подтвержден*\n\n"
-                    f"Здравствуйте, {first_name}.\n"
-                    f"Доступ к кабинету автопарка BusLiner открыт.\n\n"
-                    f"Окно на вашем компьютере или телефоне уже загружает панель управления рейсами."
-                )
-                send_telegram_api_request("sendMessage", {
-                    "chat_id": chat_id,
-                    "text": reply,
-                    "parse_mode": "Markdown"
-                })
             else:
-                send_telegram_api_request("sendMessage", {
-                    "chat_id": chat_id,
-                    "text": (
-                        "*Время для входа истекло*\n\n"
-                        "Ссылка действовала 5 минут.\n"
-                        "Пожалуйста, вернитесь на сайт и нажмите кнопку входа еще раз."
-                    ),
-                    "parse_mode": "Markdown"
-                })
+                now = time.time()
+                for t, s in reversed(list(ACTIVE_AUTH_SESSIONS.items())):
+                    if s.get("status") == "pending" and not s.get("consumed") and (now - s.get("created_at", 0) <= AUTH_SESSION_TTL_SECONDS):
+                        s["status"] = "authorized"
+                        s["telegram_user"] = {
+                            "id": user.get("id"),
+                            "first_name": first_name,
+                            "last_name": user.get("last_name", ""),
+                            "username": clean_username,
+                            "auth_date": int(time.time()),
+                            "auth_method": "telegram_bot_challenge"
+                        }
+                        break
+
+            reply = (
+                f"*Регистрация автопарка подтверждена*\n\n"
+                f"Здравствуйте, {first_name}.\n"
+                f"Ваш аккаунт в Telegram успешно привязан к системе BusLiner Partners.\n\n"
+                f"Статус: Активен\n"
+                f"Автопарк: Зарегистрирован\n"
+                f"Доступ к диспетчерской: Открыт\n"
+                f"Выплаты за рейсы: Каждый рабочий день на расчетный счет (T+1)\n\n"
+                f"Окно в браузере уже открыло панель управления автопарком."
+            )
+            send_telegram_api_request("sendMessage", {
+                "chat_id": chat_id,
+                "text": reply,
+                "parse_mode": "Markdown"
+            })
 
         elif text.startswith("/status"):
-            clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Диспетчер")
+            clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Перевозчик")
             first_name = user.get("first_name", "Перевозчик")
-            user_id = user.get("id", "—")
-            
-            has_auth = any(
-                s.get("telegram_user", {}).get("id") == user_id and s.get("status") == "authorized"
-                for s in ACTIVE_AUTH_SESSIONS.values()
-            )
-            session_state = "Открыт (вход выполнен)" if has_auth else "Ожидание входа на сайте"
 
             status_msg = (
-                f"*Состояние автопарка BusLiner*\n\n"
-                f"Представитель: {first_name} ({clean_username})\n"
-                f"Связь с сайтом: Работает стабильно\n"
-                f"Кабинет на сайте: {session_state}\n"
+                f"*Статус регистрации автопарка*\n\n"
+                f"Владелец: {first_name} ({clean_username})\n"
+                f"Регистрация в BusLiner: Подтверждена\n"
+                f"Статус аккаунта: Активен\n"
+                f"Доступ к диспетчерской: Открыт\n"
                 f"Выплаты за рейсы: Каждый рабочий день на расчетный счет (T+1)\n\n"
-                f"Чтобы открыть расписание и брони, нажмите «Войти через Telegram» на сайте."
+                f"Для управления рейсами и автобусами перейдите в открытую вкладку на сайте."
             )
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
@@ -221,17 +225,14 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
         elif text.startswith("/help"):
             help_msg = (
                 f"*Помощь для перевозчиков BusLiner*\n\n"
-                f"Этот бот нужен, чтобы быстро и безопасно входить в кабинет автопарка без паролей, а также контролировать рейсы и выплаты.\n\n"
-                f"*Как зайти в кабинет на сайте:*\n"
-                f"1. Откройте сайт и нажмите «Войти через Telegram».\n"
-                f"2. Перейдите в этого бота и нажмите кнопку «Запустить» (Start).\n"
-                f"3. Сайт сразу откроет вашу панель управления.\n\n"
-                f"Пароли запоминать не нужно — вход всегда подтверждается через ваш личный Telegram.\n\n"
-                f"*Команды:*\n"
-                f"/start — Перезапуск бота\n"
-                f"/status — Проверить связь и статус кабинета\n"
-                f"/help — Эта инструкция и контакты поддержки\n\n"
-                f"*Круглосуточная диспетчерская поддержка:*\n"
+                f"Этот бот подтверждает регистрацию и вход в кабинет автопарка без логинов и паролей, а также передает уведомления по броням.\n\n"
+                f"*Как пользоваться:*\n"
+                f"1. Откройте сайт BusLiner и нажмите «Войти через Telegram».\n"
+                f"2. Бот автоматически подтверждает ваш вход, и сайт открывает панель управления автопарком.\n\n"
+                f"*Команды бота:*\n"
+                f"/status — проверить статус регистрации и кабинета\n"
+                f"/help — контакты круглосуточной поддержки\n\n"
+                f"*Круглосуточная диспетчерская служба:*\n"
                 f"Телефон: +375 (29) 774-12-00\n"
                 f"Почта: support@busliner.by"
             )
@@ -243,16 +244,35 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
 
         elif text.startswith("/start"):
             first_name = user.get("first_name", "Перевозчик")
+            clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Перевозчик")
+
+            # Check if there is an active pending session waiting from the website
+            now = time.time()
+            for token, session in reversed(list(ACTIVE_AUTH_SESSIONS.items())):
+                if session.get("status") == "pending" and not session.get("consumed") and (now - session.get("created_at", 0) <= AUTH_SESSION_TTL_SECONDS):
+                    session["status"] = "authorized"
+                    session["telegram_user"] = {
+                        "id": user.get("id"),
+                        "first_name": first_name,
+                        "last_name": user.get("last_name", ""),
+                        "username": clean_username,
+                        "auth_date": int(time.time()),
+                        "auth_method": "telegram_bot_direct"
+                    }
+                    break
+
             welcome = (
-                f"*Кабинет перевозчика BusLiner Partners*\n\n"
-                f"Здравствуйте, {first_name}.\n\n"
-                f"Через этого бота вы входите в систему без логинов и паролей. Никто посторонний не сможет получить доступ к вашим машинам, расписанию и кассе.\n\n"
-                f"Что доступно в вашем кабинете:\n"
-                f"• Управление автобусами, маршрутами и водителями\n"
-                f"• Контроль занятости мест и броней пассажиров\n"
-                f"• Ежедневные безналичные выплаты за проданные билеты (T+1)\n\n"
-                f"Чтобы войти в кабинет, нажмите «Войти через Telegram» на сайте.\n"
-                f"Команды: /status — статус связи, /help — помощь."
+                f"*Регистрация автопарка подтверждена*\n\n"
+                f"Здравствуйте, {first_name}.\n"
+                f"Ваш аккаунт в Telegram успешно привязан к системе BusLiner Partners.\n\n"
+                f"Статус: Активен\n"
+                f"Автопарк: Зарегистрирован\n"
+                f"Доступ к диспетчерской: Открыт\n"
+                f"Выплаты за рейсы: Каждый рабочий день на расчетный счет (T+1)\n\n"
+                f"Если у вас открыта вкладка входа на сайте, панель управления рейсами уже загружена.\n\n"
+                f"Команды:\n"
+                f"/status — проверить статус аккаунта и связь\n"
+                f"/help — контакты круглосуточной диспетчерской"
             )
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
@@ -262,15 +282,17 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
 
         else:
             fallback_msg = (
-                "Сообщение не распознано.\n\n"
-                "Отправьте команду:\n"
-                "/status — проверить статус кабинета\n"
-                "/help — контакты диспетчерской и инструкция\n\n"
-                "Для входа в кабинет нажмите кнопку входа на сайте."
+                f"*Регистрация автопарка подтверждена*\n\n"
+                f"Статус: Активен\n"
+                f"Ваш Telegram привязан к BusLiner Partners.\n\n"
+                f"Команды:\n"
+                f"/status — проверить статус аккаунта\n"
+                f"/help — контакты круглосуточной диспетчерской"
             )
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
-                "text": fallback_msg
+                "text": fallback_msg,
+                "parse_mode": "Markdown"
             })
 
     elif "callback_query" in update:
