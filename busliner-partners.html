@@ -8,6 +8,27 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
   <style>
+    .font-onlyfans {
+      font-family: 'Nunito', 'Arial Rounded MT Bold', 'Varela Round', sans-serif !important;
+      font-weight: 800 !important;
+      letter-spacing: -0.02em !important;
+      text-transform: lowercase !important;
+    }
+    .brand-badge-partners {
+      font-family: 'Nunito', 'Arial Rounded MT Bold', 'Varela Round', sans-serif !important;
+      font-size: 13px !important;
+      font-weight: 800 !important;
+      padding: 3px 10px !important;
+      background: rgba(0, 175, 240, 0.15) !important;
+      border: 1px solid rgba(0, 175, 240, 0.45) !important;
+      border-radius: 9999px !important;
+      color: #00AFF0 !important;
+      margin-left: 6px !important;
+      letter-spacing: -0.01em !important;
+      vertical-align: middle !important;
+      display: inline-block !important;
+      text-transform: lowercase !important;
+    }
     /* ==========================================================================
        BOLD B2C FULLSCREEN SLIDES + FULL-BLEED FOOTER // FREIGHT MONOLITH
        ========================================================================== */
@@ -2033,7 +2054,7 @@
           <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M6 9H11.5M6 19H11.5" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
         </svg>
-        <span class="brand-title">BUS<span class="brand-title-thin">LINER</span> <span style="font-size: 11px; padding: 2px 7px; background: rgba(59,130,246,0.18); border: 1px solid rgba(59,130,246,0.35); border-radius: 4px; color: #93C5FD; font-weight: 700; margin-left: 6px; letter-spacing: 0.05em; vertical-align: middle;">PARTNERS</span></span>
+        <span class="brand-title">BUS<span class="brand-title-thin">LINER</span> <span class="brand-badge-partners font-onlyfans">partners</span></span>
       </a>
       <ul class="nav-menu">
         <li><a href="#slide-hero">О платформе</a></li>
@@ -2744,7 +2765,7 @@
                 <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M6 9H11.5M6 19H11.5" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
               </svg>
-              <span style="font-family: var(--font-body); font-weight: 800; color: #FFFFFF; font-size: 16px; letter-spacing: -0.01em;">BUS<span style="font-weight: 500; color: #93C5FD; letter-spacing: 0.04em;">LINER</span> <span style="font-size: 11px; font-weight: 700; color: #93C5FD; border: 1px solid rgba(147,197,253,0.4); padding: 1px 5px; border-radius: 4px; margin-left: 4px;">PARTNERS</span></span>
+              <span style="font-family: var(--font-body); font-weight: 800; color: #FFFFFF; font-size: 16px; letter-spacing: -0.01em;">BUS<span style="font-weight: 500; color: #93C5FD; letter-spacing: 0.04em;">LINER</span> <span class="brand-badge-partners font-onlyfans">partners</span></span>
             </div>
             <p style="font-size: 12px; line-height: 18px; color: #9CA3AF; margin-bottom: 12px;">
               Единая цифровая B2B-платформа монетизации и диспетчеризации регулярных автопарков. Полный выкуп кресел, ежедневный клиринг T+1 и Smart Cargo.
@@ -2788,7 +2809,7 @@
               b2b@busliner.by
             </div>
             <div class="mono" style="font-size: 11px; color: #93C5FD; margin-bottom: 12px;">
-              Telegram: @BusLinerPartners
+              Telegram: @BusLiner<span class="font-onlyfans" style="color: #00AFF0;">partners</span>
             </div>
             
             <div class="pay-icons-row">
@@ -3361,7 +3382,7 @@
 
     window.handlePartnerSubmit = function(e) {
       e.preventDefault();
-      alert('Спасибо! Заявка автопарка принята. Менеджер BusLiner Partners свяжется с вами в течение 15 минут.');
+      alert('Спасибо! Заявка автопарка принята. Менеджер BusLiner partners свяжется с вами в течение 15 минут.');
       window.closePartnerModal();
     };
 

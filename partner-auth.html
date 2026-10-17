@@ -7,7 +7,7 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Nunito:wght@700;800;900&family=Varela+Round&display=swap" rel="stylesheet">
   <!-- Official Google Identity Services SDK -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
@@ -93,15 +93,25 @@
       font-weight: 400;
       color: var(--accent-institutional);
     }
+    .font-onlyfans {
+      font-family: 'Nunito', 'Arial Rounded MT Bold', 'Varela Round', sans-serif !important;
+      font-weight: 800 !important;
+      letter-spacing: -0.02em !important;
+      text-transform: lowercase !important;
+    }
     .badge-b2b {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 8px;
-      background: var(--accent-soft);
-      border: 1px solid var(--accent-border);
-      border-radius: 6px;
-      color: var(--accent-institutional);
-      letter-spacing: 0.05em;
+      font-family: 'Nunito', 'Arial Rounded MT Bold', 'Varela Round', sans-serif;
+      font-size: 12.5px;
+      font-weight: 800;
+      padding: 3px 10px;
+      background: rgba(0, 175, 240, 0.12);
+      border: 1px solid rgba(0, 175, 240, 0.4);
+      border-radius: 9999px;
+      color: #00AFF0;
+      letter-spacing: -0.01em;
+      text-transform: lowercase;
+      display: inline-block;
+      vertical-align: middle;
     }
     .header-support {
       font-size: 13px;
@@ -696,7 +706,7 @@
         <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M6 9H11.5M6 19H11.5" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
       </svg>
-      <span class="brand-title">BUS<span class="brand-title-thin">LINER</span> <span class="badge-b2b">PARTNERS</span></span>
+      <span class="brand-title">BUS<span class="brand-title-thin">LINER</span> <span class="badge-b2b font-onlyfans">partners</span></span>
     </a>
     <div class="header-support">
       <span>Поддержка автопарков:</span>
@@ -727,7 +737,7 @@
            PANEL 1: ВХОД ДЛЯ ДЕЙСТВУЮЩИХ ПЕРЕВОЗЧИКОВ
            ====================================================================== -->
       <div id="view-login-panel" class="panel-body">
-        <h1 class="panel-heading">Вход для <em>партнеров</em></h1>
+        <h1 class="panel-heading">Вход для <em class="font-onlyfans" style="font-style: normal; color: #00AFF0;">partners</em></h1>
         <p class="panel-subheading">
           Управляйте выездами, мониторингом мест No-Show и ежедневным безналичным клирингом T+1.
         </p>
@@ -849,16 +859,23 @@
               Создайте профиль владельца автопарка. Авторизация через Google Workspace заполнит данные и подтвердит email автоматически.
             </p>
 
-            <!-- 1-CLICK REAL GOOGLE AUTH -->
-            <div style="margin-bottom: 20px;">
-              <button type="button" class="btn-oauth google-primary" style="width: 100%;" onclick="triggerRealGoogleAuth('onboard')">
+            <!-- 1-CLICK REAL GOOGLE & TELEGRAM REGISTRATION -->
+            <div class="oauth-grid" style="margin-bottom: 20px;">
+              <button type="button" class="btn-oauth google-primary" onclick="triggerRealGoogleAuth('onboard')">
                 <svg viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.15z"/>
                   <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.36 7.36 24 12 24z"/>
                   <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.15 0 9.99 0 12s.45 3.85 1.24 5.42l4.04-3.15z"/>
                   <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
                 </svg>
-                <span>Авторизоваться через Google (OpenID Connect)</span>
+                <span>Google Регистрация</span>
+              </button>
+
+              <button type="button" class="btn-oauth" onclick="handleTelegramOnboard()">
+                <svg viewBox="0 0 24 24" fill="#2AABEE">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                </svg>
+                <span>Telegram Регистрация</span>
               </button>
             </div>
 
@@ -1131,7 +1148,7 @@
               </div>
               <h2 class="panel-heading">Автопарк успешно <em>зарегистрирован!</em></h2>
               <p class="panel-subheading" style="max-width: 520px; margin: 0 auto 26px;">
-                Заявка внесена в реестр BusLiner Partners (статус: <span style="color: var(--status-available); font-weight: 700;">pending_verification</span>). Ваш персональный менеджер верификации активирует клиринг T+1 в течение 15 минут.
+                Заявка внесена в реестр BusLiner <span class="font-onlyfans" style="color: #00AFF0;">partners</span> (статус: <span style="color: var(--status-available); font-weight: 700;">pending_verification</span>). Ваш персональный менеджер верификации активирует клиринг T+1 в течение 15 минут.
               </p>
 
               <div style="background: var(--surface-subtle); border: 1px solid var(--border-hairline); border-radius: var(--radius-ctrl); padding: 20px; max-width: 480px; margin: 0 auto 28px; text-align: left; font-size: 13.5px; line-height: 1.8;">
@@ -1174,7 +1191,7 @@
   <footer class="auth-footer">
     <div style="max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
       <div>
-        © 2026 BusLiner B2B Fleet Technologies. Все права защищены.
+        © 2026 BusLiner <span class="font-onlyfans" style="color: #00AFF0;">partners</span> Fleet Technologies. Все права защищены.
       </div>
       <div>
         <a href="#">Оферта для перевозчиков</a> &bull; 
@@ -1447,10 +1464,37 @@
     }
 
     function handleTelegramLogin() {
-      const tgNick = prompt('Введите номер телефона или Telegram @username диспетчерской:', '+375 29 774-12-00');
-      if (tgNick) {
-        alert(`Telegram код верификации отправлен боту @BusLinerFleetBot.\nСессия авторизована.`);
+      const tgNick = prompt('Вход в диспетчерскую через Telegram:\n\nВведите номер телефона или @username диспетчера:');
+      if (tgNick && tgNick.trim()) {
+        alert(`Telegram код верификации отправлен боту @BusLinerFleetBot.\nСессия ${tgNick.trim()} авторизована.`);
         window.location.href = 'busliner-partners.html#slide-schedule';
+      }
+    }
+
+    function handleTelegramOnboard() {
+      const tgId = prompt('Регистрация автопарка через Telegram:\n\nВведите ваш номер телефона или @username в Telegram:');
+      if (tgId && tgId.trim()) {
+        const val = tgId.trim();
+        const isPhone = val.startsWith('+') || /^\d/.test(val);
+        if (isPhone) {
+          const pInput = document.getElementById('ob-phone');
+          if (pInput) pInput.value = val;
+        }
+        const cleanName = isPhone ? '' : val.replace('@', '');
+        const defaultName = cleanName ? (cleanName.charAt(0).toUpperCase() + cleanName.slice(1)) : '';
+        const namePrompt = prompt('Укажите ФИО представителя автопарка:', defaultName) || defaultName;
+        if (namePrompt) {
+          const fnInput = document.getElementById('ob-fullname');
+          if (fnInput) fnInput.value = namePrompt;
+        }
+        const badge = document.getElementById('onboard-google-badge');
+        if (badge) {
+          document.getElementById('onboard-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(namePrompt || val)}&background=2AABEE&color=fff&size=120`;
+          document.getElementById('onboard-name-display').innerText = namePrompt || val;
+          document.getElementById('onboard-email-display').innerText = isPhone ? `Телефон: ${val}` : `Telegram: ${val}`;
+          badge.style.display = 'flex';
+        }
+        alert(`Telegram верифицирован!\nБот @BusLinerFleetBot привязан к автопарку.\nДанные подставлены в форму регистрации.`);
       }
     }
 
