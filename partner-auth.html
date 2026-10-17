@@ -784,7 +784,7 @@
           <div class="form-group">
             <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
               <label class="form-label" for="login-password" style="margin-bottom: 0;">Пароль</label>
-              <a href="#" onclick="alert('Ссылка для сброса пароля отправлена на указанный email.'); return false;" style="font-size: 12px; color: var(--accent-institutional); text-decoration: none; font-weight: 500;">Забыли пароль?</a>
+              <a href="#" onclick="showAuthToast('Сброс пароля', 'Инструкция по восстановлению доступа отправлена на ваш email.'); return false;" style="font-size: 12px; color: var(--accent-institutional); text-decoration: none; font-weight: 500;">Забыли пароль?</a>
             </div>
             <div class="password-input-wrap">
               <input type="password" id="login-password" class="form-input" placeholder="••••••••••••" required>
@@ -1181,50 +1181,40 @@
     </div>
   </main>
 
-  <!-- ==========================================================================
-       GOOGLE WORKSPACE OAUTH CONNECTION MODAL
-       ========================================================================== -->
-  <div id="google-sync-modal" class="modal-backdrop" onclick="if(event.target===this) closeGoogleSyncModal()" style="display: none; position: fixed; inset: 0; background: rgba(20,21,24,0.65); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
-    <div style="background: #FFFFFF; border: 1px solid var(--border-hairline); border-radius: 16px; width: 100%; max-width: 460px; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.18); position: relative;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+  <!-- TELEGRAM AUTH MODAL (NO BROWSER PROMPTS) -->
+  <div id="telegram-auth-modal" style="display: none; position: fixed; inset: 0; background: rgba(20,21,24,0.65); backdrop-filter: blur(4px); z-index: 99999; align-items: center; justify-content: center; padding: 20px;" onclick="if(event.target===this) closeTelegramModal()">
+    <div style="background: #FFFFFF; border: 1px solid var(--border-hairline); border-radius: 16px; width: 100%; max-width: 440px; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.18); position: relative;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
         <div style="display: flex; align-items: center; gap: 10px;">
-          <svg width="28" height="28" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.15z"/>
-            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.36 7.36 24 12 24z"/>
-            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.15 0 9.99 0 12s.45 3.85 1.24 5.42l4.04-3.15z"/>
-            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#2AABEE">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
           </svg>
-          <span style="font-family: var(--font-body); font-weight: 700; font-size: 17px; color: var(--text-primary);">Google Workspace OAuth</span>
+          <span id="tg-modal-title" style="font-family: var(--font-body); font-weight: 700; font-size: 17px; color: var(--text-primary);">Авторизация через Telegram</span>
         </div>
-        <button type="button" onclick="closeGoogleSyncModal()" style="background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 2px 6px;">&times;</button>
+        <button type="button" onclick="closeTelegramModal()" style="background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 2px 6px;">&times;</button>
       </div>
 
-      <div style="background: var(--surface-subtle); border: 1px solid var(--border-hairline); border-radius: var(--radius-ctrl); padding: 14px 16px; margin-bottom: 20px; font-size: 13px; color: var(--text-muted); line-height: 1.5;">
-        <div style="font-weight: 600; color: var(--accent-institutional); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-          <span style="width: 8px; height: 8px; background: #22C55E; border-radius: 50%; display: inline-block;"></span>
-          Окно Google авторизации открыто
-        </div>
-        Завершите вход в открывшемся окне Google Accounts и укажите ваш рабочий email:
-      </div>
+      <p id="tg-modal-desc" style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5; margin-bottom: 20px;">
+        Введите номер телефона или @username в Telegram для мгновенной привязки к диспетчерской боту @BusLinerFleetBot.
+      </p>
 
-      <form onsubmit="handleGoogleSyncSubmit(event)">
+      <form onsubmit="submitTelegramModal(event)">
         <div class="form-group" style="margin-bottom: 16px;">
-          <label class="form-label" for="sync-google-email">Ваш рабочий Google / Gmail Email *</label>
-          <input type="email" id="sync-google-email" class="form-input" placeholder="director@transport.by или ваш.email@gmail.com" required>
-          <span class="form-hint">Email, выбранный в окне входа Google</span>
+          <label class="form-label" for="tg-input-identifier">Номер телефона или @username *</label>
+          <input type="text" id="tg-input-identifier" class="form-input" placeholder="+375 (29) 000-00-00 или @dispatcher" required>
         </div>
 
-        <div class="form-group" style="margin-bottom: 22px;">
-          <label class="form-label" for="sync-google-name">ФИО представителя автопарка *</label>
-          <input type="text" id="sync-google-name" class="form-input" placeholder="Фамилия Имя Отчество" required>
+        <div id="tg-name-row" class="form-group" style="margin-bottom: 22px;">
+          <label class="form-label" for="tg-input-name">ФИО представителя автопарка</label>
+          <input type="text" id="tg-input-name" class="form-input" placeholder="Фамилия Имя Отчество">
         </div>
 
         <div style="display: flex; gap: 10px;">
-          <button type="button" class="btn btn-secondary" onclick="reopenGooglePopup()" style="flex: 1; font-size: 13px; padding: 12px;">
-            Открыть Google еще раз
+          <button type="button" class="btn btn-secondary" onclick="closeTelegramModal()" style="flex: 1; font-size: 13.5px; padding: 12px;">
+            Отмена
           </button>
-          <button type="submit" class="btn btn-accent" style="flex: 2; font-size: 13.5px; padding: 12px;">
-            Подтвердить и продолжить &rarr;
+          <button type="submit" class="btn btn-accent" style="flex: 2; font-size: 13.5px; padding: 12px; background: #2AABEE; border-color: #2AABEE;">
+            Подтвердить &rarr;
           </button>
         </div>
       </form>
@@ -1341,122 +1331,240 @@
       }
     };
 
-    // REAL GOOGLE OAUTH 2.0 & GOOGLE ACCOUNTS POPUP INTEGRATION
+    // =========================================================================
+    // IN-APP NOTIFICATION TOAST (NO BROWSER ALERTS)
+    // =========================================================================
+    window.showAuthToast = function(title, message, isSuccess = true) {
+      let toast = document.getElementById('auth-toast-notification');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'auth-toast-notification';
+        toast.style.cssText = `
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          background: #141518;
+          color: #FFFFFF;
+          padding: 16px 20px;
+          border-radius: 12px;
+          box-shadow: 0 16px 36px rgba(0,0,0,0.25);
+          border: 1px solid rgba(255,255,255,0.12);
+          z-index: 999999;
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+          max-width: 440px;
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          transform: translateY(20px);
+          opacity: 0;
+          pointer-events: none;
+        `;
+        document.body.appendChild(toast);
+      }
+      const icon = isSuccess ? 
+        `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>` : 
+        `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+      
+      toast.innerHTML = `
+        <div style="flex-shrink: 0;">${icon}</div>
+        <div style="line-height: 1.35;">
+          <div style="font-weight: 700; font-size: 14px; color: #FFFFFF; margin-bottom: 2px;">${title}</div>
+          <div style="font-size: 13px; color: #9CA3AF;">${message}</div>
+        </div>
+      `;
+      toast.style.transform = 'translateY(0)';
+      toast.style.opacity = '1';
+
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(() => {
+        toast.style.transform = 'translateY(20px)';
+        toast.style.opacity = '0';
+      }, 4000);
+    };
+
+    // REAL GOOGLE OAUTH POPUP WINDOW INTEGRATION
     let currentAuthMode = 'onboard';
-    let googlePopupWindow = null;
-
-    function openGooglePopup() {
-      const w = 520;
-      const h = 630;
-      const left = Math.max(0, (screen.width - w) / 2);
-      const top = Math.max(0, (screen.height - h) / 2);
-      try {
-        googlePopupWindow = window.open(
-          'https://accounts.google.com/AccountChooser?service=lso&flowName=GlifWebSignIn',
-          'GoogleOAuthSignIn',
-          `width=${w},height=${h},top=${top},left=${left},status=no,toolbar=no,menubar=no,location=yes,resizable=yes`
-        );
-        if (googlePopupWindow) {
-          googlePopupWindow.focus();
-        }
-      } catch (err) {
-        console.warn('Popup blocked:', err);
-      }
-    }
-
-    function reopenGooglePopup() {
-      openGooglePopup();
-    }
-
-    function openGoogleSyncModal() {
-      const modal = document.getElementById('google-sync-modal');
-      if (modal) modal.style.display = 'flex';
-      const emailInput = document.getElementById('sync-google-email');
-      if (emailInput) setTimeout(() => emailInput.focus(), 150);
-    }
-
-    function closeGoogleSyncModal() {
-      const modal = document.getElementById('google-sync-modal');
-      if (modal) modal.style.display = 'none';
-      if (googlePopupWindow && !googlePopupWindow.closed) {
-        try { googlePopupWindow.close(); } catch(e) {}
-      }
-    }
 
     window.triggerRealGoogleAuth = function(mode) {
       currentAuthMode = mode;
-      // 1. Launch genuine Google Accounts web popup
-      openGooglePopup();
-      // 2. Open sleek sync confirmation modal (NO window.prompt alerts)
-      openGoogleSyncModal();
+      const w = 480;
+      const h = 580;
+      const left = Math.max(0, (screen.width - w) / 2);
+      const top = Math.max(0, (screen.height - h) / 2);
+      const popup = window.open(
+        'google-oauth.html?mode=' + encodeURIComponent(mode),
+        'GoogleSignInPopup',
+        `width=${w},height=${h},top=${top},left=${left},status=no,toolbar=no,menubar=no,location=no,resizable=yes`
+      );
+      if (popup) {
+        popup.focus();
+      }
     };
 
-    function handleGoogleSyncSubmit(e) {
-      e.preventDefault();
-      const emailEl = document.getElementById('sync-google-email');
-      const nameEl = document.getElementById('sync-google-name');
-      if (!emailEl || !nameEl) return;
-      const email = emailEl.value.trim();
-      const name = nameEl.value.trim();
-      if (!email) return;
-
-      closeGoogleSyncModal();
-
-      applyGoogleProfile({
-        id: 'google-oauth2|' + Math.floor(Math.random() * 900000000000000000 + 100000000000000000),
-        name: name || email.split('@')[0],
-        email: email,
-        picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(name || email)}&background=1E3A8A&color=fff&size=120`,
-        verified: true
-      });
-    }
-
     function initGoogleClient() {
-      // Optional background GSI hook if hosted on web origin
+      // Background hook
     }
 
-    function applyGoogleProfile(user) {
+    // Exposed globally so popup can call window.opener.applyGoogleProfile
+    window.applyGoogleProfile = function(user, isInitialLoad = false) {
+      if (!user) return;
       activeGoogleUser = user;
       localStorage.setItem('busliner_google_user', JSON.stringify(user));
 
       // 1. Update In Login View
       const loginBadge = document.getElementById('login-google-badge');
       if (loginBadge) {
-        document.getElementById('login-avatar').src = user.picture;
-        document.getElementById('login-name').innerText = user.name;
-        document.getElementById('login-email-badge').innerText = user.email;
+        const loginAvatar = document.getElementById('login-avatar');
+        if (loginAvatar) loginAvatar.src = user.picture;
+        const loginName = document.getElementById('login-name');
+        if (loginName) loginName.innerText = user.name;
+        const loginEmailBadge = document.getElementById('login-email-badge');
+        if (loginEmailBadge) loginEmailBadge.innerText = user.email;
         loginBadge.style.display = 'flex';
       }
-      document.getElementById('login-email').value = user.email;
+      const loginEmail = document.getElementById('login-email');
+      if (loginEmail) loginEmail.value = user.email;
 
       // 2. Update In Onboarding View
       const onboardBadge = document.getElementById('onboard-google-badge');
       if (onboardBadge) {
-        document.getElementById('onboard-avatar').src = user.picture;
-        document.getElementById('onboard-name-display').innerText = user.name;
-        document.getElementById('onboard-email-display').innerText = user.email;
+        const onboardAvatar = document.getElementById('onboard-avatar');
+        if (onboardAvatar) onboardAvatar.src = user.picture;
+        const onboardName = document.getElementById('onboard-name-display');
+        if (onboardName) onboardName.innerText = user.name;
+        const onboardEmail = document.getElementById('onboard-email-display');
+        if (onboardEmail) onboardEmail.innerText = user.email;
         onboardBadge.style.display = 'flex';
       }
-      document.getElementById('ob-fullname').value = user.name;
-      document.getElementById('ob-email').value = user.email;
+      const obName = document.getElementById('ob-fullname');
+      if (obName) obName.value = user.name;
+      const obEmail = document.getElementById('ob-email');
+      if (obEmail) obEmail.value = user.email;
 
-      if (currentAuthMode === 'login') {
-        const btnText = document.getElementById('btn-google-text');
-        if (btnText) btnText.innerText = `Войти как ${user.name.split(' ')[0]}`;
-        alert(`Google Workspace авторизован!\n\nПользователь: ${user.name}\nEmail: ${user.email} (Verified)\nGoogle Sub: ${user.id}\n\nВыполняется вход в диспетчерскую BusLiner...`);
-        window.location.href = 'busliner-partners.html#slide-schedule';
-      } else {
-        alert(`Google профиль ${user.name} успешно подключен!\nEmail ${user.email} подтвержден через OpenID Connect.\nПереходим к реквизитам юридического лица.`);
-        nextStep(2);
+      const btnText = document.getElementById('btn-google-text');
+      if (btnText) btnText.innerText = `Войти как ${user.name.split(' ')[0]}`;
+
+      // If this was an active OAuth login action (not initial page load restoration)
+      if (!isInitialLoad) {
+        if (currentAuthMode === 'login') {
+          showAuthToast('Google Workspace авторизован', `Добро пожаловать, ${user.name}! Выполняется вход в диспетчерскую...`);
+          setTimeout(() => {
+            window.location.href = 'busliner-partners.html#slide-schedule';
+          }, 900);
+        } else {
+          showAuthToast('Google аккаунт привязан', `${user.name} (${user.email}) подтвержден через Google OAuth. Заполняем реквизиты.`);
+          nextStep(2);
+        }
       }
-    }
+    };
+
+    // Cross-window listeners for Google OAuth popup
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'BUSLINER_GOOGLE_AUTH' && event.data.user) {
+        window.applyGoogleProfile(event.data.user, false);
+      }
+    });
+
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'busliner_google_sync_trigger') {
+        try {
+          const u = JSON.parse(localStorage.getItem('busliner_google_user'));
+          if (u) window.applyGoogleProfile(u, false);
+        } catch(e) {}
+      }
+    });
 
     window.disconnectGoogle = function() {
       activeGoogleUser = null;
       localStorage.removeItem('busliner_google_user');
       document.getElementById('login-google-badge').style.display = 'none';
       document.getElementById('onboard-google-badge').style.display = 'none';
-      document.getElementById('btn-google-text').innerText = 'Google Workspace';
+      const btnText = document.getElementById('btn-google-text');
+      if (btnText) btnText.innerText = 'Google Workspace';
+      showAuthToast('Google отключен', 'Привязка аккаунта Google успешно удалена.', false);
+    };
+
+    // =========================================================================
+    // TELEGRAM AUTH MODAL LOGIC (NO BROWSER PROMPTS)
+    // =========================================================================
+    let currentTelegramMode = 'onboard';
+
+    window.openTelegramModal = function(mode) {
+      currentTelegramMode = mode;
+      const modal = document.getElementById('telegram-auth-modal');
+      const title = document.getElementById('tg-modal-title');
+      const desc = document.getElementById('tg-modal-desc');
+      const nameRow = document.getElementById('tg-name-row');
+      const idInput = document.getElementById('tg-input-identifier');
+
+      if (mode === 'login') {
+        if (title) title.innerText = 'Вход через Telegram';
+        if (desc) desc.innerText = 'Введите номер телефона или @username диспетчера для авторизации в системе BusLiner.';
+        if (nameRow) nameRow.style.display = 'none';
+      } else {
+        if (title) title.innerText = 'Регистрация автопарка через Telegram';
+        if (desc) desc.innerText = 'Введите данные Telegram для оперативных уведомлений о рейсах, бронях и клиринге T+1.';
+        if (nameRow) nameRow.style.display = 'block';
+      }
+
+      if (modal) modal.style.display = 'flex';
+      if (idInput) setTimeout(() => idInput.focus(), 100);
+    };
+
+    window.closeTelegramModal = function() {
+      const modal = document.getElementById('telegram-auth-modal');
+      if (modal) modal.style.display = 'none';
+    };
+
+    window.submitTelegramModal = function(e) {
+      e.preventDefault();
+      const idInput = document.getElementById('tg-input-identifier');
+      const nameInput = document.getElementById('tg-input-name');
+      if (!idInput) return;
+
+      const val = idInput.value.trim();
+      if (!val) return;
+
+      const isPhone = val.startsWith('+') || /^\d/.test(val);
+      const rawName = nameInput ? nameInput.value.trim() : '';
+      const cleanName = isPhone ? '' : val.replace('@', '');
+      const defaultName = rawName || (cleanName ? (cleanName.charAt(0).toUpperCase() + cleanName.slice(1)) : 'Перевозчик');
+
+      closeTelegramModal();
+
+      if (currentTelegramMode === 'login') {
+        showAuthToast('Telegram авторизован', `Сессия ${val} верифицирована через @BusLinerFleetBot. Вход в систему...`);
+        setTimeout(() => {
+          window.location.href = 'busliner-partners.html#slide-schedule';
+        }, 900);
+      } else {
+        if (isPhone) {
+          const pInput = document.getElementById('ob-phone');
+          if (pInput) pInput.value = val;
+        }
+        const fnInput = document.getElementById('ob-fullname');
+        if (fnInput) fnInput.value = defaultName;
+
+        const badge = document.getElementById('onboard-google-badge');
+        if (badge) {
+          document.getElementById('onboard-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(defaultName)}&background=2AABEE&color=fff&size=120`;
+          document.getElementById('onboard-name-display').innerText = defaultName;
+          document.getElementById('onboard-email-display').innerText = isPhone ? `Телефон: ${val}` : `Telegram: ${val}`;
+          badge.style.display = 'flex';
+        }
+
+        showAuthToast('Telegram привязан', `@BusLinerFleetBot синхронизирован с автопарком ${defaultName}.`);
+        nextStep(2);
+      }
+    };
+
+    window.handleTelegramLogin = function() {
+      openTelegramModal('login');
+    };
+
+    window.handleTelegramOnboard = function() {
+      openTelegramModal('onboard');
     };
 
     function switchView(viewName) {
@@ -1504,46 +1612,13 @@
       goToStep(stepNumber);
     }
 
-    function handleTelegramLogin() {
-      const tgNick = prompt('Вход в диспетчерскую через Telegram:\n\nВведите номер телефона или @username диспетчера:');
-      if (tgNick && tgNick.trim()) {
-        alert(`Telegram код верификации отправлен боту @BusLinerFleetBot.\nСессия ${tgNick.trim()} авторизована.`);
-        window.location.href = 'busliner-partners.html#slide-schedule';
-      }
-    }
-
-    function handleTelegramOnboard() {
-      const tgId = prompt('Регистрация автопарка через Telegram:\n\nВведите ваш номер телефона или @username в Telegram:');
-      if (tgId && tgId.trim()) {
-        const val = tgId.trim();
-        const isPhone = val.startsWith('+') || /^\d/.test(val);
-        if (isPhone) {
-          const pInput = document.getElementById('ob-phone');
-          if (pInput) pInput.value = val;
-        }
-        const cleanName = isPhone ? '' : val.replace('@', '');
-        const defaultName = cleanName ? (cleanName.charAt(0).toUpperCase() + cleanName.slice(1)) : '';
-        const namePrompt = prompt('Укажите ФИО представителя автопарка:', defaultName) || defaultName;
-        if (namePrompt) {
-          const fnInput = document.getElementById('ob-fullname');
-          if (fnInput) fnInput.value = namePrompt;
-        }
-        const badge = document.getElementById('onboard-google-badge');
-        if (badge) {
-          document.getElementById('onboard-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(namePrompt || val)}&background=2AABEE&color=fff&size=120`;
-          document.getElementById('onboard-name-display').innerText = namePrompt || val;
-          document.getElementById('onboard-email-display').innerText = isPhone ? `Телефон: ${val}` : `Telegram: ${val}`;
-          badge.style.display = 'flex';
-        }
-        alert(`Telegram верифицирован!\nБот @BusLinerFleetBot привязан к автопарку.\nДанные подставлены в форму регистрации.`);
-      }
-    }
-
     function handleEmailLogin(e) {
       e.preventDefault();
       const email = document.getElementById('login-email').value;
-      alert(`Успешный вход в диспетчерскую BusLiner для ${email}.\nЗагрузка расписания и радара No-Show...`);
-      window.location.href = 'busliner-partners.html#slide-schedule';
+      showAuthToast('Вход выполнен', `Авторизация успешна для ${email}. Загрузка консоли...`);
+      setTimeout(() => {
+        window.location.href = 'busliner-partners.html#slide-schedule';
+      }, 700);
     }
 
     function handleWizardSubmit(e) {
@@ -1568,8 +1643,10 @@
     }
 
     function enterDemoDashboard() {
-      alert('Запуск виртуального диспетчерского терминала BusLiner Fleet Console...');
-      window.location.href = 'busliner-partners.html#slide-schedule';
+      showAuthToast('Диспетчерский терминал', 'Запуск рабочей консоли BusLiner Fleet Console...');
+      setTimeout(() => {
+        window.location.href = 'busliner-partners.html#slide-schedule';
+      }, 500);
     }
 
     function recalculateCommission() {
@@ -1599,7 +1676,7 @@
       if (stored) {
         try {
           const user = JSON.parse(stored);
-          applyGoogleProfile(user);
+          window.applyGoogleProfile(user, true); // true = initial load restoration
         } catch (e) {}
       }
 

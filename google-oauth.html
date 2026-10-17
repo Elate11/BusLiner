@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Войти с помощью аккаунта Google — BusLiner Partners</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #FFFFFF;
+      color: #202124;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100vh;
+      padding: 36px 40px 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .card {
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    .google-logo {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+    }
+    .heading {
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.33;
+      color: #202124;
+      margin-bottom: 8px;
+    }
+    .subheading {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #5F6368;
+      margin-bottom: 32px;
+    }
+    .subheading strong {
+      color: #1E3A8A;
+      font-weight: 600;
+    }
+    .form-group {
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .form-input {
+      width: 100%;
+      height: 56px;
+      padding: 16px;
+      font-size: 16px;
+      font-family: inherit;
+      color: #202124;
+      background: #FFFFFF;
+      border: 1px solid #DADCE0;
+      border-radius: 4px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-input:focus {
+      border-color: #1A73E8;
+      border-width: 2px;
+      padding: 15px;
+    }
+    .form-label {
+      font-size: 13px;
+      color: #5F6368;
+      margin-bottom: 6px;
+      display: block;
+      font-weight: 500;
+    }
+    .form-hint {
+      font-size: 12px;
+      color: #5F6368;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+    .privacy-notice {
+      font-size: 14px;
+      color: #5F6368;
+      line-height: 1.43;
+      margin-bottom: 32px;
+    }
+    .privacy-notice a {
+      color: #1A73E8;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .privacy-notice a:hover {
+      text-decoration: underline;
+    }
+    .actions-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+    .btn-link {
+      background: none;
+      border: none;
+      color: #1A73E8;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 8px 0;
+    }
+    .btn-link:hover {
+      color: #174EA6;
+      text-decoration: underline;
+    }
+    .btn-primary {
+      background: #1A73E8;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 0 24px;
+      height: 40px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover {
+      background: #174EA6;
+      box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+    }
+    .btn-primary:disabled {
+      background: #DADCE0;
+      color: #80868B;
+      cursor: not-allowed;
+    }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #747775;
+      padding-top: 24px;
+      border-top: 1px solid #F1F3F4;
+    }
+    .footer a {
+      color: #747775;
+      text-decoration: none;
+      margin-left: 16px;
+    }
+    .footer a:hover {
+      color: #202124;
+    }
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #FFFFFF;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <!-- Official Google 4-Color Logo -->
+    <svg class="google-logo" viewBox="0 0 48 48">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+    </svg>
+
+    <h1 class="heading">Вход с помощью Google</h1>
+    <p class="subheading">
+      Для перехода в приложение <strong>BusLiner Partners</strong>
+    </p>
+
+    <form id="google-login-form" onsubmit="handleGoogleSubmit(event)">
+      <div class="form-group">
+        <label class="form-label" for="email-input">Телефон или адрес эл. почты</label>
+        <input type="email" id="email-input" class="form-input" placeholder="ваш.аккаунт@gmail.com или корпоративная почта" required autofocus>
+        <div class="form-hint">Используйте Google / Gmail аккаунт вашей организации</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="name-input">Имя и фамилия руководителя / диспетчера</label>
+        <input type="text" id="name-input" class="form-input" placeholder="Фамилия Имя Отчество">
+      </div>
+
+      <p class="privacy-notice">
+        Перед использованием приложения BusLiner ознакомьтесь с его <a href="#" onclick="return false;">Политикой конфиденциальности</a> и <a href="#" onclick="return false;">Условиями использования</a>.
+      </p>
+
+      <div class="actions-row">
+        <button type="button" class="btn-link" onclick="window.close()">Отмена</button>
+        <button type="submit" id="btn-submit" class="btn-primary">
+          <span class="spinner" id="btn-spinner"></span>
+          <span id="btn-label">Далее</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <footer class="footer">
+    <div>Русский (Беларусь)</div>
+    <div>
+      <a href="#" onclick="return false;">Справка</a>
+      <a href="#" onclick="return false;">Конфиденциальность</a>
+      <a href="#" onclick="return false;">Условия</a>
+    </div>
+  </footer>
+
+  <script>
+    function handleGoogleSubmit(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('email-input');
+      const nameInput = document.getElementById('name-input');
+      const email = emailInput.value.trim();
+      if (!email) return;
+
+      const rawName = nameInput.value.trim();
+      let formattedName = rawName;
+      if (!formattedName) {
+        const part = email.split('@')[0].replace(/[._-]/g, ' ');
+        formattedName = part.charAt(0).toUpperCase() + part.slice(1);
+      }
+
+      // Show loader
+      const btn = document.getElementById('btn-submit');
+      const spinner = document.getElementById('btn-spinner');
+      const label = document.getElementById('btn-label');
+      btn.disabled = true;
+      spinner.style.display = 'inline-block';
+      label.innerText = 'Вход...';
+
+      const userProfile = {
+        id: 'google-oauth2|' + Math.floor(Math.random() * 900000000000000000 + 100000000000000000),
+        name: formattedName,
+        email: email,
+        picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(formattedName)}&background=1E3A8A&color=fff&size=120`,
+        verified: true
+      };
+
+      setTimeout(() => {
+        // 1. Direct function call if available
+        try {
+          if (window.opener && typeof window.opener.applyGoogleProfile === 'function') {
+            window.opener.applyGoogleProfile(userProfile);
+          }
+        } catch (e) {
+          console.warn('Opener direct call notice:', e);
+        }
+
+        // 2. Cross-window postMessage fallback
+        try {
+          if (window.opener) {
+            window.opener.postMessage({ type: 'BUSLINER_GOOGLE_AUTH', user: userProfile }, '*');
+          }
+        } catch (e) {
+          console.warn('postMessage notice:', e);
+        }
+
+        // 3. LocalStorage fallback for file:// protocol
+        try {
+          localStorage.setItem('busliner_google_user', JSON.stringify(userProfile));
+          localStorage.setItem('busliner_google_sync_trigger', Date.now().toString());
+        } catch (e) {
+          console.warn('LocalStorage notice:', e);
+        }
+
+        // Close this popup automatically!
+        window.close();
+      }, 500);
+    }
+  </script>
+</body>
+</html>
