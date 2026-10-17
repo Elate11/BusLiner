@@ -127,17 +127,17 @@ def send_login_prompt_to_telegram(chat_id: int, session_token: str, device_hint:
     Sends an interactive 2-Factor confirmation prompt to the carrier's Telegram account.
     """
     text = (
-        "🛡️ *Запрос на вход в диспетчерскую BusLiner*\n\n"
-        f"📱 *Устройство:* `{device_hint}`\n"
-        f"🔐 *Код сессии:* `{session_token[:8]}...`\n"
-        "⏱️ *Срок действия:* 5 минут\n\n"
-        "Если это вы входите в систему BusLiner Partners, нажмите *«Подтвердить вход»*:"
+        "*Запрос на авторизацию в диспетчерской системе BusLiner Partners*\n\n"
+        f"Устройство: `{device_hint}`\n"
+        f"Код сессии: `{session_token[:8]}...`\n"
+        "Срок действия: 5 минут\n\n"
+        "Для подтверждения входа в рабочую консоль выберите соответствующее действие:"
     )
     keyboard = {
         "inline_keyboard": [
             [
-                {"text": "✅ Подтвердить вход", "callback_data": f"auth_confirm:{session_token}"},
-                {"text": "🚫 Заблокировать", "callback_data": f"auth_deny:{session_token}"}
+                {"text": "Подтвердить вход", "callback_data": f"auth_confirm:{session_token}"},
+                {"text": "Отклонить", "callback_data": f"auth_deny:{session_token}"}
             ]
         ]
     }
@@ -173,11 +173,11 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     "auth_method": "telegram_bot_challenge"
                 }
                 reply = (
-                    f"✅ *Вход успешно подтвержден!*\n\n"
-                    f"Здравствуйте, {first_name}!\n"
-                    f"Вы авторизованы в диспетчерской *BusLiner Partners*.\n\n"
-                    f"💻 Окно браузера автоматически перейдет в рабочую консоль.\n"
-                    f"🔒 Сессия верифицирована (СТБ 1389-2003)."
+                    f"*Авторизация подтверждена*\n\n"
+                    f"Здравствуйте, {first_name}.\n"
+                    f"Вход в диспетчерскую систему BusLiner Partners успешно верифицирован.\n\n"
+                    f"Окно браузера автоматически перейдет в рабочую консоль.\n"
+                    f"Регламент безопасности: СТБ 1389-2003."
                 )
                 send_telegram_api_request("sendMessage", {
                     "chat_id": chat_id,
@@ -187,7 +187,11 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             else:
                 send_telegram_api_request("sendMessage", {
                     "chat_id": chat_id,
-                    "text": "⚠️ *Срок действия ссылки истек.*\nПожалуйста, нажмите «Войти через Telegram» на сайте еще раз.",
+                    "text": (
+                        "*Срок действия сессии истек*\n\n"
+                        "Ссылка авторизации недействительна или уже была использована.\n"
+                        "Пожалуйста, вернитесь на сайт и повторите запрос на вход."
+                    ),
                     "parse_mode": "Markdown"
                 })
 
@@ -202,18 +206,18 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 s.get("telegram_user", {}).get("id") == user_id and s.get("status") == "authorized"
                 for s in ACTIVE_AUTH_SESSIONS.values()
             )
-            session_state = "✅ Авторизована" if has_auth else "⏳ Ожидание запроса на сайте"
+            session_state = "Авторизована" if has_auth else "Ожидание запроса на сайте"
 
             status_msg = (
-                f"📊 *Статус диспетчерской BusLiner Partners*\n\n"
-                f"👤 *Представитель:* {first_name} ({clean_username})\n"
-                f"🆔 *Telegram ID:* `{user_id}`\n"
-                f"💻 *Веб-сессия:* {session_state}\n"
-                f"🟢 *Шлюз авторизации:* Онлайн (порт {SERVER_PORT})\n"
-                f"🔒 *Безопасность:* 256-bit Challenge Nonce (СТБ 1389-2003)\n"
-                f"⚡ *Активных сессий:* {active_count}\n"
-                f"💳 *Клиринг:* T+1 Активен\n\n"
-                f"Для входа перейдите на сайт и нажмите кнопку *«Войти через Telegram»*."
+                f"*Статус системы BusLiner Partners*\n\n"
+                f"Представитель: {first_name} ({clean_username})\n"
+                f"Telegram ID: `{user_id}`\n"
+                f"Текущая веб-сессия: {session_state}\n"
+                f"Шлюз авторизации: В сети (порт {SERVER_PORT})\n"
+                f"Стандарт безопасности: СТБ 1389-2003 (256-bit Nonce)\n"
+                f"Активных сессий: {active_count}\n"
+                f"Безналичный клиринг: T+1 (активен)\n\n"
+                f"Для авторизации перейдите на портал перевозчиков."
             )
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
@@ -223,18 +227,19 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
 
         elif text.startswith("/help"):
             help_msg = (
-                f"ℹ️ *Справка BusLiner Fleet Bot (@{BOT_USERNAME})*\n\n"
-                f"Официальный бот двухфакторной аутентификации и оперативных уведомлений платформы *BusLiner Partners*.\n\n"
-                f"*Доступные команды:*\n"
-                f"• /start — Начало работы и привязка сессии\n"
-                f"• /status — Проверка статуса соединения и учетной записи\n"
-                f"• /help — Инструкция и поддержка автопарков\n\n"
-                f"*Как войти в панель диспетчера:*\n"
-                f"1. Нажмите на сайте *«Войти через Telegram»*\n"
-                f"2. Перейдите по ссылке в бота и нажмите *«Start»*\n"
-                f"3. Окно браузера мгновенно авторизует вас\n\n"
-                f"📞 *Круглосуточная поддержка перевозчиков:*\n"
-                f"+375 (29) 774-12-00"
+                f"*Справка: BusLiner Fleet Bot (@{BOT_USERNAME})*\n\n"
+                f"Официальный сервис аутентификации и уведомлений диспетчерской платформы BusLiner Partners.\n\n"
+                f"*Команды:*\n"
+                f"/start — Начало работы и проверка соединения\n"
+                f"/status — Текущий статус сессии и реквизиты профиля\n"
+                f"/help — Справочная информация и регламент поддержки\n\n"
+                f"*Порядок авторизации:*\n"
+                f"1. Нажмите «Войти через Telegram» на портале перевозчиков.\n"
+                f"2. Перейдите по ссылке в бота и нажмите кнопку «Запустить» (Start).\n"
+                f"3. Авторизация в окне браузера завершится автоматически.\n\n"
+                f"*Служба поддержки автопарков:*\n"
+                f"Телефон: +375 (29) 774-12-00 (круглосуточно)\n"
+                f"Электронная почта: support@busliner.by"
             )
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
@@ -245,11 +250,12 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
         elif text.startswith("/start"):
             first_name = user.get("first_name", "Перевозчик")
             welcome = (
-                f"👋 *Здравствуйте, {first_name}!*\n\n"
-                f"Это официальный бот диспетчерской платформы *BusLiner Partners* (@{BOT_USERNAME}).\n\n"
-                f"🔑 Бот используется для мгновенной 2FA-авторизации, уведомлений о рейсах и клиринге T+1.\n"
-                f"Чтобы войти в систему, нажмите *«Войти через Telegram»* на портале перевозчиков.\n\n"
-                f"Введите /status для проверки соединения или /help для справки."
+                f"*Диспетчерский сервис BusLiner Partners*\n\n"
+                f"Здравствуйте, {first_name}.\n"
+                f"Официальный бот авторизации и уведомлений платформы BusLiner Partners (@{BOT_USERNAME}).\n\n"
+                f"Сервис предназначен для подтверждения доступа в личный кабинет перевозчика, получения уведомлений о рейсах и контроля безналичного клиринга T+1.\n\n"
+                f"Для входа в систему используйте кнопку «Войти через Telegram» на сайте.\n"
+                f"Доступные команды: /status — проверка сессии, /help — справочная информация."
             )
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
@@ -258,12 +264,12 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             })
 
         else:
-            # Fallback for arbitrary messages
             fallback_msg = (
-                "ℹ️ Команда не распознана.\n\n"
-                "• Введите /status для проверки состояния учетной записи\n"
-                "• Введите /help для получения справки\n"
-                "• Для авторизации используйте кнопку входа на сайте"
+                "Команда не распознана.\n\n"
+                "Используйте:\n"
+                "/status — проверка состояния сессии\n"
+                "/help — справочная информация\n\n"
+                "Для входа в диспетчерскую воспользуйтесь авторизацией на портале."
             )
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
@@ -293,11 +299,11 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 }
                 send_telegram_api_request("answerCallbackQuery", {
                     "callback_query_id": cb_id,
-                    "text": "✅ Вход в BusLiner подтвержден!"
+                    "text": "Вход подтвержден."
                 })
                 send_telegram_api_request("sendMessage", {
                     "chat_id": chat_id,
-                    "text": "✅ *Авторизация подтверждена.* Окно браузера входит в консоль.",
+                    "text": "*Авторизация подтверждена.* Окно браузера входит в консоль.",
                     "parse_mode": "Markdown"
                 })
         elif cb_data.startswith("auth_deny:"):
@@ -307,7 +313,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 session["status"] = "denied"
             send_telegram_api_request("answerCallbackQuery", {
                 "callback_query_id": cb_id,
-                "text": "🚫 Вход отклонен."
+                "text": "Вход отклонен."
             })
 
 
