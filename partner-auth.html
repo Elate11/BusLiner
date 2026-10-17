@@ -1255,21 +1255,16 @@
         <button type="button" onclick="closeTelegramModal()" aria-label="Закрыть" style="background: none; border: none; font-size: 26px; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 0 4px; transition: color 0.2s ease;">&times;</button>
       </div>
 
-      <!-- SECURITY BADGE (HIDDEN) -->
-      <div style="display: none;" id="tg-security-badge-row">
-        <span id="tg-session-short-token"></span>
-      </div>
-
       <!-- TABS: 1-CLICK BOT vs MANUAL / OTP -->
       <div style="display: flex; background: var(--surface-subtle); border-radius: 8px; padding: 3px; margin-bottom: 16px;">
-        <button type="button" id="tg-tab-btn-bot" onclick="switchTgTab('bot')" style="flex: 1; padding: 8px 12px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; background: #FFFFFF; color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.2s ease;">⚡ Вход через бота</button>
-        <button type="button" id="tg-tab-btn-manual" onclick="switchTgTab('manual')" style="flex: 1; padding: 8px 12px; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; background: transparent; color: var(--text-muted); transition: all 0.2s ease;">📱 Номер / Код</button>
+        <button type="button" id="tg-tab-btn-bot" onclick="switchTgTab('bot')" style="flex: 1; padding: 8px 12px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; background: #FFFFFF; color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.2s ease;">Вход через бота</button>
+        <button type="button" id="tg-tab-btn-manual" onclick="switchTgTab('manual')" style="flex: 1; padding: 8px 12px; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; background: transparent; color: var(--text-muted); transition: all 0.2s ease;">Номер или код</button>
       </div>
 
       <!-- TAB 1 CONTENT: BOT DEEP LINK & LIVE CHALLENGE -->
       <div id="tg-tab-pane-bot">
         <p id="tg-bot-desc" style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
-          Откройте бота в Telegram. Он мгновенно запросит подтверждение входа для вашего диспетчерского терминала:
+          Откройте бота в Telegram для подтверждения входа в кабинет автопарка:
         </p>
 
         <!-- CTA DEEP LINK BUTTON -->
@@ -1296,7 +1291,7 @@
         </div>
 
         <button type="button" class="btn btn-secondary" onclick="confirmBotSession()" style="width: 100%; font-size: 13px; padding: 11px;">
-          ✅ Я подтвердил в Telegram боте &rarr;
+          Я подтвердил в Telegram боте &rarr;
         </button>
       </div>
 
@@ -1329,10 +1324,10 @@
         </form>
       </div>
 
-      <!-- FOOTER COMPLIANCE NOTE -->
-      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border-hairline); display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-dim);">
-        <span>СТБ 1389-2003 Compliance</span>
-        <span>Защищенная сессия</span>
+      <!-- FOOTER SUPPORT NOTE -->
+      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border-hairline); display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--text-dim);">
+        <span>Поддержка автопарков:</span>
+        <a href="tel:+375297741200" style="color: var(--text-primary); font-weight: 600; text-decoration: none;">+375 (29) 774-12-00</a>
       </div>
     </div>
   </div>
@@ -1598,7 +1593,6 @@
       tgCountdownSeconds = 300;
 
       // Update UI elements
-      if (tokenDisplay) tokenDisplay.innerText = `Токен: ${tgSessionToken.substring(0, 8)}... (256-bit)`;
       if (otpDisplay) otpDisplay.innerText = `${tgSessionOtp.substring(0, 3)} ${tgSessionOtp.substring(3)}`;
       if (deepLinkBtn) {
         deepLinkBtn.href = `https://t.me/BusLinerFleetBot?start=auth_${tgSessionToken}`;
@@ -1606,11 +1600,11 @@
 
       if (mode === 'login') {
         if (title) title.innerText = 'Вход через Telegram';
-        if (desc) desc.innerText = 'Откройте бота в Telegram. Он отправит интерактивный запрос на подтверждение входа в диспетчерскую:';
+        if (desc) desc.innerText = 'Откройте бота в Telegram для подтверждения входа в кабинет автопарка:';
         if (nameRow) nameRow.style.display = 'none';
       } else {
         if (title) title.innerText = 'Регистрация через Telegram';
-        if (desc) desc.innerText = 'Привяжите Telegram-бота @BusLinerFleetBot к автопарку для мгновенного получения броней и T+1 выплат:';
+        if (desc) desc.innerText = 'Откройте бота в Telegram для привязки автопарка к системе:';
         if (nameRow) nameRow.style.display = 'block';
       }
 
@@ -1641,7 +1635,6 @@
             tgSessionToken = data.session_token;
             if (data.otp_code) tgSessionOtp = data.otp_code;
             if (data.deep_link && deepLinkBtn) deepLinkBtn.href = data.deep_link;
-            if (tokenDisplay) tokenDisplay.innerText = `Токен: ${tgSessionToken.substring(0, 8)}... (256-bit)`;
             if (otpDisplay) otpDisplay.innerText = `${tgSessionOtp.substring(0, 3)} ${tgSessionOtp.substring(3)}`;
           }
         })
