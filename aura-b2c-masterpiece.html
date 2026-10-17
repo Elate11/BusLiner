@@ -625,12 +625,13 @@
     }
     .dispatch-table {
       width: 100%;
-      min-width: 680px;
+      min-width: 0;
+      table-layout: auto;
       border-collapse: collapse;
       text-align: left;
     }
     .dispatch-table th {
-      padding: 10px 16px;
+      padding: 10px 14px;
       font-family: var(--font-mono);
       font-size: 11px;
       text-transform: uppercase;
@@ -640,31 +641,24 @@
       white-space: nowrap;
     }
     .dispatch-table td {
-      padding: 14px 16px;
+      padding: 11px 14px;
       border-bottom: 1px solid var(--border-hairline);
       vertical-align: middle;
-      font-size: 14px;
+      font-size: 13.5px;
     }
     .dispatch-table th:nth-child(1),
-    .dispatch-table td:nth-child(1) {
-      white-space: nowrap;
-    }
+    .dispatch-table td:nth-child(1),
+    .dispatch-table th:nth-child(2),
+    .dispatch-table td:nth-child(2),
     .dispatch-table th:nth-child(3),
-    .dispatch-table td:nth-child(3) {
-      white-space: nowrap;
-    }
+    .dispatch-table td:nth-child(3),
     .dispatch-table th:nth-child(4),
-    .dispatch-table td:nth-child(4) {
-      white-space: nowrap;
-    }
+    .dispatch-table td:nth-child(4),
     .dispatch-table th:nth-child(5),
-    .dispatch-table td:nth-child(5) {
-      white-space: nowrap;
-    }
+    .dispatch-table td:nth-child(5),
     .dispatch-table th:nth-child(6),
     .dispatch-table td:nth-child(6) {
-      white-space: nowrap;
-      text-align: right;
+      white-space: normal;
     }
     .dispatch-table tr:last-child td { border-bottom: none; }
     .dispatch-table tr:hover td { background: rgba(0,0,0,0.015); }
@@ -1613,6 +1607,188 @@
         font-size: 8px !important;
       }
     }
+
+    /* ==========================================================================
+       PASSENGER PORTAL — RICH MOTION & FLUID ANIMATIONS SYSTEM
+       ========================================================================== */
+
+    /* 1. Global Scroll-Driven Slide Entrance Reveal */
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .scroll-reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .stagger-1 { transition-delay: 0.05s; }
+    .stagger-2 { transition-delay: 0.12s; }
+    .stagger-3 { transition-delay: 0.20s; }
+    .stagger-4 { transition-delay: 0.28s; }
+
+    /* 2. Search Monolith Ambient Floating Glow */
+    .search-monolith-bar {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+      animation: searchFloatGlow 5s ease-in-out infinite alternate;
+    }
+    @keyframes searchFloatGlow {
+      0% {
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.25);
+      }
+      100% {
+        box-shadow: 0 22px 52px rgba(0, 0, 0, 0.6), 0 0 28px rgba(56, 189, 248, 0.22), 0 0 0 1px rgba(147, 197, 253, 0.45);
+      }
+    }
+    .search-monolith-bar:hover,
+    .search-monolith-bar:focus-within {
+      border-color: rgba(147, 197, 253, 0.75);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 32px rgba(56, 189, 248, 0.3);
+    }
+
+    /* 3. Search Submit Button Dynamic Shimmer & Tactile State */
+    .search-submit-btn {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .search-submit-btn::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 45%;
+      height: 200%;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.32) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: rotate(25deg);
+      animation: btnGleam 4.2s infinite ease-in-out;
+      pointer-events: none;
+    }
+    @keyframes btnGleam {
+      0%, 65% { left: -60%; }
+      100% { left: 160%; }
+    }
+    .search-submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(30, 58, 138, 0.65);
+    }
+    .search-submit-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* 4. Swap Button Spring Rotation */
+    .swap-trigger {
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s, box-shadow 0.2s;
+    }
+    .swap-trigger:active,
+    .swap-trigger.swapped {
+      transform: translateY(-50%) rotate(180deg) scale(1.18);
+    }
+
+    /* 5. Live Green Radar Pulse on Seat Badges */
+    .seats-minimalist.available .seats-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: seatPulseGreen 2.4s infinite cubic-bezier(0.66, 0, 0, 1);
+      margin-right: 3px;
+    }
+    @keyframes seatPulseGreen {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    /* 6. Schedule Row Elevation & Smooth Interactive Hover */
+    .dispatch-table tbody tr {
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, box-shadow 0.22s ease;
+    }
+    .dispatch-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.98) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+    }
+    .dispatch-table tbody tr td .btn {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+    }
+    .dispatch-table tbody tr:hover td .btn-accent {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(30, 58, 138, 0.35);
+    }
+
+    /* 7. Passenger Review Cards Elevation & Interactive Pop */
+    .review-card {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .review-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+    }
+    .ios-reaction-pill {
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .ios-reaction-pill:hover {
+      transform: scale(1.08);
+      background: rgba(30, 58, 138, 0.08);
+      border-color: rgba(30, 58, 138, 0.3);
+    }
+    .ios-reaction-pill:active,
+    .ios-reaction-pill.reacted {
+      transform: scale(0.96);
+      background: rgba(30, 58, 138, 0.12);
+      border-color: #1E3A8A;
+      color: #1E3A8A;
+    }
+    .ios-reaction-pill.reacted .ios-reaction-count {
+      color: #1E3A8A;
+      font-weight: 700;
+    }
+    .pop-anim {
+      animation: emojiBounce 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes emojiBounce {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.25); }
+      100% { transform: scale(1); }
+    }
+
+    /* 8. Feature Items Icon Box Glow */
+    .feature-item {
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .feature-item:hover {
+      transform: translateY(-4px);
+    }
+    .feature-item:hover .feature-icon-box {
+      border-color: #93C5FD;
+      box-shadow: 0 8px 24px rgba(147, 197, 253, 0.35);
+      color: #93C5FD;
+      transform: scale(1.05);
+    }
+
+    /* 9. Final CTA Button Glow Pulse */
+    .cta-center .btn-accent {
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+      animation: ctaLuminousGlow 3.6s infinite ease-in-out;
+    }
+    @keyframes ctaLuminousGlow {
+      0%, 100% { box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.4); }
+      50% { box-shadow: 0 14px 35px 2px rgba(30, 58, 138, 0.7), 0 0 22px rgba(56, 189, 248, 0.4); }
+    }
+    .cta-center .btn-accent:hover {
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 <body>
@@ -1655,15 +1831,15 @@
     <div class="container">
       
 
-      <h1 class="slide-headline">
+      <h1 class="slide-headline scroll-reveal stagger-1">
         Поездки в один клик без звонков и ожидания. <em>Твой транспорт здесь.</em>
       </h1>
-      <p class="slide-lead">
+      <p class="slide-lead scroll-reveal stagger-2">
         Забудь про «мест нет, перезвоните через час» и наглых перекупщиков. Официальные билеты в один клик, удобные места у окна и автовыкуп отказных билетов, пока ты пьешь кофе.
       </p>
 
       <!-- ROCK-SOLID SEARCH BAR -->
-      <form class="search-monolith-bar" onsubmit="event.preventDefault(); window.location.href='aura-passenger-app.html';">
+      <form class="search-monolith-bar scroll-reveal stagger-3" onsubmit="event.preventDefault(); window.location.href='aura-passenger-app.html';">
         
         <!-- FROM -->
         <div class="search-cell cell-from">
@@ -1737,7 +1913,7 @@
       </form>
 
       <!-- 4 PUNCHY PROMISES (HORIZONTAL MODULAR GRID) -->
-      <div class="features-hero-row">
+      <div class="features-hero-row scroll-reveal stagger-4">
         
         <div class="feature-item">
           <div class="feature-icon-box">
@@ -1799,12 +1975,12 @@
        ========================================================================== -->
   <section class="full-slide" id="slide-schedule">
     <div class="container">
-      <h2 class="slide-headline">Занимай кресло, пока другие <em>гуглят номера вокзалов</em></h2>
-      <p class="slide-lead">
+      <h2 class="slide-headline scroll-reveal stagger-1">Занимай кресло, пока другие <em>гуглят номера вокзалов</em></h2>
+      <p class="slide-lead scroll-reveal stagger-2">
         Честные цены без наценок и скрытых комиссий. Рейсы каждые 30 минут — садись и поезжай.
       </p>
 
-      <div class="dispatch-table-wrap">
+      <div class="dispatch-table-wrap scroll-reveal stagger-3">
         <div class="table-topbar">
           Гомель &mdash; Минск
         </div>
@@ -2059,12 +2235,12 @@
        ========================================================================== -->
   <section class="full-slide" id="slide-reviews">
     <div class="container">
-      <h2 class="slide-headline">Те, кто уже забыл фразу <em>«девушка, запишите на пятницу»</em></h2>
-      <p class="slide-lead">
+      <h2 class="slide-headline scroll-reveal stagger-1">Те, кто уже забыл фразу <em>«девушка, запишите на пятницу»</em></h2>
+      <p class="slide-lead scroll-reveal stagger-2">
         Студенты, туристы с велосипедами и удаленщики, которые больше не стоят в очередях на вокзале.
       </p>
 
-      <div class="reviews-grid">
+      <div class="reviews-grid scroll-reveal stagger-3">
         <div class="review-card">
           <div class="review-author-line">
             <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=160&h=160&q=80" alt="Илья Смирнов" class="review-avatar-img">
@@ -2134,7 +2310,7 @@
   <section class="full-slide" id="slide-cta">
     
     <!-- TOP CTA CENTER -->
-    <div class="cta-center">
+    <div class="cta-center scroll-reveal stagger-1">
       <h2 class="cta-title">Твой комфортный рейс уже в расписании. <em>Выбирай лучшее место.</em></h2>
       <p class="cta-lead">
         Официальные билеты от проверенных автопарков, гарантия посадки и моментальный возврат средств в один клик.
@@ -2325,6 +2501,7 @@
   </section>
 
   <script>
+
     // 1. Force reload to always start at the very top (Slide 1 Hero)
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
@@ -2386,19 +2563,89 @@
 
     slides.forEach(slide => observer.observe(slide));
 
-    // Interactive city swap
-    const btnSwap = document.getElementById('btn-swap');
-    if (btnSwap) {
-      btnSwap.addEventListener('click', () => {
-        const from = document.getElementById('input-from');
-        const to = document.getElementById('input-to');
-        if (from && to) {
-          const temp = from.value;
-          from.value = to.value;
-          to.value = temp;
+    // =========================================================================
+    // PASSENGER PORTAL — FLUID ANIMATIONS & MICRO-INTERACTIONS
+    // =========================================================================
+
+    // A. Global Scroll-Reveal with IntersectionObserver
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
         }
       });
+    }, {
+      threshold: 0.15,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    document.querySelectorAll('.scroll-reveal').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+    // Make Slide 1 reveal smoothly immediately on load
+    setTimeout(() => {
+      document.querySelectorAll('#slide-hero .scroll-reveal').forEach(el => {
+        el.classList.add('revealed');
+      });
+    }, 60);
+
+    // B. Interactive City Swap Button with Spring Rotation & Cross-Fade
+    const btnSwap = document.getElementById('btn-swap');
+    const inputFrom = document.getElementById('input-from');
+    const inputTo = document.getElementById('input-to');
+
+    if (btnSwap && inputFrom && inputTo) {
+      let swapRot = 0;
+      btnSwap.addEventListener('click', (e) => {
+        e.preventDefault();
+        swapRot += 180;
+        btnSwap.style.transform = `translateY(-50%) rotate(${swapRot}deg) scale(1.15)`;
+        setTimeout(() => {
+          btnSwap.style.transform = `translateY(-50%) rotate(${swapRot}deg) scale(1)`;
+        }, 250);
+
+        inputFrom.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
+        inputTo.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
+        inputFrom.style.opacity = '0.25';
+        inputTo.style.opacity = '0.25';
+        inputFrom.style.transform = 'translateX(6px)';
+        inputTo.style.transform = 'translateX(-6px)';
+
+        setTimeout(() => {
+          const temp = inputFrom.value;
+          inputFrom.value = inputTo.value;
+          inputTo.value = temp;
+
+          inputFrom.style.opacity = '1';
+          inputTo.style.opacity = '1';
+          inputFrom.style.transform = 'translateX(0)';
+          inputTo.style.transform = 'translateX(0)';
+        }, 150);
+      });
     }
+
+    // C. Passenger Review Reaction Pills with Tactile Bounce & Counter
+    document.querySelectorAll('.ios-reaction-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const countSpan = pill.querySelector('.ios-reaction-count');
+        const isReacted = pill.classList.contains('reacted');
+        let count = parseInt(countSpan.textContent, 10) || 0;
+
+        if (isReacted) {
+          pill.classList.remove('reacted');
+          countSpan.textContent = Math.max(0, count - 1);
+        } else {
+          pill.classList.add('reacted');
+          countSpan.textContent = count + 1;
+        }
+
+        pill.classList.remove('pop-anim');
+        void pill.offsetWidth;
+        pill.classList.add('pop-anim');
+        setTimeout(() => pill.classList.remove('pop-anim'), 400);
+      });
+    });
 
     // =========================================================================
     // HYPER-REALISTIC SNIPER BALLISTICS ENGINE (CANVAS + PHYSICAL IMPACT)
