@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BusLiner Partners — Платформа монетизации и диспетчеризации для регулярных автопарков</title>
+  <meta name="description" content="Подключите междугородний автопарк к платформе BusLiner: 100% предоплата мест, ликвидация срывов броней Снайпером 2.0, монетизация багажников Smart Cargo и выплаты T+1.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent-institutional: #1E3A8A;
+      --accent-institutional-dark: #152A68;
+      --accent-soft: #EFF6FF;
+      --accent-border: #BFDBFE;
+      --accent-sky: #93C5FD;
+      --canvas: #FBFBF9;
+      --surface-white: #FFFFFF;
+      --surface-subtle: #F3F4F6;
+      --surface-dark: #090A0D;
+      --surface-dark-card: #111827;
+      --border-hairline: #E5E7EB;
+      --border-dark: #1F2937;
+      --text-primary: #0F172A;
+      --text-muted: #64748B;
+      --text-light: #F8FAFC;
+      --status-available: #0E7048;
+      --status-available-bg: #E8F5E9;
+      --status-radar: #B45309;
+      --status-radar-bg: #FEF3C7;
+      --font-serif: "Newsreader", Georgia, serif;
+      --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: "JetBrains Mono", SFMono-Regular, monospace;
+      --container-width: 1200px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--canvas);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* TOP FLOATING NAVIGATION */
+    nav.app-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      z-index: 1000;
+      transition: background 0.25s ease, border-color 0.25s ease;
+      background: rgba(9, 10, 13, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    nav.app-nav.scrolled {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid var(--border-hairline);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+    nav.app-nav.scrolled .brand-title { color: #0F172A; }
+    nav.app-nav.scrolled .brand-badge { background: var(--accent-soft); color: var(--accent-institutional); border-color: var(--accent-border); }
+    nav.app-nav.scrolled .nav-menu a { color: #334155; }
+    nav.app-nav.scrolled .nav-menu a:hover { color: var(--accent-institutional); }
+    nav.app-nav.scrolled .audience-switch a.active { background: #0F172A; color: #FFFFFF; }
+    nav.app-nav.scrolled .audience-switch a { color: #64748B; }
+
+    .nav-inner {
+      width: 100%;
+      max-width: var(--container-width);
+      margin: 0 auto;
+      padding: 0 32px;
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .brand-logo-icon {
+      flex-shrink: 0;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    .brand-title {
+      font-family: var(--font-body);
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: #FFFFFF;
+      transition: color 0.2s ease;
+    }
+    .brand-title span { color: var(--accent-sky); }
+    .brand-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: #93C5FD;
+      background: rgba(30, 58, 138, 0.4);
+      padding: 3px 8px;
+      border: 1px solid rgba(147, 197, 253, 0.3);
+      border-radius: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* AUDIENCE TOGGLE SWITCH */
+    .audience-switch {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      margin-right: 18px;
+    }
+    .audience-switch a {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.65);
+      transition: all 0.15s ease;
+    }
+    .audience-switch a.active {
+      background: #FFFFFF;
+      color: #0F172A;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 18px;
+      list-style: none;
+      align-items: center;
+    }
+    .nav-menu a {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .nav-menu a:hover {
+      color: #93C5FD;
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 12px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      border: none;
+      gap: 8px;
+    }
+    .btn-accent {
+      background: var(--accent-institutional);
+      color: #FFFFFF;
+      border: 1px solid var(--accent-institutional);
+      box-shadow: 0 4px 14px rgba(30, 58, 138, 0.35);
+    }
+    .btn-accent:hover {
+      background: var(--accent-institutional-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(30, 58, 138, 0.5);
+    }
+    .btn-white {
+      background: #FFFFFF;
+      color: #0F172A;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+    .btn-white:hover {
+      background: #F8FAFC;
+      border-color: #CBD5E1;
+      transform: translateY(-2px);
+    }
+    .btn-ghost-dark {
+      background: rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    .btn-ghost-dark:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 9px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      border-radius: 6px;
+      font-weight: 600;
+      gap: 5px;
+    }
+    .badge-accent { background: var(--accent-soft); color: var(--accent-institutional); border: 1px solid var(--accent-border); }
+    .badge-success { background: var(--status-available-bg); color: var(--status-available); border: 1px solid rgba(14,112,72,0.25); }
+    .badge-radar { background: var(--status-radar-bg); color: var(--status-radar); border: 1px solid #FCD34D; }
+
+    /* LAYOUT UTILITIES */
+    .container {
+      width: 100%;
+      max-width: var(--container-width);
+      margin: 0 auto;
+      padding: 0 32px;
+      position: relative;
+    }
+    .section-wrap {
+      padding: 100px 0;
+      position: relative;
+    }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-institutional);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 14px;
+      height: 1.5px;
+      background: currentColor;
+    }
+    .eyebrow-dark {
+      color: var(--accent-sky);
+    }
+    .section-headline {
+      font-family: var(--font-serif);
+      font-size: 40px;
+      line-height: 1.15;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      max-width: 820px;
+    }
+    .section-headline em {
+      font-style: italic;
+      color: var(--accent-institutional);
+    }
+    .section-headline-dark {
+      color: #FFFFFF;
+    }
+    .section-headline-dark em {
+      color: var(--accent-sky);
+    }
+    .section-lead {
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin-bottom: 48px;
+    }
+    .section-lead-dark {
+      color: #94A3B8;
+    }
+
+    /* ==========================================================================
+       HERO SECTION (DARK INSTITUTIONAL MONOLITH)
+       ========================================================================== */
+    #hero-partners {
+      position: relative;
+      background: #090A0D;
+      color: #FFFFFF;
+      padding-top: 140px;
+      padding-bottom: 100px;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .hero-glow-sphere {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      top: -200px;
+      right: -100px;
+      background: radial-gradient(circle, rgba(30, 58, 138, 0.35) 0%, rgba(9, 10, 13, 0) 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 48px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 52px;
+      line-height: 1.08;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      margin-bottom: 24px;
+      color: #FFFFFF;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent-sky);
+    }
+    .hero-text {
+      font-size: 17px;
+      line-height: 1.65;
+      color: #94A3B8;
+      margin-bottom: 36px;
+      max-width: 580px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+
+    /* LIVE METRICS TICKER IN HERO */
+    .hero-stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .stat-box .stat-val {
+      font-family: var(--font-mono);
+      font-size: 28px;
+      font-weight: 700;
+      color: #FFFFFF;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .stat-box .stat-val span {
+      font-size: 16px;
+      color: var(--accent-sky);
+    }
+    .stat-box .stat-label {
+      font-size: 12px;
+      color: #64748B;
+      margin-top: 4px;
+    }
+
+    /* HERO LIVE DISPATCH WIDGET PREVIEW */
+    .hero-preview-card {
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+      position: relative;
+    }
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .preview-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .preview-live-dot {
+      width: 8px;
+      height: 8px;
+      background: #10B981;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10B981;
+      animation: pulseLive 2s infinite;
+    }
+    @keyframes pulseLive {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .bus-grid-visualizer {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .bus-deck-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: #94A3B8;
+      margin-bottom: 12px;
+    }
+    .seat-matrix {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+    .seat-unit {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .seat-paid {
+      background: rgba(14, 112, 72, 0.25);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34D399;
+    }
+    .seat-sniper {
+      background: rgba(180, 83, 9, 0.25);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #FBBF24;
+      animation: sniperPulse 1.8s infinite;
+    }
+    @keyframes sniperPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .seat-free {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: #64748B;
+    }
+
+    .cargo-visual-strip {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    .cargo-pill {
+      flex: 1;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(30, 58, 138, 0.25);
+      border: 1px solid rgba(147, 197, 253, 0.3);
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: #BFDBFE;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .preview-bottom-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    /* ==========================================================================
+       PAIN VS SOLUTION (WHY OPERATORS SWITCH)
+       ========================================================================== */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 32px;
+    }
+    .comparison-card {
+      border-radius: 20px;
+      padding: 36px;
+      position: relative;
+    }
+    .comparison-card.legacy {
+      background: #FFFFFF;
+      border: 1px solid #FCA5A5;
+      box-shadow: 0 4px 20px rgba(239, 68, 68, 0.05);
+    }
+    .comparison-card.modern {
+      background: #FFFFFF;
+      border: 1px solid #93C5FD;
+      box-shadow: 0 10px 30px rgba(30, 58, 138, 0.08);
+      outline: 2px solid var(--accent-institutional);
+    }
+    .comparison-title {
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .comparison-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .comparison-list li {
+      font-size: 14.5px;
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .comparison-list li svg {
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    /* ==========================================================================
+       KILLER FEATURES GRID (4 MONOLITH COLUMNS)
+       ========================================================================== */
+    .features-quad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .feature-box {
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      border-radius: 20px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .feature-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07);
+    }
+    .feature-icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-border);
+      color: var(--accent-institutional);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .feature-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+    .feature-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      flex: 1;
+    }
+    .feature-metric-tag {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--accent-institutional);
+      background: #F0F4FF;
+      padding: 6px 12px;
+      border-radius: 6px;
+      align-self: flex-start;
+      border: 1px solid rgba(30, 58, 138, 0.15);
+    }
+
+    /* ==========================================================================
+       INTERACTIVE ROI CALCULATOR
+       ========================================================================== */
+    #calculator {
+      background: #090A0D;
+      color: #FFFFFF;
+    }
+    .calc-monolith-box {
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 56px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    }
+    .calc-slider-group {
+      margin-bottom: 28px;
+    }
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+    .slider-label {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: #E2E8F0;
+    }
+    .slider-output {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent-sky);
+    }
+    .calc-range {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #1F2937;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+    .calc-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 3px solid var(--accent-institutional);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    .calc-range::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .calc-checkboxes {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      font-size: 13.5px;
+      color: #CBD5E1;
+      user-select: none;
+    }
+    .check-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-institutional);
+      cursor: pointer;
+    }
+
+    .calc-summary-panel {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(147, 197, 253, 0.25);
+      border-radius: 20px;
+      padding: 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .summary-heading {
+      font-size: 12px;
+      font-family: var(--font-mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #94A3B8;
+      margin-bottom: 8px;
+    }
+    .summary-big-gain {
+      font-family: var(--font-mono);
+      font-size: 42px;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .summary-big-gain span {
+      font-size: 20px;
+      color: var(--accent-sky);
+    }
+    .summary-subtext {
+      font-size: 13px;
+      color: #94A3B8;
+      margin-bottom: 28px;
+    }
+    .summary-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 28px;
+    }
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13.5px;
+    }
+    .breakdown-row .lbl { color: #94A3B8; }
+    .breakdown-row .val { font-family: var(--font-mono); font-weight: 600; color: #FFFFFF; }
+
+    /* ==========================================================================
+       HOW TO ONBOARD (4 STEPS WITHIN 24 HOURS)
+       ========================================================================== */
+    .steps-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 36px;
+    }
+    .step-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      border-radius: 20px;
+      padding: 28px 24px;
+      position: relative;
+    }
+    .step-num {
+      font-family: var(--font-mono);
+      font-size: 32px;
+      font-weight: 800;
+      color: rgba(30, 58, 138, 0.18);
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+    .step-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .step-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       DISPATCHER CONSOLE INTERACTION TEASER
+       ========================================================================== */
+    .console-demo-wrap {
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.05);
+      margin-top: 32px;
+      isolation: isolate;
+    }
+    .console-topbar {
+      background: #F8FAFC;
+      border-bottom: 1px solid var(--border-hairline);
+      padding: 16px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .console-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .console-route-chip {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .console-body {
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+    }
+    .console-board-left {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .console-stat-pill-row {
+      display: flex;
+      gap: 12px;
+    }
+    .console-pill {
+      flex: 1;
+      padding: 14px 18px;
+      background: #F8FAFC;
+      border: 1px solid var(--border-hairline);
+      border-radius: 12px;
+    }
+    .console-pill .lbl {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .console-pill .val {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .interactive-simulator-trigger {
+      padding: 16px 20px;
+      border-radius: 12px;
+      background: #EFF6FF;
+      border: 1px dashed var(--accent-institutional);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ==========================================================================
+       PARTNER APPLICATION FORM
+       ========================================================================== */
+    #apply-form {
+      background: var(--canvas);
+    }
+    .form-monolith-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      border-radius: 24px;
+      padding: 56px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.05);
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 32px;
+    }
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .form-field.full-span {
+      grid-column: span 2;
+    }
+    .form-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .form-input, .form-select {
+      width: 100%;
+      height: 48px;
+      border: 1px solid var(--border-hairline);
+      border-radius: 12px;
+      padding: 0 16px;
+      font-family: var(--font-body);
+      font-size: 14.5px;
+      color: var(--text-primary);
+      background: #FFFFFF;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--accent-institutional);
+      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+    }
+    .form-submit-row {
+      grid-column: span 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-hairline);
+    }
+    .form-disclaimer {
+      font-size: 12px;
+      color: var(--text-muted);
+      max-width: 440px;
+      line-height: 1.4;
+    }
+
+    /* ==========================================================================
+       FOOTER (INSTITUTIONAL NAVY BLEED)
+       ========================================================================== */
+    footer.app-footer {
+      background: #090A0D;
+      color: #94A3B8;
+      padding: 80px 0 40px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-col-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 18px;
+    }
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-links a {
+      color: #94A3B8;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .footer-links a:hover {
+      color: #FFFFFF;
+    }
+    .footer-bottom {
+      padding-top: 32px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #64748B;
+    }
+
+    /* RESPONSIVE BREAKPOINTS */
+    @media (max-width: 1024px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+      .calc-monolith-box { grid-template-columns: 1fr; padding: 32px; }
+      .features-quad { grid-template-columns: repeat(2, 1fr); }
+      .steps-row { grid-template-columns: repeat(2, 1fr); }
+      .comparison-grid { grid-template-columns: 1fr; }
+      .console-body { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .hero-title { font-size: 36px; }
+      .section-headline { font-size: 28px; }
+      .features-quad { grid-template-columns: 1fr; }
+      .steps-row { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-field.full-span { grid-column: span 1; }
+      .form-submit-row { grid-column: span 1; flex-direction: column; gap: 16px; align-items: stretch; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .nav-menu { display: none; }
+      .audience-switch { margin-right: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       FLOATING NAVIGATION BAR
+       ========================================================================== -->
+  <nav class="app-nav" id="top-nav">
+    <div class="nav-inner">
+      <a href="#hero-partners" class="brand-mark">
+        <svg class="brand-logo-icon" width="28" height="28" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="7" fill="#1E3A8A"/>
+          <path d="M7 11C7 9.34315 8.34315 8 10 8H22C23.6569 8 25 9.34315 25 11V21C25 22.1046 24.1046 23 23 23H9C7.89543 23 7 22.1046 7 21V11Z" stroke="#FFFFFF" stroke-width="1.8"/>
+          <path d="M7 15H25" stroke="#FFFFFF" stroke-width="1.5"/>
+          <circle cx="11.5" cy="19.5" r="1.5" fill="#93C5FD"/>
+          <circle cx="20.5" cy="19.5" r="1.5" fill="#93C5FD"/>
+        </svg>
+        <span class="brand-title">BusLiner <span>Partners</span></span>
+        <span class="brand-badge">B2B Carrier</span>
+      </a>
+
+      <div style="display: flex; align-items: center;">
+        <div class="audience-switch">
+          <a href="index.html">Пассажирам</a>
+          <a href="#hero-partners" class="active">Перевозчикам</a>
+        </div>
+
+        <ul class="nav-menu">
+          <li><a href="#benefits">Преимущества</a></li>
+          <li><a href="#calculator">Калькулятор</a></li>
+          <li><a href="#dispatch-demo">Диспетчерская</a></li>
+          <li><a href="#how-to-connect">Подключение</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <a href="#apply-form" class="btn btn-accent" style="padding: 9px 18px; font-size: 12.5px;">
+          Подключить автопарк &rarr;
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==========================================================================
+       HERO: INSTITUTIONAL CARRIER MONOLITH
+       ========================================================================== -->
+  <section id="hero-partners">
+    <div class="hero-glow-sphere"></div>
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow eyebrow-dark">B2B Инфраструктура для регулярных линий</div>
+          <h1 class="hero-title">
+            100% выкуп кресел и монетизация багажников <em>без диспетчерского ада</em>
+          </h1>
+          <p class="hero-text">
+            Подключите ваши микроавтобусы и автобусы к агрегатору BusLiner. Ликвидируйте неявку пассажиров (No-Show) алгоритмом «Снайпер 2.0», сдавайте пустые багажные отсеки под грузы и получайте гарантированные безналичные выплаты T+1.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#apply-form" class="btn btn-accent" style="padding: 15px 32px; font-size: 14.5px;">
+              Подать заявку на подключение &rarr;
+            </a>
+            <a href="#calculator" class="btn btn-ghost-dark" style="padding: 15px 24px; font-size: 14.5px;">
+              Рассчитать доп. выручку
+            </a>
+          </div>
+
+          <div class="hero-stats-row">
+            <div class="stat-box">
+              <div class="stat-val">97.8<span>%</span></div>
+              <div class="stat-label">Средний Load Factor линий</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">0<span>%</span></div>
+              <div class="stat-label">Срывов брони (100% Pre-auth)</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">+32<span>%</span></div>
+              <div class="stat-label">Рост чистой маржи за счет Cargo</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: INTERACTIVE MINI DISPATCHER PREVIEW -->
+        <div>
+          <div class="hero-preview-card">
+            <div class="preview-header">
+              <div>
+                <div class="preview-title">
+                  <span class="preview-live-dot"></span>
+                  Борт #14 &bull; Mercedes-Benz Sprinter 319
+                </div>
+                <div style="font-size: 11px; font-family: var(--font-mono); color: #64748B; margin-top: 2px;">
+                  Рейс: Минск (Центральный) &rarr; Гомель &bull; Отправление: 16:30
+                </div>
+              </div>
+              <span class="badge badge-success">Загрузка 100%</span>
+            </div>
+
+            <!-- SEATS VISUALIZER -->
+            <div class="bus-grid-visualizer">
+              <div class="bus-deck-info">
+                <span>САЛОН: 18/18 МЕСТ</span>
+                <span style="color: #34D399;">16 ОПЛАЧЕНО &bull; 2 СНАЙПЕР</span>
+              </div>
+              <div class="seat-matrix">
+                <div class="seat-unit seat-paid" title="Место 01: Оплачено картой">01</div>
+                <div class="seat-unit seat-paid" title="Место 02: Оплачено картой">02</div>
+                <div class="seat-unit seat-paid" title="Место 03: Оплачено картой">03</div>
+                <div class="seat-unit seat-paid" title="Место 04: Оплачено картой">04</div>
+                <div class="seat-unit seat-paid" title="Место 05: Оплачено картой">05</div>
+
+                <div class="seat-unit seat-paid" title="Место 06: Оплачено картой">06</div>
+                <div class="seat-unit seat-sniper" title="Место 07: Перехвачено Снайпером 2.0 (холдирование bePaid)">07</div>
+                <div class="seat-unit seat-paid" title="Место 08: Оплачено картой">08</div>
+                <div class="seat-unit seat-paid" title="Место 09: Оплачено картой">09</div>
+                <div class="seat-unit seat-paid" title="Место 10: Оплачено картой">10</div>
+
+                <div class="seat-unit seat-paid" title="Место 11: Оплачено картой">11</div>
+                <div class="seat-unit seat-paid" title="Место 12: Оплачено картой">12</div>
+                <div class="seat-unit seat-sniper" title="Место 13: Перехвачено Снайпером 2.0">13</div>
+                <div class="seat-unit seat-paid" title="Место 14: Оплачено картой">14</div>
+                <div class="seat-unit seat-paid" title="Место 15: Оплачено картой">15</div>
+
+                <div class="seat-unit seat-paid" title="Место 16: Оплачено картой">16</div>
+                <div class="seat-unit seat-paid" title="Место 17: Оплачено картой">17</div>
+                <div class="seat-unit seat-paid" title="Место 18: Оплачено картой">18</div>
+              </div>
+
+              <!-- CARGO SLOTS -->
+              <div class="cargo-visual-strip">
+                <div class="cargo-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 9l4-4 4 4M9 5v14M15 19l4-4-4-4M19 15H5"/></svg>
+                  2 Вело-слота (+36 BYN)
+                </div>
+                <div class="cargo-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                  3 Посылки QR (+45 BYN)
+                </div>
+              </div>
+            </div>
+
+            <div class="preview-bottom-actions">
+              <span style="font-family: var(--font-mono); color: #94A3B8;">Выручка рейса: <strong style="color: #FFFFFF;">477.00 BYN</strong></span>
+              <span style="font-family: var(--font-mono); color: #34D399;">Выплата T+1: Завтра 11:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION: COMPARISON MATRIX (OLD VS BUSLINER)
+       ========================================================================== -->
+  <section class="section-wrap" id="benefits">
+    <div class="container">
+      <div class="eyebrow">Анатомия операционной эффективности</div>
+      <h2 class="section-headline">
+        Почему лидеры направлений отказываются от <em>тетрадей и телефонных диспетчеров</em>
+      </h2>
+      <p class="section-lead">
+        Ручной прием звонков создает иллюзию контроля, но крадет до 25% чистой прибыли автопарка через неявки, пустой багаж и ошибки диспетчеров.
+      </p>
+
+      <div class="comparison-grid">
+        <!-- OLD WAY -->
+        <div class="comparison-card legacy">
+          <div class="comparison-title" style="color: #DC2626;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Классическая схема работы
+          </div>
+          <ul class="comparison-list">
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <span><strong>До 18% срывов броней (No-show):</strong> Пассажир записался по телефону, не пришел на посадку — маршрутка уходит с пустыми креслами.</span>
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <span><strong>0 BYN с багажного отсека:</strong> Перевозка велосипедов и коробок происходит стихийно за наличные водителю мимо кассы.</span>
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <span><strong>Фиксированная цена в пик спроса:</strong> В пятницу вечером билеты продаются по той же цене, что и во вторник днем, теряя маржинальность.</span>
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <span><strong>Ручная посадка по бумажным спискам:</strong> Споры пассажиров у дверей, задержки отправления на 10-15 минут.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- BUSLINER WAY -->
+        <div class="comparison-card modern">
+          <div class="comparison-title" style="color: var(--accent-institutional);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="9 12 12 15 16 10"/></svg>
+            Инфраструктура BusLiner Partner
+          </div>
+          <ul class="comparison-list">
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span><strong>100% гарантия оплаты:</strong> Средства холдируются банковским эквайрингом. Отказной билет за 1.4 сек перехватывает «Снайпер».</span>
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span><strong>Smart Cargo оцифровка:</strong> Автоматическая продажа слотов под велосипеды и малогабаритные посылки с QR-трекингом T+1.</span>
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span><strong>Yield Management:</strong> Динамическая подстройка цен на основе ML-прогноза спроса для максимального чека рейса.</span>
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <span><strong>Водительское PWA-приложение:</strong> Сканирование посадочных QR-кодов за 2 секунды прямо с телефона водителя.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION: 4 CORE ENGINES FOR CARRIERS
+       ========================================================================== -->
+  <section class="section-wrap" style="background: #FFFFFF; border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline);">
+    <div class="container">
+      <div class="eyebrow">Технологические модули платформы</div>
+      <h2 class="section-headline">
+        Инструменты, созданные специально для <em>междугородних автопарков</em>
+      </h2>
+      <p class="section-lead">
+        Никаких сложных интеграций и закупки дорогих серверов. Всё работает через защищенный веб-интерфейс и лёгкое приложение для смартфонов водителей.
+      </p>
+
+      <div class="features-quad">
+        <!-- 1. SNIPER 2.0 -->
+        <div class="feature-box">
+          <div>
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            </div>
+            <h3 class="feature-title">Снайпер 2.0 (Zero-Drop)</h3>
+            <p class="feature-desc">
+              Если пассажир отменяет бронь за 30 минут до отправления, алгоритм мгновенно перехватывает место и списывает средства с ожидающего пассажира по очереди ордеров FIFO. Ни одного пустого кресла на рейсе.
+            </p>
+          </div>
+          <div class="feature-metric-tag">Эффект: 0% потерь на срывах</div>
+        </div>
+
+        <!-- 2. SMART CARGO -->
+        <div class="feature-box">
+          <div>
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </div>
+            <h3 class="feature-title">Smart Cargo & Вело-слоты</h3>
+            <p class="feature-desc">
+              Оцифровка объема багажника (Mercedes Sprinter, Crafter). Пассажиры официально бронируют транспортировку спортинвентаря и отправку посылок. Водитель видит загрузку отсека заранее в своей CRM.
+            </p>
+          </div>
+          <div class="feature-metric-tag">+120-180 BYN/день с борта</div>
+        </div>
+
+        <!-- 3. B2B YIELD MANAGEMENT -->
+        <div class="feature-box">
+          <div>
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <h3 class="feature-title">Yield Management</h3>
+            <p class="feature-desc">
+              Биржевой стакан для автопарка. Модуль предиктивной аналитики на основе CatBoost анализирует погоду, день недели и спрос, рекомендуя диспетчеру оптимальный тариф на рейс для максимизации маржи.
+            </p>
+          </div>
+          <div class="feature-metric-tag">+14.2% к средней стоимости билета</div>
+        </div>
+
+        <!-- 4. T+1 CLEARING -->
+        <div class="feature-box">
+          <div>
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
+            <h3 class="feature-title">Клиринг и выплаты T+1</h3>
+            <p class="feature-desc">
+              Деньги за все проданные билеты перечисляются на ваш банковский расчетный счет каждый рабочий день (T+1). Полный пакет актов сверок и реестров для 1С в один клик. Прозрачная комиссия от 5%.
+            </p>
+          </div>
+          <div class="feature-metric-tag">Без задержек и кассовых разрывов</div>
+        </div>
+
+        <!-- 5. SMART MULTI-HOP -->
+        <div class="feature-box">
+          <div>
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            </div>
+            <h3 class="feature-title">Графовый транзит Multi-Hop</h3>
+            <p class="feature-desc">
+              BusLiner направляет в ваши машины транзитных пассажиров со смежных городов через промежуточные узловые станции (Бобруйск, Жлобин, Барановичи), догружая салон даже на непопулярных участках.
+            </p>
+          </div>
+          <div class="feature-metric-tag">Дополнительный пассажиропоток</div>
+        </div>
+
+        <!-- 6. DRIVER PWA -->
+        <div class="feature-box">
+          <div>
+            <div class="feature-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </div>
+            <h3 class="feature-title">PWA-терминал водителя</h3>
+            <p class="feature-desc">
+              Работает в браузере любого смартфона. Сканирует электронные посадочные талоны по QR-коду, фиксирует отметку посадки и отправляет геолокацию на онлайн-радар ожидания пассажиров.
+            </p>
+          </div>
+          <div class="feature-metric-tag">Посадка за 2 секунды на человека</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION: INTERACTIVE ROI CALCULATOR
+       ========================================================================== -->
+  <section class="section-wrap" id="calculator">
+    <div class="container">
+      <div class="eyebrow eyebrow-dark">Финансовая модель партнерства</div>
+      <h2 class="section-headline section-headline-dark">
+        Рассчитайте дополнительную прибыль <em>вашего автопарка</em>
+      </h2>
+      <p class="section-lead section-lead-dark">
+        Оцените, сколько чистой прибыли ежемесячно теряет ваш автопарк из-за телефонных no-show и пустых багажников.
+      </p>
+
+      <div class="calc-monolith-box">
+        <!-- CONTROLS LEFT -->
+        <div>
+          <!-- SLIDER 1: FLEET SIZE -->
+          <div class="calc-slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Количество машин на линии (бортов):</span>
+              <span class="slider-output" id="val-fleet">6 машин</span>
+            </div>
+            <input type="range" class="calc-range" id="range-fleet" min="1" max="25" value="6" step="1">
+          </div>
+
+          <!-- SLIDER 2: TRIPS PER DAY -->
+          <div class="calc-slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Рейсов в день на 1 борт:</span>
+              <span class="slider-output" id="val-trips">3 рейса</span>
+            </div>
+            <input type="range" class="calc-range" id="range-trips" min="1" max="6" value="3" step="1">
+          </div>
+
+          <!-- SLIDER 3: TICKET PRICE -->
+          <div class="calc-slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Средняя цена билета на маршруте:</span>
+              <span class="slider-output" id="val-price">22 BYN</span>
+            </div>
+            <input type="range" class="calc-range" id="range-price" min="10" max="45" value="22" step="1">
+          </div>
+
+          <!-- CHECKBOXES -->
+          <div class="calc-checkboxes">
+            <label class="check-item">
+              <input type="checkbox" id="chk-cargo" checked>
+              <span>Включить монетизацию Smart Cargo (вело-слоты и посылки)</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" id="chk-yield" checked>
+              <span>Активировать ML Yield Management (+12% в пятницу и воскресенье)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- SUMMARY RIGHT -->
+        <div class="calc-summary-panel">
+          <div>
+            <div class="summary-heading">Расчетная дополнительная прибыль:</div>
+            <div class="summary-big-gain" id="total-profit">+7 920 <span>BYN/мес</span></div>
+            <div class="summary-subtext">Деньги, которые ваш автопарк недополучает прямо сейчас</div>
+
+            <div class="summary-breakdown">
+              <div class="breakdown-row">
+                <span class="lbl">Спасенная выручка (Снайпер 2.0):</span>
+                <span class="val" id="gain-sniper">+4 752 BYN</span>
+              </div>
+              <div class="breakdown-row">
+                <span class="lbl">Доход от багажника и посылок:</span>
+                <span class="val" id="gain-cargo">+2 160 BYN</span>
+              </div>
+              <div class="breakdown-row">
+                <span class="lbl">Премия за пиковый спрос (Yield):</span>
+                <span class="val" id="gain-yield">+1 008 BYN</span>
+              </div>
+              <div class="breakdown-row" style="padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.15);">
+                <span class="lbl">Прогнозная годовая прибавка:</span>
+                <span class="val" id="gain-year" style="color: #34D399; font-size: 16px;">+95 040 BYN/год</span>
+              </div>
+            </div>
+          </div>
+
+          <a href="#apply-form" class="btn btn-accent" style="width: 100%; padding: 14px; font-size: 14px;">
+            Подключить автопарк к BusLiner &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION: DISPATCHER CONSOLE INTERACTIVE TEASER
+       ========================================================================== -->
+  <section class="section-wrap" id="dispatch-demo">
+    <div class="container">
+      <div class="eyebrow">Единый центр управления линиями</div>
+      <h2 class="section-headline">
+        Диспетчерский пульт, понятный с <em>первой минуты работы</em>
+      </h2>
+      <p class="section-lead">
+        Визуализируйте загрузку каждого рейса, управляйте посадкой в реальном времени и избавьте диспетчеров от 90% повторяющихся звонков.
+      </p>
+
+      <div class="console-demo-wrap">
+        <div class="console-topbar">
+          <div class="console-title-group">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span class="console-route-chip">Диспетчерский монитор &bull; ООО «Бурлаки-Авто»</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <span class="badge badge-accent">Линия: Минск &harr; Гомель</span>
+            <span class="badge badge-success">GPS-Телеметрия Активна</span>
+          </div>
+        </div>
+
+        <div class="console-body">
+          <div class="console-board-left">
+            <div class="console-stat-pill-row">
+              <div class="console-pill">
+                <div class="lbl">Бортов на линии</div>
+                <div class="val">8 машин</div>
+              </div>
+              <div class="console-pill">
+                <div class="lbl">Продано билетов</div>
+                <div class="val">142 шт.</div>
+              </div>
+              <div class="console-pill">
+                <div class="lbl">Выручка за смену</div>
+                <div class="val">3 124 BYN</div>
+              </div>
+            </div>
+
+            <div class="interactive-simulator-trigger">
+              <div>
+                <strong style="font-size: 13.5px; color: var(--text-primary); display: block; margin-bottom: 2px;">
+                  Интерактивная симуляция отказа пассажира:
+                </strong>
+                <span style="font-size: 12px; color: var(--text-muted);">
+                  Нажмите кнопку, чтобы увидеть перехват билета Снайпером 2.0 без участия человека.
+                </span>
+              </div>
+              <button type="button" class="btn btn-accent" id="btn-simulate" style="padding: 10px 16px; font-size: 12px;">
+                Смоделировать отказ &rarr;
+              </button>
+            </div>
+
+            <div id="sim-log-box" style="display: none; padding: 14px 18px; border-radius: 12px; background: #0F172A; color: #E2E8F0; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.5;">
+              <span style="color: #F87171;">[16:14:02] Пассажир #872 отменил бронь на месте #07.</span><br>
+              <span style="color: #FBBF24;">[16:14:03] Снайпер 2.0 перехватил место для Ильи Смирнова (Ордер #1409).</span><br>
+              <span style="color: #34D399;">[16:14:04] Холдирование 22.00 BYN списано. Билет выписан. No-show предотвращен.</span>
+            </div>
+          </div>
+
+          <!-- SALON MAP -->
+          <div style="background: #F8FAFC; border: 1px solid var(--border-hairline); border-radius: 16px; padding: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <span style="font-size: 13px; font-weight: 700;">Схема рассадки рейса 16:30 (Спринтер 319)</span>
+              <span class="badge badge-success" id="sim-seat-status">18 / 18 Занято</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+              <div style="padding: 12px; background: #E2E8F0; border-radius: 8px; text-align: center; font-size: 12px; font-weight: 600; grid-column: span 2;">
+                Водитель (Игорь К.)
+              </div>
+              <div style="padding: 12px; background: #FFFFFF; border: 1px solid var(--border-hairline); border-radius: 8px; text-align: center; font-size: 12px; font-weight: 600; color: #10B981;">
+                М-01
+              </div>
+              <div style="padding: 12px; background: #FFFFFF; border: 1px solid var(--border-hairline); border-radius: 8px; text-align: center; font-size: 12px; font-weight: 600; color: #10B981;">
+                М-02
+              </div>
+
+              <div style="padding: 12px; background: #FFFFFF; border: 1px solid var(--border-hairline); border-radius: 8px; text-align: center; font-size: 12px; font-weight: 600; color: #10B981;">
+                М-03
+              </div>
+              <div style="padding: 12px; background: #FFFFFF; border: 1px solid var(--border-hairline); border-radius: 8px; text-align: center; font-size: 12px; font-weight: 600; color: #10B981;">
+                М-04
+              </div>
+              <div style="padding: 12px; background: #FFFFFF; border: 1px solid var(--border-hairline); border-radius: 8px; text-align: center; font-size: 12px; font-weight: 600; color: #10B981;">
+                М-05
+              </div>
+              <div style="padding: 12px; background: #FFFFFF; border: 1px solid var(--border-hairline); border-radius: 8px; text-align: center; font-size: 12px; font-weight: 600; color: #10B981;" id="sim-target-seat">
+                М-07 (Снайпер)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION: 4 STEPS TO CONNECT IN 24 HOURS
+       ========================================================================== -->
+  <section class="section-wrap" id="how-to-connect" style="background: #FFFFFF; border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline);">
+    <div class="container">
+      <div class="eyebrow">Быстрый запуск без простоя парка</div>
+      <h2 class="section-headline">
+        Подключение к платформе <em>ровно за 24 часа</em>
+      </h2>
+      <p class="section-lead">
+        Без покупки терминалов, без переобучения водителей и без остановки действующих рейсов.
+      </p>
+
+      <div class="steps-row">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <h3 class="step-title">Заявка и договор</h3>
+          <p class="step-desc">
+            Оставляете заявку. Мы оформляем стандартный агентский договор с гарантией безналичных выплат T+1.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <h3 class="step-title">Ввод расписания</h3>
+          <p class="step-desc">
+            Загружаем ваши действующие рейсы, остановки, типы машин (Sprinter, Crafter) и тарифную сетку в систему.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <h3 class="step-title">Ссылка водителям</h3>
+          <p class="step-desc">
+            Водители получают персональные ссылки на PWA-приложение без установки через App Store / Google Play.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num">04</div>
+          <h3 class="step-title">Первые выплаты</h3>
+          <p class="step-desc">
+            Пассажиры покупают билеты онлайн со 100% предоплатой. Выручка падает на ваш счет на следующий рабочий день.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION: PARTNER APPLICATION FORM
+       ========================================================================== -->
+  <section class="section-wrap" id="apply-form">
+    <div class="container">
+      <div class="form-monolith-card">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+          <div class="eyebrow" style="justify-content: center;">Партнерская программа 2026</div>
+          <h2 class="section-headline" style="font-size: 34px;">
+            Подключите ваш автопарк к <em>BusLiner</em>
+          </h2>
+          <p class="section-lead" style="margin-bottom: 0;">
+            Оставьте контакты — наш логистический инженер свяжется с вами в течение 30 минут, рассчитает потенциал ваших маршрутов и проведет демо платформы.
+          </p>
+        </div>
+
+        <form id="carrier-onboarding-form">
+          <div class="form-grid">
+            <div class="form-field">
+              <label class="form-label">Название автопарка или ИП *</label>
+              <input type="text" class="form-input" placeholder="ООО «Бурлаки-Авто» или ИП Иванов" required>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">Количество машин в парке *</label>
+              <select class="form-select" required>
+                <option value="1-3">1 &ndash; 3 микроавтобуса</option>
+                <option value="4-8" selected>4 &ndash; 8 микроавтобусов</option>
+                <option value="9-15">9 &ndash; 15 микроавтобусов</option>
+                <option value="16+">Более 16 бортов (Крупный парк)</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">Основные маршруты следования *</label>
+              <input type="text" class="form-input" placeholder="например, Минск — Гомель, Минск — Гродно" required>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">Марки транспортных средств</label>
+              <input type="text" class="form-input" placeholder="Mercedes Sprinter 319, VW Crafter...">
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">Имя контактного лица *</label>
+              <input type="text" class="form-input" placeholder="Иван Сергеевич (директор)" required>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label">Телефон для связи (Telegram/Viber) *</label>
+              <input type="tel" class="form-input" placeholder="+375 (29) 000-00-00" required>
+            </div>
+
+            <div class="form-submit-row">
+              <div class="form-disclaimer">
+                Нажимая кнопку, вы соглашаетесь на обработку персональных данных и получение предварительного расчета окупаемости линий.
+              </div>
+              <button type="submit" class="btn btn-accent" style="padding: 16px 36px; font-size: 14.5px;">
+                Отправить заявку &rarr;
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div id="form-success-banner" style="display: none; margin-top: 24px; padding: 20px; border-radius: 12px; background: #E8F5E9; border: 1px solid #A7F3D0; color: #065F46; text-align: center;">
+          <strong style="display: block; font-size: 16px; margin-bottom: 4px;">Заявка успешно принята!</strong>
+          Логистический менеджер BusLiner свяжется с вами в течение 30 минут для согласования подключения.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="app-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
+              <rect width="32" height="32" rx="7" fill="#1E3A8A"/>
+              <path d="M7 11C7 9.34315 8.34315 8 10 8H22C23.6569 8 25 9.34315 25 11V21C25 22.1046 24.1046 23 23 23H9C7.89543 23 7 22.1046 7 21V11Z" stroke="#FFFFFF" stroke-width="1.8"/>
+              <circle cx="11.5" cy="19.5" r="1.5" fill="#93C5FD"/>
+              <circle cx="20.5" cy="19.5" r="1.5" fill="#93C5FD"/>
+            </svg>
+            <span style="font-size: 16px; font-weight: 800; color: #FFFFFF;">BusLiner <span>Partners</span></span>
+          </div>
+          <p style="line-height: 1.6; max-width: 340px; margin-bottom: 20px;">
+            B2B инфраструктура для регулярных междугородних линий Республики Беларусь. Полная оцифровка кресел, снайпер отказных мест, монетизация багажников и расчеты T+1.
+          </p>
+          <div style="font-family: var(--font-mono); font-size: 11px; color: #64748B;">
+            AURA MOBILITY SYSTEMS INC. &bull; РБ, МИНСК
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-col-title">Платформа</div>
+          <ul class="footer-links">
+            <li><a href="index.html">Пассажирский сайт (B2C)</a></li>
+            <li><a href="#benefits">Преимущества для парков</a></li>
+            <li><a href="#calculator">ROI Калькулятор</a></li>
+            <li><a href="#dispatch-demo">Диспетчерский пульт</a></li>
+            <li><a href="#how-to-connect">Условия подключения</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-col-title">Технологии</div>
+          <ul class="footer-links">
+            <li><a href="#benefits">Снайпер 2.0 (Zero-Drop)</a></li>
+            <li><a href="#benefits">Smart Cargo трекинг</a></li>
+            <li><a href="#benefits">ML Yield Management</a></li>
+            <li><a href="#benefits">Водительское PWA</a></li>
+            <li><a href="#benefits">Клиринг bePaid / WebPay</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-col-title">Отдел по работе с перевозчиками</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+            <div style="color: #FFFFFF; font-weight: 600;">+375 (17) 388-40-20</div>
+            <div style="color: #93C5FD; font-family: var(--font-mono); font-size: 12px;">partners@busliner.by</div>
+            <div style="font-size: 12px;">Ежедневно: 07:00 — 23:00</div>
+          </div>
+          <a href="#apply-form" class="btn btn-accent" style="padding: 10px 18px; font-size: 12px; width: 100%;">
+            Подключить парк онлайн &rarr;
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 BusLiner (Aura Mobility Platform). Все права защищены.</div>
+        <div style="display: flex; gap: 16px;">
+          <a href="#" style="color: #64748B; text-decoration: none;">Договор оферты</a>
+          <a href="#" style="color: #64748B; text-decoration: none;">Политика конфиденциальности</a>
+          <a href="#" style="color: #64748B; text-decoration: none;">Регламент клиринга T+1</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       INTERACTIVE JAVASCRIPT LOGIC
+       ========================================================================== -->
+  <script>
+    // 1. Navigation scroll state
+    const topNav = document.getElementById('top-nav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) {
+        topNav.classList.add('scrolled');
+      } else {
+        topNav.classList.remove('scrolled');
+      }
+    });
+
+    // 2. Interactive ROI Calculator
+    const rangeFleet = document.getElementById('range-fleet');
+    const rangeTrips = document.getElementById('range-trips');
+    const rangePrice = document.getElementById('range-price');
+    const chkCargo = document.getElementById('chk-cargo');
+    const chkYield = document.getElementById('chk-yield');
+
+    const valFleet = document.getElementById('val-fleet');
+    const valTrips = document.getElementById('val-trips');
+    const valPrice = document.getElementById('val-price');
+
+    const totalProfit = document.getElementById('total-profit');
+    const gainSniper = document.getElementById('gain-sniper');
+    const gainCargo = document.getElementById('gain-cargo');
+    const gainYield = document.getElementById('gain-yield');
+    const gainYear = document.getElementById('gain-year');
+
+    function calculateROI() {
+      const fleet = parseInt(rangeFleet.value);
+      const trips = parseInt(rangeTrips.value);
+      const price = parseInt(rangePrice.value);
+      const hasCargo = chkCargo.checked;
+      const hasYield = chkYield.checked;
+
+      valFleet.textContent = fleet + (fleet === 1 ? ' машина' : (fleet < 5 ? ' машины' : ' машин'));
+      valTrips.textContent = trips + (trips === 1 ? ' рейс' : (trips < 5 ? ' рейса' : ' рейсов'));
+      valPrice.textContent = price + ' BYN';
+
+      // 1. Sniper prevents 2 no-show empty seats per trip
+      // Days per month = 30
+      const totalMonthlyTrips = fleet * trips * 30;
+      const savedSeatsPerTrip = 1.2; // average no-show saved
+      const sniperMonthly = Math.round(totalMonthlyTrips * savedSeatsPerTrip * price * 0.80);
+
+      // 2. Cargo extra (average 15 BYN per trip in baggage parcels & bikes)
+      const cargoMonthly = hasCargo ? Math.round(totalMonthlyTrips * 12.0) : 0;
+
+      // 3. Yield management peak surcharge (+10% on ~25% weekend peak volume)
+      const yieldMonthly = hasYield ? Math.round(totalMonthlyTrips * 18 * price * 0.28 * 0.12) : 0;
+
+      const total = sniperMonthly + cargoMonthly + yieldMonthly;
+      const annual = total * 12;
+
+      totalProfit.innerHTML = '+' + total.toLocaleString('ru-RU') + ' <span>BYN/мес</span>';
+      gainSniper.textContent = '+' + sniperMonthly.toLocaleString('ru-RU') + ' BYN';
+      gainCargo.textContent = '+' + cargoMonthly.toLocaleString('ru-RU') + ' BYN';
+      gainYield.textContent = '+' + yieldMonthly.toLocaleString('ru-RU') + ' BYN';
+      gainYear.textContent = '+' + annual.toLocaleString('ru-RU') + ' BYN/год';
+    }
+
+    rangeFleet.addEventListener('input', calculateROI);
+    rangeTrips.addEventListener('input', calculateROI);
+    rangePrice.addEventListener('input', calculateROI);
+    chkCargo.addEventListener('change', calculateROI);
+    chkYield.addEventListener('change', calculateROI);
+    calculateROI();
+
+    // 3. Dispatcher Simulation Trigger
+    const btnSimulate = document.getElementById('btn-simulate');
+    const simLogBox = document.getElementById('sim-log-box');
+    const simTargetSeat = document.getElementById('sim-target-seat');
+    const simSeatStatus = document.getElementById('sim-seat-status');
+
+    let simActive = false;
+    btnSimulate.addEventListener('click', () => {
+      if (simActive) return;
+      simActive = true;
+      btnSimulate.textContent = 'Обработка отказа...';
+      btnSimulate.style.opacity = '0.7';
+
+      // Step 1: Seat turns red/canceling
+      simTargetSeat.style.background = '#FEE2E2';
+      simTargetSeat.style.color = '#DC2626';
+      simTargetSeat.textContent = 'М-07: Отказ';
+      simSeatStatus.textContent = '17 / 18 (Отказ)';
+      simSeatStatus.className = 'badge badge-radar';
+      simLogBox.style.display = 'block';
+
+      // Step 2: Sniper kicks in after 1.4s
+      setTimeout(() => {
+        simTargetSeat.style.background = 'rgba(180, 83, 9, 0.25)';
+        simTargetSeat.style.color = '#B45309';
+        simTargetSeat.style.borderColor = '#FCD34D';
+        simTargetSeat.textContent = 'М-07: Снайпер!';
+        simSeatStatus.textContent = '18 / 18 100% Заполнено';
+        simSeatStatus.className = 'badge badge-success';
+        btnSimulate.textContent = 'Перехвачено Снайпером!';
+        btnSimulate.style.opacity = '1';
+
+        setTimeout(() => {
+          btnSimulate.textContent = 'Повторить симуляцию';
+          simActive = false;
+        }, 3000);
+      }, 1400);
+    });
+
+    // 4. Form Submit
+    const form = document.getElementById('carrier-onboarding-form');
+    const banner = document.getElementById('form-success-banner');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      form.style.display = 'none';
+      banner.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
