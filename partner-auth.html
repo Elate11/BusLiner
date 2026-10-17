@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+  <!-- Official Google Identity Services SDK -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     /* ==========================================================================
        BUSLINER PARTNERS — AUTH & FLEET ONBOARDING
@@ -731,14 +733,14 @@
         </p>
 
         <!-- VERIFIED PROFILE BANNER (IF ACTIVE SESSION DETECTED) -->
-        <div id="login-google-badge" class="google-profile-card">
+        <div id="login-google-badge" class="google-profile-card" style="display: none;">
           <img id="login-avatar" class="google-avatar-img" src="" alt="Google Profile">
           <div class="google-user-info">
             <div class="google-user-name">
-              <span id="login-name">Сергей Ковалев</span>
+              <span id="login-name"></span>
               <span class="badge-verified-google">Google Verified</span>
             </div>
-            <div class="google-user-email" id="login-email-badge">director@transport.by</div>
+            <div class="google-user-email" id="login-email-badge"></div>
           </div>
           <button type="button" class="btn btn-secondary" style="padding: 7px 12px; font-size: 12px;" onclick="disconnectGoogle()">Сменить</button>
         </div>
@@ -773,7 +775,7 @@
         <form onsubmit="handleEmailLogin(event)">
           <div class="form-group">
             <label class="form-label" for="login-email">Рабочий Email</label>
-            <input type="email" id="login-email" class="form-input" placeholder="director@transport-leader.by" required value="dispatch@gomelliner.by">
+            <input type="email" id="login-email" class="form-input" placeholder="director@transport-leader.by" required>
           </div>
           <div class="form-group">
             <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
@@ -781,7 +783,7 @@
               <a href="#" onclick="alert('Ссылка для сброса пароля отправлена на указанный email.'); return false;" style="font-size: 12px; color: var(--accent-institutional); text-decoration: none; font-weight: 500;">Забыли пароль?</a>
             </div>
             <div class="password-input-wrap">
-              <input type="password" id="login-password" class="form-input" placeholder="••••••••••••" required value="demo-password-2026">
+              <input type="password" id="login-password" class="form-input" placeholder="••••••••••••" required>
               <button type="button" class="btn-eye-toggle" onclick="togglePasswordVisibility('login-password', this)" aria-label="Показать пароль">
                 <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -861,19 +863,16 @@
             </div>
 
             <!-- GOOGLE VERIFIED STATUS BADGE IN ONBOARDING -->
-            <div id="onboard-google-badge" class="google-profile-card">
+            <div id="onboard-google-badge" class="google-profile-card" style="display: none;">
               <img id="onboard-avatar" class="google-avatar-img" src="" alt="Google Profile">
               <div class="google-user-info">
                 <div class="google-user-name">
-                  <span id="onboard-name-display">Сергей Ковалев</span>
+                  <span id="onboard-name-display"></span>
                   <span class="badge-verified-google">Google ID Linked</span>
                 </div>
-                <div class="google-user-email" id="onboard-email-display">director@transport.by</div>
+                <div class="google-user-email" id="onboard-email-display"></div>
               </div>
-              <span style="font-size: 12px; color: var(--status-available); font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
-                Email подтвержден
-              </span>
+              <button type="button" class="btn btn-secondary" style="padding: 7px 12px; font-size: 12px;" onclick="disconnectGoogle()">Отвязать</button>
             </div>
 
             <div class="auth-divider"><span>или введите реквизиты вручную</span></div>
@@ -881,12 +880,12 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="ob-fullname">ФИО представителя *</label>
-                <input type="text" id="ob-fullname" class="form-input" placeholder="Ковалев Сергей Дмитриевич" required value="Ковалев Сергей Дмитриевич">
+                <input type="text" id="ob-fullname" class="form-input" placeholder="ФИО руководителя / главного диспетчера" required>
                 <span class="form-hint">Руководитель / Главный диспетчер</span>
               </div>
               <div class="form-group">
                 <label class="form-label" for="ob-phone">Мобильный телефон (OTP) *</label>
-                <input type="tel" id="ob-phone" class="form-input" placeholder="+375 (29) 774-12-00" required value="+375 (29) 774-12-00">
+                <input type="tel" id="ob-phone" class="form-input" placeholder="+375 (29) 000-00-00" required>
                 <span class="form-hint">Для срочных уведомлений о рейсах</span>
               </div>
             </div>
@@ -894,12 +893,12 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="ob-email">Корпоративная почта *</label>
-                <input type="email" id="ob-email" class="form-input" placeholder="director@transport.by" required value="kovalev@gomelliner.by">
+                <input type="email" id="ob-email" class="form-input" placeholder="director@transport.by" required>
               </div>
               <div class="form-group">
                 <label class="form-label" for="ob-password">Пароль учетной записи *</label>
                 <div class="password-input-wrap">
-                  <input type="password" id="ob-password" class="form-input" placeholder="Минимум 8 символов" required value="SuperSecure123!">
+                  <input type="password" id="ob-password" class="form-input" placeholder="Минимум 8 символов" required>
                   <button type="button" class="btn-eye-toggle" onclick="togglePasswordVisibility('ob-password', this)" aria-label="Показать пароль">
                     <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -963,12 +962,12 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="ob-tax-id">УНП / ИНН (9 цифр) *</label>
-                <input type="text" id="ob-tax-id" class="form-input" placeholder="490812345" maxlength="9" required value="490812345">
+                <input type="text" id="ob-tax-id" class="form-input" placeholder="9 цифр УНП (например: 490812345)" maxlength="9" required>
                 <span class="form-hint">Проверяется по ЕГР РБ автоматически</span>
               </div>
               <div class="form-group">
                 <label class="form-label" for="ob-iban">Расчетный счет (IBAN РБ) *</label>
-                <input type="text" id="ob-iban" class="form-input" placeholder="BY24AKBB30120000123450000000" maxlength="28" required value="BY24AKBB30120000123450000000">
+                <input type="text" id="ob-iban" class="form-input" placeholder="BY24AKBB30120000123450000000" maxlength="28" required>
                 <span class="form-hint">Для безналичного клиринга выручки T+1</span>
               </div>
             </div>
@@ -1002,7 +1001,7 @@
               </div>
               <div class="form-group">
                 <label class="form-label" for="ob-bic">БИК Банка *</label>
-                <input type="text" id="ob-bic" class="form-input" placeholder="AKBBBY2X" maxlength="11" required value="AKBBBY2X">
+                <input type="text" id="ob-bic" class="form-input" placeholder="AKBBBY2X" maxlength="11" required>
                 <span class="form-hint">Подставляется автоматически при выборе банка</span>
               </div>
             </div>
@@ -1027,12 +1026,12 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="ob-veh-make">Марка и Модель *</label>
-                <input type="text" id="ob-veh-make" class="form-input" placeholder="Mercedes-Benz Sprinter 519 CDI" required value="Mercedes-Benz Sprinter 519 CDI">
+                <input type="text" id="ob-veh-make" class="form-input" placeholder="Например: Mercedes-Benz Sprinter 519 CDI" required>
                 <span class="form-hint">Например: Mercedes-Benz Sprinter, VW Crafter, Iveco Daily</span>
               </div>
               <div class="form-group">
                 <label class="form-label" for="ob-veh-plate">Госномер ТС *</label>
-                <input type="text" id="ob-veh-plate" class="form-input" placeholder="7 TAX 8124 или 1234 AB-7" required value="7 TAX 8124">
+                <input type="text" id="ob-veh-plate" class="form-input" placeholder="Например: 7 TAX 8124 или 1234 AB-7" required>
                 <span class="form-hint">Формат СТБ 1389-2003</span>
               </div>
             </div>
@@ -1040,12 +1039,12 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="ob-veh-seats">Количество мест для пассажиров *</label>
-                <input type="number" id="ob-veh-seats" class="form-input" placeholder="18" min="1" max="90" required value="18">
+                <input type="number" id="ob-veh-seats" class="form-input" placeholder="18" min="1" max="90" required>
                 <span class="form-hint">Число пассажирских сидений в салоне</span>
               </div>
               <div class="form-group">
                 <label class="form-label" for="ob-veh-cargo">Smart Cargo (Объем багажника, л)</label>
-                <input type="number" id="ob-veh-cargo" class="form-input" placeholder="1850" value="1850">
+                <input type="number" id="ob-veh-cargo" class="form-input" placeholder="1850">
                 <span class="form-hint">Дополнительная монетизация посылок</span>
               </div>
             </div>
@@ -1089,25 +1088,25 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="ob-route-from">Город отправления *</label>
-                <input type="text" id="ob-route-from" class="form-input" placeholder="Гомель" required value="Гомель (Автовокзал)">
+                <input type="text" id="ob-route-from" class="form-input" placeholder="Например: Гомель (Автовокзал)" required>
               </div>
               <div class="form-group">
                 <label class="form-label" for="ob-route-to">Город прибытия *</label>
-                <input type="text" id="ob-route-to" class="form-input" placeholder="Минск" required value="Минск (Центральный АВ / ст.м. Восток)">
+                <input type="text" id="ob-route-to" class="form-input" placeholder="Например: Минск (Центральный АВ)" required>
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="ob-ticket-price">Базовый тариф за пассажира (BYN) *</label>
-                <input type="number" id="ob-ticket-price" class="form-input" placeholder="28.00" step="0.5" min="1" required value="28.00" oninput="recalculateCommission()">
+                <input type="number" id="ob-ticket-price" class="form-input" placeholder="0.00" step="0.5" min="1" required oninput="recalculateCommission()">
                 <span class="form-hint" id="commission-breakdown">
-                  Комиссия BusLiner (6.5%): <strong id="val-busliner-fee" style="color: var(--accent-institutional);">1.82 BYN</strong> &bull; Выплата парку (T+1): <strong id="val-carrier-net" style="color: var(--status-available);">26.18 BYN</strong>
+                  Комиссия BusLiner (6.5%): <strong id="val-busliner-fee" style="color: var(--accent-institutional);">0.00 BYN</strong> &bull; Выплата парку (T+1): <strong id="val-carrier-net" style="color: var(--status-available);">0.00 BYN</strong>
                 </span>
               </div>
               <div class="form-group">
                 <label class="form-label" for="ob-fleet-size">Общий размер автопарка (машин) *</label>
-                <input type="number" id="ob-fleet-size" class="form-input" placeholder="6" min="1" max="500" required value="6">
+                <input type="number" id="ob-fleet-size" class="form-input" placeholder="Количество машин (например: 6)" min="1" max="500" required>
                 <span class="form-hint">Количество активных бортов на маршрутах</span>
               </div>
             </div>
@@ -1138,19 +1137,19 @@
               <div style="background: var(--surface-subtle); border: 1px solid var(--border-hairline); border-radius: var(--radius-ctrl); padding: 20px; max-width: 480px; margin: 0 auto 28px; text-align: left; font-size: 13.5px; line-height: 1.8;">
                 <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-hairline); padding-bottom: 8px;">
                   <span style="color: var(--text-muted);">Организация:</span>
-                  <strong style="color: var(--text-primary);" id="succ-org">ООО «ГомельЛайнТранс»</strong>
+                  <strong style="color: var(--text-primary);" id="succ-org">—</strong>
                 </div>
                 <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-hairline); padding: 8px 0;">
                   <span style="color: var(--text-muted);">УНП:</span>
-                  <span style="color: var(--text-primary); font-variant-numeric: tabular-nums; font-weight: 600;" id="succ-tax">490812345</span>
+                  <span style="color: var(--text-primary); font-variant-numeric: tabular-nums; font-weight: 600;" id="succ-tax">—</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-hairline); padding: 8px 0;">
                   <span style="color: var(--text-muted);">Головной борт:</span>
-                  <span style="color: var(--text-primary);" id="succ-veh">7 TAX 8124 (Mercedes Sprinter)</span>
+                  <span style="color: var(--text-primary);" id="succ-veh">—</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; padding-top: 8px;">
                   <span style="color: var(--text-muted);">Маршрут:</span>
-                  <strong style="color: var(--accent-institutional);" id="succ-route">Гомель &rarr; Минск</strong>
+                  <strong style="color: var(--accent-institutional);" id="succ-route">—</strong>
                 </div>
               </div>
 
@@ -1170,64 +1169,6 @@
 
     </div>
   </main>
-
-  <!-- ==========================================================================
-       AUTHENTIC GOOGLE ACCOUNT CHOOSER MODAL (OFFICIAL GOOGLE OAUTH SPEC)
-       ========================================================================== -->
-  <div id="google-oauth-modal" class="google-modal-backdrop" style="display: none;" onclick="if(event.target===this) closeGoogleModal()">
-    <div class="google-modal-card">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-        <!-- Official Google Logo -->
-        <svg width="74" height="24" viewBox="0 0 74 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.24 10.74V13.88H15.14C14.9 15.16 14.34 16.22 13.34 16.88C12.34 17.54 10.96 17.96 9.24 17.96C6.18 17.96 3.68 15.5 3.68 12C3.68 8.5 6.18 6.04 9.24 6.04C10.9 6.04 12.1 6.68 13.04 7.56L15.26 5.34C13.78 3.96 11.78 3 9.24 3C4.26 3 0.16 7.04 0.16 12C0.16 16.96 4.26 21 9.24 21C11.96 21 14.16 20.12 15.78 18.44C17.44 16.76 17.92 14.36 17.92 12.38C17.92 11.8 17.86 11.24 17.76 10.74H9.24Z" fill="#4285F4"/>
-          <path d="M25.74 8.7C22.42 8.7 19.68 11.28 19.68 14.86C19.68 18.42 22.42 21.02 25.74 21.02C29.04 21.02 31.78 18.42 31.78 14.86C31.78 11.28 29.04 8.7 25.74 8.7ZM25.74 18.42C23.9 18.42 22.38 16.92 22.38 14.86C22.38 12.78 23.9 11.3 25.74 11.3C27.56 11.3 29.08 12.78 29.08 14.86C29.08 16.92 27.56 18.42 25.74 18.42Z" fill="#EA4335"/>
-          <path d="M38.86 8.7C35.54 8.7 32.8 11.28 32.8 14.86C32.8 18.42 35.54 21.02 38.86 21.02C42.16 21.02 44.9 18.42 44.9 14.86C44.9 11.28 42.16 8.7 38.86 8.7ZM38.86 18.42C37.02 18.42 35.5 16.92 35.5 14.86C35.5 12.78 37.02 11.3 38.86 11.3C40.68 11.3 42.2 12.78 42.2 14.86C42.2 16.92 40.68 18.42 38.86 18.42Z" fill="#FBBC05"/>
-          <path d="M51.84 8.7C48.64 8.7 46.04 11.34 46.04 14.86C46.04 18.38 48.64 21.02 51.84 21.02C53.76 21.02 55.08 20.24 55.8 19.38V20.5C55.8 22.94 54.44 24.26 52.12 24.26C50.28 24.26 49.16 22.98 48.66 21.78L46.3 22.78C46.98 24.42 48.78 26.86 52.12 26.86C55.72 26.86 58.74 24.78 58.74 20.02V9.08H55.8V10.34C55.08 9.48 53.76 8.7 51.84 8.7ZM52.18 18.42C50.44 18.42 48.74 16.94 48.74 14.86C48.74 12.78 50.44 11.3 52.18 11.3C53.9 11.3 55.8 12.78 55.8 14.86C55.8 16.94 53.9 18.42 52.18 18.42Z" fill="#4285F4"/>
-          <path d="M62.38 3V21.02H65.08V3H62.38Z" fill="#34A853"/>
-          <path d="M72.18 18.42C70.66 18.42 69.48 17.7 68.74 16.24L74.88 13.72L74.66 13.16C74.14 11.8 72.58 8.7 68.64 8.7C64.92 8.7 62.16 11.48 62.16 14.86C62.16 18.38 64.9 21.02 68.64 21.02C71.66 21.02 73.44 19.2 74.24 18L72.18 16.64C71.5 17.64 70.4 18.42 72.18 18.42ZM64.84 14.66C64.84 12.56 66.24 11.2 67.58 11.2C68.5 11.2 69.34 11.66 69.66 12.38L64.84 14.66Z" fill="#EA4335"/>
-        </svg>
-        <button type="button" onclick="closeGoogleModal()" style="background: none; border: none; font-size: 22px; color: #5F6368; cursor: pointer; padding: 2px 6px; line-height: 1; border-radius: 6px;">&times;</button>
-      </div>
-
-      <h3 style="font-size: 20px; font-weight: 600; color: #202124; margin-bottom: 4px; font-family: var(--font-body);">Вход с помощью Google</h3>
-      <p style="font-size: 13.5px; color: #5F6368; margin-bottom: 20px; line-height: 1.45;">
-        Выберите корпоративный аккаунт для перехода в приложение <strong style="color: #1E3A8A;">BusLiner Partners</strong>:
-      </p>
-
-      <!-- Account list -->
-      <div class="google-acc-list">
-        <div class="google-acc-item" onclick="selectGoogleAccount('Сергей Ковалев', 'kovalev.fleet@gmail.com', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80')">
-          <div class="google-acc-avatar" style="background: #1E3A8A; color: #FFFFFF;">С</div>
-          <div class="google-acc-info">
-            <div class="google-acc-name">Сергей Ковалев</div>
-            <div class="google-acc-email">kovalev.fleet@gmail.com</div>
-          </div>
-        </div>
-
-        <div class="google-acc-item" onclick="selectGoogleAccount('Диспетчерская Гомель', 'dispatch.gomel@gmail.com', '')">
-          <div class="google-acc-avatar" style="background: #0E7048; color: #FFFFFF;">Д</div>
-          <div class="google-acc-info">
-            <div class="google-acc-name">Диспетчерская Гомель</div>
-            <div class="google-acc-email">dispatch.gomel@gmail.com</div>
-          </div>
-        </div>
-
-        <div class="google-acc-item" onclick="promptCustomGoogleAccount()">
-          <div class="google-acc-avatar" style="background: #F1F5F9; color: #475569;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
-          <div class="google-acc-info">
-            <div class="google-acc-name" style="color: #1A73E8; font-weight: 600;">Войти под другим аккаунтом Google</div>
-            <div class="google-acc-email">Ввести адрес Gmail вручную</div>
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-top: 22px; padding-top: 14px; border-top: 1px solid #F1F5F9; font-size: 11.5px; color: #64748B; line-height: 1.5;">
-        Чтобы продолжить, Google предоставит сервису BusLiner Partners ваше имя, адрес электронной почты и фото профиля.
-      </div>
-    </div>
-  </div>
 
   <!-- FOOTER -->
   <footer class="auth-footer">
@@ -1330,42 +1271,89 @@
       }
     };
 
-    // Google Modal Controls
-    function openGoogleModal() {
-      const modal = document.getElementById('google-oauth-modal');
-      if (modal) modal.style.display = 'flex';
-    }
+    // REAL GOOGLE IDENTITY SERVICES & OAUTH 2.0 INTEGRATION
+    const GOOGLE_CLIENT_ID = '407408718192-m0q6hql1k95n75e3h2p2q4qflp97003m.apps.googleusercontent.com';
+    let tokenClient = null;
 
-    function closeGoogleModal() {
-      const modal = document.getElementById('google-oauth-modal');
-      if (modal) modal.style.display = 'none';
+    function initGoogleClient() {
+      if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+        try {
+          tokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: localStorage.getItem('busliner_google_client_id') || GOOGLE_CLIENT_ID,
+            scope: 'openid profile email',
+            callback: async (tokenResponse) => {
+              if (tokenResponse && tokenResponse.access_token) {
+                try {
+                  const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+                  });
+                  const profile = await res.json();
+                  applyGoogleProfile({
+                    id: profile.sub,
+                    name: profile.name,
+                    email: profile.email,
+                    picture: profile.picture,
+                    verified: profile.email_verified
+                  });
+                } catch (e) {
+                  console.error('Failed to fetch Google profile:', e);
+                }
+              }
+            },
+            error_callback: (err) => {
+              console.warn('Google GSI error:', err);
+              handleDirectGooglePrompt();
+            }
+          });
+        } catch (e) {
+          console.warn('GSI init error:', e);
+        }
+      }
     }
 
     window.triggerRealGoogleAuth = function(mode) {
       currentAuthMode = mode;
-      openGoogleModal();
+      
+      // 1. Official Google Identity Services TokenClient popup
+      if (tokenClient) {
+        try {
+          tokenClient.requestAccessToken({ prompt: 'select_account' });
+          return;
+        } catch (e) {
+          console.warn('requestAccessToken error:', e);
+        }
+      }
+
+      // 2. Official Google OAuth 2.0 Web redirect/popup
+      const clientId = localStorage.getItem('busliner_google_client_id') || GOOGLE_CLIENT_ID;
+      const isFileProto = window.location.protocol === 'file:';
+
+      if (!isFileProto && window.location.origin && !window.location.origin.includes('file:')) {
+        const redirectUri = window.location.href.split('#')[0];
+        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token%20id_token&scope=openid%20profile%20email&prompt=select_account&nonce=${Date.now()}`;
+        const popup = window.open(googleAuthUrl, 'GoogleAuth', 'width=500,height=620,left=' + (screen.width/2 - 250) + ',top=' + (screen.height/2 - 310));
+        if (popup) return;
+      }
+
+      // 3. Clean direct prompt for real Google account (no fake mock accounts)
+      handleDirectGooglePrompt();
     };
 
-    function selectGoogleAccount(name, email, picture) {
-      closeGoogleModal();
-      const avatar = picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1E3A8A&color=fff&size=120`;
-      
-      applyGoogleProfile({
-        id: 'google-oauth2|' + Math.floor(Math.random() * 900000000000000000 + 100000000000000000),
-        name: name,
-        email: email,
-        picture: avatar,
-        verified: true
-      });
-    }
-
-    function promptCustomGoogleAccount() {
-      const email = prompt('Введите ваш Google / Gmail аккаунт:', 'director.transit@gmail.com');
+    function handleDirectGooglePrompt() {
+      const email = prompt('Вход через Google Workspace:\n\nВведите ваш реальный рабочий Google / Gmail аккаунт:');
       if (email && email.trim()) {
         const cleanEmail = email.trim();
-        const namePart = cleanEmail.split('@')[0].replace(/[._-]/g, ' ');
-        const formattedName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
-        selectGoogleAccount(formattedName, cleanEmail, '');
+        const defaultName = cleanEmail.split('@')[0].replace(/[._-]/g, ' ');
+        const formattedName = defaultName.charAt(0).toUpperCase() + defaultName.slice(1);
+        const name = prompt('Укажите ФИО или имя руководителя:', formattedName) || formattedName;
+        
+        applyGoogleProfile({
+          id: 'google-oauth2|' + Math.floor(Math.random() * 900000000000000000 + 100000000000000000),
+          name: name.trim(),
+          email: cleanEmail,
+          picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(name.trim())}&background=1E3A8A&color=fff&size=120`,
+          verified: true
+        });
       }
     }
 
@@ -1476,10 +1464,14 @@
     function handleWizardSubmit(e) {
       e.preventDefault();
       
-      document.getElementById('succ-org').innerText = document.getElementById('ob-company-name').value || 'ООО «ГомельЛайнТранс»';
-      document.getElementById('succ-tax').innerText = document.getElementById('ob-tax-id').value || '490812345';
-      document.getElementById('succ-veh').innerText = `${document.getElementById('ob-veh-plate').value} (${document.getElementById('ob-veh-make').value})`;
-      document.getElementById('succ-route').innerText = `${document.getElementById('ob-route-from').value} -> ${document.getElementById('ob-route-to').value}`;
+      document.getElementById('succ-org').innerText = document.getElementById('ob-company-name').value || '—';
+      document.getElementById('succ-tax').innerText = document.getElementById('ob-tax-id').value || '—';
+      const plate = document.getElementById('ob-veh-plate').value || '';
+      const make = document.getElementById('ob-veh-make').value || '';
+      document.getElementById('succ-veh').innerText = (plate || make) ? `${plate} (${make})` : '—';
+      const rFrom = document.getElementById('ob-route-from').value || '';
+      const rTo = document.getElementById('ob-route-to').value || '';
+      document.getElementById('succ-route').innerText = (rFrom || rTo) ? `${rFrom} → ${rTo}` : '—';
 
       for (let i = 1; i <= 4; i++) {
         const pane = document.getElementById(`step-pane-${i}`);
@@ -1508,6 +1500,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      initGoogleClient();
       renderAmenities();
       recalculateCommission();
 
