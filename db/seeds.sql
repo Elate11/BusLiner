@@ -17,10 +17,10 @@ INSERT INTO carriers (id, legal_name, brand_name, tax_id, iban, bank_name, bic, 
 ('22222222-2222-2222-2222-222222222203', 'ООО «ЗападТрансАвто»', 'Запад Экспресс', '290456789', 'BY88PJCB30123333444450000000', 'ОАО «Приорбанк»', 'PJCBBY2X', '+375 (33) 612-40-99', 'dispatch@zapadtrans.by', 'г. Брест, ул. Московская, 208', 0.0650, 'active')
 ON CONFLICT (id) DO NOTHING;
 
--- 3. СОТРУДНИКИ И ДИСПЕТЧЕРЫ
+-- 3. СОТРУДНИКИ И УПРАВЛЯЮЩИЕ
 INSERT INTO carrier_users (id, carrier_id, role, full_name, email, phone, password_hash, email_verified) VALUES
 ('33333333-3333-3333-3333-333333333301', '22222222-2222-2222-2222-222222222201', 'owner', 'Мельников Сергей Викторович', 'melnikov@burlaki.by', '+375 (29) 774-12-00', crypt('Password@2026', gen_salt('bf')), TRUE),
-('33333333-3333-3333-3333-333333333302', '22222222-2222-2222-2222-222222222201', 'dispatcher', 'Ковалева Елена', 'dispatcher@burlaki.by', '+375 (29) 774-12-01', crypt('Dispatcher@2026', gen_salt('bf')), TRUE),
+('33333333-3333-3333-3333-333333333302', '22222222-2222-2222-2222-222222222201', 'manager', 'Ковалева Елена', 'manager@burlaki.by', '+375 (29) 774-12-01', crypt('Manager@2026', gen_salt('bf')), TRUE),
 ('33333333-3333-3333-3333-333333333303', NULL, 'owner', 'Ковалев Виталий Николаевич', 'vitaly.kovalev@gmail.com', '+375 (33) 998-11-22', NULL, TRUE)
 ON CONFLICT (id) DO NOTHING;
 

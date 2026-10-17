@@ -811,7 +811,7 @@
         <div class="view-tabs-pill">
           <button type="button" class="view-tab-btn active" id="tab-login" onclick="switchView('login')">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
-            Вход в диспетчерскую
+            Вход в кабинет автопарка
           </button>
           <button type="button" class="view-tab-btn" id="tab-onboard" onclick="switchView('onboard')">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
@@ -873,7 +873,7 @@
           </div>
 
           <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
-            Войти в кабинет диспетчера &rarr;
+            Войти в кабинет автопарка &rarr;
           </button>
         </form>
 
@@ -911,12 +911,12 @@
         <form id="onboarding-form" onsubmit="handleWizardSubmit(event)">
 
           <!-- -------------------------------------------------------------
-               ШАГ 1: ПРОФИЛЬ РУКОВОДИТЕЛЯ / ДИСПЕТЧЕРА
+               ШАГ 1: ПРОФИЛЬ ВЛАДЕЛЬЦА АВТОПАРКА
                ------------------------------------------------------------- -->
           <div class="wizard-step-pane active" id="step-pane-1">
-            <h2 class="panel-heading">Шаг 1: <em>Руководитель</em> или Диспетчер</h2>
+            <h2 class="panel-heading">Шаг 1: <em>Владелец</em> или Руководитель</h2>
             <p class="panel-subheading">
-              Создайте профиль владельца автопарка. Регистрация через Telegram мгновенно привяжет бота к диспетчерской.
+              Создайте профиль владельца автопарка. Регистрация через Telegram мгновенно привяжет бота к управлению рейсами.
             </p>
 
             <!-- 1-CLICK TELEGRAM REGISTRATION -->
@@ -945,8 +945,8 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="ob-fullname">ФИО представителя *</label>
-                <input type="text" id="ob-fullname" class="form-input" placeholder="ФИО руководителя / главного диспетчера" required>
-                <span class="form-hint">Руководитель / Главный диспетчер</span>
+                <input type="text" id="ob-fullname" class="form-input" placeholder="ФИО владельца / руководителя автопарка" required>
+                <span class="form-hint">Владелец / Руководитель автопарка</span>
               </div>
               <div class="form-group">
                 <label class="form-label" for="ob-phone">Мобильный телефон (OTP) *</label>
@@ -987,7 +987,7 @@
 
             <div style="margin-top: 20px; padding: 12px; background: var(--surface-subtle); border-radius: var(--radius-ctrl); border: 1px dashed var(--border-hairline); text-align: center; font-size: 13px; color: var(--text-muted);">
               Уже подключили автопарк ранее? 
-              <a href="#login" onclick="switchView('login'); return false;" style="color: var(--accent-institutional); font-weight: 700; text-decoration: none; margin-left: 4px;">Войти в диспетчерскую &rarr;</a>
+              <a href="#login" onclick="switchView('login'); return false;" style="color: var(--accent-institutional); font-weight: 700; text-decoration: none; margin-left: 4px;">Войти в кабинет автопарка &rarr;</a>
             </div>
           </div>
 
@@ -1220,7 +1220,7 @@
 
               <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
                 <button type="button" class="btn btn-accent" style="padding: 13px 28px;" onclick="enterDemoDashboard()">
-                  Перейти в панель диспетчера (Live-демо) &rarr;
+                  Перейти в кабинет автопарка (Live-демо) &rarr;
                 </button>
                 <a href="busliner-partners.html" class="btn btn-secondary" style="padding: 13px 24px;">
                   Вернуться на презентацию
@@ -1702,7 +1702,7 @@
       closeTelegramModal();
 
       const val = userData.username || '@fleet_carrier';
-      const name = userData.name || 'Диспетчер';
+      const name = userData.name || 'Перевозчик';
       const isPhone = val.startsWith('+') || /^\d/.test(val);
 
       if (currentTelegramMode === 'login') {
@@ -1819,7 +1819,7 @@
     }
 
     function enterDemoDashboard() {
-      showAuthToast('Диспетчерский терминал', 'Запуск рабочей консоли BusLiner Fleet Console...');
+      showAuthToast('Кабинет автопарка', 'Запуск рабочей консоли BusLiner Fleet Console...');
       setTimeout(() => {
         window.location.href = 'busliner-partners.html#slide-schedule';
       }, 500);

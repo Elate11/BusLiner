@@ -193,7 +193,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"Ваш аккаунт в Telegram успешно привязан к системе BusLiner Partners.\n\n"
                 f"Статус: Активен\n"
                 f"Автопарк: Зарегистрирован\n"
-                f"Доступ к диспетчерской: Открыт\n"
+                f"Доступ к управлению автопарком: Открыт\n"
                 f"Выплаты за рейсы: Каждый рабочий день на расчетный счет (T+1)\n\n"
                 f"Окно в браузере уже открыло панель управления автопарком."
             )
@@ -212,7 +212,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"Владелец: {first_name} ({clean_username})\n"
                 f"Регистрация в BusLiner: Подтверждена\n"
                 f"Статус аккаунта: Активен\n"
-                f"Доступ к диспетчерской: Открыт\n"
+                f"Доступ к управлению автопарком: Открыт\n"
                 f"Выплаты за рейсы: Каждый рабочий день на расчетный счет (T+1)\n\n"
                 f"Для управления рейсами и автобусами перейдите в открытую вкладку на сайте."
             )
@@ -232,7 +232,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"*Команды бота:*\n"
                 f"/status — проверить статус регистрации и кабинета\n"
                 f"/help — контакты круглосуточной поддержки\n\n"
-                f"*Круглосуточная диспетчерская служба:*\n"
+                f"*Круглосуточная служба поддержки:*\n"
                 f"Телефон: +375 (29) 774-12-00\n"
                 f"Почта: support@busliner.by"
             )
@@ -267,12 +267,12 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"Ваш аккаунт в Telegram успешно привязан к системе BusLiner Partners.\n\n"
                 f"Статус: Активен\n"
                 f"Автопарк: Зарегистрирован\n"
-                f"Доступ к диспетчерской: Открыт\n"
+                f"Доступ к управлению автопарком: Открыт\n"
                 f"Выплаты за рейсы: Каждый рабочий день на расчетный счет (T+1)\n\n"
                 f"Если у вас открыта вкладка входа на сайте, панель управления рейсами уже загружена.\n\n"
                 f"Команды:\n"
                 f"/status — проверить статус аккаунта и связь\n"
-                f"/help — контакты круглосуточной диспетчерской"
+                f"/help — контакты круглосуточной поддержки"
             )
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
@@ -287,7 +287,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"Ваш Telegram привязан к BusLiner Partners.\n\n"
                 f"Команды:\n"
                 f"/status — проверить статус аккаунта\n"
-                f"/help — контакты круглосуточной диспетчерской"
+                f"/help — контакты круглосуточной поддержки"
             )
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
@@ -306,11 +306,11 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             token = cb_data.replace("auth_confirm:", "").strip()
             session = ACTIVE_AUTH_SESSIONS.get(token)
             if session:
-                clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Диспетчер")
+                clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Перевозчик")
                 session["status"] = "authorized"
                 session["telegram_user"] = {
                     "id": user.get("id"),
-                    "first_name": user.get("first_name", "Диспетчер"),
+                    "first_name": user.get("first_name", "Перевозчик"),
                     "last_name": user.get("last_name", ""),
                     "username": clean_username,
                     "auth_date": int(time.time()),
@@ -450,7 +450,7 @@ class TelegramAuthHTTPHandler(BaseHTTPRequestHandler):
                 return
 
             # Session successfully verified
-            clean_name = identifier.replace("@", "") if identifier else "Диспетчер"
+            clean_name = identifier.replace("@", "") if identifier else "Перевозчик"
             user_profile = {
                 "id": secrets.randbelow(800000000) + 100000000,
                 "first_name": clean_name.capitalize(),
