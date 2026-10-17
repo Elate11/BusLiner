@@ -1792,6 +1792,143 @@
       color: #FFFFFF !important;
     }
 
+    /* Slide 7: Dark Freight Monolith CTA */
+    #slide-start {
+      background: var(--surface-dark) !important;
+      color: #FFFFFF !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-top: 64px;
+      padding-bottom: 0;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 40px 24px 20px 24px;
+      width: 100%;
+    }
+    .cta-title {
+      font-family: var(--font-display);
+      font-size: 46px;
+      line-height: 54px;
+      font-weight: 400;
+      margin-bottom: 16px;
+      color: #FFFFFF !important;
+      text-align: center;
+      max-width: 760px;
+    }
+    .cta-title em {
+      font-style: italic;
+      color: #93C5FD;
+    }
+    .cta-lead {
+      font-size: 16.5px;
+      line-height: 26px;
+      color: #CBD5E1 !important;
+      margin-bottom: 30px;
+      max-width: 680px;
+      text-align: center;
+    }
+    .cta-features-row {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .cta-feature-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #CBD5E1;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.2s ease;
+    }
+    .cta-feature-pill:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(147, 197, 253, 0.35);
+      color: #FFFFFF;
+    }
+
+    /* Modal Backdrop & Monolith Card */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(5, 8, 16, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .modal-backdrop.active {
+      display: flex;
+      opacity: 1;
+    }
+    .modal-card {
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 580px;
+      width: 100%;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+    .modal-close-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: #94A3B8;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: all 0.15s ease;
+    }
+    .modal-close-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      color: #FFFFFF;
+    }
+    .form-label-subtle {
+      display: block;
+      font-size: 11.5px;
+      color: #94A3B8;
+      margin-bottom: 6px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+
   </style>
 
 </head>
@@ -2414,40 +2551,32 @@
        ========================================================================== -->
   <section class="full-slide" id="slide-start">
     
-    <!-- TOP CTA & APPLICATION FORM -->
-    <div class="cta-center" style="margin-bottom: 24px;">
+    <!-- TOP CTA CENTER (DARK CANVAS, PERFECT CENTERING) -->
+    <div class="cta-center">
       <h2 class="cta-title">Подключите автопарк к BusLiner <em>за 24 часа.</em></h2>
-      <p class="cta-lead" style="margin-bottom: 24px;">
+      <p class="cta-lead">
         Без паузы в рейсах, без покупки дорогого оборудования и скрытых комиссий. Первые пассажиры и безналичные выплаты T+1 уже на завтрашних выездах.
       </p>
 
-      <!-- EXPRESS APPLICATION FORM MONOLITH (18PX RADIUS) -->
-      <form class="partner-form-monolith" onsubmit="event.preventDefault(); alert('Спасибо! Заявка автопарка принята. Менеджер BusLiner Partners свяжется с вами в течение 15 минут.');">
-        <div class="form-grid-2">
-          <input type="text" class="form-input-clean" placeholder="Ваше имя и должность" required value="Сергей (Руководитель автопарка)">
-          <input type="text" class="form-input-clean" placeholder="Название компании / ИП" required value="ООО «АвтоТрансЛидер»">
-        </div>
-        <div class="form-grid-2">
-          <input type="tel" class="form-input-clean" placeholder="Телефон для связи (+375 ...)" required value="+375 (29) 774-12-00">
-          <select class="form-input-clean" style="color: #FFFFFF;">
-            <option value="6">Размер флота: 4–8 микроавтобусов</option>
-            <option value="2">Размер флота: 1–3 машины</option>
-            <option value="12">Размер флота: 9–15 машин</option>
-            <option value="20">Размер флота: 16+ автоколонна</option>
-          </select>
-        </div>
-        <div style="display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-          <input type="text" class="form-input-clean" placeholder="Основной маршрут (напр. Гомель — Минск)" required value="Гомель — Минск" style="flex: 1; min-width: 200px;">
-          <button type="submit" class="btn btn-accent" style="padding: 14px 32px; font-size: 14px; border-radius: 12px; white-space: nowrap;">
-            Отправить заявку на подключение &rarr;
-          </button>
-        </div>
-      </form>
+      <div style="margin-bottom: 24px; display: flex; justify-content: center;">
+        <button type="button" class="btn btn-accent" onclick="openPartnerModal()" style="padding: 16px 42px; font-size: 15px; border-radius: 12px; cursor: pointer; box-shadow: 0 10px 25px -5px rgba(29, 78, 216, 0.5);">
+          Отправить заявку на подключение &rarr;
+        </button>
+      </div>
 
-      <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; font-size: 12.5px; color: #94A3B8;">
-        <span style="display: flex; align-items: center; gap: 6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Низкая комиссия: 6.5% с билета</span>
-        <span style="display: flex; align-items: center; gap: 6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Ежедневный клиринг T+1 на р/с</span>
-        <span style="display: flex; align-items: center; gap: 6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Соответствие СТБ 1389-2003</span>
+      <div class="cta-features-row">
+        <span class="cta-feature-pill">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Низкая комиссия: 6.5% с билета</span>
+        </span>
+        <span class="cta-feature-pill">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Ежедневный клиринг T+1 на р/с</span>
+        </span>
+        <span class="cta-feature-pill">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Соответствие СТБ 1389-2003</span>
+        </span>
       </div>
     </div>
 
@@ -3118,7 +3247,83 @@
       }, 200);
     })();
   
+
+    /* Modal dialog controls */
+    window.openPartnerModal = function() {
+      const modal = document.getElementById('partner-modal');
+      if (modal) {
+        modal.style.display = 'flex';
+        setTimeout(() => { modal.classList.add('active'); }, 10);
+      }
+    };
+
+    window.closePartnerModal = function() {
+      const modal = document.getElementById('partner-modal');
+      if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => { modal.style.display = 'none'; }, 250);
+      }
+    };
+
+    window.handlePartnerSubmit = function(e) {
+      e.preventDefault();
+      alert('Спасибо! Заявка автопарка принята. Менеджер BusLiner Partners свяжется с вами в течение 15 минут.');
+      window.closePartnerModal();
+    };
   </script>
+
+  <!-- MODAL: PARTNER APPLICATION MONOLITH -->
+  <div id="partner-modal" class="modal-backdrop" onclick="if(event.target===this) window.closePartnerModal()">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+        <div>
+          <h3 style="font-family: var(--font-display); font-size: 26px; line-height: 32px; color: #FFFFFF; font-weight: 400; margin: 0;">
+            Заявка на подключение <em>автопарка</em>
+          </h3>
+          <p style="font-size: 13px; color: #94A3B8; margin-top: 4px;">
+            Подключение за 24 часа без паузы в рейсах. Заполните данные:
+          </p>
+        </div>
+        <button type="button" onclick="window.closePartnerModal()" class="modal-close-btn" aria-label="Закрыть">&times;</button>
+      </div>
+
+      <form onsubmit="window.handlePartnerSubmit(event)">
+        <div class="form-grid-2">
+          <div>
+            <label class="form-label-subtle">Имя руководителя / диспетчера</label>
+            <input type="text" class="form-input-clean" placeholder="Сергей" required value="Сергей">
+          </div>
+          <div>
+            <label class="form-label-subtle">Компания или ИП</label>
+            <input type="text" class="form-input-clean" placeholder="ООО «АвтоТрансЛидер»" required value="ООО «АвтоТрансЛидер»">
+          </div>
+        </div>
+        <div class="form-grid-2">
+          <div>
+            <label class="form-label-subtle">Номер телефона</label>
+            <input type="tel" class="form-input-clean" placeholder="+375 (29) 774-12-00" required value="+375 (29) 774-12-00">
+          </div>
+          <div>
+            <label class="form-label-subtle">Размер флота</label>
+            <select class="form-input-clean" style="color: #FFFFFF;">
+              <option value="6">4–8 микроавтобусов</option>
+              <option value="2">1–3 машины</option>
+              <option value="12">9–15 машин</option>
+              <option value="20">16+ машин (Автоколонна)</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom: 22px;">
+          <label class="form-label-subtle">Основной маршрут</label>
+          <input type="text" class="form-input-clean" placeholder="Гомель — Минск" required value="Гомель — Минск">
+        </div>
+
+        <button type="submit" class="btn btn-accent" style="width: 100%; justify-content: center; padding: 15px; font-size: 15px; border-radius: 12px; cursor: pointer;">
+          Отправить заявку менеджеру подключений &rarr;
+        </button>
+      </form>
+    </div>
+  </div>
 
 </body>
 </html>
