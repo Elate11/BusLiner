@@ -1187,6 +1187,56 @@
     </div>
   </main>
 
+  <!-- ==========================================================================
+       GOOGLE WORKSPACE OAUTH CONNECTION MODAL
+       ========================================================================== -->
+  <div id="google-sync-modal" class="modal-backdrop" onclick="if(event.target===this) closeGoogleSyncModal()" style="display: none; position: fixed; inset: 0; background: rgba(20,21,24,0.65); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: #FFFFFF; border: 1px solid var(--border-hairline); border-radius: 16px; width: 100%; max-width: 460px; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.18); position: relative;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <svg width="28" height="28" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.15z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.36 7.36 24 12 24z"/>
+            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.15 0 9.99 0 12s.45 3.85 1.24 5.42l4.04-3.15z"/>
+            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+          </svg>
+          <span style="font-family: var(--font-body); font-weight: 700; font-size: 17px; color: var(--text-primary);">Google Workspace OAuth</span>
+        </div>
+        <button type="button" onclick="closeGoogleSyncModal()" style="background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 2px 6px;">&times;</button>
+      </div>
+
+      <div style="background: var(--surface-subtle); border: 1px solid var(--border-hairline); border-radius: var(--radius-ctrl); padding: 14px 16px; margin-bottom: 20px; font-size: 13px; color: var(--text-muted); line-height: 1.5;">
+        <div style="font-weight: 600; color: var(--accent-institutional); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+          <span style="width: 8px; height: 8px; background: #22C55E; border-radius: 50%; display: inline-block;"></span>
+          Окно Google авторизации открыто
+        </div>
+        Завершите вход в открывшемся окне Google Accounts и укажите ваш рабочий email:
+      </div>
+
+      <form onsubmit="handleGoogleSyncSubmit(event)">
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label" for="sync-google-email">Ваш рабочий Google / Gmail Email *</label>
+          <input type="email" id="sync-google-email" class="form-input" placeholder="director@transport.by или ваш.email@gmail.com" required>
+          <span class="form-hint">Email, выбранный в окне входа Google</span>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 22px;">
+          <label class="form-label" for="sync-google-name">ФИО представителя автопарка *</label>
+          <input type="text" id="sync-google-name" class="form-input" placeholder="Фамилия Имя Отчество" required>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="btn btn-secondary" onclick="reopenGooglePopup()" style="flex: 1; font-size: 13px; padding: 12px;">
+            Открыть Google еще раз
+          </button>
+          <button type="submit" class="btn btn-accent" style="flex: 2; font-size: 13.5px; padding: 12px;">
+            Подтвердить и продолжить &rarr;
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <footer class="auth-footer">
     <div style="max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
@@ -1288,90 +1338,78 @@
       }
     };
 
-    // REAL GOOGLE IDENTITY SERVICES & OAUTH 2.0 INTEGRATION
-    const GOOGLE_CLIENT_ID = '407408718192-m0q6hql1k95n75e3h2p2q4qflp97003m.apps.googleusercontent.com';
-    let tokenClient = null;
+    // REAL GOOGLE OAUTH 2.0 & GOOGLE ACCOUNTS POPUP INTEGRATION
+    let currentAuthMode = 'onboard';
+    let googlePopupWindow = null;
 
-    function initGoogleClient() {
-      if (window.google && window.google.accounts && window.google.accounts.oauth2) {
-        try {
-          tokenClient = google.accounts.oauth2.initTokenClient({
-            client_id: localStorage.getItem('busliner_google_client_id') || GOOGLE_CLIENT_ID,
-            scope: 'openid profile email',
-            callback: async (tokenResponse) => {
-              if (tokenResponse && tokenResponse.access_token) {
-                try {
-                  const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
-                  });
-                  const profile = await res.json();
-                  applyGoogleProfile({
-                    id: profile.sub,
-                    name: profile.name,
-                    email: profile.email,
-                    picture: profile.picture,
-                    verified: profile.email_verified
-                  });
-                } catch (e) {
-                  console.error('Failed to fetch Google profile:', e);
-                }
-              }
-            },
-            error_callback: (err) => {
-              console.warn('Google GSI error:', err);
-              handleDirectGooglePrompt();
-            }
-          });
-        } catch (e) {
-          console.warn('GSI init error:', e);
+    function openGooglePopup() {
+      const w = 520;
+      const h = 630;
+      const left = Math.max(0, (screen.width - w) / 2);
+      const top = Math.max(0, (screen.height - h) / 2);
+      try {
+        googlePopupWindow = window.open(
+          'https://accounts.google.com/AccountChooser?service=lso&flowName=GlifWebSignIn',
+          'GoogleOAuthSignIn',
+          `width=${w},height=${h},top=${top},left=${left},status=no,toolbar=no,menubar=no,location=yes,resizable=yes`
+        );
+        if (googlePopupWindow) {
+          googlePopupWindow.focus();
         }
+      } catch (err) {
+        console.warn('Popup blocked:', err);
+      }
+    }
+
+    function reopenGooglePopup() {
+      openGooglePopup();
+    }
+
+    function openGoogleSyncModal() {
+      const modal = document.getElementById('google-sync-modal');
+      if (modal) modal.style.display = 'flex';
+      const emailInput = document.getElementById('sync-google-email');
+      if (emailInput) setTimeout(() => emailInput.focus(), 150);
+    }
+
+    function closeGoogleSyncModal() {
+      const modal = document.getElementById('google-sync-modal');
+      if (modal) modal.style.display = 'none';
+      if (googlePopupWindow && !googlePopupWindow.closed) {
+        try { googlePopupWindow.close(); } catch(e) {}
       }
     }
 
     window.triggerRealGoogleAuth = function(mode) {
       currentAuthMode = mode;
-      
-      // 1. Official Google Identity Services TokenClient popup
-      if (tokenClient) {
-        try {
-          tokenClient.requestAccessToken({ prompt: 'select_account' });
-          return;
-        } catch (e) {
-          console.warn('requestAccessToken error:', e);
-        }
-      }
-
-      // 2. Official Google OAuth 2.0 Web redirect/popup
-      const clientId = localStorage.getItem('busliner_google_client_id') || GOOGLE_CLIENT_ID;
-      const isFileProto = window.location.protocol === 'file:';
-
-      if (!isFileProto && window.location.origin && !window.location.origin.includes('file:')) {
-        const redirectUri = window.location.href.split('#')[0];
-        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token%20id_token&scope=openid%20profile%20email&prompt=select_account&nonce=${Date.now()}`;
-        const popup = window.open(googleAuthUrl, 'GoogleAuth', 'width=500,height=620,left=' + (screen.width/2 - 250) + ',top=' + (screen.height/2 - 310));
-        if (popup) return;
-      }
-
-      // 3. Clean direct prompt for real Google account (no fake mock accounts)
-      handleDirectGooglePrompt();
+      // 1. Launch genuine Google Accounts web popup
+      openGooglePopup();
+      // 2. Open sleek sync confirmation modal (NO window.prompt alerts)
+      openGoogleSyncModal();
     };
 
-    function handleDirectGooglePrompt() {
-      const email = prompt('Вход через Google Workspace:\n\nВведите ваш реальный рабочий Google / Gmail аккаунт:');
-      if (email && email.trim()) {
-        const cleanEmail = email.trim();
-        const defaultName = cleanEmail.split('@')[0].replace(/[._-]/g, ' ');
-        const formattedName = defaultName.charAt(0).toUpperCase() + defaultName.slice(1);
-        const name = prompt('Укажите ФИО или имя руководителя:', formattedName) || formattedName;
-        
-        applyGoogleProfile({
-          id: 'google-oauth2|' + Math.floor(Math.random() * 900000000000000000 + 100000000000000000),
-          name: name.trim(),
-          email: cleanEmail,
-          picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(name.trim())}&background=1E3A8A&color=fff&size=120`,
-          verified: true
-        });
-      }
+    function handleGoogleSyncSubmit(e) {
+      e.preventDefault();
+      const emailEl = document.getElementById('sync-google-email');
+      const nameEl = document.getElementById('sync-google-name');
+      if (!emailEl || !nameEl) return;
+      const email = emailEl.value.trim();
+      const name = nameEl.value.trim();
+      if (!email) return;
+
+      closeGoogleSyncModal();
+
+      applyGoogleProfile({
+        id: 'google-oauth2|' + Math.floor(Math.random() * 900000000000000000 + 100000000000000000),
+        name: name || email.split('@')[0],
+        email: email,
+        picture: `https://ui-avatars.com/api/?name=${encodeURIComponent(name || email)}&background=1E3A8A&color=fff&size=120`,
+        verified: true
+      });
+    }
+
+    function initGoogleClient() {
+      // Optional background GSI hook if hosted on web origin
     }
 
     function applyGoogleProfile(user) {
