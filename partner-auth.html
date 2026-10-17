@@ -366,6 +366,36 @@
       gap: 5px;
     }
 
+    /* PASSWORD INPUT WITH EYE TOGGLE */
+    .password-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+    .password-input-wrap .form-input {
+      padding-right: 46px;
+    }
+    .btn-eye-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: color 0.15s ease;
+    }
+    .btn-eye-toggle:hover {
+      color: var(--accent-institutional);
+    }
+
     /* BUTTONS EXACT MATCH TO BUSLINER DESIGN SYSTEM */
     .btn {
       display: inline-flex;
@@ -470,38 +500,53 @@
       font-weight: 700;
     }
 
-    /* AMENITIES CHIPS */
-    .amenities-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    .chip-checkbox {
-      position: relative;
-      cursor: pointer;
-    }
-    .chip-checkbox input {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-    }
-    .chip-box {
+    /* DYNAMIC AMENITIES CHIPS WRAPPER & ADDER */
+    .amenities-chips-wrap {
       display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .amenity-chip {
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 12px 14px;
-      background: var(--surface-elevated);
+      gap: 8px;
+      padding: 7px 14px;
+      background: var(--surface-subtle);
       border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-ctrl);
-      font-size: 13.5px;
+      border-radius: 20px;
+      font-size: 13px;
       color: var(--text-primary);
+      font-weight: 500;
       transition: all 0.15s ease;
     }
-    .chip-checkbox input:checked + .chip-box {
-      border-color: var(--accent-border);
+    .amenity-chip.active {
       background: var(--accent-soft);
+      border-color: var(--accent-border);
       color: var(--accent-institutional);
       font-weight: 600;
+    }
+    .amenity-chip-remove {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text-dim);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      line-height: 1;
+      padding: 0 2px;
+      border-radius: 50%;
+      transition: color 0.15s ease;
+    }
+    .amenity-chip-remove:hover {
+      color: #DC2626;
+    }
+    .amenity-add-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
 
     /* CALLOUT INFO */
@@ -633,7 +678,7 @@
 
     @media (max-width: 640px) {
       .panel-body { padding: 24px 20px; }
-      .form-row, .oauth-grid, .amenities-grid { grid-template-columns: 1fr; }
+      .form-row, .oauth-grid { grid-template-columns: 1fr; }
       .wizard-steps { display: none; }
       .view-tabs-wrapper { padding: 16px 20px 0; }
     }
@@ -735,7 +780,19 @@
               <label class="form-label" for="login-password" style="margin-bottom: 0;">Пароль</label>
               <a href="#" onclick="alert('Ссылка для сброса пароля отправлена на указанный email.'); return false;" style="font-size: 12px; color: var(--accent-institutional); text-decoration: none; font-weight: 500;">Забыли пароль?</a>
             </div>
-            <input type="password" id="login-password" class="form-input" placeholder="••••••••••••" required value="demo-password-2026">
+            <div class="password-input-wrap">
+              <input type="password" id="login-password" class="form-input" placeholder="••••••••••••" required value="demo-password-2026">
+              <button type="button" class="btn-eye-toggle" onclick="togglePasswordVisibility('login-password', this)" aria-label="Показать пароль">
+                <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg class="eye-closed" style="display: none;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
           </div>
 
           <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 8px;">
@@ -813,7 +870,10 @@
                 </div>
                 <div class="google-user-email" id="onboard-email-display">director@transport.by</div>
               </div>
-              <span style="font-size: 12px; color: var(--status-available); font-weight: 700;">✓ Email подтвержден</span>
+              <span style="font-size: 12px; color: var(--status-available); font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                Email подтвержден
+              </span>
             </div>
 
             <div class="auth-divider"><span>или введите реквизиты вручную</span></div>
@@ -838,7 +898,19 @@
               </div>
               <div class="form-group">
                 <label class="form-label" for="ob-password">Пароль учетной записи *</label>
-                <input type="password" id="ob-password" class="form-input" placeholder="Минимум 8 символов" required value="SuperSecure123!">
+                <div class="password-input-wrap">
+                  <input type="password" id="ob-password" class="form-input" placeholder="Минимум 8 символов" required value="SuperSecure123!">
+                  <button type="button" class="btn-eye-toggle" onclick="togglePasswordVisibility('ob-password', this)" aria-label="Показать пароль">
+                    <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <svg class="eye-closed" style="display: none;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -915,7 +987,7 @@
           </div>
 
           <!-- -------------------------------------------------------------
-               ШАГ 3: АВТОПАРК (БД: VEHICLES)
+               ШАГ 3: АВТОПАРК (БД: VEHICLES) — ПОЛЯ ВВОДА + ДИНАМИЧЕСКИЙ СПИСОК
                ------------------------------------------------------------- -->
           <div class="wizard-step-pane" id="step-pane-3">
             <h2 class="panel-heading">Шаг 3: Первый борт <em>автопарка</em></h2>
@@ -926,13 +998,8 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="ob-veh-make">Марка и Модель *</label>
-                <select id="ob-veh-make" class="form-input">
-                  <option value="Mercedes-Benz Sprinter 519 CDI">Mercedes-Benz Sprinter 519 CDI (Tourist Lux)</option>
-                  <option value="Mercedes-Benz Sprinter 316 CDI">Mercedes-Benz Sprinter 316 CDI</option>
-                  <option value="Volkswagen Crafter 50">Volkswagen Crafter 50 Grand</option>
-                  <option value="Iveco Daily 50C">Iveco Daily 50C Tourliner</option>
-                  <option value="MAN TGE 5.180">MAN TGE 5.180</option>
-                </select>
+                <input type="text" id="ob-veh-make" class="form-input" placeholder="Mercedes-Benz Sprinter 519 CDI" required value="Mercedes-Benz Sprinter 519 CDI">
+                <span class="form-hint">Например: Mercedes-Benz Sprinter, VW Crafter, Iveco Daily</span>
               </div>
               <div class="form-group">
                 <label class="form-label" for="ob-veh-plate">Госномер ТС *</label>
@@ -944,12 +1011,8 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="ob-veh-seats">Количество мест для пассажиров *</label>
-                <select id="ob-veh-seats" class="form-input">
-                  <option value="18">18 мест (Анатомические кресла)</option>
-                  <option value="15">15 мест (Бизнес-компоновка)</option>
-                  <option value="19">19 мест</option>
-                  <option value="21">21 место</option>
-                </select>
+                <input type="number" id="ob-veh-seats" class="form-input" placeholder="18" min="1" max="90" required value="18">
+                <span class="form-hint">Число пассажирских сидений в салоне</span>
               </div>
               <div class="form-group">
                 <label class="form-label" for="ob-veh-cargo">Smart Cargo (Объем багажника, л)</label>
@@ -958,33 +1021,22 @@
               </div>
             </div>
 
+            <!-- DYNAMIC AMENITIES & COMFORT LIST WITH + BUTTON -->
             <div class="form-group">
               <label class="form-label">Оснащение и комфорт салона</label>
-              <div class="amenities-grid">
-                <label class="chip-checkbox">
-                  <input type="checkbox" id="ob-wifi" checked>
-                  <div class="chip-box">
-                    <span>📡 Wi-Fi 5G на борту</span>
-                  </div>
-                </label>
-                <label class="chip-checkbox">
-                  <input type="checkbox" id="ob-usb" checked>
-                  <div class="chip-box">
-                    <span>⚡ 220V & USB зарядка</span>
-                  </div>
-                </label>
-                <label class="chip-checkbox">
-                  <input type="checkbox" id="ob-ac" checked>
-                  <div class="chip-box">
-                    <span>❄️ Климат-контроль (A/C)</span>
-                  </div>
-                </label>
-                <label class="chip-checkbox">
-                  <input type="checkbox" id="ob-cargo" checked>
-                  <div class="chip-box">
-                    <span>📦 Smart Cargo отсек</span>
-                  </div>
-                </label>
+              
+              <!-- Active Amenity Chips -->
+              <div id="amenities-container" class="amenities-chips-wrap">
+                <!-- Rendered dynamically via JavaScript -->
+              </div>
+
+              <!-- Add custom amenity input row -->
+              <div class="amenity-add-row">
+                <input type="text" id="new-amenity-input" class="form-input" placeholder="Добавить опцию (например: Откидные столики, TV-мониторы)" onkeydown="if(event.key==='Enter'){event.preventDefault(); addCustomAmenity();}">
+                <button type="button" class="btn btn-secondary" onclick="addCustomAmenity()" style="height: 48px; padding: 0 20px; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  Добавить
+                </button>
               </div>
             </div>
 
@@ -1083,7 +1135,7 @@
                 </div>
                 <div style="display: flex; justify-content: space-between; padding-top: 8px;">
                   <span style="color: var(--text-muted);">Маршрут:</span>
-                  <strong style="color: var(--accent-institutional);" id="succ-route">Гомель ➔ Минск</strong>
+                  <strong style="color: var(--accent-institutional);" id="succ-route">Гомель &rarr; Минск</strong>
                 </div>
               </div>
 
@@ -1182,6 +1234,65 @@
   <script>
     let activeGoogleUser = null;
     let currentAuthMode = 'login'; // 'login' or 'onboard'
+
+    // DYNAMIC AMENITIES LIST
+    let activeAmenities = [
+      'Wi-Fi 5G на борту',
+      'Розетки 220V и USB',
+      'Климат-контроль (A/C)',
+      'Smart Cargo отсек'
+    ];
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function renderAmenities() {
+      const container = document.getElementById('amenities-container');
+      if (!container) return;
+      container.innerHTML = activeAmenities.map((item, idx) => `
+        <div class="amenity-chip active">
+          <span>${escapeHtml(item)}</span>
+          <button type="button" class="amenity-chip-remove" onclick="removeAmenity(${idx})" aria-label="Удалить опцию">&times;</button>
+        </div>
+      `).join('');
+    }
+
+    function addCustomAmenity() {
+      const input = document.getElementById('new-amenity-input');
+      if (!input) return;
+      const val = input.value.trim();
+      if (val && !activeAmenities.includes(val)) {
+        activeAmenities.push(val);
+        renderAmenities();
+        input.value = '';
+      }
+    }
+
+    function removeAmenity(idx) {
+      activeAmenities.splice(idx, 1);
+      renderAmenities();
+    }
+
+    // PASSWORD VISIBILITY TOGGLE (EYE)
+    window.togglePasswordVisibility = function(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const isPass = input.type === 'password';
+      input.type = isPass ? 'text' : 'password';
+
+      const eyeOpen = btn.querySelector('.eye-open');
+      const eyeClosed = btn.querySelector('.eye-closed');
+      if (eyeOpen && eyeClosed) {
+        if (isPass) {
+          eyeOpen.style.display = 'none';
+          eyeClosed.style.display = 'block';
+        } else {
+          eyeOpen.style.display = 'block';
+          eyeClosed.style.display = 'none';
+        }
+      }
+    };
 
     // Google Modal Controls
     function openGoogleModal() {
@@ -1332,7 +1443,7 @@
       document.getElementById('succ-org').innerText = document.getElementById('ob-company-name').value || 'ООО «ГомельЛайнТранс»';
       document.getElementById('succ-tax').innerText = document.getElementById('ob-tax-id').value || '490812345';
       document.getElementById('succ-veh').innerText = `${document.getElementById('ob-veh-plate').value} (${document.getElementById('ob-veh-make').value})`;
-      document.getElementById('succ-route').innerText = `${document.getElementById('ob-route-from').value} ➔ ${document.getElementById('ob-route-to').value}`;
+      document.getElementById('succ-route').innerText = `${document.getElementById('ob-route-from').value} -> ${document.getElementById('ob-route-to').value}`;
 
       for (let i = 1; i <= 4; i++) {
         const pane = document.getElementById(`step-pane-${i}`);
@@ -1349,6 +1460,8 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      renderAmenities();
+
       const stored = localStorage.getItem('busliner_google_user');
       if (stored) {
         try {
