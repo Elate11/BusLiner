@@ -1820,19 +1820,24 @@
         deepLinkBtn.href = `https://t.me/BusLinerFleetBot?start=auth_${tgSessionToken}`;
       }
 
+      let backendAction = 'carrier_login';
       if (mode === 'login') {
+        backendAction = 'carrier_login';
         if (title) title.innerText = 'Вход через Telegram';
         if (desc) desc.innerText = 'Откройте бота в Telegram для подтверждения входа в кабинет перевозчика:';
         if (nameRow) nameRow.style.display = 'none';
       } else if (mode === 'driver_reg') {
+        backendAction = 'driver_reg';
         if (title) title.innerText = 'Регистрация водителя через Telegram';
         if (desc) desc.innerText = 'Откройте бота в Telegram для внесения профиля в реестр BusLiner:';
         if (nameRow) nameRow.style.display = 'block';
       } else if (mode === 'driver') {
+        backendAction = 'driver_login';
         if (title) title.innerText = 'Вход водителя через Telegram';
         if (desc) desc.innerText = 'Откройте бота в Telegram для входа в терминал посадки водителя:';
         if (nameRow) nameRow.style.display = 'none';
       } else {
+        backendAction = 'carrier_reg';
         if (title) title.innerText = 'Регистрация перевозчика через Telegram';
         if (desc) desc.innerText = 'Откройте бота в Telegram для привязки компании или ИП к системе:';
         if (nameRow) nameRow.style.display = 'block';
@@ -1857,8 +1862,8 @@
       updateTimer();
       tgCountdownInterval = setInterval(updateTimer, 1000);
 
-      // Try contacting local backend daemon asynchronously if running
-      fetch('http://localhost:8080/api/auth/telegram/create-session', { credentials: 'omit' })
+      // Request secure session with explicit action context
+      fetch(`http://localhost:8080/api/auth/telegram/create-session?action=${backendAction}`, { credentials: 'omit' })
         .then(res => res.json())
         .then(data => {
           if (data && data.session_token) {
@@ -1879,10 +1884,15 @@
           .then(data => {
             if (data && data.status === 'authorized' && data.user) {
               completeTelegramAuth(data.user);
+            } else if (data && data.status === 'denied') {
+              clearInterval(tgPollingInterval);
+              if (tgCountdownInterval) clearInterval(tgCountdownInterval);
+              showAuthToast('Вход отклонен', 'Запрос авторизации был отклонен в Telegram.', false);
+              closeTelegramModal();
             }
           })
           .catch(() => {});
-      }, 2500);
+      }, 2000);
     };
 
     window.closeTelegramModal = function() {
@@ -1899,6 +1909,9 @@
         .then(data => {
           if (data && data.status === 'authorized' && data.user) {
             completeTelegramAuth(data.user);
+          } else if (data && data.status === 'denied') {
+            showAuthToast('Вход отклонен', 'Запрос авторизации был отклонен в Telegram.', false);
+            closeTelegramModal();
           } else {
             showAuthToast('Ожидание подтверждения', 'Пожалуйста, откройте @BusLinerFleetBot в Telegram и нажмите кнопку «Подтвердить вход».', false);
           }

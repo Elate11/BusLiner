@@ -175,6 +175,44 @@ def get_db_records() -> Dict[str, Any]:
         return {"users": [], "carriers": [], "drivers": []}
 
 
+def get_carrier_by_telegram_id(telegram_id: int) -> Optional[Dict[str, Any]]:
+    try:
+        with sqlite3.connect(DB_PATH) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM carriers WHERE telegram_id = ? ORDER BY id DESC LIMIT 1", (telegram_id,))
+            row = cursor.fetchone()
+            if row:
+                return dict(row)
+            cursor.execute("SELECT * FROM users WHERE telegram_id = ? AND role IN ('carrier', 'owner') ORDER BY id DESC LIMIT 1", (telegram_id,))
+            user_row = cursor.fetchone()
+            if user_row:
+                return {"telegram_id": telegram_id, "company_name": user_row["full_name"], "unp": "Не указан"}
+            return None
+    except Exception as e:
+        print(f"[DB Error: get_carrier_by_telegram_id] {e}", file=sys.stderr)
+        return None
+
+
+def get_driver_by_telegram_id(telegram_id: int) -> Optional[Dict[str, Any]]:
+    try:
+        with sqlite3.connect(DB_PATH) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM drivers WHERE telegram_id = ? ORDER BY id DESC LIMIT 1", (telegram_id,))
+            row = cursor.fetchone()
+            if row:
+                return dict(row)
+            cursor.execute("SELECT * FROM users WHERE telegram_id = ? AND role = 'driver' ORDER BY id DESC LIMIT 1", (telegram_id,))
+            user_row = cursor.fetchone()
+            if user_row:
+                return {"telegram_id": telegram_id, "full_name": user_row["full_name"], "carrier_name": "Не прикреплен к автопарку", "status": "unassigned"}
+            return None
+    except Exception as e:
+        print(f"[DB Error: get_driver_by_telegram_id] {e}", file=sys.stderr)
+        return None
+
+
 # ==============================================================================
 # CRYPTOGRAPHIC SECURITY PRIMITIVES
 # ==============================================================================
@@ -341,7 +379,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     f"*Приглашение принято!*\n\n"
                     f"Здравствуйте, {first_name}.\n"
                     f"Вы успешно привязаны к перевозчику:\n\n"
-                    f"🏢 *Организация перевозчика:*\n"
+                    f" *Организация перевозчика:*\n"
                     f"• Компания: *{org_info.get('name', 'Перевозчик')}*\n"
                     f"• Форма: {org_info.get('type', 'ИП / Юрлицо')}\n"
                     f"• УНП: `{org_info.get('unp', '—')}`\n"
@@ -380,7 +418,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 driver_welcome = (
                     f"*Профиль водителя*\n\n"
                     f"Здравствуйте, {first_name}.\n\n"
-                    f"🏢 *Прикрепленная организация:* *{org_info.get('name', '—')}*\n"
+                    f" *Прикрепленная организация:* *{org_info.get('name', '—')}*\n"
                     f"• УНП: `{org_info.get('unp', '—')}`\n\n"
                     f"Команды:\n"
                     f"/trip — ведомость текущего рейса\n"
@@ -392,7 +430,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     f"*Приглашение для водителя*\n\n"
                     f"Здравствуйте, {first_name}.\n"
                     f"Вы зарегистрированы в системе BusLiner как водитель.\n\n"
-                    f"🏢 *Организация перевозчика:* Не прикреплен\n"
+                    f" *Организация перевозчика:* Не прикреплен\n"
                     f"• Статус: Свободный водитель\n\n"
                     f"Чтобы привязаться к автопарку, запросите персональную ссылку-приглашение у вашего перевозчика (команда /drivers в боте).\n\n"
                     f"Команды:\n"
@@ -420,7 +458,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 driver_welcome = (
                     f"*Профиль водителя*\n\n"
                     f"Здравствуйте, {first_name}.\n\n"
-                    f"🏢 *Прикрепленная организация:* *{org_info['name']}*\n"
+                    f" *Прикрепленная организация:* *{org_info['name']}*\n"
                     f"• УНП: `{org_info['unp']}`\n\n"
                     f"Команды:\n"
                     f"/trip — ведомость текущего рейса\n"
@@ -432,7 +470,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     f"*Профиль водителя зарегистрирован*\n\n"
                     f"Здравствуйте, {first_name}.\n"
                     f"Вы успешно зарегистрированы в системе BusLiner как водитель.\n\n"
-                    f"🏢 *Организация перевозчика:* Не прикреплен\n"
+                    f" *Организация перевозчика:* Не прикреплен\n"
                     f"• Статус: Новый профиль (свободный водитель)\n\n"
                     f"Вы пока не прикреплены ни к одному перевозчику.\n"
                     f"Чтобы выйти на рейс, перевозчик (ИП или юрлицо) должен добавить ваш номер телефона/Telegram в свой штат, либо отправить вам ссылку-приглашение.\n\n"
@@ -450,70 +488,212 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
         elif text.startswith("/start auth_"):
             token = text.replace("/start auth_", "").strip()
             session = ACTIVE_AUTH_SESSIONS.get(token)
-            
-            if session and not session.get("consumed"):
-                session["status"] = "authorized"
-                session["telegram_user"] = {
-                    "id": user_id,
-                    "first_name": first_name,
-                    "last_name": user.get("last_name", ""),
-                    "username": clean_username,
-                    "auth_date": int(time.time()),
-                    "auth_method": "telegram_bot_challenge"
-                }
-            else:
-                now = time.time()
-                for t, s in reversed(list(ACTIVE_AUTH_SESSIONS.items())):
-                    if s.get("status") == "pending" and not s.get("consumed") and (now - s.get("created_at", 0) <= AUTH_SESSION_TTL_SECONDS):
-                        s["status"] = "authorized"
-                        s["telegram_user"] = {
-                            "id": user_id,
-                            "first_name": first_name,
-                            "last_name": user.get("last_name", ""),
-                            "username": clean_username,
-                            "auth_date": int(time.time()),
-                            "auth_method": "telegram_bot_challenge"
-                        }
-                        break
+            now = time.time()
 
-            user_role = USER_ROLES.get(user_id, "owner")
-            if user_role == "driver":
-                org_info = DRIVER_ORGANIZATIONS.get(user_id)
-                if org_info:
+            if not session or (now - session.get("created_at", 0) > AUTH_SESSION_TTL_SECONDS):
+                reply = (
+                    "<b>BUSLINER SECURITY: СЕССИЯ НЕ НАЙДЕНА</b>\n\n"
+                    f"Здравствуйте, {first_name}.\n"
+                    "Сессия входа не найдена или истек срок действия (5 минут).\n\n"
+                    "Пожалуйста, вернитесь на сайт BusLiner и запросите новую ссылку для входа."
+                )
+                send_telegram_api_request("sendMessage", {
+                    "chat_id": chat_id,
+                    "text": reply,
+                    "parse_mode": "HTML"
+                })
+            elif session.get("consumed"):
+                reply = (
+                    "<b>BUSLINER SECURITY: СЕССИЯ УСТАРЕЛА</b>\n\n"
+                    f"Здравствуйте, {first_name}.\n"
+                    "Данная сессия авторизации уже была использована ранее."
+                )
+                send_telegram_api_request("sendMessage", {
+                    "chat_id": chat_id,
+                    "text": reply,
+                    "parse_mode": "HTML"
+                })
+            elif session.get("status") == "authorized":
+                reply = (
+                    "<b>BUSLINER SECURITY: ВХОД УЖЕ ПОДТВЕРЖДЕН</b>\n\n"
+                    f"Здравствуйте, {first_name}.\n"
+                    "Вы уже подтвердили авторизацию. Окно в браузере обновляется."
+                )
+                send_telegram_api_request("sendMessage", {
+                    "chat_id": chat_id,
+                    "text": reply,
+                    "parse_mode": "HTML"
+                })
+            elif session.get("status") == "denied":
+                reply = (
+                    "<b>BUSLINER SECURITY: ВХОД ОТКЛОНЕН</b>\n\n"
+                    "Запрос на авторизацию был ранее отклонен."
+                )
+                send_telegram_api_request("sendMessage", {
+                    "chat_id": chat_id,
+                    "text": reply,
+                    "parse_mode": "HTML"
+                })
+            else:
+                action = session.get("action", "carrier_login")
+                client_ip = session.get("client_ip", "127.0.0.1")
+                device_str = session.get("user_agent", "Браузер")
+                if len(device_str) > 40:
+                    device_str = device_str[:37] + "..."
+
+                if action == "carrier_login":
+                    carrier = get_carrier_by_telegram_id(user_id)
+                    if carrier:
+                        comp_name = carrier.get("company_name", "ИП / Юрлицо")
+                        unp = carrier.get("unp", "Не указан")
+                        reply = (
+                            "<b>BUSLINER SECURITY: ПОДТВЕРЖДЕНИЕ ВХОДА</b>\n\n"
+                            f"Здравствуйте, {first_name}.\n"
+                            "Поступил запрос на вход в личный кабинет перевозчика:\n\n"
+                            f"• Организация: <b>{comp_name}</b>\n"
+                            f"• УНП: <code>{unp}</code>\n"
+                            f"• Telegram ID: <code>{user_id}</code>\n"
+                            f"• Устройство: {device_str}\n"
+                            f"• IP-адрес: <code>{client_ip}</code>\n\n"
+                            "Для подтверждения входа нажмите кнопку ниже:"
+                        )
+                        keyboard = {
+                            "inline_keyboard": [
+                                [{"text": "Подтвердить вход", "callback_data": f"auth_confirm:{token}"}],
+                                [{"text": "Отклонить", "callback_data": f"auth_deny:{token}"}]
+                            ]
+                        }
+                    else:
+                        reply = (
+                            "<b>BUSLINER SECURITY: АККАУНТ НЕ НАЙДЕН</b>\n\n"
+                            f"Здравствуйте, {first_name}.\n"
+                            f"Telegram ID <code>{user_id}</code> не зарегистрирован в качестве перевозчика в системе BusLiner.\n\n"
+                            "Если вы хотите подключить автопарк или стать партнером, выберите вкладку «Регистрация» на странице входа."
+                        )
+                        keyboard = {
+                            "inline_keyboard": [
+                                [{"text": "Отклонить запрос", "callback_data": f"auth_deny:{token}"}]
+                            ]
+                        }
+                    send_telegram_api_request("sendMessage", {
+                        "chat_id": chat_id,
+                        "text": reply,
+                        "parse_mode": "HTML",
+                        "reply_markup": keyboard
+                    })
+
+                elif action in ("carrier_reg", "onboard"):
                     reply = (
-                        f"*Вход водителя подтвержден*\n\n"
+                        "<b>BUSLINER SECURITY: РЕГИСТРАЦИЯ ПЕРЕВОЗЧИКА</b>\n\n"
                         f"Здравствуйте, {first_name}.\n"
-                        f"Вы авторизованы в системе BusLiner.\n\n"
-                        f"🏢 *Прикрепленная организация:*\n"
-                        f"• Название: *{org_info['name']}*\n"
-                        f"• УНП: `{org_info['unp']}`\n\n"
-                        f"Команда /trip открывает список пассажиров на рейс."
+                        "Поступил запрос на привязку Telegram к новому аккаунту перевозчика BusLiner:\n\n"
+                        f"• Представитель: <b>{first_name} {user.get('last_name', '')}</b>\n"
+                        f"• Username: <b>{clean_username}</b>\n"
+                        f"• Telegram ID: <code>{user_id}</code>\n"
+                        f"• Устройство: {device_str}\n"
+                        f"• IP-адрес: <code>{client_ip}</code>\n\n"
+                        "Подтвердите передачу данных для заполнения анкеты перевозчика:"
                     )
+                    keyboard = {
+                        "inline_keyboard": [
+                            [{"text": "Подтвердить привязку", "callback_data": f"auth_confirm:{token}"}],
+                            [{"text": "Отклонить", "callback_data": f"auth_deny:{token}"}]
+                        ]
+                    }
+                    send_telegram_api_request("sendMessage", {
+                        "chat_id": chat_id,
+                        "text": reply,
+                        "parse_mode": "HTML",
+                        "reply_markup": keyboard
+                    })
+
+                elif action == "driver_login":
+                    driver = get_driver_by_telegram_id(user_id)
+                    if driver:
+                        carrier_name = driver.get("carrier_name") or "Не прикреплен к автопарку"
+                        driver_name = driver.get("full_name") or first_name
+                        reply = (
+                            "<b>BUSLINER SECURITY: ВХОД ВОДИТЕЛЯ</b>\n\n"
+                            f"Здравствуйте, {first_name}.\n"
+                            "Поступил запрос на вход в терминал посадки водителя BusLiner:\n\n"
+                            f"• Водитель: <b>{driver_name}</b>\n"
+                            f"• Автопарк: <b>{carrier_name}</b>\n"
+                            f"• Telegram ID: <code>{user_id}</code>\n"
+                            f"• Устройство: {device_str}\n"
+                            f"• IP-адрес: <code>{client_ip}</code>\n\n"
+                            "Подтвердите вход в терминал для проверки билетов и списков пассажиров:"
+                        )
+                        keyboard = {
+                            "inline_keyboard": [
+                                [{"text": "Войти в терминал", "callback_data": f"auth_confirm:{token}"}],
+                                [{"text": "Отклонить", "callback_data": f"auth_deny:{token}"}]
+                            ]
+                        }
+                    else:
+                        reply = (
+                            "<b>BUSLINER SECURITY: ВОДИТЕЛЬ НЕ НАЙДЕН</b>\n\n"
+                            f"Здравствуйте, {first_name}.\n"
+                            f"Ваш Telegram ID <code>{user_id}</code> пока не внесен в реестр водителей BusLiner.\n\n"
+                            "Обратитесь к вашему перевозчику для получения персонального кода приглашения или зарегистрируйтесь во вкладке «Регистрация водителя»."
+                        )
+                        keyboard = {
+                            "inline_keyboard": [
+                                [{"text": "Отклонить запрос", "callback_data": f"auth_deny:{token}"}]
+                            ]
+                        }
+                    send_telegram_api_request("sendMessage", {
+                        "chat_id": chat_id,
+                        "text": reply,
+                        "parse_mode": "HTML",
+                        "reply_markup": keyboard
+                    })
+
+                elif action == "driver_reg":
+                    reply = (
+                        "<b>BUSLINER SECURITY: РЕГИСТРАЦИЯ ВОДИТЕЛЯ</b>\n\n"
+                        f"Здравствуйте, {first_name}.\n"
+                        "Запрос на регистрацию профиля водителя в системе BusLiner:\n\n"
+                        f"• ФИО: <b>{first_name} {user.get('last_name', '')}</b>\n"
+                        f"• Username: <b>{clean_username}</b>\n"
+                        f"• Telegram ID: <code>{user_id}</code>\n"
+                        f"• Устройство: {device_str}\n"
+                        f"• IP-адрес: <code>{client_ip}</code>\n\n"
+                        "Подтвердите создание профиля водителя:"
+                    )
+                    keyboard = {
+                        "inline_keyboard": [
+                            [{"text": "Подтвердить регистрацию", "callback_data": f"auth_confirm:{token}"}],
+                            [{"text": "Отклонить", "callback_data": f"auth_deny:{token}"}]
+                        ]
+                    }
+                    send_telegram_api_request("sendMessage", {
+                        "chat_id": chat_id,
+                        "text": reply,
+                        "parse_mode": "HTML",
+                        "reply_markup": keyboard
+                    })
+
                 else:
                     reply = (
-                        f"*Вход водителя подтвержден*\n\n"
+                        "<b>BUSLINER SECURITY: АВТОРИЗАЦИЯ</b>\n\n"
                         f"Здравствуйте, {first_name}.\n"
-                        f"Вы авторизованы в системе BusLiner.\n\n"
-                        f"🏢 *Организация перевозчика:* Не прикреплен\n"
-                        f"• Статус: Свободный водитель\n"
-                        f"• Дождитесь, пока перевозчик (ИП или юрлицо) добавит вас в свой автопарк."
+                        f"Поступил запрос на авторизацию в системе BusLiner Partners.\n\n"
+                        f"• Telegram ID: <code>{user_id}</code>\n"
+                        f"• IP-адрес: <code>{client_ip}</code>\n\n"
+                        "Подтвердите вход в систему:"
                     )
-            else:
-                reply = (
-                    f"*Регистрация перевозчика подтверждена*\n\n"
-                    f"Здравствуйте, {first_name}.\n"
-                    f"Ваш аккаунт в Telegram успешно привязан к системе BusLiner Partners.\n\n"
-                    f"Статус перевозчика: Зарегистрирован (ИП / Юрлицо)\n"
-                    f"Доступ к управлению перевозками: Открыт\n"
-                    f"Выплаты за рейсы: Каждый рабочий день на расчетный счет (T+1)\n\n"
-                    f"Окно в браузере уже открыло панель управления перевозчика."
-                )
-
-            send_telegram_api_request("sendMessage", {
-                "chat_id": chat_id,
-                "text": reply,
-                "parse_mode": "Markdown"
-            })
+                    keyboard = {
+                        "inline_keyboard": [
+                            [{"text": "Подтвердить вход", "callback_data": f"auth_confirm:{token}"}],
+                            [{"text": "Отклонить", "callback_data": f"auth_deny:{token}"}]
+                        ]
+                    }
+                    send_telegram_api_request("sendMessage", {
+                        "chat_id": chat_id,
+                        "text": reply,
+                        "parse_mode": "HTML",
+                        "reply_markup": keyboard
+                    })
 
         elif text.startswith("/drivers"):
             CARRIER_ORGS.setdefault(user_id, {
@@ -543,7 +723,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 p_lines = "\n".join([f"{i+1}. {p.get('name', 'Пассажир')} — Место {p.get('seat', '—')} [{p.get('status', 'Оплачено')}]" for i, p in enumerate(passengers)]) if passengers else "Пассажиров пока нет (свободная посадка)."
                 trip_msg = (
                     f"*Посадочная ведомость рейса*\n\n"
-                    f"🏢 Организация: *{org_info.get('name', '—')}* (УНП {org_info.get('unp', '—')})\n"
+                    f" Организация: *{org_info.get('name', '—')}* (УНП {org_info.get('unp', '—')})\n"
                     f"Маршрут: {trip_info.get('route', '—')}\n"
                     f"Машина: {trip_info.get('vehicle', '—')}\n"
                     f"Всего мест: {trip_info.get('seats_total', 0)} | Занято: {len(passengers)}\n\n"
@@ -554,7 +734,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             elif org_info:
                 trip_msg = (
                     f"*Ведомость рейса*\n\n"
-                    f"🏢 Организация: *{org_info.get('name', '—')}*\n"
+                    f" Организация: *{org_info.get('name', '—')}*\n"
                     f"• Статус смены: Вне смены (активных рейсов нет)\n\n"
                     f"На текущую смену активных рейсов не назначено.\n"
                     f"Когда организация назначит вас на рейс, здесь появится посадочная ведомость и список мест."
@@ -584,13 +764,13 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                         f"*Статус водителя рейса*\n\n"
                         f"Водитель: {first_name} ({clean_username})\n"
                         f"Роль: Водитель рейса\n\n"
-                        f"🏢 *Прикрепленная организация перевозчика:*\n"
+                        f" *Прикрепленная организация перевозчика:*\n"
                         f"• Название: *{org_info.get('name', '—')}*\n"
                         f"• Юр. форма: {org_info.get('type', 'Юрлицо / ИП')}\n"
                         f"• УНП: `{org_info.get('unp', '—')}`\n"
                         f"• Лицензия: {org_info.get('license', 'Минтранс РБ')}\n"
                         f"• Клиринг выручки: Прямой счет перевозчика (T+1)\n\n"
-                        f"🚍 *Текущая смена:*\n"
+                        f" *Текущая смена:*\n"
                         f"• Статус смены: {shift_status}\n"
                         f"• Закрепленный борт: {veh_text}\n"
                         f"• Ближайший рейс: {trip_text}\n\n"
@@ -602,7 +782,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                         f"Водитель: {first_name} ({clean_username})\n"
                         f"Роль: Водитель рейса\n"
                         f"Статус аккаунта: Зарегистрирован (Новый профиль)\n\n"
-                        f"🏢 *Организация перевозчика:* Не прикреплен\n"
+                        f" *Организация перевозчика:* Не прикреплен\n"
                         f"• Вы еще не привязаны ни к одному перевозчику.\n"
                         f"• Чтобы получать ведомости рейсов, работодатель (ИП или компания) должен добавить вас в свой автопарк."
                     )
@@ -670,8 +850,8 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             keyboard = {
                 "inline_keyboard": [
                     [
-                        {"text": "🏢 Перевозчик (ИП / Юрлицо)", "callback_data": "role_owner"},
-                        {"text": "🚍 Водитель рейса", "callback_data": "role_driver"}
+                        {"text": " Перевозчик (ИП / Юрлицо)", "callback_data": "role_owner"},
+                        {"text": " Водитель рейса", "callback_data": "role_driver"}
                     ]
                 ]
             }
@@ -693,12 +873,12 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
 
             admin_msg = (
                 f"*Реестр базы данных BusLiner*\n\n"
-                f"📊 *Статистика регистрации:*\n"
+                f" *Статистика регистрации:*\n"
                 f"• Пользователей в БД: *{len(u_list)}*\n"
                 f"• Перевозчиков (ИП / Юрлиц): *{len(c_list)}*\n"
                 f"• Водителей: *{len(d_list)}*\n\n"
-                f"🏢 *Перевозчики (первые 5):*\n{carriers_txt}\n\n"
-                f"🚍 *Водители (первые 5):*\n{drivers_txt}\n\n"
+                f" *Перевозчики (первые 5):*\n{carriers_txt}\n\n"
+                f" *Водители (первые 5):*\n{drivers_txt}\n\n"
                 f"Команды проверки:\n"
                 f"• В терминале: `python3 server/view_db.py`\n"
                 f"• Через API: `GET http://localhost:8080/api/admin/users`"
@@ -783,7 +963,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 driver_text = (
                     f"*Режим: Водитель рейса*\n\n"
                     f"Здравствуйте, {first_name}.\n\n"
-                    f"🏢 *Прикрепленная организация:* *{org_info['name']}*\n"
+                    f" *Прикрепленная организация:* *{org_info['name']}*\n"
                     f"• УНП: `{org_info['unp']}`\n\n"
                     f"Команды:\n"
                     f"/trip — открыть ведомость текущего рейса\n"
@@ -799,7 +979,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     f"*Режим: Водитель*\n\n"
                     f"Здравствуйте, {first_name}.\n"
                     f"Вы зарегистрированы в системе BusLiner как водитель.\n\n"
-                    f"🏢 *Организация перевозчика:* Не прикреплен\n"
+                    f" *Организация перевозчика:* Не прикреплен\n"
                     f"• Статус: Свободный водитель\n\n"
                     f"Вы еще не привязаны ни к одному перевозчику. Когда перевозчик (ИП или юрлицо) добавит вас на рейс или передаст вам ссылку-приглашение, вы начнете получать ведомости пассажиров.\n\n"
                     f"Команды:\n"
@@ -815,40 +995,125 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
         elif cb_data.startswith("auth_confirm:"):
             token = cb_data.replace("auth_confirm:", "").strip()
             session = ACTIVE_AUTH_SESSIONS.get(token)
-            if session:
-                clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Перевозчик")
-                session["status"] = "authorized"
+            message = cb.get("message", {})
+            msg_id = message.get("message_id")
+
+            if not session:
+                send_telegram_api_request("answerCallbackQuery", {
+                    "callback_query_id": cb_id,
+                    "text": "Сессия устарела или не найдена."
+                })
+                return
+
+            if session.get("status") == "authorized":
+                send_telegram_api_request("answerCallbackQuery", {
+                    "callback_query_id": cb_id,
+                    "text": "Вход уже был подтвержден ранее."
+                })
+                return
+
+            clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Пользователь")
+            session["status"] = "authorized"
+            action = session.get("action", "carrier_login")
+
+            if action in ("carrier_login", "carrier_reg", "onboard"):
+                save_or_update_user(user_id, clean_username, f"{first_name} {user.get('last_name', '')}".strip(), role="owner")
+                carrier = get_carrier_by_telegram_id(user_id)
+                comp_name = (carrier.get("company_name") if carrier else None) or f"ИП {first_name}"
+                unp = (carrier.get("unp") if carrier else None) or "Не указан"
+                session["telegram_user"] = {
+                    "id": user_id,
+                    "first_name": first_name,
+                    "last_name": user.get("last_name", ""),
+                    "username": clean_username,
+                    "company_name": comp_name,
+                    "unp": unp,
+                    "role": "owner",
+                    "auth_date": int(time.time()),
+                    "auth_method": "telegram_bot_challenge"
+                }
+                conf_title = "Вход перевозчика подтвержден" if action == "carrier_login" else "Привязка перевозчика подтверждена"
+                conf_text = (
+                    f"<b>{conf_title}</b>\n\n"
+                    f"Здравствуйте, {first_name}.\n"
+                    f"Организация: <b>{comp_name}</b> (УНП: <code>{unp}</code>)\n\n"
+                    "Окно в браузере обновляется и выполняет вход в консоль управления."
+                )
+            elif action in ("driver_login", "driver_reg"):
+                driver = get_driver_by_telegram_id(user_id)
+                if not driver and action == "driver_reg":
+                    save_or_update_driver(
+                        telegram_id=user_id,
+                        full_name=f"{first_name} {user.get('last_name', '')}".strip(),
+                        username=clean_username,
+                        status="unassigned"
+                    )
+                    driver = get_driver_by_telegram_id(user_id)
+                save_or_update_user(user_id, clean_username, f"{first_name} {user.get('last_name', '')}".strip(), role="driver")
+                carrier_name = (driver.get("carrier_name") if driver else None) or "Не прикреплен к автопарку"
+                session["telegram_user"] = {
+                    "id": user_id,
+                    "first_name": first_name,
+                    "last_name": user.get("last_name", ""),
+                    "username": clean_username,
+                    "carrier_name": carrier_name,
+                    "role": "driver",
+                    "auth_date": int(time.time()),
+                    "auth_method": "telegram_bot_challenge"
+                }
+                conf_title = "Вход водителя подтвержден" if action == "driver_login" else "Регистрация водителя подтверждена"
+                conf_text = (
+                    f"<b>{conf_title}</b>\n\n"
+                    f"Здравствуйте, {first_name}.\n"
+                    f"Автопарк: <b>{carrier_name}</b>\n\n"
+                    "Окно в браузере обновляется и выполняет вход в терминал посадки."
+                )
+            else:
                 session["telegram_user"] = {
                     "id": user_id,
                     "first_name": first_name,
                     "last_name": user.get("last_name", ""),
                     "username": clean_username,
                     "auth_date": int(time.time()),
-                    "auth_method": "telegram_callback"
+                    "auth_method": "telegram_bot_challenge"
                 }
-                send_telegram_api_request("answerCallbackQuery", {
-                    "callback_query_id": cb_id,
-                    "text": "Вход подтвержден."
-                })
-                send_telegram_api_request("sendMessage", {
+                conf_text = f"<b>Авторизация подтверждена.</b>\n\nОкно браузера входит в консоль."
+
+            send_telegram_api_request("answerCallbackQuery", {
+                "callback_query_id": cb_id,
+                "text": "Действие успешно подтверждено."
+            })
+            if msg_id:
+                send_telegram_api_request("editMessageText", {
                     "chat_id": chat_id,
-                    "text": "*Авторизация подтверждена.* Окно браузера входит в консоль.",
-                    "parse_mode": "Markdown"
+                    "message_id": msg_id,
+                    "text": conf_text,
+                    "parse_mode": "HTML"
                 })
+
         elif cb_data.startswith("auth_deny:"):
             token = cb_data.replace("auth_deny:", "").strip()
             session = ACTIVE_AUTH_SESSIONS.get(token)
+            message = cb.get("message", {})
+            msg_id = message.get("message_id")
             if session:
                 session["status"] = "denied"
             send_telegram_api_request("answerCallbackQuery", {
                 "callback_query_id": cb_id,
-                "text": "Вход отклонен."
+                "text": "Запрос отклонен."
             })
+            if msg_id:
+                send_telegram_api_request("editMessageText", {
+                    "chat_id": chat_id,
+                    "message_id": msg_id,
+                    "text": "<b>Запрос авторизации отклонен.</b>\n\nВход в систему отменен. Если это были не вы, ваш аккаунт в безопасности.",
+                    "parse_mode": "HTML"
+                })
 
 
 def telegram_polling_worker():
     """Background worker continuously pulling updates from Telegram Bot API."""
-    print("🤖 Telegram Bot Polling worker started...")
+    print(" Telegram Bot Polling worker started...")
     last_update_id = 0
     while True:
         try:
@@ -893,6 +1158,36 @@ class TelegramAuthHTTPHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(response_bytes)
 
+    def _handle_create_session(self, action: str):
+        clean_expired_sessions()
+        token = generate_auth_token()
+        otp = generate_otp_code()
+        user_agent = self.headers.get("User-Agent", "Unknown Browser")
+        client_ip = self.client_address[0] if self.client_address else "127.0.0.1"
+
+        deep_link = f"https://t.me/{BOT_USERNAME}?start=auth_{token}"
+
+        ACTIVE_AUTH_SESSIONS[token] = {
+            "created_at": time.time(),
+            "status": "pending",  # pending | authorized | denied | consumed
+            "action": action,     # carrier_login | carrier_reg | driver_login | driver_reg
+            "otp_code": otp,
+            "user_agent": user_agent,
+            "client_ip": client_ip,
+            "telegram_user": None,
+            "consumed": False
+        }
+
+        self._send_json_response(200, {
+            "success": True,
+            "session_token": token,
+            "otp_code": otp,
+            "deep_link": deep_link,
+            "bot_username": BOT_USERNAME,
+            "action": action,
+            "expires_in_seconds": AUTH_SESSION_TTL_SECONDS
+        })
+
     def do_POST(self):
         url = urlparse(self.path)
         content_length = int(self.headers.get("Content-Length", 0))
@@ -907,37 +1202,11 @@ class TelegramAuthHTTPHandler(BaseHTTPRequestHandler):
         # ENDPOINT 1: CREATE NEW AUTH CHALLENGE SESSION (NONCE + DEEP LINK + OTP)
         # ----------------------------------------------------------------------
         if url.path == "/api/auth/telegram/create-session":
-            clean_expired_sessions()
-            token = generate_auth_token()
-            otp = generate_otp_code()
-            user_agent = self.headers.get("User-Agent", "Unknown Browser")
-            client_ip = self.client_address[0] if self.client_address else "127.0.0.1"
-
-            deep_link = f"https://t.me/{BOT_USERNAME}?start=auth_{token}"
-
-            ACTIVE_AUTH_SESSIONS[token] = {
-                "created_at": time.time(),
-                "status": "pending",  # pending | authorized | denied | consumed
-                "otp_code": otp,
-                "user_agent": user_agent,
-                "client_ip": client_ip,
-                "telegram_user": None,
-                "consumed": False
-            }
-
-            self._send_json_response(200, {
-                "success": True,
-                "session_token": token,
-                "otp_code": otp,
-                "deep_link": deep_link,
-                "bot_username": BOT_USERNAME,
-                "expires_in_seconds": AUTH_SESSION_TTL_SECONDS
-            })
+            params = parse_qs(url.query)
+            action = payload.get("action") or params.get("action", ["carrier_login"])[0]
+            self._handle_create_session(action)
             return
 
-        # ----------------------------------------------------------------------
-        # ENDPOINT 2: CONFIRM SESSION VIA ONE-TIME OTP OR DIRECT WEBHOOK SIMULATION
-        # ----------------------------------------------------------------------
         elif url.path == "/api/auth/telegram/verify-otp":
             token = payload.get("session_token", "")
             entered_otp = payload.get("otp_code", "").strip()
@@ -1094,6 +1363,14 @@ class TelegramAuthHTTPHandler(BaseHTTPRequestHandler):
         params = parse_qs(url.query)
 
         # ----------------------------------------------------------------------
+        # ENDPOINT 0: CREATE NEW AUTH CHALLENGE SESSION (GET & POST SUPPORTED)
+        # ----------------------------------------------------------------------
+        if url.path == "/api/auth/telegram/create-session":
+            action = params.get("action", ["carrier_login"])[0]
+            self._handle_create_session(action)
+            return
+
+        # ----------------------------------------------------------------------
         # ENDPOINT 4: POLL SESSION STATUS (CHECK IF USER CONFIRMED IN TELEGRAM)
         # ----------------------------------------------------------------------
         if url.path == "/api/auth/telegram/check-session":
@@ -1174,9 +1451,9 @@ def run_auth_server(host: str = SERVER_HOST, port: int = SERVER_PORT):
     server_address = (host, port)
     httpd = HTTPServer(server_address, TelegramAuthHTTPHandler)
     print(f"==================================================================")
-    print(f"🛡️  BusLiner Telegram Fleet Auth Daemon is running on http://{host}:{port}")
-    print(f"🤖  Target Bot: @{BOT_USERNAME}")
-    print(f"🔒  Security Spec: Telegram HMAC-SHA256 & 256-bit Anti-Replay Tokens")
+    print(f"  BusLiner Telegram Fleet Auth Daemon is running on http://{host}:{port}")
+    print(f"  Target Bot: @{BOT_USERNAME}")
+    print(f"  Security Spec: Telegram HMAC-SHA256 & 256-bit Anti-Replay Tokens")
     print(f"==================================================================")
     try:
         httpd.serve_forever()
