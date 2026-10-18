@@ -385,7 +385,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     f"• УНП: `{org_info.get('unp', '—')}`\n"
                     f"• Лицензия: {org_info.get('license', 'Минтранс РБ')}\n\n"
                     f"Вам открыт доступ к ведомостям рейсов этой организации.\n\n"
-                    f"Вы можете закрыть Telegram и перейти в терминал водителя в браузере.\n\n"
+                    f"Вы можете закрыть Telegram и перейти в кабинет водителя в браузере.\n\n"
                     f"Команды:\n"
                     f"/trip — открыть ведомость текущего рейса\n"
                     f"/status — организация, статус смены и автобус\n"
@@ -617,17 +617,17 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                         reply = (
                             "<b>BUSLINER SECURITY: ВХОД ВОДИТЕЛЯ</b>\n\n"
                             f"Здравствуйте, {first_name}.\n"
-                            "Поступил запрос на вход в терминал посадки водителя BusLiner:\n\n"
+                            "Поступил запрос на вход водителя BusLiner:\n\n"
                             f"• Водитель: <b>{driver_name}</b>\n"
                             f"• Автопарк: <b>{carrier_name}</b>\n"
                             f"• Telegram ID: <code>{user_id}</code>\n"
                             f"• Устройство: {device_str}\n"
                             f"• IP-адрес: <code>{client_ip}</code>\n\n"
-                            "Подтвердите вход в терминал для проверки билетов и списков пассажиров:"
+                            "Подтвердите вход для проверки билетов и списков пассажиров:"
                         )
                         keyboard = {
                             "inline_keyboard": [
-                                [{"text": "Войти в терминал", "callback_data": f"auth_confirm:{token}"}],
+                                [{"text": "Подтвердить вход", "callback_data": f"auth_confirm:{token}"}],
                                 [{"text": "Отклонить", "callback_data": f"auth_deny:{token}"}]
                             ]
                         }
@@ -1071,7 +1071,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     f"<b>{conf_title}</b>\n\n"
                     f"Здравствуйте, {first_name}.\n"
                     f"Автопарк: <b>{carrier_name}</b>\n\n"
-                    f"{conf_status} Окно в браузере уже открыло терминал посадки.\n\n"
+                    f"{conf_status} Окно в браузере уже открыло кабинет водителя.\n\n"
                     "Вы можете закрыть Telegram и продолжить работу в браузере."
                 )
             else:
