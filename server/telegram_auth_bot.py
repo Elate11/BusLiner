@@ -132,21 +132,27 @@ def save_carrier_registration(telegram_id: Optional[int], company_name: str, unp
         print(f"[DB Error: save_carrier_registration] {e}", file=sys.stderr)
 
 
-def save_or_update_driver(telegram_id: int, full_name: str, username: str, phone: Optional[str] = None, carrier_id: Optional[int] = None, carrier_name: Optional[str] = None, status: str = "unassigned") -> None:
+def save_or_update_driver(telegram_id: Optional[int], full_name: str, username: str, phone: Optional[str] = None, carrier_id: Optional[int] = None, carrier_name: Optional[str] = None, status: str = "unassigned") -> None:
     try:
         with sqlite3.connect(DB_PATH) as conn:
             cursor = conn.cursor()
-            cursor.execute("""
-                INSERT INTO drivers (telegram_id, full_name, username, phone, carrier_id, carrier_name, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                ON CONFLICT(telegram_id) DO UPDATE SET
-                    full_name = excluded.full_name,
-                    username = excluded.username,
-                    phone = COALESCE(excluded.phone, drivers.phone),
-                    carrier_id = COALESCE(excluded.carrier_id, drivers.carrier_id),
-                    carrier_name = COALESCE(excluded.carrier_name, drivers.carrier_name),
-                    status = excluded.status
-            """, (telegram_id, full_name, username, phone, carrier_id, carrier_name, status))
+            if telegram_id:
+                cursor.execute("""
+                    INSERT INTO drivers (telegram_id, full_name, username, phone, carrier_id, carrier_name, status)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    ON CONFLICT(telegram_id) DO UPDATE SET
+                        full_name = excluded.full_name,
+                        username = excluded.username,
+                        phone = COALESCE(excluded.phone, drivers.phone),
+                        carrier_id = COALESCE(excluded.carrier_id, drivers.carrier_id),
+                        carrier_name = COALESCE(excluded.carrier_name, drivers.carrier_name),
+                        status = excluded.status
+                """, (telegram_id, full_name, username, phone, carrier_id, carrier_name, status))
+            else:
+                cursor.execute("""
+                    INSERT INTO drivers (telegram_id, full_name, username, phone, carrier_id, carrier_name, status)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                """, (None, full_name, username, phone, carrier_id, carrier_name, status))
             conn.commit()
     except Exception as e:
         print(f"[DB Error: save_or_update_driver] {e}", file=sys.stderr)
@@ -1006,6 +1012,45 @@ class TelegramAuthHTTPHandler(BaseHTTPRequestHandler):
                 "success": True,
                 "message": "Перевозчик успешно сохранен в базе данных.",
                 "company_name": company_name
+            })
+            return
+
+        # ----------------------------------------------------------------------
+        # ENDPOINT 5: REGISTER DRIVER (SAVES TO SQLITE DB)
+        # ----------------------------------------------------------------------
+        elif url.path == "/api/auth/register-driver":
+            full_name = payload.get("full_name", "").strip()
+            phone = payload.get("phone", "").strip()
+            invite_code = payload.get("invite_code", "").strip()
+            tg_user = payload.get("telegram_user") or {}
+            tg_id = tg_user.get("id")
+            clean_username = tg_user.get("username", "")
+
+            carrier_name = f"Партнер ({invite_code})" if invite_code else None
+            status = "assigned" if invite_code else "unassigned"
+
+            save_or_update_driver(
+                telegram_id=tg_id,
+                full_name=full_name or tg_user.get("first_name", "Водитель"),
+                username=clean_username,
+                phone=phone,
+                carrier_id=None,
+                carrier_name=carrier_name,
+                status=status
+            )
+            if tg_id:
+                save_or_update_user(
+                    telegram_id=tg_id,
+                    username=clean_username,
+                    full_name=full_name or tg_user.get("first_name", "Водитель"),
+                    role="driver",
+                    phone=phone
+                )
+
+            self._send_json_response(200, {
+                "success": True,
+                "message": "Водитель успешно сохранен в базе данных.",
+                "driver_name": full_name
             })
             return
 

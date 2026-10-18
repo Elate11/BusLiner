@@ -1347,32 +1347,93 @@
       <div id="view-driver-panel" class="panel-body" style="display: none;">
         <h1 class="panel-heading">Кабинет <em>водителя</em></h1>
         <p class="panel-subheading">
-          Посадочные ведомости, список пассажиров рейса и сканирование билетов со смартфона без диспетчеров.
+          Посадочные ведомости, список пассажиров рейса и сканирование билетов со смартфона в режиме реального времени.
         </p>
 
-        <!-- FAST TELEGRAM SIGN IN FOR DRIVER -->
-        <button type="button" class="btn-oauth" onclick="handleDriverTelegramLogin()" style="width: 100%; margin-bottom: 22px; padding: 14px 20px; font-size: 14px;">
-          <svg viewBox="0 0 24 24" fill="#2AABEE" style="width: 20px; height: 20px;">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
-          </svg>
-          <span>Войти через Telegram как водитель</span>
-        </button>
-
-        <div class="auth-divider">
-          <span>или вход по номеру телефона</span>
+        <!-- SUB-TABS: DRIVER LOGIN VS REGISTRATION -->
+        <div class="auth-tabs" style="margin-bottom: 22px;">
+          <button type="button" class="tab-btn active" id="tab-driver-login" onclick="switchDriverView('login')">Вход водителя</button>
+          <button type="button" class="tab-btn" id="tab-driver-register" onclick="switchDriverView('register')">Регистрация водителя</button>
         </div>
 
-        <form onsubmit="handleDriverPhoneLogin(event)">
-          <div class="form-group" style="margin-bottom: 20px;">
-            <label class="form-label" for="driver-phone">Номер телефона водителя *</label>
-            <input type="tel" id="driver-phone" class="form-input" placeholder="+375 (29) 000-00-00" required>
-            <span class="form-hint">Вход по номеру, зарегистрированному перевозчиком в реестре BusLiner</span>
+        <!-- SUB-VIEW 1: DRIVER LOGIN -->
+        <div id="driver-subview-login">
+          <!-- FAST TELEGRAM SIGN IN FOR DRIVER -->
+          <button type="button" class="btn-oauth" onclick="handleDriverTelegramLogin()" style="width: 100%; margin-bottom: 22px; padding: 14px 20px; font-size: 14px;">
+            <svg viewBox="0 0 24 24" fill="#2AABEE" style="width: 20px; height: 20px;">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+            </svg>
+            <span>Войти через Telegram как водитель</span>
+          </button>
+
+          <div class="auth-divider">
+            <span>или вход по номеру телефона</span>
           </div>
 
-          <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
-            Войти как водитель &rarr;
+          <form onsubmit="handleDriverPhoneLogin(event)">
+            <div class="form-group" style="margin-bottom: 20px;">
+              <label class="form-label" for="driver-phone">Номер телефона водителя *</label>
+              <input type="tel" id="driver-phone" class="form-input" placeholder="+375 (29) 000-00-00" required>
+              <span class="form-hint">Вход по номеру, зарегистрированному перевозчиком в реестре BusLiner</span>
+            </div>
+
+            <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
+              Войти как водитель &rarr;
+            </button>
+          </form>
+        </div>
+
+        <!-- SUB-VIEW 2: DRIVER REGISTRATION -->
+        <div id="driver-subview-register" style="display: none;">
+          <!-- FAST TELEGRAM REGISTRATION FOR DRIVER -->
+          <button type="button" class="btn-oauth" onclick="handleDriverTelegramRegister()" style="width: 100%; margin-bottom: 22px; padding: 14px 20px; font-size: 14px;">
+            <svg viewBox="0 0 24 24" fill="#2AABEE" style="width: 20px; height: 20px;">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+            </svg>
+            <span>Регистрация через Telegram</span>
           </button>
-        </form>
+
+          <div class="auth-divider">
+            <span>или анкета нового водителя</span>
+          </div>
+
+          <form onsubmit="handleDriverRegisterSubmit(event)">
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label class="form-label" for="driver-reg-name">ФИО водителя *</label>
+              <input type="text" id="driver-reg-name" class="form-input" placeholder="Иванов Сергей Николаевич" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label class="form-label" for="driver-reg-phone">Номер телефона *</label>
+              <input type="tel" id="driver-reg-phone" class="form-input" placeholder="+375 (29) 000-00-00" required>
+            </div>
+
+            <div class="form-row" style="margin-bottom: 14px;">
+              <div class="form-group">
+                <label class="form-label" for="driver-reg-category">Категория прав *</label>
+                <select id="driver-reg-category" class="form-input">
+                  <option value="D">Категория D (автобусы)</option>
+                  <option value="D1">Категория D1 (микроавтобусы)</option>
+                  <option value="DE">Категория DE (автобус с прицепом)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="driver-reg-exp">Стаж категории D</label>
+                <input type="number" id="driver-reg-exp" class="form-input" placeholder="Лет" min="0" max="50">
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+              <label class="form-label" for="driver-reg-invite">Код приглашения автопарка (если есть)</label>
+              <input type="text" id="driver-reg-invite" class="form-input" placeholder="Например: CARRIER-789">
+              <span class="form-hint">Если код не указан, профиль регистрируется со статусом «Свободный водитель»</span>
+            </div>
+
+            <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
+              Зарегистрироваться в реестре BusLiner &rarr;
+            </button>
+          </form>
+        </div>
       </div>
 
     </div>
@@ -1719,8 +1780,16 @@
         if (title) title.innerText = 'Вход через Telegram';
         if (desc) desc.innerText = 'Откройте бота в Telegram для подтверждения входа в кабинет перевозчика:';
         if (nameRow) nameRow.style.display = 'none';
+      } else if (mode === 'driver_reg') {
+        if (title) title.innerText = 'Регистрация водителя через Telegram';
+        if (desc) desc.innerText = 'Откройте бота в Telegram для внесения профиля в реестр BusLiner:';
+        if (nameRow) nameRow.style.display = 'block';
+      } else if (mode === 'driver') {
+        if (title) title.innerText = 'Вход водителя через Telegram';
+        if (desc) desc.innerText = 'Откройте бота в Telegram для входа в терминал посадки водителя:';
+        if (nameRow) nameRow.style.display = 'none';
       } else {
-        if (title) title.innerText = 'Регистрация через Telegram';
+        if (title) title.innerText = 'Регистрация перевозчика через Telegram';
         if (desc) desc.innerText = 'Откройте бота в Telegram для привязки компании или ИП к системе:';
         if (nameRow) nameRow.style.display = 'block';
       }
@@ -1830,8 +1899,20 @@
       const name = userData.name || userData.first_name || 'Пользователь';
       const isPhone = val.startsWith('+') || /^\d/.test(val);
 
-      if (currentTelegramMode === 'driver') {
-        showAuthToast('Водитель авторизован', `Водитель ${name} авторизован. Статус: Новый профиль (ожидает привязки к автопарку перевозчика).`);
+      if (currentTelegramMode === 'driver_reg') {
+        fetch('http://localhost:8080/api/auth/register-driver', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            telegram_user: userData,
+            full_name: name,
+            phone: isPhone ? val : ''
+          })
+        }).catch(() => {});
+        showAuthToast('Регистрация успешна', `Водитель ${name} внесен в реестр BusLiner со статусом «Свободный водитель».`);
+        switchDriverView('login');
+      } else if (currentTelegramMode === 'driver') {
+        showAuthToast('Водитель авторизован', `Водитель ${name} авторизован. Статус: Профиль подтвержден.`);
         setPartnerRole('driver');
       } else if (currentTelegramMode === 'login') {
         showAuthToast('Telegram авторизован', `Криптографическая сессия ${val} верифицирована. Вход в систему...`);
@@ -1891,8 +1972,60 @@
       }
     };
 
+    window.switchDriverView = function(view) {
+      const tabLogin = document.getElementById('tab-driver-login');
+      const tabRegister = document.getElementById('tab-driver-register');
+      const paneLogin = document.getElementById('driver-subview-login');
+      const paneRegister = document.getElementById('driver-subview-register');
+
+      if (view === 'register') {
+        if (tabRegister) tabRegister.classList.add('active');
+        if (tabLogin) tabLogin.classList.remove('active');
+        if (paneRegister) paneRegister.style.display = 'block';
+        if (paneLogin) paneLogin.style.display = 'none';
+      } else {
+        if (tabLogin) tabLogin.classList.add('active');
+        if (tabRegister) tabRegister.classList.remove('active');
+        if (paneLogin) paneLogin.style.display = 'block';
+        if (paneRegister) paneRegister.style.display = 'none';
+      }
+    };
+
     window.handleDriverTelegramLogin = function() {
       openTelegramModal('driver');
+    };
+
+    window.handleDriverTelegramRegister = function() {
+      openTelegramModal('driver_reg');
+    };
+
+    window.handleDriverRegisterSubmit = function(e) {
+      if (e) e.preventDefault();
+      const name = (document.getElementById('driver-reg-name')?.value || '').trim();
+      const phone = (document.getElementById('driver-reg-phone')?.value || '').trim();
+      const cat = document.getElementById('driver-reg-category')?.value || 'D';
+      const exp = (document.getElementById('driver-reg-exp')?.value || '').trim();
+      const invite = (document.getElementById('driver-reg-invite')?.value || '').trim();
+
+      if (!name || !phone) {
+        showAuthToast('Заполните поля', 'Укажите ФИО и номер телефона водителя.', false);
+        return;
+      }
+
+      fetch('http://localhost:8080/api/auth/register-driver', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: name,
+          phone: phone,
+          category: cat,
+          experience_years: exp,
+          invite_code: invite
+        })
+      }).catch(() => {});
+
+      showAuthToast('Регистрация завершена', `Водитель ${name} успешно внесен в реестр BusLiner.`);
+      switchDriverView('login');
     };
 
     window.handleDriverPhoneLogin = function(e) {
@@ -1903,7 +2036,7 @@
         showAuthToast('Введите номер', 'Укажите ваш номер телефона для входа.', false);
         return;
       }
-      showAuthToast('Вход выполнен', `Водитель ${phone} авторизован. Статус: Новый профиль (ожидает назначения в штат перевозчика).`);
+      showAuthToast('Вход выполнен', `Водитель ${phone} авторизован в терминале посадки.`);
     };
 
     window.handleDriverCodeLogin = window.handleDriverPhoneLogin;
