@@ -308,6 +308,24 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 org_info = CARRIER_ORGS.get(int(carrier_ref))
             if not org_info:
                 org_info = INVITE_TOKENS.get(carrier_ref)
+            if not org_info:
+                try:
+                    with sqlite3.connect(DB_PATH) as conn:
+                        cursor = conn.cursor()
+                        clean_ref = carrier_ref.replace("CARRIER-", "").replace("PARK-", "").strip()
+                        cursor.execute("SELECT id, company_name, unp, route FROM carriers WHERE telegram_id = ? OR unp = ? OR id = ?", (clean_ref, clean_ref, clean_ref))
+                        row = cursor.fetchone()
+                        if row:
+                            org_info = {
+                                "id": row[0],
+                                "name": row[1] or "Перевозчик BusLiner",
+                                "unp": row[2] or "Не указан",
+                                "type": "ИП / Юрлицо",
+                                "license": "Минтранс РБ",
+                                "route": row[3] or "Междугородний"
+                            }
+                except Exception as e:
+                    print(f"[DB invite lookup error]: {e}", file=sys.stderr)
 
             if org_info:
                 DRIVER_ORGANIZATIONS[user_id] = org_info
@@ -1026,8 +1044,24 @@ class TelegramAuthHTTPHandler(BaseHTTPRequestHandler):
             tg_id = tg_user.get("id")
             clean_username = tg_user.get("username", "")
 
-            carrier_name = f"Партнер ({invite_code})" if invite_code else None
-            status = "assigned" if invite_code else "unassigned"
+            carrier_name = None
+            carrier_id = None
+            if invite_code:
+                try:
+                    with sqlite3.connect(DB_PATH) as conn:
+                        cursor = conn.cursor()
+                        clean_code = invite_code.replace("CARRIER-", "").replace("PARK-", "").strip()
+                        cursor.execute("SELECT id, company_name, unp FROM carriers WHERE unp = ? OR telegram_id = ? OR id = ? OR company_name LIKE ?", 
+                                       (clean_code, clean_code, clean_code, f"%{clean_code}%"))
+                        row = cursor.fetchone()
+                        if row:
+                            carrier_id = row[0]
+                            carrier_name = row[1]
+                        else:
+                            carrier_name = f"Партнер ({invite_code})"
+                except Exception as e:
+                    carrier_name = f"Партнер ({invite_code})"
+            status = "assigned" if carrier_name else "unassigned"
 
             save_or_update_driver(
                 telegram_id=tg_id,
