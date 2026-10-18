@@ -943,7 +943,7 @@
         </div>
       </div>
 
-      <!-- TABS: PILL SWITCHER -->
+      <!-- TABS: PILL SWITCHER FOR CARRIER -->
       <div class="view-tabs-wrapper" id="owner-tabs-wrapper">
         <div class="view-tabs-pill">
           <button type="button" class="view-tab-btn active" id="tab-login" onclick="switchView('login')">
@@ -953,6 +953,20 @@
           <button type="button" class="view-tab-btn" id="tab-onboard" onclick="switchView('onboard')">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
             Регистрация перевозчика (ИП / Юрлицо)
+          </button>
+        </div>
+      </div>
+
+      <!-- TABS: PILL SWITCHER FOR DRIVER -->
+      <div class="view-tabs-wrapper" id="driver-tabs-wrapper" style="display: none;">
+        <div class="view-tabs-pill">
+          <button type="button" class="view-tab-btn active" id="tab-driver-login" onclick="switchDriverView('login')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+            Вход для водителей
+          </button>
+          <button type="button" class="view-tab-btn" id="tab-driver-register" onclick="switchDriverView('register')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            Регистрация водителя в реестре
           </button>
         </div>
       </div>
@@ -1376,97 +1390,122 @@
       </div>
 
       <!-- ======================================================================
-           PANEL 3: ТЕРМИНАЛ И РЕГИСТРАЦИЯ ВОДИТЕЛЯ
+           PANEL 3: ВХОД ДЛЯ ВОДИТЕЛЕЙ
            ====================================================================== -->
-      <div id="view-driver-panel" class="panel-body" style="display: none;">
-        <h1 class="panel-heading">Кабинет <em>водителя</em></h1>
+      <div id="view-driver-login-panel" class="panel-body" style="display: none;">
+        <h1 class="panel-heading">Вход для <em>водителей</em></h1>
         <p class="panel-subheading">
-          Посадочные ведомости, список пассажиров рейса и сканирование билетов со смартфона в режиме реального времени.
+          Посадочные ведомости рейсов, сканирование QR-билетов пассажиров и статус смены со смартфона в режиме реального времени.
         </p>
 
-        <!-- SUB-TABS: DRIVER LOGIN VS REGISTRATION -->
-        <div class="auth-tabs" style="margin-bottom: 22px;">
-          <button type="button" class="tab-btn active" id="tab-driver-login" onclick="switchDriverView('login')">Вход водителя</button>
-          <button type="button" class="tab-btn" id="tab-driver-register" onclick="switchDriverView('register')">Регистрация водителя</button>
+        <!-- FAST TELEGRAM SIGN IN FOR DRIVER -->
+        <button type="button" class="btn-oauth" onclick="handleDriverTelegramLogin()" style="width: 100%; margin-bottom: 22px; padding: 14px 20px; font-size: 14px;">
+          <svg viewBox="0 0 24 24" fill="#2AABEE" style="width: 20px; height: 20px;">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+          </svg>
+          <span>Войти через Telegram</span>
+        </button>
+
+        <div class="auth-divider">
+          <span>или вход по номеру телефона</span>
         </div>
 
-        <!-- SUB-VIEW 1: DRIVER LOGIN -->
-        <div id="driver-subview-login">
-          <!-- FAST TELEGRAM SIGN IN FOR DRIVER -->
-          <button type="button" class="btn-oauth" onclick="handleDriverTelegramLogin()" style="width: 100%; margin-bottom: 22px; padding: 14px 20px; font-size: 14px;">
-            <svg viewBox="0 0 24 24" fill="#2AABEE" style="width: 20px; height: 20px;">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
-            </svg>
-            <span>Войти через Telegram как водитель</span>
-          </button>
-
-          <div class="auth-divider">
-            <span>или вход по номеру телефона</span>
+        <form onsubmit="handleDriverPhoneLogin(event)">
+          <div class="form-group" style="margin-bottom: 18px;">
+            <label class="form-label" for="driver-phone">Номер телефона водителя *</label>
+            <input type="tel" id="driver-phone" class="form-input" placeholder="+375 (29) 000-00-00" required>
+            <span class="form-hint">Вход по номеру, зарегистрированному перевозчиком в реестре BusLiner</span>
           </div>
 
-          <form onsubmit="handleDriverPhoneLogin(event)">
-            <div class="form-group" style="margin-bottom: 20px;">
-              <label class="form-label" for="driver-phone">Номер телефона водителя *</label>
-              <input type="tel" id="driver-phone" class="form-input" placeholder="+375 (29) 000-00-00" required>
-              <span class="form-hint">Вход по номеру, зарегистрированному перевозчиком в реестре BusLiner</span>
-            </div>
+          <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="driver-remember-me" checked style="accent-color: var(--accent-institutional); width: 16px; height: 16px;">
+            <label for="driver-remember-me" style="font-size: 13px; color: var(--text-muted); cursor: pointer;">Запомнить рабочую сессию на 30 дней</label>
+          </div>
 
-            <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
-              Войти как водитель &rarr;
-            </button>
-          </form>
+          <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
+            Войти в терминал водителя &rarr;
+          </button>
+        </form>
+
+        <div style="margin-top: 24px; padding: 14px; background: var(--surface-subtle); border-radius: var(--radius-ctrl); border: 1px dashed var(--border-hairline); text-align: center; font-size: 13.5px; color: var(--text-muted);">
+          Еще не зарегистрированы как водитель? 
+          <a href="#driver-register" onclick="switchDriverView('register'); return false;" style="color: var(--accent-institutional); font-weight: 700; text-decoration: none; margin-left: 4px;">Зарегистрироваться в реестре BusLiner &rarr;</a>
         </div>
 
-        <!-- SUB-VIEW 2: DRIVER REGISTRATION -->
-        <div id="driver-subview-register" style="display: none;">
-          <!-- FAST TELEGRAM REGISTRATION FOR DRIVER -->
-          <button type="button" class="btn-oauth" onclick="handleDriverTelegramRegister()" style="width: 100%; margin-bottom: 22px; padding: 14px 20px; font-size: 14px;">
-            <svg viewBox="0 0 24 24" fill="#2AABEE" style="width: 20px; height: 20px;">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
-            </svg>
-            <span>Регистрация через Telegram</span>
-          </button>
+        <div style="margin-top: 18px; text-align: center;">
+          <a href="busliner-partners.html" onclick="goBackToMain(event)" style="font-size: 13px; color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 500; transition: color 0.15s ease;">
+            <span>&larr; Вернуться на главную страницу BusLiner Partners</span>
+          </a>
+        </div>
+      </div>
 
-          <div class="auth-divider">
-            <span>или анкета нового водителя</span>
+      <!-- ======================================================================
+           PANEL 4: РЕГИСТРАЦИЯ ВОДИТЕЛЯ В РЕЕСТРЕ
+           ====================================================================== -->
+      <div id="view-driver-register-panel" class="panel-body" style="display: none;">
+        <h1 class="panel-heading">Регистрация <em>водителя</em></h1>
+        <p class="panel-subheading">
+          Внесите свои данные в реестр BusLiner как свободный водитель или привяжитесь к автопарку перевозчика.
+        </p>
+
+        <!-- FAST TELEGRAM REGISTRATION FOR DRIVER -->
+        <button type="button" class="btn-oauth" onclick="handleDriverTelegramRegister()" style="width: 100%; margin-bottom: 22px; padding: 14px 20px; font-size: 14px;">
+          <svg viewBox="0 0 24 24" fill="#2AABEE" style="width: 20px; height: 20px;">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+          </svg>
+          <span>Регистрация через Telegram</span>
+        </button>
+
+        <div class="auth-divider">
+          <span>или анкета нового водителя</span>
+        </div>
+
+        <form onsubmit="handleDriverRegisterSubmit(event)">
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label class="form-label" for="driver-reg-name">ФИО водителя *</label>
+            <input type="text" id="driver-reg-name" class="form-input" placeholder="Иванов Сергей Николаевич" required>
           </div>
 
-          <form onsubmit="handleDriverRegisterSubmit(event)">
-            <div class="form-group" style="margin-bottom: 14px;">
-              <label class="form-label" for="driver-reg-name">ФИО водителя *</label>
-              <input type="text" id="driver-reg-name" class="form-input" placeholder="Иванов Сергей Николаевич" required>
-            </div>
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label class="form-label" for="driver-reg-phone">Номер телефона *</label>
+            <input type="tel" id="driver-reg-phone" class="form-input" placeholder="+375 (29) 000-00-00" required>
+          </div>
 
-            <div class="form-group" style="margin-bottom: 14px;">
-              <label class="form-label" for="driver-reg-phone">Номер телефона *</label>
-              <input type="tel" id="driver-reg-phone" class="form-input" placeholder="+375 (29) 000-00-00" required>
+          <div class="form-row" style="margin-bottom: 14px;">
+            <div class="form-group">
+              <label class="form-label" for="driver-reg-category">Категория прав *</label>
+              <select id="driver-reg-category" class="form-input">
+                <option value="D">Категория D (автобусы)</option>
+                <option value="D1">Категория D1 (микроавтобусы)</option>
+                <option value="DE">Категория DE (автобус с прицепом)</option>
+              </select>
             </div>
-
-            <div class="form-row" style="margin-bottom: 14px;">
-              <div class="form-group">
-                <label class="form-label" for="driver-reg-category">Категория прав *</label>
-                <select id="driver-reg-category" class="form-input">
-                  <option value="D">Категория D (автобусы)</option>
-                  <option value="D1">Категория D1 (микроавтобусы)</option>
-                  <option value="DE">Категория DE (автобус с прицепом)</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="driver-reg-exp">Стаж категории D</label>
-                <input type="number" id="driver-reg-exp" class="form-input" placeholder="Лет" min="0" max="50">
-              </div>
+            <div class="form-group">
+              <label class="form-label" for="driver-reg-exp">Стаж категории D</label>
+              <input type="number" id="driver-reg-exp" class="form-input" placeholder="Лет" min="0" max="50">
             </div>
+          </div>
 
-            <div class="form-group" style="margin-bottom: 20px;">
-              <label class="form-label" for="driver-reg-invite">Код приглашения автопарка (если есть)</label>
-              <input type="text" id="driver-reg-invite" class="form-input" placeholder="Например: CARRIER-789">
-              <span class="form-hint">Если код не указан, профиль регистрируется со статусом «Свободный водитель»</span>
-            </div>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label class="form-label" for="driver-reg-invite">Код приглашения автопарка (если есть)</label>
+            <input type="text" id="driver-reg-invite" class="form-input" placeholder="Например: CARRIER-789">
+            <span class="form-hint">Если код не указан, профиль регистрируется со статусом «Свободный водитель»</span>
+          </div>
 
-            <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
-              Зарегистрироваться в реестре BusLiner &rarr;
-            </button>
-          </form>
+          <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
+            Зарегистрироваться в реестре BusLiner &rarr;
+          </button>
+        </form>
+
+        <div style="margin-top: 24px; padding: 14px; background: var(--surface-subtle); border-radius: var(--radius-ctrl); border: 1px dashed var(--border-hairline); text-align: center; font-size: 13.5px; color: var(--text-muted);">
+          Уже зарегистрированы как водитель? 
+          <a href="#driver" onclick="switchDriverView('login'); return false;" style="color: var(--accent-institutional); font-weight: 700; text-decoration: none; margin-left: 4px;">Войти в терминал водителя &rarr;</a>
+        </div>
+
+        <div style="margin-top: 18px; text-align: center;">
+          <a href="busliner-partners.html" onclick="goBackToMain(event)" style="font-size: 13px; color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 500; transition: color 0.15s ease;">
+            <span>&larr; Вернуться на главную страницу BusLiner Partners</span>
+          </a>
         </div>
       </div>
 
@@ -1980,48 +2019,28 @@
 
     let currentPartnerRole = 'owner';
 
-    window.setPartnerRole = function(role) {
-      currentPartnerRole = role;
-      const btnOwner = document.getElementById('btn-role-owner');
-      const btnDriver = document.getElementById('btn-role-driver');
-      const ownerTabs = document.getElementById('owner-tabs-wrapper');
-      const panelLogin = document.getElementById('view-login-panel');
-      const panelOnboard = document.getElementById('view-onboard-panel');
-      const panelDriver = document.getElementById('view-driver-panel');
-
-      if (role === 'driver') {
-        if (btnDriver) btnDriver.classList.add('active');
-        if (btnOwner) btnOwner.classList.remove('active');
-        if (ownerTabs) ownerTabs.style.display = 'none';
-        if (panelLogin) panelLogin.style.display = 'none';
-        if (panelOnboard) panelOnboard.style.display = 'none';
-        if (panelDriver) panelDriver.style.display = 'block';
-        window.location.hash = 'driver';
-      } else {
-        if (btnOwner) btnOwner.classList.add('active');
-        if (btnDriver) btnDriver.classList.remove('active');
-        if (ownerTabs) ownerTabs.style.display = 'block';
-        if (panelDriver) panelDriver.style.display = 'none';
-        switchView('login');
-      }
-    };
-
-    window.switchDriverView = function(view) {
+    window.switchDriverView = function(view, pushToHistory = true) {
       const tabLogin = document.getElementById('tab-driver-login');
       const tabRegister = document.getElementById('tab-driver-register');
-      const paneLogin = document.getElementById('driver-subview-login');
-      const paneRegister = document.getElementById('driver-subview-register');
+      const panelLogin = document.getElementById('view-driver-login-panel');
+      const panelRegister = document.getElementById('view-driver-register-panel');
 
       if (view === 'register') {
         if (tabRegister) tabRegister.classList.add('active');
         if (tabLogin) tabLogin.classList.remove('active');
-        if (paneRegister) paneRegister.style.display = 'block';
-        if (paneLogin) paneLogin.style.display = 'none';
+        if (panelRegister) panelRegister.style.display = 'block';
+        if (panelLogin) panelLogin.style.display = 'none';
+        if (pushToHistory && window.location.hash !== '#driver-register') {
+          history.pushState({ view: 'driver-register' }, '', '#driver-register');
+        }
       } else {
         if (tabLogin) tabLogin.classList.add('active');
         if (tabRegister) tabRegister.classList.remove('active');
-        if (paneLogin) paneLogin.style.display = 'block';
-        if (paneRegister) paneRegister.style.display = 'none';
+        if (panelLogin) panelLogin.style.display = 'block';
+        if (panelRegister) panelRegister.style.display = 'none';
+        if (pushToHistory && window.location.hash !== '#driver') {
+          history.pushState({ view: 'driver' }, '', '#driver');
+        }
       }
     };
 
@@ -2092,10 +2111,12 @@
       const tabOnboard = document.getElementById('tab-onboard');
       const panelLogin = document.getElementById('view-login-panel');
       const panelOnboard = document.getElementById('view-onboard-panel');
-      const panelDriver = document.getElementById('view-driver-panel');
+      const panelDriverLogin = document.getElementById('view-driver-login-panel');
+      const panelDriverRegister = document.getElementById('view-driver-register-panel');
       const btnOwner = document.getElementById('btn-role-owner');
       const btnDriver = document.getElementById('btn-role-driver');
       const ownerTabs = document.getElementById('owner-tabs-wrapper');
+      const driverTabs = document.getElementById('driver-tabs-wrapper');
 
       // 1. DRIVER VIEW
       if (clean === 'driver' || clean === 'driver-login' || clean === 'driver-register') {
@@ -2103,9 +2124,9 @@
         if (btnDriver) btnDriver.classList.add('active');
         if (btnOwner) btnOwner.classList.remove('active');
         if (ownerTabs) ownerTabs.style.display = 'none';
+        if (driverTabs) driverTabs.style.display = 'block';
         if (panelLogin) panelLogin.style.display = 'none';
         if (panelOnboard) panelOnboard.style.display = 'none';
-        if (panelDriver) panelDriver.style.display = 'block';
 
         if (clean === 'driver-register') {
           switchDriverView('register', false);
@@ -2124,11 +2145,13 @@
         currentPartnerRole = 'owner';
         if (btnOwner) btnOwner.classList.add('active');
         if (btnDriver) btnDriver.classList.remove('active');
+        if (driverTabs) driverTabs.style.display = 'none';
         if (ownerTabs) ownerTabs.style.display = 'block';
         if (tabOnboard) tabOnboard.classList.add('active');
         if (tabLogin) tabLogin.classList.remove('active');
         if (panelLogin) panelLogin.style.display = 'none';
-        if (panelDriver) panelDriver.style.display = 'none';
+        if (panelDriverLogin) panelDriverLogin.style.display = 'none';
+        if (panelDriverRegister) panelDriverRegister.style.display = 'none';
         if (panelOnboard) panelOnboard.style.display = 'block';
 
         let targetStep = 1;
@@ -2148,12 +2171,14 @@
       currentPartnerRole = 'owner';
       if (btnOwner) btnOwner.classList.add('active');
       if (btnDriver) btnDriver.classList.remove('active');
+      if (driverTabs) driverTabs.style.display = 'none';
       if (ownerTabs) ownerTabs.style.display = 'block';
       if (tabLogin) tabLogin.classList.add('active');
       if (tabOnboard) tabOnboard.classList.remove('active');
       if (panelLogin) panelLogin.style.display = 'block';
       if (panelOnboard) panelOnboard.style.display = 'none';
-      if (panelDriver) panelDriver.style.display = 'none';
+      if (panelDriverLogin) panelDriverLogin.style.display = 'none';
+      if (panelDriverRegister) panelDriverRegister.style.display = 'none';
 
       if (pushToHistory && window.location.hash !== '#login') {
         history.pushState({ view: 'login' }, '', '#login');
