@@ -2216,9 +2216,6 @@
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
         </a>
-        <a href="#slide-calculator" class="btn btn-secondary" style="padding: 16px 28px; font-size: 14px; border-radius: 12px; color: #FFFFFF; border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.06); backdrop-filter: blur(8px);">
-          <span>Рассчитать прибыль флота ↓</span>
-        </a>
       </div>
 
       <!-- 4 PUNCHY PROMISES (HORIZONTAL MODULAR GRID) -->
@@ -3135,8 +3132,25 @@
 
       const ctx = canvas.getContext('2d');
       let animId = null;
-      let hasShotFired = false;
       let isAnimating = false;
+      let sniperTimer = null;
+      let isSlideVisible = false;
+
+      function resetSniperState() {
+        if (sniperTimer) {
+          clearTimeout(sniperTimer);
+          sniperTimer = null;
+        }
+        if (isAnimating) {
+          cancelAnimationFrame(animId);
+          isAnimating = false;
+        }
+        const slideRect = slideSniper.getBoundingClientRect();
+        ctx.clearRect(0, 0, slideRect.width, slideRect.height);
+        holeEl.classList.remove('hole-exploded');
+        paperSheet.classList.remove('paper-recoiling');
+        setTicketStateSoldout();
+      }
 
       function resizeCanvas() {
         const dpr = window.devicePixelRatio || 1;
@@ -3426,19 +3440,26 @@
       }
 
       paperSheet.addEventListener('click', () => {
+        resetSniperState();
         fireSniperShot();
       });
 
       const sniperObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting && !hasShotFired) {
-            hasShotFired = true;
-            setTimeout(() => {
-              fireSniperShot();
-            }, 450);
+          if (entry.isIntersecting) {
+            if (!isSlideVisible) {
+              isSlideVisible = true;
+              resetSniperState();
+              sniperTimer = setTimeout(() => {
+                fireSniperShot();
+              }, 420);
+            }
+          } else {
+            isSlideVisible = false;
+            resetSniperState();
           }
         });
-      }, { threshold: 0.55 });
+      }, { threshold: 0.40 });
 
       sniperObserver.observe(slideSniper);
     })();
