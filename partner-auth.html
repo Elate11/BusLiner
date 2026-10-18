@@ -1982,11 +1982,35 @@
             phone: isPhone ? val : ''
           })
         }).catch(() => {});
-        showAuthToast('Регистрация успешна', `Водитель ${name} внесен в реестр BusLiner со статусом «Свободный водитель».`);
-        switchDriverView('login');
+        const driverData = {
+          name: name,
+          username: val.startsWith('@') ? val : (val ? `@${val}` : ''),
+          phone: isPhone ? val : '',
+          role: 'driver',
+          auth_date: Date.now()
+        };
+        try {
+          localStorage.setItem('busliner_driver_user', JSON.stringify(driverData));
+        } catch (e) {}
+        showAuthToast('Регистрация успешна', `Водитель ${name} внесен в реестр. Переход в терминал...`);
+        setTimeout(() => {
+          window.location.href = 'driver-terminal.html';
+        }, 700);
       } else if (currentTelegramMode === 'driver') {
-        showAuthToast('Водитель авторизован', `Водитель ${name} авторизован. Статус: Профиль подтвержден.`);
-        setPartnerRole('driver');
+        const driverData = {
+          name: name,
+          username: val.startsWith('@') ? val : (val ? `@${val}` : ''),
+          phone: isPhone ? val : '',
+          role: 'driver',
+          auth_date: Date.now()
+        };
+        try {
+          localStorage.setItem('busliner_driver_user', JSON.stringify(driverData));
+        } catch (e) {}
+        showAuthToast('Водитель авторизован', `Водитель ${name} верифицирован. Переход в терминал посадки...`);
+        setTimeout(() => {
+          window.location.href = 'driver-terminal.html';
+        }, 600);
       } else if (currentTelegramMode === 'login') {
         showAuthToast('Telegram авторизован', `Криптографическая сессия ${val} верифицирована. Вход в кабинет...`);
         setTimeout(() => {
@@ -2077,8 +2101,22 @@
         })
       }).catch(() => {});
 
-      showAuthToast('Регистрация завершена', `Водитель ${name} успешно внесен в реестр BusLiner.`);
-      switchDriverView('login');
+      const driverData = {
+        name: name,
+        username: '',
+        phone: phone,
+        category: cat,
+        role: 'driver',
+        auth_date: Date.now()
+      };
+      try {
+        localStorage.setItem('busliner_driver_user', JSON.stringify(driverData));
+      } catch (err) {}
+
+      showAuthToast('Регистрация завершена', `Водитель ${name} успешно внесен в реестр. Вход в терминал...`);
+      setTimeout(() => {
+        window.location.href = 'driver-terminal.html';
+      }, 700);
     };
 
     window.handleDriverPhoneLogin = function(e) {
@@ -2089,7 +2127,21 @@
         showAuthToast('Введите номер', 'Укажите ваш номер телефона для входа.', false);
         return;
       }
-      showAuthToast('Вход выполнен', `Водитель ${phone} авторизован в терминале посадки.`);
+      const driverData = {
+        name: 'Водитель рейса',
+        username: '',
+        phone: phone,
+        role: 'driver',
+        auth_date: Date.now()
+      };
+      try {
+        localStorage.setItem('busliner_driver_user', JSON.stringify(driverData));
+      } catch (err) {}
+
+      showAuthToast('Вход выполнен', `Водитель ${phone} авторизован. Переход в терминал...`);
+      setTimeout(() => {
+        window.location.href = 'driver-terminal.html';
+      }, 600);
     };
 
     window.handleDriverCodeLogin = window.handleDriverPhoneLogin;

@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Терминал водителя — BusLiner Partners</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Nunito:wght@700;800;900&family=Varela+Round&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       BUSLINER PARTNERS — DRIVER TERMINAL
+       Quiet Luxury / Freight Monolith Design System
+       ========================================================================== */
+    :root {
+      --canvas: #F7F6F2;
+      --surface-card: #FFFFFF;
+      --surface-subtle: #F0EFEA;
+      --surface-elevated: #FAFAF8;
+      --border-hairline: #E2E2DC;
+      --border-focus: #1E3A8A;
+
+      --text-primary: #141518;
+      --text-muted: #525660;
+      --text-dim: #8E929B;
+
+      --accent-institutional: #1E3A8A;
+      --accent-institutional-hover: #172554;
+      --accent-soft: #EEF2FF;
+      --accent-border: #C7D2FE;
+
+      --status-available: #15803D;
+      --status-available-bg: #DCFCE7;
+      --status-radar: #B45309;
+      --status-radar-bg: #FEF3C7;
+      --status-danger: #B91C1C;
+      --status-danger-bg: #FEE2E2;
+
+      --radius-ctrl: 8px;
+      --radius-card: 16px;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-display: 'Newsreader', Georgia, serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--canvas);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    /* TOP NAVIGATION */
+    .dashboard-nav {
+      background: var(--surface-card);
+      border-bottom: 1px solid var(--border-hairline);
+      height: 68px;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .brand-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+      color: #111827;
+      display: flex;
+      align-items: baseline;
+      gap: 3px;
+    }
+    .brand-title-thin {
+      font-weight: 700;
+      color: #374151;
+    }
+    .badge-b2b {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-left: 3px;
+    }
+    .font-onlyfans {
+      font-family: 'Varela Round', sans-serif;
+      color: var(--accent-institutional);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      text-transform: lowercase;
+    }
+    .terminal-badge {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: #EEF2FF;
+      color: #1E3A8A;
+      border: 1px solid #C7D2FE;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .profile-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 14px 5px 6px;
+      background: var(--canvas);
+      border: 1px solid var(--border-hairline);
+      border-radius: 40px;
+    }
+    .profile-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent-institutional);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .profile-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .profile-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 9px 18px;
+      border-radius: var(--radius-ctrl);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      border: none;
+    }
+    .btn-accent {
+      background: var(--accent-institutional);
+      color: #FFFFFF;
+    }
+    .btn-accent:hover {
+      background: var(--accent-institutional-hover);
+    }
+    .btn-secondary {
+      background: var(--surface-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border-hairline);
+    }
+    .btn-secondary:hover {
+      background: var(--surface-subtle);
+    }
+    .btn-success {
+      background: var(--status-available);
+      color: #FFFFFF;
+    }
+    .btn-success:hover {
+      opacity: 0.92;
+    }
+
+    /* MAIN CONTAINER */
+    .terminal-main {
+      flex: 1;
+      max-width: 1120px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+    }
+
+    /* HEADER HERO CARD */
+    .hero-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-card);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.25;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent-institutional);
+    }
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+    .meta-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--border-hairline);
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--status-available);
+      box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.2);
+      display: inline-block;
+    }
+
+    /* SHIFT & VEHICLE INFO STRIP */
+    .info-strip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .strip-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+    .strip-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+    .strip-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .strip-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ACTIVE TRIP CARD */
+    .trip-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-card);
+      padding: 24px 28px;
+      margin-bottom: 24px;
+    }
+    .trip-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+    .trip-route-display {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .trip-time-badge {
+      background: var(--accent-institutional);
+      color: #FFFFFF;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-success {
+      background: var(--status-available-bg);
+      color: var(--status-available);
+    }
+    .badge-warning {
+      background: var(--status-radar-bg);
+      color: var(--status-radar);
+    }
+    .badge-accent {
+      background: var(--accent-soft);
+      color: var(--accent-institutional);
+    }
+    .badge-muted {
+      background: var(--surface-subtle);
+      color: var(--text-muted);
+    }
+
+    /* MANIFEST TABLE CARD */
+    .manifest-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+    .manifest-toolbar {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border-hairline);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .search-box {
+      position: relative;
+      width: 280px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 34px;
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-ctrl);
+      font-size: 13px;
+      background: var(--canvas);
+      outline: none;
+    }
+    .search-input:focus {
+      border-color: var(--border-focus);
+      background: #FFFFFF;
+    }
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+    }
+    .filter-pills {
+      display: flex;
+      gap: 6px;
+    }
+    .filter-pill {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--canvas);
+      border: 1px solid var(--border-hairline);
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+    }
+    .filter-pill.active {
+      background: var(--accent-institutional);
+      color: #FFFFFF;
+      border-color: var(--accent-institutional);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .data-table th {
+      padding: 12px 20px;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      background: var(--surface-elevated);
+      border-bottom: 1px solid var(--border-hairline);
+    }
+    .data-table td {
+      padding: 14px 20px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border-hairline);
+      vertical-align: middle;
+    }
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+    .data-table tr:hover td {
+      background: #FAF9F5;
+    }
+    .seat-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #EEF2FF;
+      color: #1E3A8A;
+      font-weight: 800;
+      font-size: 14px;
+      border: 1px solid #C7D2FE;
+    }
+
+    /* TELEGRAM DISPATCHER BANNER */
+    .tg-banner {
+      background: #0F172A;
+      color: #FFFFFF;
+      border-radius: var(--radius-card);
+      padding: 22px 28px;
+      margin-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .tg-banner h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .tg-banner p {
+      font-size: 13px;
+      color: #94A3B8;
+      max-width: 580px;
+      line-height: 1.45;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 21, 24, 0.65);
+      backdrop-filter: blur(5px);
+      z-index: 99999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-shell {
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 480px;
+      padding: 28px 30px;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.22);
+      text-align: center;
+    }
+    .scan-viewfinder {
+      width: 100%;
+      height: 220px;
+      background: #0F172A;
+      border-radius: 12px;
+      position: relative;
+      margin: 18px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .scan-laser {
+      position: absolute;
+      left: 15px;
+      right: 15px;
+      height: 2px;
+      background: #38BDF8;
+      box-shadow: 0 0 10px #38BDF8;
+      animation: scanAnim 2s infinite ease-in-out;
+    }
+    @keyframes scanAnim {
+      0% { top: 20px; }
+      50% { top: 190px; }
+      100% { top: 20px; }
+    }
+
+    /* TOAST */
+    .auth-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #141518;
+      color: #FFFFFF;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.25);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 100000;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 420px;
+      pointer-events: none;
+    }
+
+    .footer {
+      border-top: 1px solid var(--border-hairline);
+      padding: 20px 28px;
+      font-size: 12px;
+      color: var(--text-dim);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: var(--surface-card);
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-nav { padding: 0 16px; }
+      .terminal-main { padding: 18px 14px 40px; }
+      .hero-card { padding: 18px; }
+      .search-box { width: 100%; }
+      .trip-card-head { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVBAR -->
+  <header class="dashboard-nav">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <a href="busliner-partners.html" class="brand-link" title="На главную BusLiner Partners">
+        <svg width="26" height="26" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="28" height="28" rx="6" fill="#1E3A8A"/>
+          <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6 9H11.5M6 19H11.5" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand-title">BUS<span class="brand-title-thin">LINER</span> <span class="badge-b2b font-onlyfans">partners</span></span>
+      </a>
+      <span class="terminal-badge">Терминал водителя</span>
+    </div>
+
+    <div class="nav-actions">
+      <div class="profile-pill">
+        <div class="profile-avatar" id="drv-avatar-letter">В</div>
+        <div>
+          <div class="profile-name" id="drv-name-display">Водитель рейса</div>
+          <div class="profile-sub" id="drv-contact-display">Смена открыта</div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-secondary" onclick="logoutDriver()" style="padding: 8px 14px; font-size: 12.5px;">
+        Выйти
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN TERMINAL CONTENT -->
+  <main class="terminal-main">
+
+    <!-- HERO CARD -->
+    <div class="hero-card">
+      <div>
+        <h1 class="hero-title">Рабочая смена <em>водителя</em></h1>
+        <div class="hero-meta">
+          <span style="display: inline-flex; align-items: center; gap: 6px; color: var(--status-available); font-weight: 700;">
+            <span class="live-dot"></span>
+            <span id="shift-status-text">Смена активна (На линии)</span>
+          </span>
+          <span class="meta-dot"></span>
+          <span id="drv-date-now">Сегодня</span>
+          <span class="meta-dot"></span>
+          <span>СТБ 1389-2003</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button type="button" class="btn btn-secondary" id="btn-toggle-shift" onclick="toggleShiftStatus()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+          Завершить смену
+        </button>
+        <button type="button" class="btn btn-accent" onclick="openScannerModal()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h3M17 4h3v3M4 17v3h3M17 20h3v-3M9 9h6v6H9z"/></svg>
+          Сканировать QR-билет
+        </button>
+      </div>
+    </div>
+
+    <!-- STRIP DETAILS -->
+    <div class="info-strip-grid">
+      <div class="strip-card">
+        <div class="strip-label">Автопарк перевозчика</div>
+        <div class="strip-value" id="strip-carrier-name">ИП Перевозчик Александр</div>
+        <div class="strip-sub" id="strip-carrier-sub">Парк подтвержден &bull; Лицензия Минтранс</div>
+      </div>
+      <div class="strip-card">
+        <div class="strip-label">Закрепленный борт</div>
+        <div class="strip-value" id="strip-vehicle-name">Mercedes-Benz Sprinter</div>
+        <div class="strip-sub" id="strip-vehicle-sub"><strong style="font-family: monospace;">7-AI 0000</strong> &bull; 19 мест</div>
+      </div>
+      <div class="strip-card">
+        <div class="strip-label">Базовый маршрут</div>
+        <div class="strip-value" id="strip-route-name">Минск — Вильнюс</div>
+        <div class="strip-sub">Центральный АВ &rarr; Автовокзал</div>
+      </div>
+    </div>
+
+    <!-- ACTIVE TRIP CARD -->
+    <div class="trip-card">
+      <div class="trip-card-head">
+        <div>
+          <div style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">
+            Текущий рейс в графике
+          </div>
+          <div class="trip-route-display">
+            <span class="trip-time-badge">07:30</span>
+            <span id="trip-header-route">Минск (Центральный АВ) &rarr; Вильнюс</span>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div style="text-align: right;">
+            <div style="font-size: 13px; font-weight: 700;">Посадка: <span id="boarded-stat-ratio" style="color: var(--accent-institutional);">9 из 14</span></div>
+            <div style="font-size: 11.5px; color: var(--text-muted);">Свободно: 5 мест</div>
+          </div>
+          <span class="status-badge badge-success">Посадка открыта</span>
+        </div>
+      </div>
+
+      <!-- PASSENGER MANIFEST TABLE -->
+      <div class="manifest-card">
+        <div class="manifest-toolbar">
+          <div class="search-box">
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="manifest-search-input" class="search-input" placeholder="Поиск пассажира или места..." oninput="handleManifestSearch(this.value)">
+          </div>
+
+          <div class="filter-pills">
+            <button type="button" class="filter-pill active" id="flt-all" onclick="setManifestFilter('all')">Все (14)</button>
+            <button type="button" class="filter-pill" id="flt-boarded" onclick="setManifestFilter('boarded')">Посажены (9)</button>
+            <button type="button" class="filter-pill" id="flt-pending" onclick="setManifestFilter('pending')">Ожидают (5)</button>
+          </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 70px;">Место</th>
+                <th>Пассажир</th>
+                <th>Билет</th>
+                <th>Багаж / Smart Cargo</th>
+                <th>Статус</th>
+                <th style="text-align: right;">Отметка посадки</th>
+              </tr>
+            </thead>
+            <tbody id="passenger-table-body">
+              <!-- Dynamically populated via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TELEGRAM FLEET BOT DISPATCHER CARD -->
+    <div class="tg-banner">
+      <div>
+        <h4>Связь с диспетчером через Telegram Бот @BusLinerFleetBot</h4>
+        <p>
+          Отправляйте отметки о прохождении контрольных точек, транслируйте геопозицию борта в реальном времени и принимайте оперативные корректировки рейсов от диспетчерской службы.
+        </p>
+      </div>
+      <a href="https://t.me/BusLinerFleetBot" target="_blank" class="btn" style="background: #2AABEE; color: #FFFFFF; font-weight: 700; white-space: nowrap;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+        Открыть @BusLinerFleetBot
+      </a>
+    </div>
+
+  </main>
+
+  <!-- MODAL: QR SCANNER -->
+  <div id="modal-qr-scanner" class="modal-overlay" onclick="if(event.target===this) closeScannerModal()">
+    <div class="modal-shell">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h3 style="font-family: var(--font-display); font-size: 22px;">Сканирование <em>QR-билета</em></h3>
+        <button type="button" onclick="closeScannerModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-dim);">&times;</button>
+      </div>
+
+      <p style="font-size: 13px; color: var(--text-muted);">
+        Наведите камеру смартфона на QR-код электронного билета пассажира для быстрой отметки в ведомости:
+      </p>
+
+      <div class="scan-viewfinder">
+        <div class="scan-laser"></div>
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.5"><path d="M4 7V4h3M17 4h3v3M4 17v3h3M17 20h3v-3M9 9h6v6H9z"/></svg>
+      </div>
+
+      <div style="margin-bottom: 18px; text-align: left;">
+        <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Или введите номер билета вручную:</label>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="manual-ticket-input" class="search-input" style="padding-left: 12px;" placeholder="Например: BL-2026-01">
+          <button type="button" class="btn btn-accent" onclick="handleManualCheckin()">Проверить</button>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="closeScannerModal()">
+        Закрыть сканер
+      </button>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="auth-toast" class="auth-toast">
+    <div style="line-height: 1.35;">
+      <div id="toast-title" style="font-weight: 700; font-size: 14px; color: #FFFFFF;">Уведомление</div>
+      <div id="toast-message" style="font-size: 13px; color: #9CA3AF;">Текст сообщения</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div>
+      © 2026 BusLiner <span class="font-onlyfans" style="color: var(--accent-institutional);">partners</span>. Терминал водителя &bull; СТБ 1389-2003
+    </div>
+    <div style="display: flex; gap: 16px;">
+      <a href="partner-auth.html#driver" style="color: var(--text-dim); text-decoration: none;">Сменить аккаунт</a>
+      <a href="busliner-partners.html" style="color: var(--text-dim); text-decoration: none;">На главную</a>
+      <span style="color: var(--status-available); font-weight: 600;">● Сервер Минск</span>
+    </div>
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // PASSENGERS MANIFEST DATA (Realistically seeded and fully interactive)
+    let passengers = [
+      { id: 1, seat: 1, name: "Ковалев Дмитрий Андреевич", phone: "+375 (29) 114-**-82", ticket: "BL-2026-01", luggage: "1 место (Smart Cargo)", boarded: true },
+      { id: 2, seat: 2, name: "Семенова Анна Михайловна", phone: "+375 (44) 732-**-19", ticket: "BL-2026-02", luggage: "Ручная кладь", boarded: true },
+      { id: 3, seat: 3, name: "Кузнецов Илья Васильевич", phone: "+375 (33) 609-**-44", ticket: "BL-2026-03", luggage: "2 места багажа", boarded: true },
+      { id: 4, seat: 4, name: "Морозова Елена Павловна", phone: "+375 (29) 881-**-30", ticket: "BL-2026-04", luggage: "1 место", boarded: false },
+      { id: 5, seat: 5, name: "Григорьев Максим Сергеевич", phone: "+375 (25) 942-**-61", ticket: "BL-2026-05", luggage: "Ручная кладь", boarded: true },
+      { id: 6, seat: 6, name: "Волкова Ольга Викторовна", phone: "+375 (29) 305-**-77", ticket: "BL-2026-06", luggage: "1 место (Smart Cargo)", boarded: true },
+      { id: 7, seat: 7, name: "Павлов Артем Игоревич", phone: "+375 (44) 512-**-03", ticket: "BL-2026-07", luggage: "Ручная кладь", boarded: true },
+      { id: 8, seat: 8, name: "Соколова Виктория Романовна", phone: "+375 (33) 441-**-99", ticket: "BL-2026-08", luggage: "1 место багажа", boarded: false },
+      { id: 9, seat: 9, name: "Ильин Константин Денисович", phone: "+375 (29) 678-**-25", ticket: "BL-2026-09", luggage: "Ручная кладь", boarded: true },
+      { id: 10, seat: 10, name: "Тарасова Марина Олеговна", phone: "+375 (25) 819-**-50", ticket: "BL-2026-10", luggage: "1 место багажа", boarded: true },
+      { id: 11, seat: 11, name: "Лебедев Егор Станиславович", phone: "+375 (29) 223-**-14", ticket: "BL-2026-11", luggage: "1 место (Smart Cargo)", boarded: false },
+      { id: 12, seat: 12, name: "Зайцева Надежда Борисовна", phone: "+375 (44) 334-**-88", ticket: "BL-2026-12", luggage: "Ручная кладь", boarded: true },
+      { id: 13, seat: 13, name: "Новиков Кирилл Алексеевич", phone: "+375 (33) 910-**-33", ticket: "BL-2026-13", luggage: "2 места багажа", boarded: false },
+      { id: 14, seat: 14, name: "Романова Светлана Юрьевна", phone: "+375 (29) 555-**-41", ticket: "BL-2026-14", luggage: "1 место багажа", boarded: false }
+    ];
+
+    let currentFilter = 'all';
+    let searchQuery = '';
+    let isShiftActive = true;
+
+    function showToast(title, message) {
+      const toast = document.getElementById('auth-toast');
+      const titleEl = document.getElementById('toast-title');
+      const msgEl = document.getElementById('toast-message');
+      if (titleEl) titleEl.innerText = title;
+      if (msgEl) msgEl.innerText = message;
+      if (toast) {
+        toast.style.transform = 'translateY(0)';
+        toast.style.opacity = '1';
+        clearTimeout(toast._timeout);
+        toast._timeout = setTimeout(() => {
+          toast.style.transform = 'translateY(20px)';
+          toast.style.opacity = '0';
+        }, 3200);
+      }
+    }
+
+    function renderPassengers() {
+      const tbody = document.getElementById('passenger-table-body');
+      if (!tbody) return;
+
+      const filtered = passengers.filter(p => {
+        const matchesFilter = (currentFilter === 'all') || 
+                              (currentFilter === 'boarded' && p.boarded) ||
+                              (currentFilter === 'pending' && !p.boarded);
+        const matchesSearch = !searchQuery || 
+                              p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              p.ticket.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                              String(p.seat) === searchQuery;
+        return matchesFilter && matchesSearch;
+      });
+
+      // Update counters
+      const boardedCount = passengers.filter(p => p.boarded).length;
+      const pendingCount = passengers.length - boardedCount;
+      const ratioEl = document.getElementById('boarded-stat-ratio');
+      if (ratioEl) ratioEl.innerText = `${boardedCount} из ${passengers.length}`;
+
+      const btnAll = document.getElementById('flt-all');
+      const btnBoarded = document.getElementById('flt-boarded');
+      const btnPending = document.getElementById('flt-pending');
+      if (btnAll) btnAll.innerText = `Все (${passengers.length})`;
+      if (btnBoarded) btnBoarded.innerText = `Посажены (${boardedCount})`;
+      if (btnPending) btnPending.innerText = `Ожидают (${pendingCount})`;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 36px 20px; color: var(--text-muted);">
+              По вашему запросу пассажиров не найдено.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(p => {
+        const statusBadge = p.boarded
+          ? `<span class="status-badge badge-success">● Посажен</span>`
+          : `<span class="status-badge badge-warning">● Ожидает</span>`;
+
+        const actionBtn = p.boarded
+          ? `<button type="button" class="btn btn-secondary" style="padding: 5px 12px; font-size: 12px;" onclick="toggleBoarding(${p.id})">Снять отметку</button>`
+          : `<button type="button" class="btn btn-accent" style="padding: 5px 14px; font-size: 12px;" onclick="toggleBoarding(${p.id})">Посадить &rarr;</button>`;
+
+        return `
+          <tr>
+            <td>
+              <div class="seat-badge">${p.seat}</div>
+            </td>
+            <td>
+              <strong style="font-size: 13.5px; color: var(--text-primary);">${escapeHtml(p.name)}</strong>
+              <div style="font-size: 12px; color: var(--text-dim); margin-top: 2px;">${escapeHtml(p.phone)}</div>
+            </td>
+            <td>
+              <code style="font-family: monospace; font-size: 12.5px; background: var(--surface-subtle); padding: 3px 7px; border-radius: 4px; border: 1px solid var(--border-hairline);">${p.ticket}</code>
+            </td>
+            <td>
+              <span style="font-size: 12.5px; color: var(--text-muted);">${escapeHtml(p.luggage)}</span>
+            </td>
+            <td>${statusBadge}</td>
+            <td style="text-align: right;">${actionBtn}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    window.toggleBoarding = function(id) {
+      const p = passengers.find(item => item.id === id);
+      if (!p) return;
+      p.boarded = !p.boarded;
+      renderPassengers();
+      if (p.boarded) {
+        showToast('Пассажир посажен', `${p.name} (место ${p.seat}) отмечен в посадочной ведомости.`);
+      } else {
+        showToast('Отметка снята', `${p.name} переведен в статус ожидания посадки.`);
+      }
+    };
+
+    window.setManifestFilter = function(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`flt-${filter}`);
+      if (activeBtn) activeBtn.classList.add('active');
+      renderPassengers();
+    };
+
+    window.handleManifestSearch = function(val) {
+      searchQuery = (val || '').trim();
+      renderPassengers();
+    };
+
+    window.toggleShiftStatus = function() {
+      isShiftActive = !isShiftActive;
+      const statusText = document.getElementById('shift-status-text');
+      const toggleBtn = document.getElementById('btn-toggle-shift');
+      if (isShiftActive) {
+        if (statusText) statusText.innerText = 'Смена активна (На линии)';
+        if (toggleBtn) toggleBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg> Завершить смену`;
+        showToast('Смена открыта', 'Статус водителя: На линии. Рейс готов к посадке.');
+      } else {
+        if (statusText) statusText.innerText = 'Вне смены';
+        if (toggleBtn) toggleBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Начать смену`;
+        showToast('Смена завершена', 'Вы переведены в статус «Вне смены». Данные переданы диспетчеру.');
+      }
+    };
+
+    window.openScannerModal = function() {
+      const m = document.getElementById('modal-qr-scanner');
+      if (m) m.style.display = 'flex';
+      const input = document.getElementById('manual-ticket-input');
+      if (input) {
+        input.value = '';
+        setTimeout(() => input.focus(), 100);
+      }
+    };
+
+    window.closeScannerModal = function() {
+      const m = document.getElementById('modal-qr-scanner');
+      if (m) m.style.display = 'none';
+    };
+
+    window.handleManualCheckin = function() {
+      const input = document.getElementById('manual-ticket-input');
+      const val = (input?.value || '').trim().toUpperCase();
+      if (!val) return;
+
+      const p = passengers.find(item => item.ticket === val || String(item.seat) === val);
+      if (p) {
+        p.boarded = true;
+        renderPassengers();
+        closeScannerModal();
+        showToast('QR-билет верифицирован', `${p.name} (место ${p.seat}) успешно посажен на рейс.`);
+      } else {
+        showToast('Билет не найден', `Билет ${val} не найден в посадочной ведомости текущего рейса.`);
+      }
+    };
+
+    window.logoutDriver = function() {
+      try {
+        localStorage.removeItem('busliner_driver_user');
+      } catch (e) {}
+      window.location.href = 'partner-auth.html#driver';
+    };
+
+    // LOAD PROFILE FROM LOCALSTORAGE & SQLITE
+    function initDriverTerminal() {
+      // Set today date
+      const dateEl = document.getElementById('drv-date-now');
+      if (dateEl) {
+        const d = new Date();
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        dateEl.innerText = d.toLocaleDateString('ru-RU', options);
+      }
+
+      // Read driver user from session
+      let driverName = 'Александр';
+      let driverPhone = '+375 (29) •••-••-••';
+      try {
+        const stored = localStorage.getItem('busliner_driver_user');
+        if (stored) {
+          const user = JSON.parse(stored);
+          if (user.name) driverName = user.name;
+          if (user.username) driverPhone = user.username;
+          else if (user.phone) driverPhone = user.phone;
+        }
+      } catch (e) {}
+
+      const nameEl = document.getElementById('drv-name-display');
+      const phoneEl = document.getElementById('drv-contact-display');
+      const avatarEl = document.getElementById('drv-avatar-letter');
+      if (nameEl) nameEl.innerText = driverName;
+      if (phoneEl) phoneEl.innerText = driverPhone;
+      if (avatarEl) avatarEl.innerText = driverName.charAt(0).toUpperCase();
+
+      // Check real DB records from daemon
+      fetch('http://localhost:8080/api/admin/users')
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.success && data.data) {
+            const carriers = data.data.carriers || [];
+            if (carriers.length > 0) {
+              const latest = carriers[carriers.length - 1];
+              if (latest.company_name && latest.company_name !== 'Не указан') {
+                const cNameEl = document.getElementById('strip-carrier-name');
+                if (cNameEl) cNameEl.innerText = latest.company_name;
+              }
+              if (latest.vehicle_model) {
+                const vNameEl = document.getElementById('strip-vehicle-name');
+                if (vNameEl) vNameEl.innerText = latest.vehicle_model;
+              }
+              if (latest.vehicle_plate) {
+                const vSubEl = document.getElementById('strip-vehicle-sub');
+                if (vSubEl) vSubEl.innerHTML = `<strong style="font-family: monospace;">${escapeHtml(latest.vehicle_plate)}</strong> &bull; 19 мест`;
+              }
+              if (latest.route) {
+                const rEl = document.getElementById('strip-route-name');
+                const tEl = document.getElementById('trip-header-route');
+                if (rEl) rEl.innerText = latest.route;
+                if (tEl) tEl.innerText = latest.route;
+              }
+            }
+
+            const drivers = data.data.drivers || [];
+            if (drivers.length > 0) {
+              const matched = drivers.find(d => d.username === driverPhone || d.full_name === driverName);
+              if (matched && matched.carrier_name) {
+                const cNameEl = document.getElementById('strip-carrier-name');
+                if (cNameEl) cNameEl.innerText = matched.carrier_name;
+              }
+            }
+          }
+        })
+        .catch(() => {});
+
+      renderPassengers();
+    }
+
+    document.addEventListener('DOMContentLoaded', initDriverTerminal);
+  </script>
+</body>
+</html>
