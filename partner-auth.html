@@ -1397,14 +1397,49 @@
         <!-- LIVE DEMO TRIP MANIFEST PREVIEW -->
         <div style="margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border-hairline);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.05em;">Пример терминала водителя</span>
+            <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.05em;">Терминал водителя рейса</span>
             <span class="badge-verified-status" style="background: var(--status-available-bg); color: var(--status-available);">Рейс активен</span>
           </div>
 
+          <!-- CARRIER ORGANIZATION CONNECTION BADGE -->
+          <div id="driver-carrier-info-card" style="margin-bottom: 14px; padding: 14px 16px; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(30, 58, 138, 0.08); display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--accent-institutional); flex-shrink: 0;">
+                  🏢
+                </div>
+                <div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); font-weight: 700;">Прикрепленная организация</span>
+                    <span class="badge-verified-status" style="background: var(--status-available-bg); color: var(--status-available); font-size: 10.5px; padding: 2px 7px;">Подключен ✓</span>
+                  </div>
+                  <div id="driver-carrier-name" style="font-size: 15px; font-weight: 700; color: var(--text-primary); margin-top: 2px;">
+                    ООО «ТрансЛидер Экспресс»
+                  </div>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <span class="mono" id="driver-carrier-code-badge" style="font-size: 11px; background: var(--surface-subtle); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--border-hairline); color: var(--accent-institutional); font-weight: 600;">FLEET-771</span>
+              </div>
+            </div>
+            
+            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-hairline); display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11.5px; color: var(--text-muted);">
+              <div><strong style="color: var(--text-primary);">УНП:</strong> <span id="driver-carrier-unp" class="mono">193821049</span></div>
+              <div><strong style="color: var(--text-primary);">Форма:</strong> <span id="driver-carrier-type">Юрлицо (ООО)</span></div>
+              <div style="grid-column: span 2;"><strong style="color: var(--text-primary);">Лицензия:</strong> Минтранс РБ № 02190/77412 &bull; Прямой расчетный счет T+1</div>
+            </div>
+          </div>
+
           <div class="driver-trip-card">
-            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
               <strong style="font-size: 16px; color: var(--text-primary);">17:00 Гомель &rarr; Минск</strong>
               <span class="mono" style="font-size: 12px; color: var(--accent-institutional); font-weight: 600;">VW Crafter • 5192 AB-3</span>
+            </div>
+            <div style="font-size: 11.5px; color: var(--text-dim); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <span>Организация перевозчика:</span>
+              <strong style="color: var(--accent-institutional);" id="manifest-carrier-name">ООО «ТрансЛидер Экспресс»</strong>
+              <span>&bull;</span>
+              <span>Рейс BL-1700</span>
             </div>
             <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
               Посадка: Автовокзал, Платформа 3 &bull; Занято: 13 из 16 мест
@@ -1886,7 +1921,7 @@
       const isPhone = val.startsWith('+') || /^\d/.test(val);
 
       if (currentTelegramMode === 'driver') {
-        showAuthToast('Водитель авторизован', `Водитель ${name} подключен. Открываем посадочную ведомость...`);
+        showAuthToast('Водитель авторизован', `Водитель ${name} прикреплен к ООО «ТрансЛидер Экспресс» (УНП 193821049).`);
         setPartnerRole('driver');
       } else if (currentTelegramMode === 'login') {
         showAuthToast('Telegram авторизован', `Криптографическая сессия ${val} верифицирована. Вход в систему...`);
@@ -1952,12 +1987,43 @@
 
     window.handleDriverCodeLogin = function(e) {
       e.preventDefault();
-      const phone = document.getElementById('driver-phone').value;
-      const code = document.getElementById('driver-invite-code').value || 'FLEET-771';
-      showAuthToast('Вход водителя подтвержден', `Водитель ${phone} подключен к рейсу ${code}. Загрузка ведомости...`);
+      const phone = document.getElementById('driver-phone').value || '+375 (29) 714-22-10';
+      const rawCode = (document.getElementById('driver-invite-code').value || 'FLEET-771').trim().toUpperCase();
+
+      let orgName = 'ООО «ТрансЛидер Экспресс»';
+      let orgType = 'Юрлицо (ООО)';
+      let orgUnp = '193821049';
+
+      if (rawCode.includes('ИП') || rawCode.startsWith('IP')) {
+        orgName = 'ИП Воронов А. В.';
+        orgType = 'Индивидуальный предприниматель (ИП)';
+        orgUnp = '490182934';
+      } else if (rawCode.includes('ОАО') || rawCode.startsWith('OAO')) {
+        orgName = 'ОАО «Автобусный парк №3»';
+        orgType = 'Акционерное общество (ОАО)';
+        orgUnp = '100234567';
+      } else if (rawCode.includes('ЧУП') || rawCode.startsWith('CHUP')) {
+        orgName = 'ЧТУП «БелЭкспрессТранс»';
+        orgType = 'Унитарное предприятие (ЧТУП)';
+        orgUnp = '290884112';
+      }
+
+      const nameEl = document.getElementById('driver-carrier-name');
+      const typeEl = document.getElementById('driver-carrier-type');
+      const unpEl = document.getElementById('driver-carrier-unp');
+      const codeBadge = document.getElementById('driver-carrier-code-badge');
+      const manifestName = document.getElementById('manifest-carrier-name');
+
+      if (nameEl) nameEl.innerText = orgName;
+      if (typeEl) typeEl.innerText = orgType;
+      if (unpEl) unpEl.innerText = orgUnp;
+      if (codeBadge) codeBadge.innerText = rawCode;
+      if (manifestName) manifestName.innerText = orgName;
+
+      showAuthToast('Организация подключена', `Водитель привязан к «${orgName}» (${orgType}). Загрузка ведомости...`);
       setTimeout(() => {
-        showAuthToast('Терминал активен', 'Посадка открыта: 13 пассажиров подтверждены.');
-      }, 850);
+        showAuthToast('Терминал активен', `Посадочная ведомость 17:00 Гомель → Минск открыта. Перевозчик: ${orgName}`);
+      }, 750);
     };
 
     window.togglePassengerBoarded = function(btn) {
