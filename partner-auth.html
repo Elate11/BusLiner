@@ -917,6 +917,14 @@
       </svg>
       <span class="brand-title">BUS<span class="brand-title-thin">LINER</span> <span class="badge-b2b font-onlyfans">partners</span></span>
     </a>
+
+    <a href="busliner-partners.html" class="btn-nav-back" onclick="goBackToMain(event)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Назад</span>
+    </a>
   </header>
 
   <!-- MAIN BODY -->
@@ -1122,7 +1130,7 @@
             </div>
 
             <div class="wizard-nav-buttons">
-              <div></div>
+              <a href="busliner-partners.html" class="btn btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;" onclick="goBackToMain(event)">&larr; Назад</a>
               <button type="button" class="btn btn-accent" style="padding: 13px 28px;" onclick="nextStep(2)">
                 Далее: Реквизиты юрлица &rarr;
               </button>
@@ -2235,11 +2243,7 @@
 
     window.goBackToMain = function(e) {
       if (e) e.preventDefault();
-      if (document.referrer && (document.referrer.includes('busliner-partners') || document.referrer.includes('BusLiner'))) {
-        window.history.back();
-      } else {
-        window.location.href = 'busliner-partners.html';
-      }
+      window.location.href = 'busliner-partners.html';
     };
 
     // BROWSER BACK / FORWARD POPSTATE AND HASHCHANGE HANDLERS
