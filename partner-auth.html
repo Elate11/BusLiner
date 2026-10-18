@@ -1988,10 +1988,10 @@
         showAuthToast('Водитель авторизован', `Водитель ${name} авторизован. Статус: Профиль подтвержден.`);
         setPartnerRole('driver');
       } else if (currentTelegramMode === 'login') {
-        showAuthToast('Telegram авторизован', `Криптографическая сессия ${val} верифицирована. Вход в систему...`);
+        showAuthToast('Telegram авторизован', `Криптографическая сессия ${val} верифицирована. Вход в кабинет...`);
         setTimeout(() => {
-          window.location.href = 'busliner-partners.html#slide-schedule';
-        }, 750);
+          window.location.href = 'carrier-dashboard.html';
+        }, 600);
       } else {
         if (isPhone) {
           const pInput = document.getElementById('ob-phone');
@@ -2259,10 +2259,10 @@
     function handleEmailLogin(e) {
       e.preventDefault();
       const email = document.getElementById('login-email').value;
-      showAuthToast('Вход выполнен', `Авторизация успешна для ${email}. Загрузка консоли...`);
+      showAuthToast('Вход выполнен', `Авторизация успешна для ${email}. Загрузка кабинета...`);
       setTimeout(() => {
-        window.location.href = 'busliner-partners.html#slide-schedule';
-      }, 700);
+        window.location.href = 'carrier-dashboard.html';
+      }, 600);
     }
 
     function handleWizardSubmit(e) {
@@ -2320,7 +2320,7 @@
     function enterCarrierDashboard() {
       showAuthToast('Кабинет перевозчика', 'Запуск рабочей консоли BusLiner Carrier Console...');
       setTimeout(() => {
-        window.location.href = 'busliner-partners.html#slide-schedule';
+        window.location.href = 'carrier-dashboard.html';
       }, 500);
     }
     const enterDemoDashboard = enterCarrierDashboard;
