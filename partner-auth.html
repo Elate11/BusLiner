@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Вход и регистрация автопарка — BusLiner Partners</title>
+  <title>Вход и регистрация перевозчика (ИП / Юрлицо) — BusLiner Partners</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -910,8 +910,8 @@
               </svg>
             </div>
             <div>
-              <span class="role-info-title">Владелец автопарка</span>
-              <span class="role-info-desc">Машины, маршруты, T+1</span>
+              <span class="role-info-title">Перевозчик (ИП / Юрлицо)</span>
+              <span class="role-info-desc">ИП, ООО, ОАО, ЧУП • T+1 выплаты</span>
             </div>
           </button>
 
@@ -936,11 +936,11 @@
         <div class="view-tabs-pill">
           <button type="button" class="view-tab-btn active" id="tab-login" onclick="switchView('login')">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
-            Вход в кабинет автопарка
+            Вход для перевозчиков
           </button>
           <button type="button" class="view-tab-btn" id="tab-onboard" onclick="switchView('onboard')">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-            Регистрация автопарка
+            Регистрация перевозчика (ИП / Юрлицо)
           </button>
         </div>
       </div>
@@ -998,13 +998,13 @@
           </div>
 
           <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
-            Войти в кабинет автопарка &rarr;
+            Войти в кабинет перевозчика &rarr;
           </button>
         </form>
 
         <div style="margin-top: 24px; padding: 14px; background: var(--surface-subtle); border-radius: var(--radius-ctrl); border: 1px dashed var(--border-hairline); text-align: center; font-size: 13.5px; color: var(--text-muted);">
-          Еще не подключили автопарк? 
-          <a href="#onboard" onclick="switchView('onboard'); return false;" style="color: var(--accent-institutional); font-weight: 700; text-decoration: none; margin-left: 4px;">Зарегистрировать компанию &rarr;</a>
+          Еще не зарегистрированы как перевозчик? 
+          <a href="#onboard" onclick="switchView('onboard'); return false;" style="color: var(--accent-institutional); font-weight: 700; text-decoration: none; margin-left: 4px;">Зарегистрироваться (ИП / Организация) &rarr;</a>
         </div>
       </div>
 
@@ -1036,12 +1036,12 @@
         <form id="onboarding-form" onsubmit="handleWizardSubmit(event)">
 
           <!-- -------------------------------------------------------------
-               ШАГ 1: ПРОФИЛЬ ВЛАДЕЛЬЦА АВТОПАРКА
+               ШАГ 1: ПРОФИЛЬ ПЕРЕВОЗЧИКА (ИП / ЮРЛИЦО)
                ------------------------------------------------------------- -->
           <div class="wizard-step-pane active" id="step-pane-1">
-            <h2 class="panel-heading">Шаг 1: <em>Владелец</em> или Руководитель</h2>
+            <h2 class="panel-heading">Шаг 1: <em>ИП</em> или Руководитель (ООО / ОАО)</h2>
             <p class="panel-subheading">
-              Создайте профиль владельца автопарка. Регистрация через Telegram мгновенно привяжет бота к управлению рейсами.
+              Создайте профиль ИП или руководителя организации (ООО/ОАО/ЧУП). Регистрация через Telegram мгновенно привяжет бота к управлению рейсами.
             </p>
 
             <!-- 1-CLICK TELEGRAM REGISTRATION -->
@@ -1070,8 +1070,8 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="ob-fullname">ФИО представителя *</label>
-                <input type="text" id="ob-fullname" class="form-input" placeholder="ФИО владельца / руководителя автопарка" required>
-                <span class="form-hint">Владелец / Руководитель автопарка</span>
+                <input type="text" id="ob-fullname" class="form-input" placeholder="ФИО индивидуального предпринимателя или руководителя" required>
+                <span class="form-hint">ИП / Руководитель (ООО, ОАО, ЧУП)</span>
               </div>
               <div class="form-group">
                 <label class="form-label" for="ob-phone">Мобильный телефон (OTP) *</label>
@@ -1111,8 +1111,8 @@
             </div>
 
             <div style="margin-top: 20px; padding: 12px; background: var(--surface-subtle); border-radius: var(--radius-ctrl); border: 1px dashed var(--border-hairline); text-align: center; font-size: 13px; color: var(--text-muted);">
-              Уже подключили автопарк ранее? 
-              <a href="#login" onclick="switchView('login'); return false;" style="color: var(--accent-institutional); font-weight: 700; text-decoration: none; margin-left: 4px;">Войти в кабинет автопарка &rarr;</a>
+              Уже зарегистрированы как перевозчик? 
+              <a href="#login" onclick="switchView('login'); return false;" style="color: var(--accent-institutional); font-weight: 700; text-decoration: none; margin-left: 4px;">Войти в кабинет перевозчика &rarr;</a>
             </div>
           </div>
 
@@ -1304,7 +1304,7 @@
             <div class="wizard-nav-buttons">
               <button type="button" class="btn btn-secondary" onclick="goToStep(3)">&larr; Назад</button>
               <button type="submit" class="btn btn-accent" style="padding: 13px 32px;">
-                Завершить регистрацию и запустить автопарк &rarr;
+                Завершить регистрацию перевозчика &rarr;
               </button>
             </div>
           </div>
@@ -1319,7 +1319,7 @@
                   <path d="M20 6L9 17l-5-5"/>
                 </svg>
               </div>
-              <h2 class="panel-heading">Автопарк успешно <em>зарегистрирован!</em></h2>
+              <h2 class="panel-heading">Перевозчик успешно <em>зарегистрирован!</em></h2>
               <p class="panel-subheading" style="max-width: 520px; margin: 0 auto 26px;">
                 Заявка внесена в реестр BusLiner <span class="font-onlyfans" style="color: var(--accent-institutional);">partners</span> (статус: <span style="color: var(--status-available); font-weight: 700;">pending_verification</span>). Ваш персональный менеджер верификации активирует клиринг T+1 в течение 15 минут.
               </p>
@@ -1345,7 +1345,7 @@
 
               <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
                 <button type="button" class="btn btn-accent" style="padding: 13px 28px;" onclick="enterDemoDashboard()">
-                  Перейти в кабинет автопарка (Live-демо) &rarr;
+                  Перейти в кабинет перевозчика (Live-демо) &rarr;
                 </button>
                 <a href="busliner-partners.html" class="btn btn-secondary" style="padding: 13px 24px;">
                   Вернуться на презентацию
@@ -1384,9 +1384,9 @@
             <input type="tel" id="driver-phone" class="form-input" placeholder="+375 (29) 000-00-00" required>
           </div>
           <div class="form-group">
-            <label class="form-label" for="driver-invite-code">Код автопарка или номер рейса</label>
+            <label class="form-label" for="driver-invite-code">Код перевозчика или номер рейса</label>
             <input type="text" id="driver-invite-code" class="form-input" placeholder="Например: FLEET-771 или BL-1700" style="text-transform: uppercase;">
-            <span class="form-hint">Код выдает владелец автопарка при добавлении вас на рейс.</span>
+            <span class="form-hint">Код выдает перевозчик (ИП или организация) при добавлении вас на рейс.</span>
           </div>
 
           <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
@@ -1468,7 +1468,7 @@
       <!-- TAB 1 CONTENT: BOT DEEP LINK & LIVE CHALLENGE -->
       <div id="tg-tab-pane-bot">
         <p id="tg-bot-desc" style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
-          Откройте бота в Telegram для подтверждения входа в кабинет автопарка:
+          Откройте бота в Telegram для подтверждения входа в кабинет перевозчика:
         </p>
 
         <!-- CTA DEEP LINK BUTTON -->
@@ -1493,7 +1493,7 @@
           </div>
 
           <div id="tg-name-row" class="form-group" style="margin-bottom: 14px;">
-            <label class="form-label" for="tg-input-name">ФИО представителя автопарка</label>
+            <label class="form-label" for="tg-input-name">ФИО представителя (ИП / Руководитель)</label>
             <input type="text" id="tg-input-name" class="form-input" placeholder="Фамилия Имя Отчество">
           </div>
 
@@ -1779,11 +1779,11 @@
 
       if (mode === 'login') {
         if (title) title.innerText = 'Вход через Telegram';
-        if (desc) desc.innerText = 'Откройте бота в Telegram для подтверждения входа в кабинет автопарка:';
+        if (desc) desc.innerText = 'Откройте бота в Telegram для подтверждения входа в кабинет перевозчика:';
         if (nameRow) nameRow.style.display = 'none';
       } else {
         if (title) title.innerText = 'Регистрация через Telegram';
-        if (desc) desc.innerText = 'Откройте бота в Telegram для привязки автопарка к системе:';
+        if (desc) desc.innerText = 'Откройте бота в Telegram для привязки компании или ИП к системе:';
         if (nameRow) nameRow.style.display = 'block';
       }
 
@@ -1844,8 +1844,8 @@
     window.confirmBotSession = function() {
       // 1-Click fast confirmation simulation when carrier approves via Telegram bot
       completeTelegramAuth({
-        username: '@busliner_fleet',
-        name: 'Руководитель автопарка',
+        username: '@busliner_carrier',
+        name: 'Представитель (ИП / Юрлицо)',
         auth_method: 'telegram_bot_challenge'
       });
     };
@@ -1913,7 +1913,7 @@
           localStorage.setItem('busliner_telegram_user', JSON.stringify({ identifier: val, name: name }));
         } catch(e) {}
 
-        showAuthToast('Telegram привязан', `Аккаунт успешно синхронизирован с автопарком «${name}».`);
+        showAuthToast('Telegram привязан', `Аккаунт успешно синхронизирован с профилем перевозчика.`);
         nextStep(2);
       }
     }
@@ -2060,7 +2060,7 @@
     }
 
     function enterDemoDashboard() {
-      showAuthToast('Кабинет автопарка', 'Запуск рабочей консоли BusLiner Fleet Console...');
+      showAuthToast('Кабинет перевозчика', 'Запуск рабочей консоли BusLiner Carrier Console...');
       setTimeout(() => {
         window.location.href = 'busliner-partners.html#slide-schedule';
       }, 500);
