@@ -1825,7 +1825,7 @@
       const isPhone = val.startsWith('+') || /^\d/.test(val);
 
       if (currentTelegramMode === 'driver') {
-        showAuthToast('Водитель авторизован', `Водитель ${name} прикреплен к ООО «ТрансЛидер Экспресс» (УНП 193821049).`);
+        showAuthToast('Водитель авторизован', `Водитель ${name} авторизован. Статус: Новый профиль (ожидает привязки к автопарку перевозчика).`);
         setPartnerRole('driver');
       } else if (currentTelegramMode === 'login') {
         showAuthToast('Telegram авторизован', `Криптографическая сессия ${val} верифицирована. Вход в систему...`);
@@ -1893,7 +1893,7 @@
       if (e) e.preventDefault();
       const phoneInput = document.getElementById('driver-phone');
       const phone = phoneInput ? phoneInput.value : '+375 (29) 714-22-10';
-      showAuthToast('Вход выполнен', `Водитель ${phone} авторизован. Организация: ООО «ТрансЛидер Экспресс» (УНП 193821049).`);
+      showAuthToast('Вход выполнен', `Водитель ${phone} авторизован. Статус: Новый профиль (ожидает назначения в штат перевозчика).`);
     };
 
     window.handleDriverCodeLogin = window.handleDriverPhoneLogin;
