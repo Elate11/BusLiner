@@ -563,6 +563,165 @@
       .search-box { width: 100%; }
       .trip-card-head { flex-direction: column; align-items: flex-start; }
     }
+
+    /* DRIVER TABS NAVIGATION BAR */
+    .dashboard-tabs-bar {
+      display: flex;
+      gap: 6px;
+      padding: 6px;
+      background: rgba(30, 58, 138, 0.04);
+      border-radius: 14px;
+      border: 1px solid var(--border-hairline);
+      overflow-x: auto;
+      scrollbar-width: none;
+      margin-bottom: 24px;
+    }
+    .dashboard-tabs-bar::-webkit-scrollbar { display: none; }
+    .dash-tab-btn {
+      padding: 11px 18px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 10px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+    }
+    .dash-tab-btn:hover:not(.active) {
+      color: var(--text-primary);
+      background: rgba(30, 58, 138, 0.04);
+    }
+    .dash-tab-btn.active {
+      background: #FFFFFF;
+      color: var(--accent-institutional);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .driver-tab-pane {
+      display: none;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .driver-tab-pane.active {
+      display: flex;
+    }
+
+    /* SCHEDULE TIMELINE & CARDS */
+    .schedule-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-card);
+      padding: 24px 28px;
+    }
+    .schedule-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .schedule-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 18px 20px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-hairline);
+      border-radius: 12px;
+      transition: all 0.2s ease;
+    }
+    .schedule-item.active-run {
+      background: #FFFFFF;
+      border-color: var(--accent-border);
+      box-shadow: 0 4px 14px -4px rgba(30, 58, 138, 0.08);
+    }
+    .schedule-time-box {
+      min-width: 72px;
+      text-align: center;
+      padding: 8px 12px;
+      background: var(--accent-institutional);
+      color: #FFFFFF;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+    .schedule-time-box.dimmed {
+      background: #64748B;
+    }
+    .schedule-details {
+      flex: 1;
+    }
+    .schedule-route-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .schedule-waypoints {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .waypoint-pill {
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      padding: 3px 9px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* CARGO SECTION */
+    .cargo-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-card);
+      padding: 24px 28px;
+    }
+
+    /* INSPECTION CHECKLIST */
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      margin: 16px 0 24px;
+    }
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-hairline);
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13.5px;
+      color: var(--text-primary);
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .checklist-item:hover {
+      background: #FFFFFF;
+      border-color: var(--accent-institutional);
+    }
+    .checklist-item input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--accent-institutional);
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -581,7 +740,7 @@
     </div>
 
     <div class="nav-actions">
-      <div class="profile-pill">
+      <div class="profile-pill" style="cursor: pointer;" onclick="switchDriverTab('profile')" title="Открыть профиль водителя">
         <div class="profile-avatar" id="drv-avatar-letter">В</div>
         <div>
           <div class="profile-name" id="drv-name-display">Водитель рейса</div>
@@ -626,59 +785,257 @@
       </div>
     </div>
 
-    <!-- STRIP DETAILS -->
-    <div class="info-strip-grid">
-      <div class="strip-card">
-        <div class="strip-label">Автопарк перевозчика</div>
-        <div class="strip-value" id="strip-carrier-name">ИП Перевозчик Александр</div>
-        <div class="strip-sub" id="strip-carrier-sub">Парк подтвержден &bull; Лицензия Минтранс</div>
+    <!-- DRIVER DASHBOARD TABS NAVIGATION BAR -->
+    <div class="dashboard-tabs-bar">
+      <button type="button" class="dash-tab-btn active" id="tab-btn-manifest" onclick="switchDriverTab('manifest')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+        Рейс и посадка
+      </button>
+      <button type="button" class="dash-tab-btn" id="tab-btn-schedule" onclick="switchDriverTab('schedule')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        График смен
+      </button>
+      <button type="button" class="dash-tab-btn" id="tab-btn-cargo" onclick="switchDriverTab('cargo')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Smart Cargo
+      </button>
+      <button type="button" class="dash-tab-btn" id="tab-btn-vehicle" onclick="switchDriverTab('vehicle')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16l2-8h12l2 8v4h-2a2 2 0 0 1-4 0H10a2 2 0 0 1-4 0H4v-4z"/><circle cx="8" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/></svg>
+        Борт и осмотр
+      </button>
+      <button type="button" class="dash-tab-btn" id="tab-btn-profile" onclick="switchDriverTab('profile')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Профиль и автопарк
+      </button>
+    </div>
+
+    <!-- PANE 1: MANIFEST -->
+    <div class="driver-tab-pane active" id="pane-manifest">
+      <!-- STRIP DETAILS -->
+      <div class="info-strip-grid">
+        <div class="strip-card">
+          <div class="strip-label">Автопарк перевозчика</div>
+          <div class="strip-value" id="strip-carrier-name">ИП Перевозчик Александр</div>
+          <div class="strip-sub" id="strip-carrier-sub">Парк подтвержден &bull; Лицензия Минтранс</div>
+        </div>
+        <div class="strip-card">
+          <div class="strip-label">Закрепленный борт</div>
+          <div class="strip-value" id="strip-vehicle-name">Mercedes-Benz Sprinter</div>
+          <div class="strip-sub" id="strip-vehicle-sub"><strong style="font-family: monospace;">7-AI 0000</strong> &bull; 19 мест</div>
+        </div>
+        <div class="strip-card">
+          <div class="strip-label">Базовый маршрут</div>
+          <div class="strip-value" id="strip-route-name">Минск — Вильнюс</div>
+          <div class="strip-sub">Центральный АВ &rarr; Автовокзал</div>
+        </div>
       </div>
-      <div class="strip-card">
-        <div class="strip-label">Закрепленный борт</div>
-        <div class="strip-value" id="strip-vehicle-name">Mercedes-Benz Sprinter</div>
-        <div class="strip-sub" id="strip-vehicle-sub"><strong style="font-family: monospace;">7-AI 0000</strong> &bull; 19 мест</div>
+
+      <!-- ACTIVE TRIP CARD -->
+      <div class="trip-card">
+        <div class="trip-card-head">
+          <div>
+            <div style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">
+              Текущий рейс в графике
+            </div>
+            <div class="trip-route-display">
+              <span class="trip-time-badge">07:30</span>
+              <span id="trip-header-route">Минск (Центральный АВ) &rarr; Вильнюс</span>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="text-align: right;">
+              <div style="font-size: 13px; font-weight: 700;">Посадка: <span id="boarded-stat-ratio" style="color: var(--accent-institutional);">9 из 14</span></div>
+              <div style="font-size: 11.5px; color: var(--text-muted);">Свободно: 5 мест</div>
+            </div>
+            <span class="status-badge badge-success">Посадка открыта</span>
+          </div>
+        </div>
+
+        <!-- PASSENGER MANIFEST TABLE -->
+        <div class="manifest-card">
+          <div class="manifest-toolbar">
+            <div class="search-box">
+              <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="manifest-search-input" class="search-input" placeholder="Поиск пассажира или места..." oninput="handleManifestSearch(this.value)">
+            </div>
+
+            <div class="filter-pills">
+              <button type="button" class="filter-pill active" id="flt-all" onclick="setManifestFilter('all')">Все (14)</button>
+              <button type="button" class="filter-pill" id="flt-boarded" onclick="setManifestFilter('boarded')">Посажены (9)</button>
+              <button type="button" class="filter-pill" id="flt-pending" onclick="setManifestFilter('pending')">Ожидают (5)</button>
+            </div>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 70px;">Место</th>
+                  <th>Пассажир</th>
+                  <th>Билет</th>
+                  <th>Багаж / Smart Cargo</th>
+                  <th>Статус</th>
+                  <th style="text-align: right;">Отметка посадки</th>
+                </tr>
+              </thead>
+              <tbody id="passenger-table-body">
+                <!-- Dynamically populated via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <div class="strip-card">
-        <div class="strip-label">Базовый маршрут</div>
-        <div class="strip-value" id="strip-route-name">Минск — Вильнюс</div>
-        <div class="strip-sub">Центральный АВ &rarr; Автовокзал</div>
+
+      <!-- TELEGRAM FLEET BOT DISPATCHER CARD -->
+      <div class="tg-banner">
+        <div>
+          <h4>Связь с диспетчером через Telegram Бот @BusLinerFleetBot</h4>
+          <p>
+            Отправляйте отметки о прохождении контрольных точек, транслируйте геопозицию борта в реальном времени и принимайте оперативные корректировки рейсов от диспетчерской службы.
+          </p>
+        </div>
+        <a href="https://t.me/BusLinerFleetBot" target="_blank" class="btn" style="background: #2AABEE; color: #FFFFFF; font-weight: 700; white-space: nowrap;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+          Открыть @BusLinerFleetBot
+        </a>
       </div>
     </div>
 
-    <!-- ACTIVE TRIP CARD -->
-    <div class="trip-card">
-      <div class="trip-card-head">
-        <div>
-          <div style="font-size: 12px; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">
-            Текущий рейс в графике
+    <!-- PANE 2: SCHEDULE -->
+    <div class="driver-tab-pane" id="pane-schedule">
+      <div class="schedule-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+          <div>
+            <h3 style="font-family: var(--font-display); font-size: 20px; margin-bottom: 4px;">Маршрутный лист &bull; <em>Контрольные точки</em></h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Отмечайте контрольные пункты для автоматического информирования диспетчера и пассажиров</p>
           </div>
-          <div class="trip-route-display">
-            <span class="trip-time-badge">07:30</span>
-            <span id="trip-header-route">Минск (Центральный АВ) &rarr; Вильнюс</span>
-          </div>
+          <span class="status-badge badge-info" id="active-schedule-badge">Рейс выполняется</span>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 14px;">
-          <div style="text-align: right;">
-            <div style="font-size: 13px; font-weight: 700;">Посадка: <span id="boarded-stat-ratio" style="color: var(--accent-institutional);">9 из 14</span></div>
-            <div style="font-size: 11.5px; color: var(--text-muted);">Свободно: 5 мест</div>
+        <div class="schedule-timeline" id="checkpoints-container">
+          <div class="schedule-item active-run">
+            <div class="schedule-time-box">07:30</div>
+            <div class="schedule-details">
+              <div class="schedule-route-title">Минск, Центральный автовокзал (Платформа 3)</div>
+              <div style="font-size: 13px; color: var(--text-dim);">Точка отправления &bull; Посадка завершается за 5 минут до отправления</div>
+              <div class="schedule-waypoints">
+                <span class="waypoint-pill">Пассажиры: 14</span>
+                <span class="waypoint-pill">Smart Cargo: 4 посылки</span>
+                <span class="status-badge badge-success" id="cp-status-1">Отправление подтверждено (07:30)</span>
+              </div>
+            </div>
+            <div>
+              <button type="button" class="btn btn-secondary" style="font-size: 12px; padding: 7px 12px;" onclick="logCheckpoint(1, 'Минск Центральный АВ')">Пройдена</button>
+            </div>
           </div>
-          <span class="status-badge badge-success">Посадка открыта</span>
+
+          <div class="schedule-item">
+            <div class="schedule-time-box">09:15</div>
+            <div class="schedule-details">
+              <div class="schedule-route-title">Ошмяны, Автостанция</div>
+              <div style="font-size: 13px; color: var(--text-dim);">Промежуточная остановка &bull; Стоянка 5 минут</div>
+              <div class="schedule-waypoints">
+                <span class="waypoint-pill">Посадка: 2 пассажира</span>
+                <span class="waypoint-pill">Выгрузка Cargo: 1 место</span>
+                <span class="status-badge badge-warning" id="cp-status-2">Ожидается</span>
+              </div>
+            </div>
+            <div>
+              <button type="button" class="btn btn-secondary" style="font-size: 12px; padding: 7px 12px;" onclick="logCheckpoint(2, 'Ошмяны АС')">Отметить прибытие</button>
+            </div>
+          </div>
+
+          <div class="schedule-item">
+            <div class="schedule-time-box">10:00</div>
+            <div class="schedule-details">
+              <div class="schedule-route-title">КПП Каменный Лог / Мядининкай (Граница BY / LT)</div>
+              <div style="font-size: 13px; color: var(--text-dim);">Пограничный и таможенный контроль &bull; Нормативное время: 90 мин</div>
+              <div class="schedule-waypoints">
+                <span class="waypoint-pill">Электронная очередь: Бронь #EV-4402</span>
+                <span class="status-badge badge-warning" id="cp-status-3">В очереди</span>
+              </div>
+            </div>
+            <div>
+              <button type="button" class="btn btn-secondary" style="font-size: 12px; padding: 7px 12px;" onclick="logCheckpoint(3, 'КПП Каменный Лог')">Въезд на КПП</button>
+            </div>
+          </div>
+
+          <div class="schedule-item">
+            <div class="schedule-time-box">12:30</div>
+            <div class="schedule-details">
+              <div class="schedule-route-title">Вильнюс, Международный автовокзал (Sodų g. 22)</div>
+              <div style="font-size: 13px; color: var(--text-dim);">Конечный пункт прибытия &bull; Высадка пассажиров и выдача Smart Cargo</div>
+              <div class="schedule-waypoints">
+                <span class="waypoint-pill">Платформа прибытия #12</span>
+                <span class="status-badge" style="background: #F1F5F9; color: #64748B;" id="cp-status-4">По графику</span>
+              </div>
+            </div>
+            <div>
+              <button type="button" class="btn btn-secondary" style="font-size: 12px; padding: 7px 12px;" onclick="logCheckpoint(4, 'Вильнюс АВ')">Завершить рейс</button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- PASSENGER MANIFEST TABLE -->
-      <div class="manifest-card">
-        <div class="manifest-toolbar">
-          <div class="search-box">
-            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="manifest-search-input" class="search-input" placeholder="Поиск пассажира или места..." oninput="handleManifestSearch(this.value)">
+      <!-- UPCOMING SHIFTS CARD -->
+      <div class="schedule-card">
+        <h3 style="font-family: var(--font-display); font-size: 18px; margin-bottom: 14px;">Предстоящие рейсы в вашей смене</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px;">
+          <div style="padding: 16px; background: var(--surface-subtle); border-radius: 10px; border: 1px solid var(--border-hairline);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-weight: 700; font-size: 14px;">Сегодня &bull; 16:30</span>
+              <span class="status-badge" style="background: #E2E8F0; color: #475569;">Обратный рейс</span>
+            </div>
+            <div style="font-weight: 600; font-size: 13.5px; margin-bottom: 4px;">Вильнюс &rarr; Минск (Центральный АВ)</div>
+            <div style="font-size: 12px; color: var(--text-muted);">Борт: Mercedes-Benz Sprinter 7-AI 0000 &bull; Забронировано: 16 мест</div>
           </div>
 
-          <div class="filter-pills">
-            <button type="button" class="filter-pill active" id="flt-all" onclick="setManifestFilter('all')">Все (14)</button>
-            <button type="button" class="filter-pill" id="flt-boarded" onclick="setManifestFilter('boarded')">Посажены (9)</button>
-            <button type="button" class="filter-pill" id="flt-pending" onclick="setManifestFilter('pending')">Ожидают (5)</button>
+          <div style="padding: 16px; background: var(--surface-subtle); border-radius: 10px; border: 1px solid var(--border-hairline);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-weight: 700; font-size: 14px;">Завтра &bull; 07:30</span>
+              <span class="status-badge" style="background: #E2E8F0; color: #475569;">Регулярный</span>
+            </div>
+            <div style="font-weight: 600; font-size: 13.5px; margin-bottom: 4px;">Минск (Центральный АВ) &rarr; Вильнюс</div>
+            <div style="font-size: 12px; color: var(--text-muted);">Борт: Mercedes-Benz Sprinter 7-AI 0000 &bull; Забронировано: 12 мест</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE 3: CARGO -->
+    <div class="driver-tab-pane" id="pane-cargo">
+      <div class="cargo-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="font-family: var(--font-display); font-size: 20px; margin-bottom: 4px;">Smart Cargo &bull; <em>Коммерческие посылки и багаж</em></h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Контроль передачи малогабаритных отправлений и сопроводительных накладных</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn btn-secondary" onclick="openCargoAddModal()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Принять посылку
+            </button>
+          </div>
+        </div>
+
+        <!-- CARGO METRICS -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px;">
+          <div style="padding: 14px 16px; background: var(--surface-subtle); border-radius: 8px; border: 1px solid var(--border-hairline);">
+            <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Всего посылок</div>
+            <div style="font-size: 20px; font-weight: 800; color: var(--accent-institutional); margin-top: 4px;" id="cargo-count-total">4</div>
+          </div>
+          <div style="padding: 14px 16px; background: var(--surface-subtle); border-radius: 8px; border: 1px solid var(--border-hairline);">
+            <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">К выдаче в Вильнюсе</div>
+            <div style="font-size: 20px; font-weight: 800; color: var(--text-primary); margin-top: 4px;" id="cargo-count-dest">3</div>
+          </div>
+          <div style="padding: 14px 16px; background: var(--surface-subtle); border-radius: 8px; border: 1px solid var(--border-hairline);">
+            <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">К выдаче в Ошмянах</div>
+            <div style="font-size: 20px; font-weight: 800; color: var(--text-primary); margin-top: 4px;" id="cargo-count-transit">1</div>
+          </div>
+          <div style="padding: 14px 16px; background: var(--surface-subtle); border-radius: 8px; border: 1px solid var(--border-hairline);">
+            <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Выдано адресатам</div>
+            <div style="font-size: 20px; font-weight: 800; color: var(--status-available); margin-top: 4px;" id="cargo-count-delivered">1</div>
           </div>
         </div>
 
@@ -686,34 +1043,150 @@
           <table class="data-table">
             <thead>
               <tr>
-                <th style="width: 70px;">Место</th>
-                <th>Пассажир</th>
-                <th>Билет</th>
-                <th>Багаж / Smart Cargo</th>
+                <th style="width: 130px;">Трек-номер</th>
+                <th>Описание / Вес</th>
+                <th>Пункт выдачи</th>
+                <th>Получатель и телефон</th>
                 <th>Статус</th>
-                <th style="text-align: right;">Отметка посадки</th>
+                <th style="text-align: right;">Действие</th>
               </tr>
             </thead>
-            <tbody id="passenger-table-body">
-              <!-- Dynamically populated via JavaScript -->
+            <tbody id="cargo-table-body">
+              <!-- Dynamically populated via JS -->
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- TELEGRAM FLEET BOT DISPATCHER CARD -->
-    <div class="tg-banner">
-      <div>
-        <h4>Связь с диспетчером через Telegram Бот @BusLinerFleetBot</h4>
-        <p>
-          Отправляйте отметки о прохождении контрольных точек, транслируйте геопозицию борта в реальном времени и принимайте оперативные корректировки рейсов от диспетчерской службы.
+    <!-- PANE 4: VEHICLE -->
+    <div class="driver-tab-pane" id="pane-vehicle">
+      <div class="schedule-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="font-family: var(--font-display); font-size: 20px; margin-bottom: 4px;">Закрепленный борт &bull; <em>Mercedes-Benz Sprinter</em></h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Госномер: <strong style="font-family: monospace; font-size: 14px; color: var(--text-primary);">7-AI 0000</strong> &bull; Категория M2 &bull; Вместимость: 19 пассажиров</p>
+          </div>
+          <span class="status-badge badge-success">Допущен к международным перевозкам</span>
+        </div>
+
+        <!-- VEHICLE TECHNICAL INFO STRIP -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 24px;">
+          <div style="padding: 14px 16px; background: var(--surface-subtle); border-radius: 8px; border: 1px solid var(--border-hairline);">
+            <div style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Техосмотр (СТБ 1389)</div>
+            <div style="font-weight: 700; font-size: 14px; margin-top: 4px; color: var(--text-primary);">Действителен до 12.11.2026</div>
+            <div style="font-size: 11.5px; color: var(--status-available); margin-top: 2px;">Пройден без замечаний</div>
+          </div>
+          <div style="padding: 14px 16px; background: var(--surface-subtle); border-radius: 8px; border: 1px solid var(--border-hairline);">
+            <div style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Страховка «Зеленая карта»</div>
+            <div style="font-weight: 700; font-size: 14px; margin-top: 4px; color: var(--text-primary);">Полис #BY-5509214</div>
+            <div style="font-size: 11.5px; color: var(--status-available); margin-top: 2px;">Международное покрытие ЕС</div>
+          </div>
+          <div style="padding: 14px 16px; background: var(--surface-subtle); border-radius: 8px; border: 1px solid var(--border-hairline);">
+            <div style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Текущий пробег (Одометр)</div>
+            <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
+              <input type="number" id="vehicle-odometer-input" value="184250" style="width: 110px; padding: 4px 8px; font-weight: 700; font-family: monospace; font-size: 14px; border: 1px solid var(--border-hairline); border-radius: 6px;">
+              <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px;" onclick="saveOdometer()">Сохранить</button>
+            </div>
+          </div>
+        </div>
+
+        <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 6px;">Предрейсовый ежедневный технический осмотр</h4>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+          В соответствии с требованиями СТБ 1389-2003 и ПДД водитель обязан убедиться в исправности транспортного средства перед выходом на линию:
         </p>
+
+        <div class="checklist-grid">
+          <label class="checklist-item">
+            <input type="checkbox" checked id="chk-brakes">
+            <span>Тормозная система и рулевое управление исправны</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" checked id="chk-lights">
+            <span>Внешние световые приборы, стеклоочистители и сигнал</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" checked id="chk-tires">
+            <span>Состояние протектора шин и давление в колесах</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" checked id="chk-kit">
+            <span>Огнетушители (2 шт.), медицинская аптечка и знак АО</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" checked id="chk-belts">
+            <span>Ремни безопасности на всех 19 пассажирских креслах</span>
+          </label>
+          <label class="checklist-item">
+            <input type="checkbox" checked id="chk-clean">
+            <span>Санитарное состояние салона и багажного отсека</span>
+          </label>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-top: 14px; border-top: 1px solid var(--border-hairline);">
+          <div style="font-size: 12.5px; color: var(--text-muted);">
+            Отметка о прохождении предрейсового медицинского осмотра: <strong style="color: var(--status-available);">Пройден (06:50)</strong>
+          </div>
+          <button type="button" class="btn btn-accent" onclick="submitVehicleInspection()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Подтвердить осмотр борта
+          </button>
+        </div>
       </div>
-      <a href="https://t.me/BusLinerFleetBot" target="_blank" class="btn" style="background: #2AABEE; color: #FFFFFF; font-weight: 700; white-space: nowrap;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-        Открыть @BusLinerFleetBot
-      </a>
+    </div>
+
+    <!-- PANE 5: PROFILE & FLEET -->
+    <div class="driver-tab-pane" id="pane-profile">
+      <div class="schedule-card">
+        <h3 style="font-family: var(--font-display); font-size: 20px; margin-bottom: 6px;">Учетная карточка <em>водителя</em></h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+          Персональные данные, статус допуска к международным пассажирским перевозкам и привязка к автопарку
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-bottom: 24px;">
+          <div style="padding: 16px 20px; background: var(--surface-subtle); border-radius: 10px; border: 1px solid var(--border-hairline);">
+            <div style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Водитель рейса</div>
+            <div style="font-size: 16px; font-weight: 800; color: var(--text-primary);" id="card-driver-fullname">Александр</div>
+            <div style="font-size: 13px; color: var(--text-dim); margin-top: 4px;" id="card-driver-phone">+375 (29) •••-••-••</div>
+            <div style="margin-top: 10px; font-size: 12px; color: var(--text-muted);">
+              Водительское удостоверение: <strong style="color: var(--text-primary);">Категории B, C, D</strong>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">
+              Квалификационная карточка водителя: <strong style="color: var(--status-available);">Код 95 (действителен)</strong>
+            </div>
+          </div>
+
+          <div style="padding: 16px 20px; background: var(--surface-subtle); border-radius: 10px; border: 1px solid var(--border-hairline);">
+            <div style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Текущий автопарк</div>
+            <div style="font-size: 16px; font-weight: 800; color: var(--text-primary);" id="card-carrier-company">ИП Перевозчик Александр</div>
+            <div style="font-size: 13px; color: var(--status-available); font-weight: 600; margin-top: 4px;">Лицензия Минтранс РБ &bull; Активен</div>
+            <div style="margin-top: 10px; font-size: 12px; color: var(--text-muted);">
+              Диспетчерская служба: <strong style="color: var(--text-primary);">+375 (29) 123-45-67</strong>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">
+              Связь в Telegram: <a href="https://t.me/BusLinerFleetBot" target="_blank" style="color: var(--accent-institutional); font-weight: 600;">@BusLinerFleetBot</a>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: #FFFFFF; border: 1px solid var(--accent-border); border-radius: 12px; padding: 22px 24px; margin-top: 10px;">
+          <h4 style="font-size: 16px; font-weight: 800; color: var(--accent-institutional); margin-bottom: 6px;">
+            Привязка к новому автопарку
+          </h4>
+          <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 14px; max-width: 640px;">
+            Если диспетчер или руководство компании выдали вам персональный код автопарка (Invite Code), введите его ниже для синхронизации графиков и рейсов:
+          </p>
+          <div style="display: flex; gap: 10px; max-width: 440px; flex-wrap: wrap;">
+            <input type="text" id="driver-fleet-code-input" class="search-input" style="padding-left: 14px; text-transform: uppercase;" placeholder="Например: FLT-8821">
+            <button type="button" class="btn btn-accent" onclick="handleDriverFleetInvite()">
+              Применить код
+            </button>
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">
+            После ввода кода борта и смены компании автоматически обновятся в вашей рабочей панели.
+          </div>
+        </div>
+      </div>
     </div>
 
   </main>
@@ -746,6 +1219,40 @@
       <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="closeScannerModal()">
         Закрыть сканер
       </button>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD CARGO -->
+  <div id="modal-cargo-add" class="modal-overlay" onclick="if(event.target===this) closeCargoAddModal()">
+    <div class="modal-shell">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h3 style="font-family: var(--font-display); font-size: 22px;">Прием посылки <em>Smart Cargo</em></h3>
+        <button type="button" onclick="closeCargoAddModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-dim);">&times;</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; text-align: left; margin-bottom: 18px;">
+        <div>
+          <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Описание груза / Вес:</label>
+          <input type="text" id="new-cargo-desc" class="search-input" style="padding-left: 12px;" placeholder="Например: Документы, 0.5 кг">
+        </div>
+        <div>
+          <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Пункт назначения / выдачи:</label>
+          <select id="new-cargo-dest" class="search-input" style="padding-left: 12px; cursor: pointer; height: 42px;">
+            <option value="Вильнюс, Международный АВ">Вильнюс, Международный АВ</option>
+            <option value="Ошмяны, Автостанция">Ошмяны, Автостанция</option>
+            <option value="Минск, Центральный АВ">Минск, Центральный АВ</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Получатель и контактный телефон:</label>
+          <input type="text" id="new-cargo-recipient" class="search-input" style="padding-left: 12px;" placeholder="Имя Фамилия, телефон">
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeCargoAddModal()">Отмена</button>
+        <button type="button" class="btn btn-accent" style="flex: 1;" onclick="submitNewCargo()">Зарегистрировать</button>
+      </div>
     </div>
   </div>
 
@@ -967,6 +1474,178 @@
       window.location.href = 'partner-auth.html#driver';
     };
 
+    // DRIVER TABS NAVIGATION
+    const DRIVER_VALID_TABS = ['manifest', 'schedule', 'cargo', 'vehicle', 'profile'];
+
+    window.switchDriverTab = function(tabId) {
+      if (!DRIVER_VALID_TABS.includes(tabId)) tabId = 'manifest';
+
+      // Switch active class on tab buttons & panes
+      DRIVER_VALID_TABS.forEach(t => {
+        const btn = document.getElementById('tab-btn-' + t);
+        const pane = document.getElementById('pane-' + t);
+        if (btn) btn.classList.toggle('active', t === tabId);
+        if (pane) pane.classList.toggle('active', t === tabId);
+      });
+
+      // Update URL hash without page jump
+      if (history.replaceState) {
+        history.replaceState(null, '', '#' + tabId);
+      } else {
+        window.location.hash = '#' + tabId;
+      }
+    };
+
+    // SMART CARGO DATA & HANDLERS
+    let cargoItems = [
+      { id: 1, tracking: 'CRG-BY-8831', desc: 'Документы в плотном конверте (0.3 кг)', dest: 'Вильнюс, Международный АВ', recipient: 'Linas Vaitkus (+370 652 11**)', status: 'delivered' },
+      { id: 2, tracking: 'CRG-BY-8849', desc: 'Запчасти к оборудованию (коробка 4.5 кг)', dest: 'Вильнюс, Международный АВ', recipient: 'Jonas Petraitis (+370 618 90**)', status: 'transit' },
+      { id: 3, tracking: 'CRG-BY-8852', desc: 'Медицинские контейнеры (0.8 кг)', dest: 'Ошмяны, Автостанция', recipient: 'Сидорова Светлана (+375 29 441-**-90)', status: 'transit' },
+      { id: 4, tracking: 'CRG-BY-8860', desc: 'Личные вещи в фирменном пакете (2.1 кг)', dest: 'Вильнюс, Международный АВ', recipient: 'Arturas Kazlauskas (+370 600 33**)', status: 'transit' }
+    ];
+
+    window.renderCargoTable = function() {
+      const tbody = document.getElementById('cargo-table-body');
+      if (!tbody) return;
+
+      tbody.innerHTML = '';
+      let total = cargoItems.length;
+      let destCount = 0;
+      let transitCount = 0;
+      let deliveredCount = 0;
+
+      cargoItems.forEach(item => {
+        if (item.status === 'delivered') deliveredCount++;
+        if (item.dest.includes('Вильнюс')) destCount++;
+        if (item.dest.includes('Ошмяны')) transitCount++;
+
+        const isDelivered = item.status === 'delivered';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong style="font-family: monospace; font-size: 13px; color: var(--accent-institutional);">${escapeHtml(item.tracking)}</strong></td>
+          <td><div style="font-weight: 600; font-size: 13px;">${escapeHtml(item.desc)}</div></td>
+          <td><span style="font-size: 12.5px; color: var(--text-muted);">${escapeHtml(item.dest)}</span></td>
+          <td><div style="font-size: 13px; font-weight: 500;">${escapeHtml(item.recipient)}</div></td>
+          <td>
+            ${isDelivered 
+              ? '<span class="status-badge badge-success">Выдано</span>' 
+              : '<span class="status-badge badge-warning">В пути</span>'}
+          </td>
+          <td style="text-align: right;">
+            <button type="button" class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="toggleCargoDelivery(${item.id})">
+              ${isDelivered ? 'Отменить выдачу' : 'Выдать адресату'}
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const totalEl = document.getElementById('cargo-count-total');
+      const destEl = document.getElementById('cargo-count-dest');
+      const transEl = document.getElementById('cargo-count-transit');
+      const delEl = document.getElementById('cargo-count-delivered');
+      if (totalEl) totalEl.innerText = total;
+      if (destEl) destEl.innerText = destCount;
+      if (transEl) transEl.innerText = transitCount;
+      if (delEl) delEl.innerText = deliveredCount;
+    };
+
+    window.toggleCargoDelivery = function(id) {
+      const item = cargoItems.find(c => c.id === id);
+      if (!item) return;
+      if (item.status === 'delivered') {
+        item.status = 'transit';
+        showToast('Статус посылки изменен', `Посылка ${item.tracking} возвращена в статус «В пути».`);
+      } else {
+        item.status = 'delivered';
+        showToast('Посылка выдана', `Посылка ${item.tracking} успешно передана получателю.`);
+      }
+      renderCargoTable();
+    };
+
+    window.openCargoAddModal = function() {
+      const m = document.getElementById('modal-cargo-add');
+      if (m) m.style.display = 'flex';
+      const descInput = document.getElementById('new-cargo-desc');
+      if (descInput) {
+        descInput.value = '';
+        setTimeout(() => descInput.focus(), 100);
+      }
+    };
+
+    window.closeCargoAddModal = function() {
+      const m = document.getElementById('modal-cargo-add');
+      if (m) m.style.display = 'none';
+    };
+
+    window.submitNewCargo = function() {
+      const desc = (document.getElementById('new-cargo-desc')?.value || '').trim();
+      const dest = document.getElementById('new-cargo-dest')?.value || 'Вильнюс, Международный АВ';
+      const recipient = (document.getElementById('new-cargo-recipient')?.value || '').trim();
+
+      if (!desc || !recipient) {
+        showToast('Ошибка заполнения', 'Укажите описание груза и контакты получателя.');
+        return;
+      }
+
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      const newCargo = {
+        id: Date.now(),
+        tracking: `CRG-BY-${randomNum}`,
+        desc: desc,
+        dest: dest,
+        recipient: recipient,
+        status: 'transit'
+      };
+
+      cargoItems.unshift(newCargo);
+      renderCargoTable();
+      closeCargoAddModal();
+      showToast('Посылка принята', `Отправление ${newCargo.tracking} зарегистрировано и добавлено в рейс.`);
+    };
+
+    // CHECKPOINT LOGGING
+    window.logCheckpoint = function(id, name) {
+      const statusEl = document.getElementById('cp-status-' + id);
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+      if (statusEl) {
+        statusEl.className = 'status-badge badge-success';
+        statusEl.innerText = `Пройдена (${timeStr})`;
+      }
+      showToast('Контрольная точка', `Точка «${name}» зафиксирована в ${timeStr}. Диспетчер уведомлен.`);
+    };
+
+    // VEHICLE INSPECTION & ODOMETER
+    window.saveOdometer = function() {
+      const val = document.getElementById('vehicle-odometer-input')?.value;
+      if (!val) return;
+      showToast('Одометр сохранен', `Текущий пробег ${val} км зафиксирован в путевом листе.`);
+    };
+
+    window.submitVehicleInspection = function() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+      showToast('Осмотр борта подтвержден', `Предрейсовый осмотр по СТБ 1389-2003 успешно зафиксирован (${timeStr}).`);
+    };
+
+    // FLEET INVITE CODE HANDLER
+    window.handleDriverFleetInvite = function() {
+      const input = document.getElementById('driver-fleet-code-input');
+      const val = (input?.value || '').trim().toUpperCase();
+      if (!val) {
+        showToast('Введите код', 'Укажите код приглашения автопарка (например, FLT-8821).');
+        return;
+      }
+
+      const cNameEl = document.getElementById('strip-carrier-name');
+      const cardCarEl = document.getElementById('card-carrier-company');
+      if (cNameEl) cNameEl.innerText = `Автопарк (${val})`;
+      if (cardCarEl) cardCarEl.innerText = `Автопарк (${val})`;
+      input.value = '';
+      showToast('Автопарк привязан', `Код ${val} подтвержден. Борта и рейсы парка привязаны к вашей смене.`);
+    };
+
     // LOAD PROFILE FROM LOCALSTORAGE & SQLITE
     function initDriverTerminal() {
       // Set today date
@@ -993,9 +1672,14 @@
       const nameEl = document.getElementById('drv-name-display');
       const phoneEl = document.getElementById('drv-contact-display');
       const avatarEl = document.getElementById('drv-avatar-letter');
+      const cardNameEl = document.getElementById('card-driver-fullname');
+      const cardPhoneEl = document.getElementById('card-driver-phone');
+
       if (nameEl) nameEl.innerText = driverName;
       if (phoneEl) phoneEl.innerText = driverPhone;
       if (avatarEl) avatarEl.innerText = driverName.charAt(0).toUpperCase();
+      if (cardNameEl) cardNameEl.innerText = driverName;
+      if (cardPhoneEl) cardPhoneEl.innerText = driverPhone;
 
       // Check real DB records from daemon
       fetch('http://localhost:8080/api/admin/users')
@@ -1007,7 +1691,9 @@
               const latest = carriers[carriers.length - 1];
               if (latest.company_name && latest.company_name !== 'Не указан') {
                 const cNameEl = document.getElementById('strip-carrier-name');
+                const cardCarEl = document.getElementById('card-carrier-company');
                 if (cNameEl) cNameEl.innerText = latest.company_name;
+                if (cardCarEl) cardCarEl.innerText = latest.company_name;
               }
               if (latest.vehicle_model) {
                 const vNameEl = document.getElementById('strip-vehicle-name');
@@ -1030,7 +1716,9 @@
               const matched = drivers.find(d => d.username === driverPhone || d.full_name === driverName);
               if (matched && matched.carrier_name) {
                 const cNameEl = document.getElementById('strip-carrier-name');
+                const cardCarEl = document.getElementById('card-carrier-company');
                 if (cNameEl) cNameEl.innerText = matched.carrier_name;
+                if (cardCarEl) cardCarEl.innerText = matched.carrier_name;
               }
             }
           }
@@ -1038,6 +1726,13 @@
         .catch(() => {});
 
       renderPassengers();
+      renderCargoTable();
+
+      // Check URL hash for initial tab
+      const hash = (window.location.hash || '').replace('#', '').trim();
+      if (hash && DRIVER_VALID_TABS.includes(hash)) {
+        switchDriverTab(hash);
+      }
     }
 
     document.addEventListener('DOMContentLoaded', initDriverTerminal);
