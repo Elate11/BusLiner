@@ -9,6 +9,7 @@ Thumbs.db
 # Images
 *.jpg
 *.jpeg
+*.png
 
 # Environment & secrets
 .env
