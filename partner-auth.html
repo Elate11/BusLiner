@@ -1386,100 +1386,13 @@
           </div>
 
           <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
-            Войти в терминал водителя &rarr;
+            Войти как водитель &rarr;
           </button>
         </form>
 
-        <!-- LIVE DEMO TRIP MANIFEST PREVIEW (ПОТОМ: ВЫБОР РЕЙСА И ВЕДОМОСТЬ) -->
-        <div id="driver-terminal-section" style="margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border-hairline);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.05em;">Терминал водителя рейса</span>
-            <span class="badge-verified-status" style="background: var(--status-available-bg); color: var(--status-available);">Рейс активен</span>
-          </div>
-
-          <!-- CODE / FLIGHT SELECTION (ПОТОМ, ПЕРЕД ВЫХОДОМ НА ЛИНИЮ) -->
-          <div style="background: var(--surface-subtle); border: 1px dashed var(--border-hairline); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px;">
-            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-              <label class="form-label" for="driver-invite-code" style="margin-bottom: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em;">Код автопарка или номер рейса</label>
-              <span style="font-size: 11px; color: var(--text-muted);">Вводится перед началом рейса</span>
-            </div>
-            <form onsubmit="handleApplyTripCode(event)" style="display: flex; gap: 8px;">
-              <input type="text" id="driver-invite-code" class="form-input" value="FLEET-771" placeholder="Например: FLEET-771 или BL-1700" style="text-transform: uppercase; font-size: 13px; padding: 10px 12px; flex: 1;">
-              <button type="submit" class="btn btn-secondary" style="padding: 10px 16px; font-size: 13px; white-space: nowrap;">
-                Загрузить рейс &rarr;
-              </button>
-            </form>
-            <span class="form-hint" style="margin-top: 6px; font-size: 11.5px; display: block;">Код выдает перевозчик (ИП или организация) перед посадкой для доступа к ведомости конкретного автобуса.</span>
-          </div>
-
-          <!-- CARRIER ORGANIZATION CONNECTION BADGE -->
-          <div id="driver-carrier-info-card" style="margin-bottom: 14px; padding: 14px 16px; background: #FFFFFF; border: 1.5px solid #E2E8F0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(30, 58, 138, 0.08); display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--accent-institutional); flex-shrink: 0;">
-                  🏢
-                </div>
-                <div>
-                  <div style="display: flex; align-items: center; gap: 6px;">
-                    <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); font-weight: 700;">Прикрепленная организация</span>
-                    <span class="badge-verified-status" style="background: var(--status-available-bg); color: var(--status-available); font-size: 10.5px; padding: 2px 7px;">Подключен ✓</span>
-                  </div>
-                  <div id="driver-carrier-name" style="font-size: 15px; font-weight: 700; color: var(--text-primary); margin-top: 2px;">
-                    ООО «ТрансЛидер Экспресс»
-                  </div>
-                </div>
-              </div>
-              <div style="text-align: right;">
-                <span class="mono" id="driver-carrier-code-badge" style="font-size: 11px; background: var(--surface-subtle); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--border-hairline); color: var(--accent-institutional); font-weight: 600;">FLEET-771</span>
-              </div>
-            </div>
-            
-            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-hairline); display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11.5px; color: var(--text-muted);">
-              <div><strong style="color: var(--text-primary);">УНП:</strong> <span id="driver-carrier-unp" class="mono">193821049</span></div>
-              <div><strong style="color: var(--text-primary);">Форма:</strong> <span id="driver-carrier-type">Юрлицо (ООО)</span></div>
-              <div style="grid-column: span 2;"><strong style="color: var(--text-primary);">Лицензия:</strong> Минтранс РБ № 02190/77412 &bull; Прямой расчетный счет T+1</div>
-            </div>
-          </div>
-
-          <div class="driver-trip-card">
-            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
-              <strong style="font-size: 16px; color: var(--text-primary);">17:00 Гомель &rarr; Минск</strong>
-              <span class="mono" style="font-size: 12px; color: var(--accent-institutional); font-weight: 600;">VW Crafter • 5192 AB-3</span>
-            </div>
-            <div style="font-size: 11.5px; color: var(--text-dim); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-              <span>Организация перевозчика:</span>
-              <strong style="color: var(--accent-institutional);" id="manifest-carrier-name">ООО «ТрансЛидер Экспресс»</strong>
-              <span>&bull;</span>
-              <span>Рейс BL-1700</span>
-            </div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
-              Посадка: Автовокзал, Платформа 3 &bull; Занято: 13 из 16 мест
-            </div>
-
-            <div style="background: #FFFFFF; border-radius: 8px; padding: 0 12px; border: 1px solid var(--border-hairline);">
-              <div class="passenger-row-item">
-                <div>
-                  <strong>Место 04</strong>: Смирнов Илья
-                  <div style="font-size: 11px; color: var(--text-muted);">Без багажа &bull; Оплачено картой</div>
-                </div>
-                <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="togglePassengerBoarded(this)">Посажен ✓</button>
-              </div>
-              <div class="passenger-row-item">
-                <div>
-                  <strong>Место 07</strong>: Громов Максим
-                  <div style="font-size: 11px; color: var(--text-muted);">Тихая зона &bull; Оплачено картой</div>
-                </div>
-                <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="togglePassengerBoarded(this)">Отметить</button>
-              </div>
-              <div class="passenger-row-item">
-                <div>
-                  <strong>Место 11</strong>: Ковалева Анна
-                  <div style="font-size: 11px; color: var(--accent-institutional);">+1 Слот под велосипед</div>
-                </div>
-                <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="togglePassengerBoarded(this)">Отметить</button>
-              </div>
-            </div>
-          </div>
+        <div style="margin-top: 24px; padding: 14px; background: var(--surface-subtle); border-radius: var(--radius-ctrl); border: 1px dashed var(--border-hairline); text-align: center; font-size: 13px; color: var(--text-muted);">
+          🏢 Вы перевозчик (ИП или юрлицо)? 
+          <a href="#login" onclick="setPartnerRole('owner'); return false;" style="color: var(--accent-institutional); font-weight: 700; text-decoration: none; margin-left: 4px;">Войти в кабинет перевозчика &rarr;</a>
         </div>
       </div>
 
@@ -2000,65 +1913,10 @@
       if (e) e.preventDefault();
       const phoneInput = document.getElementById('driver-phone');
       const phone = phoneInput ? phoneInput.value : '+375 (29) 714-22-10';
-      showAuthToast('Вход выполнен', `Водитель ${phone} авторизован в BusLiner. Загрузка терминала рейсов...`);
-      const terminalSection = document.getElementById('driver-terminal-section');
-      if (terminalSection) {
-        terminalSection.scrollIntoView({ behavior: 'smooth' });
-      }
+      showAuthToast('Вход выполнен', `Водитель ${phone} авторизован. Организация: ООО «ТрансЛидер Экспресс» (УНП 193821049).`);
     };
 
     window.handleDriverCodeLogin = window.handleDriverPhoneLogin;
-
-    window.handleApplyTripCode = function(e) {
-      if (e) e.preventDefault();
-      const codeInput = document.getElementById('driver-invite-code');
-      const rawCode = (codeInput ? codeInput.value : 'FLEET-771').trim().toUpperCase() || 'FLEET-771';
-
-      let orgName = 'ООО «ТрансЛидер Экспресс»';
-      let orgType = 'Юрлицо (ООО)';
-      let orgUnp = '193821049';
-
-      if (rawCode.includes('ИП') || rawCode.startsWith('IP')) {
-        orgName = 'ИП Воронов А. В.';
-        orgType = 'Индивидуальный предприниматель (ИП)';
-        orgUnp = '490182934';
-      } else if (rawCode.includes('ОАО') || rawCode.startsWith('OAO')) {
-        orgName = 'ОАО «Автобусный парк №3»';
-        orgType = 'Акционерное общество (ОАО)';
-        orgUnp = '100234567';
-      } else if (rawCode.includes('ЧУП') || rawCode.startsWith('CHUP')) {
-        orgName = 'ЧТУП «БелЭкспрессТранс»';
-        orgType = 'Унитарное предприятие (ЧТУП)';
-        orgUnp = '290884112';
-      }
-
-      const nameEl = document.getElementById('driver-carrier-name');
-      const typeEl = document.getElementById('driver-carrier-type');
-      const unpEl = document.getElementById('driver-carrier-unp');
-      const codeBadge = document.getElementById('driver-carrier-code-badge');
-      const manifestName = document.getElementById('manifest-carrier-name');
-
-      if (nameEl) nameEl.innerText = orgName;
-      if (typeEl) typeEl.innerText = orgType;
-      if (unpEl) unpEl.innerText = orgUnp;
-      if (codeBadge) codeBadge.innerText = rawCode;
-      if (manifestName) manifestName.innerText = orgName;
-
-      showAuthToast('Рейс привязан', `Код «${rawCode}» принят. Организация: ${orgName}. Ведомость открыта.`);
-    };
-
-    window.togglePassengerBoarded = function(btn) {
-      if (btn.innerText.includes('Посажен')) {
-        btn.innerText = 'Отметить';
-        btn.style.background = '#FFFFFF';
-        btn.style.color = 'var(--text-primary)';
-      } else {
-        btn.innerText = 'Посажен ✓';
-        btn.style.background = 'var(--status-available-bg)';
-        btn.style.color = 'var(--status-available)';
-        btn.style.borderColor = 'var(--status-available)';
-      }
-    };
 
     window.handleTelegramLogin = function() {
       openTelegramModal('login');
