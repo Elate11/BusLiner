@@ -142,6 +142,26 @@
       color: var(--accent-institutional);
       transform: translateY(-1px);
     }
+    .btn-nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 8px 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border-hairline);
+      background: #FFFFFF;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-nav-back:hover {
+      color: var(--text-primary);
+      border-color: var(--accent-institutional);
+      background: var(--surface-subtle);
+      transform: translateX(-2px);
+    }
 
     /* MAIN CONTAINER WITH SMOOTH ENTRANCE */
     main.auth-main {
@@ -889,13 +909,21 @@
 
   <!-- FIXED TOP NAVIGATION (MATCHES BUSLINER ON-LIGHT) -->
   <header class="app-nav">
-    <a href="busliner-partners.html" class="brand-link">
+    <a href="busliner-partners.html" class="brand-link" onclick="goBackToMain(event)">
       <svg width="26" height="26" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="28" height="28" rx="6" fill="#1E3A8A"/>
         <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M6 9H11.5M6 19H11.5" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
       </svg>
       <span class="brand-title">BUS<span class="brand-title-thin">LINER</span> <span class="badge-b2b font-onlyfans">partners</span></span>
+    </a>
+
+    <a href="busliner-partners.html" class="btn-nav-back" onclick="goBackToMain(event)" title="Вернуться на главную страницу BusLiner Partners">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Назад на главную</span>
     </a>
   </header>
 
@@ -989,6 +1017,12 @@
         <div style="margin-top: 24px; padding: 14px; background: var(--surface-subtle); border-radius: var(--radius-ctrl); border: 1px dashed var(--border-hairline); text-align: center; font-size: 13.5px; color: var(--text-muted);">
           Еще не зарегистрированы как перевозчик? 
           <a href="#onboard" onclick="switchView('onboard'); return false;" style="color: var(--accent-institutional); font-weight: 700; text-decoration: none; margin-left: 4px;">Зарегистрироваться (ИП / Организация) &rarr;</a>
+        </div>
+
+        <div style="margin-top: 18px; text-align: center;">
+          <a href="busliner-partners.html" onclick="goBackToMain(event)" style="font-size: 13px; color: var(--text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 500; transition: color 0.15s ease;">
+            <span>&larr; Вернуться на главную страницу BusLiner Partners</span>
+          </a>
         </div>
       </div>
 
@@ -2049,31 +2083,124 @@
       openTelegramModal('onboard');
     };
 
-    function switchView(viewName) {
+    // =========================================================================
+    // UNIFIED ROUTER & BROWSER HISTORY LOGIC
+    // =========================================================================
+    window.applyViewState = function(rawHash, pushToHistory = true) {
+      const clean = (rawHash || '').replace(/^#/, '').toLowerCase().trim();
       const tabLogin = document.getElementById('tab-login');
       const tabOnboard = document.getElementById('tab-onboard');
       const panelLogin = document.getElementById('view-login-panel');
       const panelOnboard = document.getElementById('view-onboard-panel');
       const panelDriver = document.getElementById('view-driver-panel');
+      const btnOwner = document.getElementById('btn-role-owner');
+      const btnDriver = document.getElementById('btn-role-driver');
+      const ownerTabs = document.getElementById('owner-tabs-wrapper');
 
+      // 1. DRIVER VIEW
+      if (clean === 'driver' || clean === 'driver-login' || clean === 'driver-register') {
+        currentPartnerRole = 'driver';
+        if (btnDriver) btnDriver.classList.add('active');
+        if (btnOwner) btnOwner.classList.remove('active');
+        if (ownerTabs) ownerTabs.style.display = 'none';
+        if (panelLogin) panelLogin.style.display = 'none';
+        if (panelOnboard) panelOnboard.style.display = 'none';
+        if (panelDriver) panelDriver.style.display = 'block';
+
+        if (clean === 'driver-register') {
+          switchDriverView('register', false);
+        } else {
+          switchDriverView('login', false);
+        }
+
+        if (pushToHistory && window.location.hash !== '#' + clean) {
+          history.pushState({ view: clean }, '', '#' + clean);
+        }
+        return;
+      }
+
+      // 2. CARRIER ONBOARDING & STEPS
+      if (clean === 'onboard' || clean === 'register' || clean.startsWith('step-')) {
+        currentPartnerRole = 'owner';
+        if (btnOwner) btnOwner.classList.add('active');
+        if (btnDriver) btnDriver.classList.remove('active');
+        if (ownerTabs) ownerTabs.style.display = 'block';
+        if (tabOnboard) tabOnboard.classList.add('active');
+        if (tabLogin) tabLogin.classList.remove('active');
+        if (panelLogin) panelLogin.style.display = 'none';
+        if (panelDriver) panelDriver.style.display = 'none';
+        if (panelOnboard) panelOnboard.style.display = 'block';
+
+        let targetStep = 1;
+        if (clean === 'step-2') targetStep = 2;
+        else if (clean === 'step-3') targetStep = 3;
+        else if (clean === 'step-4') targetStep = 4;
+        goToStep(targetStep, false);
+
+        const targetHash = targetStep === 1 ? 'onboard' : `step-${targetStep}`;
+        if (pushToHistory && window.location.hash !== '#' + targetHash) {
+          history.pushState({ view: targetHash }, '', '#' + targetHash);
+        }
+        return;
+      }
+
+      // 3. CARRIER LOGIN (DEFAULT ROOT STATE)
+      currentPartnerRole = 'owner';
+      if (btnOwner) btnOwner.classList.add('active');
+      if (btnDriver) btnDriver.classList.remove('active');
+      if (ownerTabs) ownerTabs.style.display = 'block';
+      if (tabLogin) tabLogin.classList.add('active');
+      if (tabOnboard) tabOnboard.classList.remove('active');
+      if (panelLogin) panelLogin.style.display = 'block';
+      if (panelOnboard) panelOnboard.style.display = 'none';
       if (panelDriver) panelDriver.style.display = 'none';
 
-      if (viewName === 'login') {
-        tabLogin.classList.add('active');
-        tabOnboard.classList.remove('active');
-        panelLogin.style.display = 'block';
-        panelOnboard.style.display = 'none';
-        window.location.hash = 'login';
-      } else {
-        tabOnboard.classList.add('active');
-        tabLogin.classList.remove('active');
-        panelLogin.style.display = 'none';
-        panelOnboard.style.display = 'block';
-        window.location.hash = 'onboard';
+      if (pushToHistory && window.location.hash !== '#login') {
+        history.pushState({ view: 'login' }, '', '#login');
       }
-    }
+    };
 
-    function goToStep(stepNumber) {
+    window.switchView = function(viewName) {
+      applyViewState(viewName, true);
+    };
+
+    window.setPartnerRole = function(role) {
+      if (role === 'driver') {
+        applyViewState('driver', true);
+      } else {
+        applyViewState('login', true);
+      }
+    };
+
+    window.goBackToMain = function(e) {
+      if (e) e.preventDefault();
+      if (document.referrer && (document.referrer.includes('busliner-partners') || document.referrer.includes('BusLiner'))) {
+        window.history.back();
+      } else {
+        window.location.href = 'busliner-partners.html';
+      }
+    };
+
+    // BROWSER BACK / FORWARD POPSTATE AND HASHCHANGE HANDLERS
+    window.addEventListener('popstate', () => {
+      const hash = window.location.hash;
+      if (!hash || hash === '#' || hash === '#login') {
+        applyViewState('login', false);
+      } else {
+        applyViewState(hash, false);
+      }
+    });
+
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash;
+      if (!hash || hash === '#' || hash === '#login') {
+        applyViewState('login', false);
+      } else {
+        applyViewState(hash, false);
+      }
+    });
+
+    function goToStep(stepNumber, pushToHistory = true) {
       for (let i = 1; i <= 4; i++) {
         const pane = document.getElementById(`step-pane-${i}`);
         const nav = document.getElementById(`step-nav-${i}`);
@@ -2091,10 +2218,17 @@
       const targetNav = document.getElementById(`step-nav-${stepNumber}`);
       if (targetPane) targetPane.classList.add('active');
       if (targetNav) targetNav.classList.add('active');
+
+      if (pushToHistory) {
+        const h = stepNumber === 1 ? 'onboard' : `step-${stepNumber}`;
+        if (window.location.hash !== '#' + h) {
+          history.pushState({ view: h }, '', '#' + h);
+        }
+      }
     }
 
     function nextStep(stepNumber) {
-      goToStep(stepNumber);
+      goToStep(stepNumber, true);
     }
 
     function handleEmailLogin(e) {
@@ -2204,11 +2338,11 @@
         } catch (e) {}
       }
 
-      if (window.location.hash === '#login') {
-        switchView('login');
-      } else {
-        switchView('onboard');
-      }
+      const rawInitialHash = window.location.hash || '#login';
+      applyViewState(rawInitialHash, false);
+      try {
+        history.replaceState({ view: rawInitialHash.replace(/^#/, '') }, '', rawInitialHash);
+      } catch(e) {}
     });
   </script>
 </body>
