@@ -540,6 +540,19 @@
       background: var(--surface-subtle);
       color: var(--text-muted);
     }
+    .badge-amenity {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: var(--surface-subtle);
+      color: var(--text-muted);
+      border: 1px solid var(--border-hairline);
+      white-space: nowrap;
+    }
 
     /* PANELS (TABS SWITCHING) */
     .dashboard-panel {
@@ -1049,11 +1062,12 @@
                 <th>Опции комфорта</th>
                 <th>Техосмотр (ТО)</th>
                 <th>Текущий статус</th>
+                <th style="text-align: right;">Действия</th>
               </tr>
             </thead>
             <tbody id="fleet-table-body">
               <tr>
-                <td colspan="7">
+                <td colspan="8">
                   <div class="empty-state-wrap">
                     <div class="empty-state-icon">
                       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16l2-8h12l2 8v4h-2a2 2 0 0 1-4 0H10a2 2 0 0 1-4 0H4v-4z"/><circle cx="8" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/></svg>
@@ -1297,24 +1311,27 @@
   </div>
 
   <!-- ========================================================================
-       MODAL 3: ДОБАВИТЬ МИКРОАВТОБУС
+       MODAL 3: ДОБАВИТЬ / РЕДАКТИРОВАТЬ МИКРОАВТОБУС
        ======================================================================== -->
   <div id="modal-new-vehicle" class="modal-overlay" onclick="if(event.target===this) closeNewVehicleModal()">
-    <div class="modal-shell">
+    <div class="modal-shell" style="max-width: 580px; max-height: 92vh; overflow-y: auto;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h3 style="font-family: var(--font-display); font-size: 22px;">Добавить <em>микроавтобус</em></h3>
+        <h3 id="modal-vehicle-title" style="font-family: var(--font-display); font-size: 22px;">Добавить <em>микроавтобус</em></h3>
         <button type="button" onclick="closeNewVehicleModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-dim);">&times;</button>
       </div>
 
       <form onsubmit="handleCreateVehicleSubmit(event)">
+        <!-- Hidden index for edit mode -->
+        <input type="hidden" id="veh-edit-index" value="">
+
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Марка и модель *</label>
-            <input type="text" id="veh-model" class="form-input" placeholder="Например: Mercedes-Benz Sprinter 519" required>
+            <input type="text" id="veh-model" class="form-input" placeholder="Mercedes-Benz Sprinter 519 CDI" required>
           </div>
           <div class="form-group">
             <label class="form-label">Госномер РБ *</label>
-            <input type="text" id="veh-plate" class="form-input" placeholder="7-AI 0000" required>
+            <input type="text" id="veh-plate" class="form-input" placeholder="7-TAX 1234 или 7-AI 8890" required>
           </div>
         </div>
 
@@ -1329,14 +1346,56 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Срок действия техосмотра (ТО) *</label>
-          <input type="date" id="veh-to" class="form-input" required>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Текущий статус *</label>
+            <select id="veh-status" class="form-input" required>
+              <option value="На линии">На линии (готов к рейсам)</option>
+              <option value="В рейсе">В рейсе</option>
+              <option value="В резерве">В резерве</option>
+              <option value="На ТО">На ТО / Ремонт</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Срок действия техосмотра (ТО) *</label>
+            <input type="date" id="veh-to" class="form-input" required>
+          </div>
         </div>
 
-        <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <div class="form-group" style="margin-top: 10px;">
+          <label class="form-label">Опции комфорта для пассажиров</label>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 6px;">
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; padding: 7px 11px; background: var(--canvas); border: 1px solid var(--border-hairline); border-radius: 8px;">
+              <input type="checkbox" class="veh-amenity-cb" value="Wi-Fi">
+              <span>📶 Wi-Fi</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; padding: 7px 11px; background: var(--canvas); border: 1px solid var(--border-hairline); border-radius: 8px;">
+              <input type="checkbox" class="veh-amenity-cb" value="USB / 220V">
+              <span>🔌 USB / 220V</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; padding: 7px 11px; background: var(--canvas); border: 1px solid var(--border-hairline); border-radius: 8px;">
+              <input type="checkbox" class="veh-amenity-cb" value="Климат-контроль">
+              <span>❄️ Кондиционер / Климат</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; padding: 7px 11px; background: var(--canvas); border: 1px solid var(--border-hairline); border-radius: 8px;">
+              <input type="checkbox" class="veh-amenity-cb" value="Откидные сиденья">
+              <span>💺 Откидные кресла</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; padding: 7px 11px; background: var(--canvas); border: 1px solid var(--border-hairline); border-radius: 8px;">
+              <input type="checkbox" class="veh-amenity-cb" value="TV / Медиа">
+              <span>📺 TV / Медиасистема</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; padding: 7px 11px; background: var(--canvas); border: 1px solid var(--border-hairline); border-radius: 8px;">
+              <input type="checkbox" class="veh-amenity-cb" value="Smart Cargo">
+              <span>🧳 Багажный отсек</span>
+            </label>
+          </div>
+          <input type="text" id="veh-extra-amenity" class="form-input" style="margin-top: 8px; font-size: 12.5px;" placeholder="Другие опции через запятую (например: кофемашина, индивидуальный свет)">
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 22px;">
           <button type="button" class="btn btn-secondary" onclick="closeNewVehicleModal()" style="flex: 1;">Отмена</button>
-          <button type="submit" class="btn btn-accent" style="flex: 2;">Внести в реестр парка &rarr;</button>
+          <button type="submit" id="btn-submit-vehicle" class="btn btn-accent" style="flex: 2;">Внести в реестр парка &rarr;</button>
         </div>
       </form>
     </div>
@@ -1356,6 +1415,16 @@
 
   <!-- SCRIPT -->
   <script>
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
     // DASHBOARD TAB SWITCHING WITH HASH INTEGRATION
     window.switchDashboardTab = function(tabName) {
       const tabs = ['overview', 'schedule', 'yield', 'cargo', 'fleet', 'drivers', 'settings'];
@@ -1438,11 +1507,91 @@
 
     window.openNewVehicleModal = function() {
       const m = document.getElementById('modal-new-vehicle');
+      const titleEl = document.getElementById('modal-vehicle-title');
+      const submitBtn = document.getElementById('btn-submit-vehicle');
+      const editIdx = document.getElementById('veh-edit-index');
+
+      if (titleEl) titleEl.innerHTML = 'Добавить <em>микроавтобус</em>';
+      if (submitBtn) submitBtn.innerHTML = 'Внести в реестр парка &rarr;';
+      if (editIdx) editIdx.value = '';
+
+      const modelEl = document.getElementById('veh-model');
+      const plateEl = document.getElementById('veh-plate');
+      const yearEl = document.getElementById('veh-year');
+      const seatsEl = document.getElementById('veh-seats');
+      const toEl = document.getElementById('veh-to');
+      const statusEl = document.getElementById('veh-status');
+      const extraEl = document.getElementById('veh-extra-amenity');
+
+      if (modelEl) modelEl.value = '';
+      if (plateEl) plateEl.value = '';
+      if (yearEl) yearEl.value = '';
+      if (seatsEl) seatsEl.value = '';
+      if (toEl) toEl.value = '';
+      if (statusEl) statusEl.value = 'На линии';
+      if (extraEl) extraEl.value = '';
+
+      document.querySelectorAll('.veh-amenity-cb').forEach(cb => { cb.checked = false; });
+
       if (m) m.style.display = 'flex';
     };
+
     window.closeNewVehicleModal = function() {
       const m = document.getElementById('modal-new-vehicle');
       if (m) m.style.display = 'none';
+    };
+
+    window.openEditVehicleModal = function(index) {
+      const v = userVehicles[index];
+      if (!v) return;
+
+      const m = document.getElementById('modal-new-vehicle');
+      const titleEl = document.getElementById('modal-vehicle-title');
+      const submitBtn = document.getElementById('btn-submit-vehicle');
+      const editIdx = document.getElementById('veh-edit-index');
+
+      if (titleEl) titleEl.innerHTML = 'Редактировать <em>микроавтобус</em>';
+      if (submitBtn) submitBtn.innerHTML = 'Сохранить изменения &rarr;';
+      if (editIdx) editIdx.value = String(index);
+
+      const modelEl = document.getElementById('veh-model');
+      const plateEl = document.getElementById('veh-plate');
+      const yearEl = document.getElementById('veh-year');
+      const seatsEl = document.getElementById('veh-seats');
+      const toEl = document.getElementById('veh-to');
+      const statusEl = document.getElementById('veh-status');
+      const extraEl = document.getElementById('veh-extra-amenity');
+
+      if (modelEl) modelEl.value = v.model || '';
+      if (plateEl) plateEl.value = v.plate || '';
+      if (yearEl) yearEl.value = v.year || '';
+      if (seatsEl) seatsEl.value = v.seats || '';
+      if (toEl) toEl.value = v.toDate || '';
+      if (statusEl) statusEl.value = v.status || 'На линии';
+      if (extraEl) extraEl.value = v.extraAmenities || '';
+
+      const activeAmenities = Array.isArray(v.amenities)
+        ? v.amenities
+        : (typeof v.amenities === 'string' ? v.amenities.split(',').map(s => s.trim()) : []);
+
+      document.querySelectorAll('.veh-amenity-cb').forEach(cb => {
+        cb.checked = activeAmenities.includes(cb.value);
+      });
+
+      if (m) m.style.display = 'flex';
+    };
+
+    window.deleteVehicle = function(index) {
+      const v = userVehicles[index];
+      if (!v) return;
+      if (confirm(`Удалить микроавтобус ${v.model} (${v.plate}) из автопарка?`)) {
+        userVehicles.splice(index, 1);
+        try {
+          localStorage.setItem('busliner_carrier_vehicles', JSON.stringify(userVehicles));
+        } catch (err) {}
+        renderVehicles();
+        showAuthToast('Борт удален', `Микроавтобус ${v.model} (${v.plate}) исключен из автопарка.`);
+      }
     };
 
     window.viewManifestModal = function(routeText, vehicleText, paxCount) {
@@ -1558,7 +1707,7 @@
       if (!userVehicles || userVehicles.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="7">
+            <td colspan="8">
               <div class="empty-state-wrap">
                 <div class="empty-state-icon">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16l2-8h12l2 8v4h-2a2 2 0 0 1-4 0H10a2 2 0 0 1-4 0H4v-4z"/><circle cx="8" cy="19" r="1.5"/><circle cx="16" cy="19" r="1.5"/></svg>
@@ -1580,20 +1729,75 @@
         return;
       }
 
-      tbody.innerHTML = userVehicles.map(v => `
-        <tr>
-          <td><strong style="font-family: monospace; font-size: 14px; color: var(--accent-institutional);">${v.plate}</strong></td>
-          <td><strong>${v.model}</strong></td>
-          <td>${v.year}</td>
-          <td>${v.seats} мест</td>
-          <td>Стандартная комплектация</td>
-          <td><span style="color: var(--status-available); font-weight: 600;">до ${v.toDate}</span></td>
-          <td><span class="status-badge badge-accent">В автопарке</span></td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = userVehicles.map((v, idx) => {
+        // Collect amenities
+        const allAmenities = [];
+        if (Array.isArray(v.amenities)) {
+          allAmenities.push(...v.amenities);
+        } else if (typeof v.amenities === 'string' && v.amenities.trim()) {
+          allAmenities.push(...v.amenities.split(',').map(s => s.trim()));
+        }
+        if (v.extraAmenities && v.extraAmenities.trim()) {
+          allAmenities.push(...v.extraAmenities.split(',').map(s => s.trim()));
+        }
+
+        let amenitiesHtml = '';
+        if (allAmenities.length > 0) {
+          amenitiesHtml = `<div style="display: flex; gap: 4px; flex-wrap: wrap; max-width: 250px;">` +
+            allAmenities.map(a => `<span class="badge-amenity">${escapeHtml(a)}</span>`).join('') +
+            `</div>`;
+        } else {
+          amenitiesHtml = `<span style="color: var(--text-dim); font-size: 12px;">Стандартная комплектация</span>`;
+        }
+
+        // Status badge
+        let statusBadge = '';
+        const st = v.status || 'На линии';
+        if (st === 'На линии') {
+          statusBadge = `<span class="status-badge badge-success">● На линии</span>`;
+        } else if (st === 'В рейсе') {
+          statusBadge = `<span class="status-badge badge-accent">● В рейсе</span>`;
+        } else if (st === 'В резерве') {
+          statusBadge = `<span class="status-badge badge-muted">● В резерве</span>`;
+        } else if (st === 'На ТО') {
+          statusBadge = `<span class="status-badge" style="background: #FEF3C7; color: #B45309; border: 1px solid #FCD34D;">● На ТО</span>`;
+        } else {
+          statusBadge = `<span class="status-badge badge-muted">● ${escapeHtml(st)}</span>`;
+        }
+
+        // TO date formatted
+        const toDisplay = v.toDate ? `до ${escapeHtml(v.toDate)}` : 'Не указан';
+
+        return `
+          <tr>
+            <td>
+              <strong style="font-family: monospace; font-size: 13.5px; background: #EEF2FF; color: #1E3A8A; padding: 4px 8px; border-radius: 6px; border: 1px solid #C7D2FE;">
+                ${escapeHtml(v.plate)}
+              </strong>
+            </td>
+            <td><strong>${escapeHtml(v.model)}</strong></td>
+            <td>${escapeHtml(String(v.year))} г.</td>
+            <td><span style="font-weight: 600;">${escapeHtml(String(v.seats))} мест</span></td>
+            <td>${amenitiesHtml}</td>
+            <td><span style="color: var(--status-available); font-weight: 600; font-size: 12.5px;">${toDisplay}</span></td>
+            <td>${statusBadge}</td>
+            <td style="text-align: right;">
+              <div style="display: inline-flex; gap: 6px;">
+                <button type="button" class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;" onclick="openEditVehicleModal(${idx})" title="Редактировать">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align: -1px; margin-right: 3px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  Изменить
+                </button>
+                <button type="button" class="btn btn-secondary" style="padding: 5px 8px; font-size: 12px; color: #DC2626;" onclick="deleteVehicle(${idx})" title="Удалить борт">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
 
       if (vehSelect) {
-        vehSelect.innerHTML = userVehicles.map(v => `<option value="${v.model} (${v.plate})">${v.model} (${v.plate})</option>`).join('');
+        vehSelect.innerHTML = userVehicles.map(v => `<option value="${escapeHtml(v.model)} (${escapeHtml(v.plate)})">${escapeHtml(v.model)} (${escapeHtml(v.plate)})</option>`).join('');
       }
     }
 
@@ -1625,22 +1829,43 @@
       showAuthToast('Рейс назначен', `Рейс ${tTime} (${rFrom} → ${rTo}) успешно добавлен в расписание.`);
     };
 
-    // SUBMIT NEW VEHICLE HANDLER
+    // SUBMIT VEHICLE (CREATE / EDIT) HANDLER
     window.handleCreateVehicleSubmit = function(e) {
       e.preventDefault();
-      const model = document.getElementById('veh-model')?.value || '';
-      const plate = document.getElementById('veh-plate')?.value || '';
-      const year = document.getElementById('veh-year')?.value || '';
-      const seats = document.getElementById('veh-seats')?.value || '';
-      const toDate = document.getElementById('veh-to')?.value || '';
+      const model = document.getElementById('veh-model')?.value.trim() || '';
+      const plate = document.getElementById('veh-plate')?.value.trim() || '';
+      const year = document.getElementById('veh-year')?.value.trim() || '';
+      const seats = document.getElementById('veh-seats')?.value.trim() || '';
+      const toDate = document.getElementById('veh-to')?.value.trim() || '';
+      const status = document.getElementById('veh-status')?.value || 'На линии';
+      const extraAmenities = document.getElementById('veh-extra-amenity')?.value.trim() || '';
 
-      userVehicles.unshift({
+      const amenities = [];
+      document.querySelectorAll('.veh-amenity-cb:checked').forEach(cb => {
+        amenities.push(cb.value);
+      });
+
+      const editIdx = document.getElementById('veh-edit-index')?.value;
+
+      const vehicleData = {
         model,
         plate,
         year,
         seats,
-        toDate
-      });
+        toDate,
+        status,
+        amenities,
+        extraAmenities
+      };
+
+      if (editIdx !== '' && !isNaN(parseInt(editIdx, 10))) {
+        const idx = parseInt(editIdx, 10);
+        userVehicles[idx] = vehicleData;
+        showAuthToast('Данные обновлены', `Параметры микроавтобуса ${model} (${plate}) сохранены.`);
+      } else {
+        userVehicles.unshift(vehicleData);
+        showAuthToast('Борт добавлен', `Микроавтобус ${model} (${plate}) внесен в автопарк.`);
+      }
 
       try {
         localStorage.setItem('busliner_carrier_vehicles', JSON.stringify(userVehicles));
@@ -1648,7 +1873,6 @@
 
       renderVehicles();
       closeNewVehicleModal();
-      showAuthToast('Борт добавлен', `Микроавтобус ${model} (${plate}) успешно внесен в автопарк.`);
     };
 
     // SYNC CARRIER ORG INFO AND REAL DRIVERS FROM SQLITE DATABASE
