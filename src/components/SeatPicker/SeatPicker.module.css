@@ -1,0 +1,1020 @@
+/**
+ * Дизайн-система компонента выбора мест (SeatPicker)
+ * Стилизовано по принципам Quiet Luxury и Travel-Tech (Aviasales, FlixBus, Omio)
+ * Строго консистентные токены, отсутствие аляповатых градиентов, 100% доступность
+ */
+
+:root {
+  --sp-canvas: #F8F9FA;
+  --sp-surface: #FFFFFF;
+  --sp-surface-subtle: #F1F5F9;
+  --sp-border: #E2E8F0;
+  --sp-border-strong: #CBD5E1;
+  --sp-text-main: #0F172A;
+  --sp-text-muted: #64748B;
+  --sp-text-subtle: #94A3B8;
+
+  /* Бренд-акценты */
+  --sp-brand-primary: #1E3A8A;
+  --sp-brand-primary-hover: #172554;
+  --sp-brand-light: #EEF2FF;
+  --sp-brand-border: #C7D2FE;
+
+  /* Статусы кресел */
+  --sp-seat-available-bg: #FFFFFF;
+  --sp-seat-available-border: #CBD5E1;
+  --sp-seat-available-hover: #F8FAFC;
+  --sp-seat-selected-bg: #1E3A8A;
+  --sp-seat-selected-border: #1E3A8A;
+  --sp-seat-selected-text: #FFFFFF;
+  --sp-seat-occupied-bg: #F1F5F9;
+  --sp-seat-occupied-border: #E2E8F0;
+  --sp-seat-occupied-text: #94A3B8;
+  --sp-seat-female-bg: #FDF2F8;
+  --sp-seat-female-border: #F472B6;
+  --sp-seat-male-bg: #F0F9FF;
+  --sp-seat-male-border: #38BDF8;
+  --sp-seat-disabled-bg: #EFF6FF;
+  --sp-seat-disabled-border: #60A5FA;
+
+  /* Радиусы и тени */
+  --sp-radius-card: 16px;
+  --sp-radius-seat: 7px;
+  --sp-radius-pill: 9999px;
+  --sp-shadow-card: 0 2px 14px rgba(0, 0, 0, 0.04);
+  --sp-shadow-tooltip: 0 8px 24px rgba(15, 23, 42, 0.12);
+  --sp-shadow-sticky: 0 -4px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* ================= КАРТОЧКА КОМПОНЕНТА ================= */
+.seatPickerCard {
+  background: var(--sp-surface);
+  border: 1px solid var(--sp-border);
+  border-radius: var(--sp-radius-card);
+  box-shadow: var(--sp-shadow-card);
+  padding: 24px;
+  max-width: 820px;
+  margin: 0 auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: var(--sp-text-main);
+  box-sizing: border-box;
+}
+
+/* ================= ШАПКА ================= */
+.pickerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--sp-border);
+}
+
+.carrierTagline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.carrierTagBadge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--sp-surface-subtle);
+  color: var(--sp-text-muted);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--sp-border);
+}
+
+.carrierName {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sp-brand-primary);
+}
+
+.pickerTitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: var(--sp-text-main);
+  letter-spacing: -0.01em;
+}
+
+.pickerSubtitle {
+  font-size: 13px;
+  color: var(--sp-text-muted);
+  margin: 0;
+}
+
+/* Переключатель ТС */
+.vehicleSwitcher {
+  display: flex;
+  background: var(--sp-surface-subtle);
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid var(--sp-border);
+  gap: 4px;
+}
+
+.switchBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sp-text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.switchBtn:hover {
+  color: var(--sp-text-main);
+}
+
+.switchBtn_active {
+  background: var(--sp-surface);
+  color: var(--sp-brand-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* ================= ЛЕГЕНДА ================= */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--sp-border);
+  font-size: 12px;
+  color: var(--sp-text-muted);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legendChip {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+.legendChip_available {
+  background: var(--sp-seat-available-bg);
+  border: 1.5px solid var(--sp-seat-available-border);
+}
+
+.legendChip_selected {
+  background: var(--sp-seat-selected-bg);
+  border: 1.5px solid var(--sp-seat-selected-border);
+}
+
+.legendChip_occupied {
+  background: var(--sp-seat-occupied-bg);
+  border: 1.5px solid var(--sp-seat-occupied-border);
+}
+
+.legendChip_blocked {
+  background: repeating-linear-gradient(
+    -45deg,
+    #E2E8F0,
+    #E2E8F0 2px,
+    #FFFFFF 2px,
+    #FFFFFF 4px
+  );
+  border: 1.5px solid var(--sp-border-strong);
+}
+
+.legendChip_female {
+  background: var(--sp-seat-female-bg);
+  border: 1.5px solid var(--sp-seat-female-border);
+}
+
+.legendChip_male {
+  background: var(--sp-seat-male-bg);
+  border: 1.5px solid var(--sp-seat-male-border);
+}
+
+.legendChip_disabled {
+  background: var(--sp-seat-disabled-bg);
+  border: 1.5px solid var(--sp-seat-disabled-border);
+}
+
+.legendText {
+  font-weight: 500;
+}
+
+/* ================= СХЕМА САЛОНА И КОРПУС ================= */
+.seatMapWrapper {
+  position: relative;
+  padding: 24px 0 16px;
+}
+
+.seatMapScrollArea {
+  overflow-x: auto;
+  padding: 8px 4px 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.busHull {
+  background: #FFFFFF;
+  border: 2px solid #CBD5E1;
+  border-radius: 28px;
+  min-width: 380px;
+  max-width: 440px;
+  margin: 0 auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  position: relative;
+}
+
+/* Носовая часть / Кабина */
+.busFrontHeader {
+  background: #F8FAFC;
+  border-bottom: 2px solid #E2E8F0;
+  border-radius: 26px 26px 0 0;
+  padding: 16px 18px 12px;
+}
+
+.busWindshield {
+  position: relative;
+  height: 28px;
+  background: linear-gradient(180deg, rgba(30, 58, 138, 0.08) 0%, rgba(30, 58, 138, 0.02) 100%);
+  border: 1.5px solid #CBD5E1;
+  border-radius: 14px 14px 6px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.busFrontLabel {
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.windshieldWiperLeft,
+.windshieldWiperRight {
+  position: absolute;
+  bottom: 2px;
+  width: 28px;
+  height: 2px;
+  background: #94A3B8;
+  transform-origin: left bottom;
+}
+
+.windshieldWiperLeft {
+  left: 30px;
+  transform: rotate(15deg);
+}
+
+.windshieldWiperRight {
+  right: 40px;
+  transform: rotate(-15deg);
+}
+
+.frontCockpitRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.driverCockpit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.steeringWheel {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1.5px solid #64748B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #334155;
+}
+
+.driverLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.frontCockpitAisle {
+  flex: 1;
+}
+
+.entranceDoor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: #FEF3C7;
+  border: 1px dashed #D97706;
+  border-radius: 6px;
+}
+
+.entranceStairs {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stairStep {
+  width: 14px;
+  height: 3px;
+  background: #D97706;
+  border-radius: 1px;
+}
+
+.entranceMeta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #92400E;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ================= САЛОН И РЯДЫ ================= */
+.cabinSaloon {
+  padding: 16px 14px;
+}
+
+.cabinRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.rowNumberIndicator {
+  width: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sp-text-subtle);
+  text-align: right;
+  margin-right: 8px;
+  user-select: none;
+}
+
+.rowSeatsGroup {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidePair {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.aisleTrack {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 32px;
+}
+
+.aisleDottedLine {
+  width: 1.5px;
+  height: 28px;
+  border-left: 1.5px dashed #CBD5E1;
+}
+
+/* Служебные зоны */
+.serviceZoneWc {
+  width: 88px;
+  height: 42px;
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  border-radius: var(--sp-radius-seat);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #475569;
+}
+
+.midEntrance {
+  width: 88px;
+  height: 42px;
+  background: #FEF3C7;
+  border: 1px dashed #D97706;
+  border-radius: var(--sp-radius-seat);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #92400E;
+}
+
+/* ================= КРЕСЛО (SEAT) ================= */
+.seat {
+  width: 44px;
+  height: 42px;
+  position: relative;
+  padding: 0;
+  background: var(--sp-seat-available-bg);
+  border: 1.5px solid var(--sp-seat-available-border);
+  border-radius: var(--sp-radius-seat);
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.16s ease,
+              border-color 0.16s ease,
+              background-color 0.16s ease;
+}
+
+.seat:focus-visible {
+  outline: 2px solid var(--sp-brand-primary);
+  outline-offset: 2px;
+  z-index: 2;
+}
+
+/* Спинка и подголовник */
+.seatBackrest {
+  height: 12px;
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 5px 5px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seatHeadrest {
+  width: 20px;
+  height: 5px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* Подушка и номер */
+.seatCushion {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.seatNumber {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--sp-text-main);
+  line-height: 1;
+  user-select: none;
+}
+
+/* Подлокотники */
+.seatArmrestLeft,
+.seatArmrestRight {
+  position: absolute;
+  top: 10px;
+  width: 3px;
+  height: 18px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 1.5px;
+}
+
+.seatArmrestLeft {
+  left: 1.5px;
+}
+
+.seatArmrestRight {
+  right: 1.5px;
+}
+
+/* Индикаторы */
+.seatIconBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+
+.seatFeeDotPlus {
+  position: absolute;
+  bottom: 2px;
+  right: 3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10B981;
+}
+
+.seatFeeDotMinus {
+  position: absolute;
+  bottom: 2px;
+  right: 3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #F59E0B;
+}
+
+/* ================= СОСТОЯНИЯ КРЕСЕЛ ================= */
+/* Available Hover */
+.seat_available:hover {
+  background: var(--sp-seat-available-hover);
+  border-color: #94A3B8;
+  transform: translateY(-1.5px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Selected */
+.seat_selected {
+  background: var(--sp-seat-selected-bg) !important;
+  border-color: var(--sp-seat-selected-border) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3) !important;
+}
+
+.seat_selected .seatNumber {
+  color: var(--sp-seat-selected-text) !important;
+}
+
+.seat_selected .seatBackrest {
+  background: rgba(255, 255, 255, 0.15);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.seat_selected .seatHeadrest {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.seat_selected .seatArmrestLeft,
+.seat_selected .seatArmrestRight {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Occupied */
+.seat_occupied {
+  background: var(--sp-seat-occupied-bg);
+  border-color: var(--sp-seat-occupied-border);
+  cursor: not-allowed;
+}
+
+.seat_occupied .seatNumber {
+  color: var(--sp-seat-occupied-text);
+  text-decoration: line-through;
+}
+
+/* Blocked */
+.seat_blocked {
+  background: repeating-linear-gradient(
+    -45deg,
+    #F1F5F9,
+    #F1F5F9 3px,
+    #FFFFFF 3px,
+    #FFFFFF 6px
+  );
+  border-color: #CBD5E1;
+  cursor: not-allowed;
+}
+
+.seat_blocked .seatNumber {
+  color: #94A3B8;
+}
+
+/* Female-only */
+.seat_female-only {
+  background: var(--sp-seat-female-bg);
+  border-color: var(--sp-seat-female-border);
+  color: #DB2777;
+}
+
+.seat_female-only:hover {
+  background: #FCE7F3;
+}
+
+/* Male-only */
+.seat_male-only {
+  background: var(--sp-seat-male-bg);
+  border-color: var(--sp-seat-male-border);
+  color: #0284C7;
+}
+
+.seat_male-only:hover {
+  background: #E0F2FE;
+}
+
+/* Disabled */
+.seat_disabled {
+  background: var(--sp-seat-disabled-bg);
+  border-color: var(--sp-seat-disabled-border);
+  color: #2563EB;
+}
+
+.seat_disabled:hover {
+  background: #DBEAFE;
+}
+
+/* ================= КОРМА / БАГАЖ ================= */
+.busRearLuggage {
+  background: #F8FAFC;
+  border-top: 2px solid #E2E8F0;
+  border-radius: 0 0 26px 26px;
+  padding: 14px 18px;
+}
+
+.luggageCompartment {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #FFFFFF;
+  border: 1px dashed #CBD5E1;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.luggageIcon {
+  color: #64748B;
+  display: flex;
+}
+
+.luggageTitle {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #1E293B;
+}
+
+.luggageSub {
+  display: block;
+  font-size: 10px;
+  color: #64748B;
+}
+
+.busRearBumper {
+  height: 5px;
+  width: 120px;
+  background: #CBD5E1;
+  border-radius: 3px;
+  margin: 10px auto 0;
+}
+
+/* ================= TOOLTIP ================= */
+.tooltip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  width: 230px;
+  background: #0F172A;
+  color: #FFFFFF;
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: var(--sp-shadow-tooltip);
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  font-size: 12px;
+}
+
+.tooltipHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+
+.tooltipTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tooltipSeatNum {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.tooltipTypeBadge {
+  font-size: 10px;
+  color: #94A3B8;
+  font-weight: 500;
+}
+
+.tooltipPrice {
+  font-size: 14px;
+  font-weight: 800;
+  color: #38BDF8;
+}
+
+.tooltipExtraFee {
+  display: block;
+  font-size: 9px;
+  font-weight: 600;
+  color: #34D399;
+  text-align: right;
+}
+
+.tooltipDiscountFee {
+  display: block;
+  font-size: 9px;
+  font-weight: 600;
+  color: #FBBF24;
+  text-align: right;
+}
+
+.tooltipStatusNotice {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 10.5px;
+  margin-bottom: 8px;
+  color: #F8FAFC;
+}
+
+.tooltipFeatures {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tooltipFeatureItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #CBD5E1;
+}
+
+.tooltipFeatureItem svg {
+  color: #38BDF8;
+  flex-shrink: 0;
+}
+
+/* ================= STICKY SUMMARY BAR ================= */
+.summaryStickyBar {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #FFFFFF;
+  border-top: 1px solid var(--sp-border);
+  box-shadow: var(--sp-shadow-sticky);
+  border-radius: 0 0 var(--sp-radius-card) var(--sp-radius-card);
+  margin: 16px -24px -24px -24px;
+  padding: 16px 24px;
+  z-index: 20;
+}
+
+.limitBanner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #991B1B;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.summaryContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.summaryDetails {
+  flex: 1;
+  min-width: 240px;
+}
+
+.summaryEmptyState {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.summaryEmptyIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--sp-surface-subtle);
+  border: 1px solid var(--sp-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sp-text-muted);
+}
+
+.summaryEmptyTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sp-text-main);
+  margin: 0;
+}
+
+.summaryEmptySubtitle {
+  font-size: 11.5px;
+  color: var(--sp-text-muted);
+  margin: 2px 0 0 0;
+}
+
+.summaryHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.summaryCount {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sp-text-muted);
+}
+
+.summaryTotalPrice {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--sp-brand-primary);
+}
+
+.summaryChipsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.summaryChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--sp-brand-light);
+  border: 1px solid var(--sp-brand-border);
+  color: var(--sp-brand-primary);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.summaryChipRemoveBtn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  color: var(--sp-brand-primary);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.summaryChipRemoveBtn:hover {
+  opacity: 1;
+}
+
+.summaryAction {
+  flex-shrink: 0;
+}
+
+.summaryProceedBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--sp-brand-primary);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.summaryProceedBtn:hover:not(:disabled) {
+  background: var(--sp-brand-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(30, 58, 138, 0.25);
+}
+
+.summaryProceedBtn:disabled {
+  background: #E2E8F0;
+  color: #94A3B8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ================= SKELETON LOADING ================= */
+.skeletonContainer {
+  padding: 30px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.skeletonHull {
+  width: 380px;
+  height: 380px;
+  background: #F8FAFC;
+  border: 2px dashed #E2E8F0;
+  border-radius: 28px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.skeletonHeader {
+  height: 32px;
+  background: #E2E8F0;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  animation: skeletonPulse 1.4s infinite ease-in-out;
+}
+
+.skeletonRows {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skeletonRow {
+  height: 34px;
+  background: #E2E8F0;
+  border-radius: 6px;
+  animation: skeletonPulse 1.4s infinite ease-in-out;
+}
+
+@keyframes skeletonPulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+/* ================= АДАПТИВНОСТЬ ================= */
+@media (max-width: 640px) {
+  .seatPickerCard {
+    padding: 16px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .summaryStickyBar {
+    margin: 16px -16px -16px -16px;
+    padding: 14px 16px;
+  }
+
+  .pickerTitle {
+    font-size: 18px;
+  }
+
+  .summaryProceedBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .summaryAction {
+    width: 100%;
+  }
+}
