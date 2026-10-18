@@ -897,117 +897,11 @@
     }
 
 
-    /* SMS VERIFICATION MODAL & 4-DIGIT OTP INPUTS */
-    .sms-modal-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(20, 21, 24, 0.65);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      z-index: 99999;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .sms-modal-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border-hairline);
-      border-radius: 20px;
-      width: 100%;
-      max-width: 440px;
-      padding: 28px 28px;
-      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.22);
-      position: relative;
-      animation: modalPop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .sms-otp-inputs-row {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin: 22px 0 16px;
-    }
-    .sms-digit-input {
-      width: 58px;
-      height: 64px;
-      font-size: 26px;
-      font-weight: 800;
-      font-family: var(--font-body);
-      text-align: center;
-      color: var(--accent-institutional);
-      background: var(--surface-subtle);
-      border: 2px solid var(--border-hairline);
-      border-radius: 12px;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      outline: none;
-    }
-    .sms-digit-input:focus {
-      border-color: var(--accent-institutional);
-      background: #FFFFFF;
-      box-shadow: 0 0 0 4px var(--accent-soft);
-      transform: translateY(-2px);
-    }
-    .sms-resend-wrap {
-      text-align: center;
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 20px;
-    }
-    .sms-resend-btn {
-      background: none;
-      border: none;
-      color: var(--accent-institutional);
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      text-decoration: underline;
-      padding: 0;
-    }
-    .phone-verify-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--surface-subtle);
-      border: 1px solid var(--border-hairline);
-      border-radius: 10px;
-      padding: 8px 14px;
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--accent-institutional);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
-    .phone-verify-btn:hover {
-      background: var(--accent-soft);
-      border-color: var(--accent-border);
-      transform: translateY(-1px);
-    }
-    .carrier-method-btn {
-      flex: 1;
-      padding: 9px 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      background: transparent;
-      color: var(--text-muted);
-      transition: all 0.2s ease;
-    }
-    .carrier-method-btn.active {
-      background: #FFFFFF;
-      color: var(--accent-institutional);
-      font-weight: 700;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    }
-
     @media (max-width: 640px) {
       .panel-body { padding: 24px 20px; }
       .form-row, .oauth-grid { grid-template-columns: 1fr; }
       .wizard-steps { display: none; }
       .view-tabs-wrapper { padding: 16px 20px 0; }
-      .sms-digit-input { width: 50px; height: 56px; font-size: 22px; }
     }
   </style>
 </head>
@@ -1095,42 +989,14 @@
         </button>
 
         <div class="auth-divider">
-          <span>или выберите способ входа</span>
+          <span>или через корпоративную почту</span>
         </div>
 
-        <!-- CARRIER AUTH METHOD SWITCHER -->
-        <div style="display: flex; background: var(--surface-subtle); border-radius: 10px; padding: 4px; margin-bottom: 20px; border: 1px solid var(--border-hairline);">
-          <button type="button" id="carrier-login-tab-phone" class="carrier-method-btn active" onclick="switchCarrierLoginMethod('phone')">
-            По номеру телефона (SMS)
-          </button>
-          <button type="button" id="carrier-login-tab-email" class="carrier-method-btn" onclick="switchCarrierLoginMethod('email')">
-            Корпоративный Email
-          </button>
-        </div>
-
-        <!-- METHOD 1: PHONE (SMS OTP) LOGIN FORM -->
-        <form id="carrier-login-phone-form" onsubmit="handleCarrierPhoneLogin(event)">
-          <div class="form-group" style="margin-bottom: 18px;">
-            <label class="form-label" for="carrier-login-phone">Номер телефона представителя *</label>
-            <input type="tel" id="carrier-login-phone" class="form-input" placeholder="+375 (29) 000-00-00" required>
-            <span class="form-hint">Мы отправим 4-значный проверочный SMS-код</span>
-          </div>
-
-          <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" id="carrier-sms-remember" checked style="accent-color: var(--accent-institutional); width: 16px; height: 16px;">
-            <label for="carrier-sms-remember" style="font-size: 13px; color: var(--text-muted); cursor: pointer;">Запомнить рабочую сессию на 30 дней</label>
-          </div>
-
-          <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
-            Получить SMS-код и войти &rarr;
-          </button>
-        </form>
-
-        <!-- METHOD 2: EMAIL / PASSWORD FORM -->
-        <form id="carrier-login-email-form" onsubmit="handleEmailLogin(event)" style="display: none;">
+        <!-- EMAIL / PASSWORD FORM -->
+        <form onsubmit="handleEmailLogin(event)">
           <div class="form-group">
             <label class="form-label" for="login-email">Рабочий Email</label>
-            <input type="email" id="login-email" class="form-input" placeholder="info@carrier.by">
+            <input type="email" id="login-email" class="form-input" placeholder="info@carrier.by" required>
           </div>
           <div class="form-group">
             <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
@@ -1138,7 +1004,7 @@
               <a href="#" onclick="showAuthToast('Сброс пароля', 'Инструкция по восстановлению доступа отправлена на ваш email.'); return false;" style="font-size: 12px; color: var(--accent-institutional); text-decoration: none; font-weight: 500;">Забыли пароль?</a>
             </div>
             <div class="password-input-wrap">
-              <input type="password" id="login-password" class="form-input" placeholder="••••••••••••">
+              <input type="password" id="login-password" class="form-input" placeholder="••••••••••••" required>
               <button type="button" class="btn-eye-toggle" onclick="togglePasswordVisibility('login-password', this)" aria-label="Показать пароль">
                 <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -1241,17 +1107,8 @@
               </div>
               <div class="form-group">
                 <label class="form-label" for="ob-phone">Мобильный телефон (OTP) *</label>
-                <div style="display: flex; gap: 8px;">
-                  <input type="tel" id="ob-phone" class="form-input" placeholder="+375 (29) 000-00-00" required style="flex: 1;">
-                  <button type="button" id="btn-verify-carrier-phone" class="phone-verify-btn" onclick="startCarrierOnboardPhoneSms()">
-                    Подтвердить по SMS
-                  </button>
-                </div>
-                <div id="carrier-phone-verified-badge" style="display: none; align-items: center; gap: 6px; margin-top: 6px; color: var(--status-available); font-size: 12.5px; font-weight: 700;">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span>Номер подтвержден по SMS</span>
-                </div>
-                <span class="form-hint" id="carrier-phone-hint">Для срочных уведомлений о рейсах и авторизации</span>
+                <input type="tel" id="ob-phone" class="form-input" placeholder="+375 (29) 000-00-00" required>
+                <span class="form-hint">Для срочных уведомлений о рейсах</span>
               </div>
             </div>
 
@@ -1730,54 +1587,6 @@
     </div>
   </div>
 
-  <!-- SMS OTP VERIFICATION MODAL (CARRIER & DRIVER) -->
-  <div id="sms-auth-modal" class="sms-modal-backdrop" onclick="if(event.target===this) closeSmsModal()">
-    <div class="sms-modal-card">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="width: 38px; height: 38px; border-radius: 10px; background: var(--accent-soft); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--accent-institutional);">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
-              <line x1="12" y1="18" x2="12.01" y2="18"/>
-            </svg>
-          </div>
-          <div>
-            <div id="sms-modal-title" style="font-family: var(--font-body); font-weight: 700; font-size: 17px; color: var(--text-primary); line-height: 1.2;">Подтверждение по SMS</div>
-            <div id="sms-modal-subtitle" style="font-size: 12px; color: var(--text-dim); margin-top: 2px;">Одноразовый проверочный код (OTP)</div>
-          </div>
-        </div>
-        <button type="button" onclick="closeSmsModal()" aria-label="Закрыть" style="background: none; border: none; font-size: 26px; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 0 4px; transition: color 0.2s ease;">&times;</button>
-      </div>
-
-      <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5; margin-bottom: 6px;">
-        Мы отправили SMS с 4-значным кодом подтверждения на номер:
-      </p>
-      <div style="font-size: 16px; font-weight: 700; color: var(--accent-institutional); margin-bottom: 16px;" id="sms-modal-phone-text">
-        +375 (29) 000-00-00
-      </div>
-
-      <!-- 4-DIGIT PIN INPUTS -->
-      <div class="sms-otp-inputs-row" id="sms-otp-boxes">
-        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="sms-digit-input" id="sms-digit-0" autofocus>
-        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="sms-digit-input" id="sms-digit-1">
-        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="sms-digit-input" id="sms-digit-2">
-        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="sms-digit-input" id="sms-digit-3">
-      </div>
-
-      <div id="sms-error-feedback" style="display: none; color: #DC2626; font-size: 12.5px; text-align: center; margin-bottom: 12px; font-weight: 500;"></div>
-
-      <div class="sms-resend-wrap">
-        <span id="sms-timer-text">Отправить код повторно через <strong id="sms-countdown" style="font-variant-numeric: tabular-nums;">60</strong> с</span>
-        <button type="button" id="sms-btn-resend" class="sms-resend-btn" onclick="resendSmsCode()" style="display: none;">Отправить код повторно</button>
-      </div>
-
-      <div style="display: flex; gap: 10px;">
-        <button type="button" class="btn btn-secondary" onclick="closeSmsModal()" style="flex: 1; padding: 12px; font-size: 13.5px;">Отмена</button>
-        <button type="button" class="btn btn-accent" id="sms-submit-btn" onclick="submitSmsVerification()" style="flex: 2; padding: 12px; font-size: 13.5px;">Подтвердить код &rarr;</button>
-      </div>
-    </div>
-  </div>
-
   <!-- FOOTER -->
   <footer class="auth-footer">
     <div style="max-width: 800px; margin: 0 auto; display: flex; justify-content: flex-end; align-items: center; margin-bottom: 18px;">
@@ -2243,383 +2052,6 @@
       openTelegramModal('driver_reg');
     };
 
-    // =========================================================================
-    // SMS OTP CONFIRMATION ENGINE (CARRIER & DRIVER)
-    // =========================================================================
-    let smsCurrentPhone = '';
-    let smsCurrentRole = 'owner';
-    let smsCurrentIntent = 'login';
-    let smsCurrentExtra = {};
-    let smsOnSuccessCallback = null;
-    let smsCountdownInterval = null;
-    let smsCountdownSeconds = 60;
-    let carrierPhoneVerified = false;
-
-    // Carrier login method switch (Phone SMS vs Email)
-    window.switchCarrierLoginMethod = function(method) {
-      const btnPhone = document.getElementById('carrier-login-tab-phone');
-      const btnEmail = document.getElementById('carrier-login-tab-email');
-      const formPhone = document.getElementById('carrier-login-phone-form');
-      const formEmail = document.getElementById('carrier-login-email-form');
-
-      if (method === 'email') {
-        if (btnEmail) btnEmail.classList.add('active');
-        if (btnPhone) btnPhone.classList.remove('active');
-        if (formEmail) formEmail.style.display = 'block';
-        if (formPhone) formPhone.style.display = 'none';
-        const em = document.getElementById('login-email');
-        if (em) em.focus();
-      } else {
-        if (btnPhone) btnPhone.classList.add('active');
-        if (btnEmail) btnEmail.classList.remove('active');
-        if (formPhone) formPhone.style.display = 'block';
-        if (formEmail) formEmail.style.display = 'none';
-        const ph = document.getElementById('carrier-login-phone');
-        if (ph) ph.focus();
-      }
-    };
-
-    window.openSmsModal = function(phone, role, intent, extra = {}, onSuccess = null) {
-      smsCurrentPhone = (phone || '').trim();
-      smsCurrentRole = role || 'owner';
-      smsCurrentIntent = intent || 'login';
-      smsCurrentExtra = extra || {};
-      smsOnSuccessCallback = onSuccess;
-
-      const modal = document.getElementById('sms-auth-modal');
-      const phoneText = document.getElementById('sms-modal-phone-text');
-      const titleEl = document.getElementById('sms-modal-title');
-      const errEl = document.getElementById('sms-error-feedback');
-
-      if (errEl) {
-        errEl.style.display = 'none';
-        errEl.innerText = '';
-      }
-
-      if (phoneText) phoneText.innerText = smsCurrentPhone;
-
-      if (titleEl) {
-        if (role === 'driver') {
-          titleEl.innerText = intent === 'driver_reg' ? 'Регистрация водителя (SMS)' : 'Вход для водителя (SMS)';
-        } else {
-          titleEl.innerText = intent === 'onboard' ? 'Подтверждение номера телефона' : 'Вход перевозчика по SMS';
-        }
-      }
-
-      // Clear input boxes
-      for (let i = 0; i < 4; i++) {
-        const box = document.getElementById(`sms-digit-${i}`);
-        if (box) box.value = '';
-      }
-
-      if (modal) {
-        modal.style.display = 'flex';
-      }
-
-      startSmsCountdown();
-
-      // Trigger SMS send to backend
-      fetch('http://localhost:8080/api/auth/send-sms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone: smsCurrentPhone,
-          role: smsCurrentRole,
-          intent: smsCurrentIntent
-        })
-      })
-      .then(r => r.json())
-      .then(data => {
-        if (data && data.success) {
-          const devCode = data.dev_code;
-          if (devCode) {
-            showAuthToast('SMS отправлено', `Тестовый проверочный код: [ ${devCode} ]`);
-            // Pre-fill automatically to make interactive testing frictionless
-            setTimeout(() => {
-              for (let i = 0; i < 4; i++) {
-                const box = document.getElementById(`sms-digit-${i}`);
-                if (box && devCode[i]) box.value = devCode[i];
-              }
-              const lastBox = document.getElementById('sms-digit-3');
-              if (lastBox) lastBox.focus();
-            }, 300);
-          }
-        } else {
-          if (errEl) {
-            errEl.innerText = data.error || 'Ошибка отправки SMS. Попробуйте снова.';
-            errEl.style.display = 'block';
-          }
-        }
-      })
-      .catch(() => {
-        // Fallback for offline demo mode
-        showAuthToast('SMS отправлено', `Тестовый проверочный код: [ 1234 ]`);
-        setTimeout(() => {
-          ['1', '2', '3', '4'].forEach((d, i) => {
-            const box = document.getElementById(`sms-digit-${i}`);
-            if (box) box.value = d;
-          });
-        }, 300);
-      });
-
-      setTimeout(() => {
-        const first = document.getElementById('sms-digit-0');
-        if (first) first.focus();
-      }, 100);
-    };
-
-    window.closeSmsModal = function() {
-      const modal = document.getElementById('sms-auth-modal');
-      if (modal) modal.style.display = 'none';
-      if (smsCountdownInterval) {
-        clearInterval(smsCountdownInterval);
-        smsCountdownInterval = null;
-      }
-    };
-
-    function startSmsCountdown() {
-      if (smsCountdownInterval) clearInterval(smsCountdownInterval);
-      smsCountdownSeconds = 60;
-      const countEl = document.getElementById('sms-countdown');
-      const timerText = document.getElementById('sms-timer-text');
-      const resendBtn = document.getElementById('sms-btn-resend');
-
-      if (countEl) countEl.innerText = smsCountdownSeconds;
-      if (timerText) timerText.style.display = 'inline';
-      if (resendBtn) resendBtn.style.display = 'none';
-
-      smsCountdownInterval = setInterval(() => {
-        smsCountdownSeconds--;
-        if (countEl) countEl.innerText = smsCountdownSeconds;
-        if (smsCountdownSeconds <= 0) {
-          clearInterval(smsCountdownInterval);
-          smsCountdownInterval = null;
-          if (timerText) timerText.style.display = 'none';
-          if (resendBtn) resendBtn.style.display = 'inline';
-        }
-      }, 1000);
-    }
-
-    window.resendSmsCode = function() {
-      if (!smsCurrentPhone) return;
-      startSmsCountdown();
-      fetch('http://localhost:8080/api/auth/send-sms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone: smsCurrentPhone,
-          role: smsCurrentRole,
-          intent: smsCurrentIntent
-        })
-      })
-      .then(r => r.json())
-      .then(data => {
-        if (data && data.dev_code) {
-          showAuthToast('Новый SMS-код отправлен', `Код подтверждения: [ ${data.dev_code} ]`);
-          for (let i = 0; i < 4; i++) {
-            const box = document.getElementById(`sms-digit-${i}`);
-            if (box && data.dev_code[i]) box.value = data.dev_code[i];
-          }
-        } else {
-          showAuthToast('SMS отправлено', `Код подтверждения отправлен на ${smsCurrentPhone}`);
-        }
-      })
-      .catch(() => {
-        showAuthToast('SMS отправлено', 'Новый SMS-код отправлен (тестовый: 1234)');
-      });
-    };
-
-    window.submitSmsVerification = function() {
-      const digits = [0, 1, 2, 3].map(i => {
-        const box = document.getElementById(`sms-digit-${i}`);
-        return box ? box.value.trim() : '';
-      }).join('');
-
-      const errEl = document.getElementById('sms-error-feedback');
-      const submitBtn = document.getElementById('sms-submit-btn');
-
-      if (digits.length < 4) {
-        if (errEl) {
-          errEl.innerText = 'Пожалуйста, введите все 4 цифры проверочного кода.';
-          errEl.style.display = 'block';
-        }
-        return;
-      }
-
-      if (errEl) errEl.style.display = 'none';
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerText = 'Проверка...';
-      }
-
-      const payload = {
-        phone: smsCurrentPhone,
-        code: digits,
-        role: smsCurrentRole,
-        intent: smsCurrentIntent,
-        ...smsCurrentExtra
-      };
-
-      fetch('http://localhost:8080/api/auth/verify-sms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-      .then(r => r.json())
-      .then(data => {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerText = 'Подтвердить код →';
-        }
-        if (data && data.success && data.verified) {
-          closeSmsModal();
-          if (typeof smsOnSuccessCallback === 'function') {
-            smsOnSuccessCallback(data);
-          }
-        } else {
-          if (errEl) {
-            errEl.innerText = data.error || 'Неверный проверочный код из SMS.';
-            errEl.style.display = 'block';
-          }
-          const boxes = document.getElementById('sms-otp-boxes');
-          if (boxes) {
-            boxes.style.transform = 'translateX(-6px)';
-            setTimeout(() => { boxes.style.transform = 'translateX(6px)'; }, 80);
-            setTimeout(() => { boxes.style.transform = 'translateX(-4px)'; }, 160);
-            setTimeout(() => { boxes.style.transform = 'translateX(0)'; }, 240);
-          }
-        }
-      })
-      .catch(() => {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerText = 'Подтвердить код →';
-        }
-        closeSmsModal();
-        if (typeof smsOnSuccessCallback === 'function') {
-          smsOnSuccessCallback({ success: true, verified: true, phone: smsCurrentPhone });
-        }
-      });
-    };
-
-    function initSmsOtpInputs() {
-      for (let i = 0; i < 4; i++) {
-        const input = document.getElementById(`sms-digit-${i}`);
-        if (!input) continue;
-
-        input.addEventListener('input', () => {
-          const val = input.value.replace(/\D/g, '');
-          input.value = val ? val[0] : '';
-
-          if (input.value && i < 3) {
-            const next = document.getElementById(`sms-digit-${i + 1}`);
-            if (next) next.focus();
-          }
-
-          const full = [0, 1, 2, 3].every(idx => {
-            const b = document.getElementById(`sms-digit-${idx}`);
-            return b && b.value.length === 1;
-          });
-          if (full) {
-            submitSmsVerification();
-          }
-        });
-
-        input.addEventListener('keydown', (e) => {
-          if (e.key === 'Backspace' && !input.value && i > 0) {
-            const prev = document.getElementById(`sms-digit-${i - 1}`);
-            if (prev) {
-              prev.focus();
-              prev.value = '';
-            }
-          } else if (e.key === 'ArrowLeft' && i > 0) {
-            const prev = document.getElementById(`sms-digit-${i - 1}`);
-            if (prev) prev.focus();
-          } else if (e.key === 'ArrowRight' && i < 3) {
-            const next = document.getElementById(`sms-digit-${i + 1}`);
-            if (next) next.focus();
-          }
-        });
-
-        input.addEventListener('paste', (e) => {
-          e.preventDefault();
-          const pasteData = (e.clipboardData || window.clipboardData).getData('text');
-          const cleanDigits = pasteData.replace(/\D/g, '').slice(0, 4);
-          if (cleanDigits) {
-            for (let idx = 0; idx < cleanDigits.length; idx++) {
-              const b = document.getElementById(`sms-digit-${idx}`);
-              if (b) b.value = cleanDigits[idx];
-            }
-            if (cleanDigits.length === 4) {
-              submitSmsVerification();
-            } else {
-              const next = document.getElementById(`sms-digit-${cleanDigits.length}`);
-              if (next) next.focus();
-            }
-          }
-        });
-      }
-    }
-
-    // CARRIER PHONE SMS LOGIN HANDLER
-    window.handleCarrierPhoneLogin = function(e) {
-      if (e) e.preventDefault();
-      const phoneInput = document.getElementById('carrier-login-phone');
-      const phone = phoneInput ? phoneInput.value.trim() : '';
-      if (!phone) {
-        showAuthToast('Введите номер', 'Укажите номер мобильного телефона перевозчика.', false);
-        return;
-      }
-      openSmsModal(phone, 'owner', 'login', {}, (res) => {
-        showAuthToast('Вход выполнен', `Перевозчик (${res.phone || phone}) успешно авторизован по SMS.`);
-        localStorage.setItem('busliner_carrier_phone', res.phone || phone);
-        setTimeout(() => {
-          window.location.href = 'busliner-partners.html#slide-schedule';
-        }, 800);
-      });
-    };
-
-    // CARRIER ONBOARD STEP 1 PHONE SMS VERIFICATION
-    window.startCarrierOnboardPhoneSms = function() {
-      const phoneInput = document.getElementById('ob-phone');
-      const phone = phoneInput ? phoneInput.value.trim() : '';
-      if (!phone) {
-        showAuthToast('Введите номер', 'Сначала укажите номер телефона в поле.', false);
-        if (phoneInput) phoneInput.focus();
-        return;
-      }
-      openSmsModal(phone, 'owner', 'onboard', {}, (res) => {
-        carrierPhoneVerified = true;
-        const btn = document.getElementById('btn-verify-carrier-phone');
-        const badge = document.getElementById('carrier-phone-verified-badge');
-        const hint = document.getElementById('carrier-phone-hint');
-        if (btn) btn.style.display = 'none';
-        if (badge) badge.style.display = 'inline-flex';
-        if (hint) hint.innerText = 'Номер успешно подтвержден по SMS';
-        showAuthToast('Номер подтвержден', `Телефон ${res.phone || phone} верифицирован по SMS.`);
-      });
-    };
-
-    // DRIVER PHONE SMS LOGIN
-    window.handleDriverPhoneLogin = function(e) {
-      if (e) e.preventDefault();
-      const phoneInput = document.getElementById('driver-phone');
-      const phone = phoneInput ? phoneInput.value.trim() : '';
-      if (!phone) {
-        showAuthToast('Введите номер', 'Укажите номер телефона водителя для входа.', false);
-        return;
-      }
-      openSmsModal(phone, 'driver', 'driver_login', {}, (res) => {
-        showAuthToast('Вход выполнен', `Водитель (${res.phone || phone}) подтвержден по SMS. Загрузка терминала...`);
-        localStorage.setItem('busliner_driver_phone', res.phone || phone);
-        setTimeout(() => {
-          showAuthToast('Терминал водителя', 'Рейс Минск — Гомель (18:30). Доступ к ведомости открыт.');
-        }, 800);
-      });
-    };
-    window.handleDriverCodeLogin = window.handleDriverPhoneLogin;
-
-    // DRIVER REGISTRATION WITH SMS OTP CONFIRMATION
     window.handleDriverRegisterSubmit = function(e) {
       if (e) e.preventDefault();
       const name = (document.getElementById('driver-reg-name')?.value || '').trim();
@@ -2633,18 +2065,34 @@
         return;
       }
 
-      openSmsModal(phone, 'driver', 'driver_reg', {
-        full_name: name,
-        category: cat,
-        experience_years: exp,
-        invite_code: invite
-      }, (res) => {
-        showAuthToast('Регистрация завершена', `Водитель ${name} подтвержден по SMS и внесен в реестр BusLiner.`);
-        const loginPhoneInput = document.getElementById('driver-phone');
-        if (loginPhoneInput) loginPhoneInput.value = phone;
-        switchDriverView('login');
-      });
+      fetch('http://localhost:8080/api/auth/register-driver', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: name,
+          phone: phone,
+          category: cat,
+          experience_years: exp,
+          invite_code: invite
+        })
+      }).catch(() => {});
+
+      showAuthToast('Регистрация завершена', `Водитель ${name} успешно внесен в реестр BusLiner.`);
+      switchDriverView('login');
     };
+
+    window.handleDriverPhoneLogin = function(e) {
+      if (e) e.preventDefault();
+      const phoneInput = document.getElementById('driver-phone');
+      const phone = phoneInput && phoneInput.value ? phoneInput.value.trim() : '';
+      if (!phone) {
+        showAuthToast('Введите номер', 'Укажите ваш номер телефона для входа.', false);
+        return;
+      }
+      showAuthToast('Вход выполнен', `Водитель ${phone} авторизован в терминале посадки.`);
+    };
+
+    window.handleDriverCodeLogin = window.handleDriverPhoneLogin;
 
     window.handleTelegramLogin = function() {
       openTelegramModal('login');
@@ -2892,7 +2340,6 @@
     window.addEventListener('DOMContentLoaded', () => {
       renderAmenities();
       recalculateCommission();
-      initSmsOtpInputs();
 
       const bankSelect = document.getElementById('ob-bank-name');
       if (bankSelect) {
