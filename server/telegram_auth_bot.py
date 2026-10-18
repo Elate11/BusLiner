@@ -385,6 +385,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     f"• УНП: `{org_info.get('unp', '—')}`\n"
                     f"• Лицензия: {org_info.get('license', 'Минтранс РБ')}\n\n"
                     f"Вам открыт доступ к ведомостям рейсов этой организации.\n\n"
+                    f"Вы можете закрыть Telegram и перейти в терминал водителя в браузере.\n\n"
                     f"Команды:\n"
                     f"/trip — открыть ведомость текущего рейса\n"
                     f"/status — организация, статус смены и автобус\n"
@@ -517,7 +518,8 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 reply = (
                     "<b>BUSLINER SECURITY: ВХОД УЖЕ ПОДТВЕРЖДЕН</b>\n\n"
                     f"Здравствуйте, {first_name}.\n"
-                    "Вы уже подтвердили авторизацию. Окно в браузере обновляется."
+                    "Вы уже подтвердили авторизацию. Окно в браузере открыто.\n\n"
+                    "Вы можете закрыть Telegram и вернуться в браузер."
                 )
                 send_telegram_api_request("sendMessage", {
                     "chat_id": chat_id,
@@ -1032,12 +1034,14 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     "auth_date": int(time.time()),
                     "auth_method": "telegram_bot_challenge"
                 }
-                conf_title = "Вход перевозчика подтвержден" if action == "carrier_login" else "Привязка перевозчика подтверждена"
+                conf_title = "Вход перевозчика подтвержден" if action == "carrier_login" else "Регистрация перевозчика подтверждена"
+                conf_status = "Вход успешно выполнен." if action == "carrier_login" else "Регистрация успешно завершена."
                 conf_text = (
                     f"<b>{conf_title}</b>\n\n"
                     f"Здравствуйте, {first_name}.\n"
                     f"Организация: <b>{comp_name}</b> (УНП: <code>{unp}</code>)\n\n"
-                    "Окно в браузере обновляется и выполняет вход в консоль управления."
+                    f"{conf_status} Окно в браузере уже открыло личный кабинет перевозчика.\n\n"
+                    "Вы можете закрыть Telegram и продолжить работу в браузере."
                 )
             elif action in ("driver_login", "driver_reg"):
                 driver = get_driver_by_telegram_id(user_id)
@@ -1062,11 +1066,13 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     "auth_method": "telegram_bot_challenge"
                 }
                 conf_title = "Вход водителя подтвержден" if action == "driver_login" else "Регистрация водителя подтверждена"
+                conf_status = "Вход успешно выполнен." if action == "driver_login" else "Регистрация водителя успешно завершена."
                 conf_text = (
                     f"<b>{conf_title}</b>\n\n"
                     f"Здравствуйте, {first_name}.\n"
                     f"Автопарк: <b>{carrier_name}</b>\n\n"
-                    "Окно в браузере обновляется и выполняет вход в терминал посадки."
+                    f"{conf_status} Окно в браузере уже открыло терминал посадки.\n\n"
+                    "Вы можете закрыть Telegram и продолжить работу в браузере."
                 )
             else:
                 session["telegram_user"] = {
@@ -1077,7 +1083,11 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     "auth_date": int(time.time()),
                     "auth_method": "telegram_bot_challenge"
                 }
-                conf_text = f"<b>Авторизация подтверждена.</b>\n\nОкно браузера входит в консоль."
+                conf_text = (
+                    "<b>Авторизация подтверждена</b>\n\n"
+                    "Вход успешно выполнен. Окно браузера уже открыло систему.\n\n"
+                    "Вы можете закрыть Telegram и продолжить работу в браузере."
+                )
 
             send_telegram_api_request("answerCallbackQuery", {
                 "callback_query_id": cb_id,
