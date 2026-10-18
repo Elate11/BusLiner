@@ -810,13 +810,13 @@
       gap: 14px;
       margin-bottom: 22px;
       padding-bottom: 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid var(--border-hairline, #E2E2DC);
     }
 
     .cutaway-model-select {
-      background: #1E293B;
-      border: 1.5px solid rgba(255, 255, 255, 0.2);
-      color: #F8FAFC;
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      color: #0F172A;
       font-size: 13px;
       font-weight: 600;
       padding: 9px 16px;
@@ -826,11 +826,11 @@
       transition: all 0.2s ease;
     }
     .cutaway-model-select:hover {
-      border-color: #38BDF8;
+      border-color: #1E3A8A;
     }
     .cutaway-model-select option {
-      background: #0F172A;
-      color: #F8FAFC;
+      background: #FFFFFF;
+      color: #0F172A;
     }
 
     .cutaway-legend {
@@ -843,7 +843,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      color: #94A3B8;
+      color: #64748B;
       font-weight: 500;
     }
     .legend-chip {
@@ -853,15 +853,15 @@
     }
 
     /* ==========================================================================
-       MERCEDES-BENZ RESCUE SHEET CAD BLUEPRINT (HORIZONTAL & VERTICAL)
+       TECHNICAL MINIBUS CUTAWAY BLUEPRINT (LIGHT ARCHITECTURAL SCHEME)
        ========================================================================== */
     .cad-rescue-container {
-      background: #060913;
-      border: 1.5px solid #1E293B;
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline, #E2E2DC);
       border-radius: 16px;
       padding: 20px;
       position: relative;
-      box-shadow: inset 0 2px 28px rgba(0, 0, 0, 0.85);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
       overflow-x: auto;
     }
     .cad-header-bar {
@@ -871,8 +871,8 @@
       flex-wrap: wrap;
       gap: 12px;
       padding: 10px 16px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(56, 189, 248, 0.25);
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
       border-radius: 10px;
       margin-bottom: 16px;
     }
@@ -885,30 +885,30 @@
       width: 28px;
       height: 28px;
       border-radius: 50%;
-      border: 1.5px solid #E2E8F0;
+      border: 1.5px solid #0F172A;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #E2E8F0;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      color: #0F172A;
+      background: #FFFFFF;
     }
     .cad-title-text {
       font-family: 'SF Mono', Monaco, monospace;
       font-size: 13px;
       font-weight: 800;
-      color: #F8FAFC;
-      letter-spacing: 0.08em;
+      color: #0F172A;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
     }
     .cad-sub-text {
-      font-size: 11px;
-      color: #94A3B8;
-      letter-spacing: 0.04em;
+      font-size: 11.5px;
+      color: #64748B;
+      letter-spacing: 0.02em;
     }
     .cad-view-toggle-btns {
       display: flex;
-      background: #0B1120;
-      border: 1px solid #334155;
+      background: #F1F5F9;
+      border: 1px solid #E2E8F0;
       border-radius: 8px;
       padding: 2px;
       gap: 2px;
@@ -917,7 +917,7 @@
       padding: 5px 12px;
       font-size: 11.5px;
       font-weight: 700;
-      color: #94A3B8;
+      color: #64748B;
       background: transparent;
       border: none;
       border-radius: 6px;
@@ -928,12 +928,12 @@
       gap: 6px;
     }
     .cad-view-btn:hover {
-      color: #F8FAFC;
+      color: #0F172A;
     }
     .cad-view-btn.active {
       background: #1E3A8A;
       color: #FFFFFF;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
     }
     .cad-blueprint-svg {
       width: 100%;
@@ -941,60 +941,34 @@
       min-width: 820px;
       display: block;
       margin: 0 auto;
-      filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.7));
     }
     .cad-chassis-outline {
-      fill: #0A0F1D;
-      stroke: #475569;
-      stroke-width: 2.5;
+      fill: #FFFFFF;
+      stroke: #0F172A;
+      stroke-width: 2.2;
     }
     .cad-chassis-inner {
-      fill: #0F172A;
-      stroke: #334155;
+      fill: #F8FAFC;
+      stroke: #E2E8F0;
       stroke-width: 1.5;
-    }
-    .cad-stamped-rib {
-      fill: rgba(255, 255, 255, 0.018);
-      stroke: #1E293B;
-      stroke-width: 1.2;
-    }
-    .cad-fuel-tank {
-      fill: rgba(159, 18, 57, 0.28);
-      stroke: #F43F5E;
-      stroke-width: 1.8;
-      stroke-dasharray: 4 2;
-    }
-    .cad-battery-box {
-      fill: rgba(245, 158, 11, 0.25);
-      stroke: #F59E0B;
-      stroke-width: 1.8;
-    }
-    .cad-pyro-box {
-      fill: rgba(168, 85, 247, 0.28);
-      stroke: #C084FC;
-      stroke-width: 1.8;
-    }
-    .cad-airbag-oval {
-      fill: rgba(56, 189, 248, 0.3);
-      stroke: #38BDF8;
-      stroke-width: 1.8;
     }
     .cad-seat-group {
       cursor: pointer;
       transition: transform 0.15s ease;
     }
     .cad-seat-group:hover {
-      filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.8));
+      filter: drop-shadow(0 2px 6px rgba(30, 58, 138, 0.3));
     }
     .cad-seat-rect {
-      fill: #1E293B;
-      stroke: #475569;
+      fill: #FFFFFF;
+      stroke: #CBD5E1;
       stroke-width: 1.5;
+      stroke-dasharray: 4 2;
       transition: all 0.15s ease;
     }
     .cad-seat-headrest {
-      fill: rgba(255, 255, 255, 0.08);
-      stroke: currentColor;
+      fill: #F1F5F9;
+      stroke: #CBD5E1;
       stroke-width: 1;
     }
     .cad-seat-num {
@@ -1003,7 +977,7 @@
       font-size: 13px;
       text-anchor: middle;
       dominant-baseline: central;
-      fill: #F8FAFC;
+      fill: #64748B;
       user-select: none;
     }
     .cad-seat-initials {
@@ -1012,53 +986,69 @@
       font-size: 9px;
       text-anchor: middle;
       dominant-baseline: central;
-      fill: #BAE6FD;
+      fill: #64748B;
       user-select: none;
     }
     .cad-armrest {
-      fill: #475569;
+      fill: #94A3B8;
+    }
+    .cad-status-dot {
+      fill: #CBD5E1;
     }
     .cad-seat-group.seat-boarded .cad-seat-rect {
-      fill: rgba(16, 185, 129, 0.25);
-      stroke: #10B981;
-      stroke-width: 2;
+      fill: #DCFCE7;
+      stroke: #16A34A;
+      stroke-width: 1.8;
+      stroke-dasharray: none;
     }
     .cad-seat-group.seat-boarded .cad-status-dot {
-      fill: #10B981;
-      filter: drop-shadow(0 0 4px #10B981);
+      fill: #15803D;
     }
     .cad-seat-group.seat-boarded .cad-seat-headrest {
-      fill: rgba(16, 185, 129, 0.35);
-      stroke: #34D399;
+      fill: #BBF7D0;
+      stroke: #16A34A;
+    }
+    .cad-seat-group.seat-boarded .cad-seat-num {
+      fill: #166534;
+    }
+    .cad-seat-group.seat-boarded .cad-seat-initials {
+      fill: #15803D;
     }
     .cad-seat-group.seat-pending .cad-seat-rect {
-      fill: rgba(245, 158, 11, 0.25);
-      stroke: #F59E0B;
-      stroke-width: 2;
+      fill: #FEF3C7;
+      stroke: #D97706;
+      stroke-width: 1.8;
+      stroke-dasharray: none;
     }
     .cad-seat-group.seat-pending .cad-status-dot {
-      fill: #F59E0B;
-      filter: drop-shadow(0 0 4px #F59E0B);
+      fill: #D97706;
     }
     .cad-seat-group.seat-pending .cad-seat-headrest {
-      fill: rgba(245, 158, 11, 0.35);
-      stroke: #FBBF24;
+      fill: #FDE68A;
+      stroke: #D97706;
+    }
+    .cad-seat-group.seat-pending .cad-seat-num {
+      fill: #92400E;
+    }
+    .cad-seat-group.seat-pending .cad-seat-initials {
+      fill: #B45309;
     }
     .cad-seat-group.seat-free .cad-seat-rect {
-      fill: rgba(255, 255, 255, 0.02);
-      stroke: #475569;
+      fill: #FFFFFF;
+      stroke: #CBD5E1;
       stroke-dasharray: 4 2;
     }
     .cad-seat-group.seat-free .cad-status-dot {
-      fill: #475569;
+      fill: #CBD5E1;
     }
     .cad-seat-group.seat-free .cad-seat-num {
-      fill: #94A3B8;
+      fill: #64748B;
     }
     .cad-seat-group.seat-selected .cad-seat-rect {
-      stroke: #FFFFFF;
+      stroke: #1E3A8A;
       stroke-width: 2.5;
-      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9));
+      stroke-dasharray: none;
+      filter: drop-shadow(0 0 6px rgba(30, 58, 138, 0.4));
     }
     .cad-rescue-legend {
       display: flex;
@@ -1066,34 +1056,32 @@
       gap: 16px;
       margin-top: 16px;
       padding-top: 14px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid #E2E8F0;
       font-size: 11.5px;
-      color: #94A3B8;
+      color: #64748B;
       align-items: center;
     }
     .cad-legend-chip {
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      font-weight: 500;
     }
     .cad-chip-color {
       width: 14px;
       height: 14px;
       border-radius: 3px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(0, 0, 0, 0.1);
     }
 
-    /* ==========================================================================
-       HYPER-REALISTIC TECHNICAL CUTAWAY BUS BLUEPRINT
-       ========================================================================== */
     .bus-cutaway-card {
-      background: #0B1120;
-      border: 1px solid #1E293B;
-      border-radius: 16px;
+      background: var(--surface-card, #FFFFFF);
+      border: 1px solid var(--border-hairline, #E2E2DC);
+      border-radius: var(--radius-card, 16px);
       padding: 24px 20px;
       position: relative;
       overflow-x: auto;
-      box-shadow: inset 0 2px 24px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
     }
     
     .bus-spec-blueprint-bar {
@@ -1104,13 +1092,12 @@
       gap: 10px;
       padding: 10px 16px;
       margin-bottom: 20px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(56, 189, 248, 0.2);
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
       border-radius: 10px;
       font-family: 'SF Mono', Monaco, monospace;
       font-size: 11.5px;
-      color: #94A3B8;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      color: #64748B;
     }
     .blueprint-meta-item {
       display: flex;
@@ -1118,52 +1105,27 @@
       gap: 6px;
     }
     .blueprint-meta-item .meta-label {
-      color: #38BDF8;
+      color: #1E3A8A;
       font-weight: 700;
     }
     .blueprint-meta-item .meta-val {
-      color: #F8FAFC;
+      color: #0F172A;
       font-weight: 600;
     }
 
-    /* THE BUS BODY HULL */
+    /* THE BUS BODY HULL (VERTICAL VIEW) */
     .bus-hull {
       max-width: 860px;
       margin: 0 auto;
-      background: #0F172A;
-      background-image: 
-        linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
-      background-size: 20px 20px;
-      border: 3.5px solid #334155;
-      outline: 4px solid #1E293B;
-      border-radius: 54px 54px 26px 26px;
+      background: #FFFFFF;
+      border: 2px solid #0F172A;
+      border-radius: 46px 46px 20px 20px;
       position: relative;
-      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(0, 0, 0, 0.85);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
       padding: 22px 26px 30px;
     }
 
-    /* Side Panoramic Double-Glazing Windows with Pillars */
-    .bus-hull::before, .bus-hull::after {
-      content: '';
-      position: absolute;
-      top: 115px;
-      bottom: 100px;
-      width: 6px;
-      background: linear-gradient(180deg, 
-        rgba(56, 189, 248, 0.5) 0%, 
-        rgba(30, 58, 138, 0.3) 20%, 
-        rgba(56, 189, 248, 0.5) 40%, 
-        rgba(30, 58, 138, 0.3) 60%, 
-        rgba(56, 189, 248, 0.5) 80%, 
-        rgba(30, 58, 138, 0.4) 100%);
-      box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
-      border-radius: 3px;
-    }
-    .bus-hull::before { left: 6px; }
-    .bus-hull::after { right: 6px; }
-
-    /* FRONT AERODYNAMICS & RADIATOR GRILLE */
+    /* FRONT NOSE & HOOD */
     .bus-front-hood {
       display: flex;
       flex-direction: column;
@@ -1171,123 +1133,54 @@
       margin-bottom: 14px;
       position: relative;
     }
-    .bus-grille-assembly {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      padding: 0 8px;
-      gap: 12px;
-    }
-    .headlight-cluster {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      background: #111827;
-      padding: 5px 10px;
-      border-radius: 8px;
-      border: 1.5px solid #38BDF8;
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
-    }
-    .xenon-led {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: #E0F2FE;
-      box-shadow: 0 0 10px #38BDF8, 0 0 4px #FFFFFF;
-    }
-    .turn-signal {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #F59E0B;
-      box-shadow: 0 0 8px #F59E0B;
-    }
     .grille-center-badge {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
-      flex: 1;
-      max-width: 440px;
+      width: 100%;
+      max-width: 320px;
       padding: 6px 14px;
-      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
-      border: 1.5px solid #475569;
+      background: #F8FAFC;
+      border: 1.5px solid #CBD5E1;
       border-radius: 8px;
-      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.1);
     }
     .grille-louver {
       flex: 1;
       height: 2px;
-      background: linear-gradient(90deg, #64748B, #CBD5E1, #64748B);
+      background: #CBD5E1;
       border-radius: 1px;
     }
     .star-emblem {
-      color: #E2E8F0;
-      filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.4));
+      color: #0F172A;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    /* ELECTRONIC ROUTE MATRIX DESTINATION BOARD */
-    .bus-matrix-display {
-      background: #000000;
-      border: 2px solid #334155;
-      border-radius: 7px;
-      padding: 6px 18px;
-      font-family: 'SF Mono', monospace;
-      font-size: 11.5px;
-      font-weight: 800;
-      color: #F59E0B;
-      letter-spacing: 0.16em;
-      box-shadow: inset 0 0 10px rgba(245, 158, 11, 0.35);
-      text-shadow: 0 0 6px rgba(245, 158, 11, 0.8);
-      text-transform: uppercase;
-      margin: 10px 0 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    /* Windshield with ADAS Camera and Wipers */
+    /* Windshield */
     .bus-windshield {
-      height: 48px;
-      background: linear-gradient(180deg, 
-        rgba(16, 185, 129, 0.22) 0%, 
-        rgba(56, 189, 248, 0.28) 25%, 
-        rgba(30, 58, 138, 0.55) 100%);
-      border: 1.5px solid rgba(56, 189, 248, 0.5);
-      border-radius: 36px 36px 10px 10px;
+      height: 44px;
+      background: rgba(30, 58, 138, 0.05);
+      border: 1.5px solid #CBD5E1;
+      border-radius: 30px 30px 8px 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 11.5px;
       font-weight: 700;
-      color: #BAE6FD;
-      letter-spacing: 0.12em;
+      color: #1E3A8A;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       position: relative;
-      box-shadow: inset 0 3px 12px rgba(56, 189, 248, 0.3);
-    }
-    .windshield-sensor {
-      position: absolute;
-      top: 4px;
-      width: 18px;
-      height: 8px;
-      background: #0F172A;
-      border: 1px solid #38BDF8;
-      border-radius: 3px;
     }
     .bus-wiper-left, .bus-wiper-right {
       position: absolute;
       bottom: 6px;
       width: 36px;
-      height: 2.5px;
-      background: #94A3B8;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+      height: 2px;
+      background: #64748B;
       border-radius: 1px;
     }
     .bus-wiper-left { left: 28%; transform: rotate(-16deg); }
@@ -1296,25 +1189,14 @@
     .bus-mirror-left, .bus-mirror-right {
       position: absolute;
       top: 42px;
-      width: 16px;
-      height: 42px;
-      background: #1E293B;
+      width: 14px;
+      height: 38px;
+      background: #F8FAFC;
       border: 1.5px solid #64748B;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 3px 2px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    .bus-mirror-left { left: -18px; border-radius: 8px 0 0 8px; }
-    .bus-mirror-right { right: -18px; border-radius: 0 8px 8px 0; }
-    .mirror-repeater-led {
-      width: 3px;
-      height: 14px;
-      background: #F59E0B;
-      border-radius: 1px;
-      box-shadow: 0 0 5px #F59E0B;
-    }
+    .bus-mirror-left { left: -16px; border-radius: 6px 0 0 6px; }
+    .bus-mirror-right { right: -16px; border-radius: 0 6px 6px 0; }
 
     /* COCKPIT & DRIVER WORKSTATION */
     .bus-cockpit {
@@ -1323,8 +1205,8 @@
       gap: 16px;
       margin-bottom: 22px;
       padding: 14px 16px 18px;
-      background: rgba(30, 41, 59, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
       border-radius: 14px;
       position: relative;
     }
@@ -1339,44 +1221,11 @@
       gap: 6px;
       flex: 1;
     }
-    .tachograph-display {
-      background: #020617;
-      border: 1px solid #10B981;
-      border-radius: 5px;
-      padding: 4px 8px;
-      font-family: 'SF Mono', monospace;
-      font-size: 10px;
-      font-weight: 700;
-      color: #34D399;
-      letter-spacing: 0.06em;
-      box-shadow: inset 0 0 6px rgba(16, 185, 129, 0.25);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
     .driver-partition-bar {
       height: 2px;
-      background: linear-gradient(90deg, #38BDF8, #64748B, transparent);
+      background: #E2E8F0;
       margin-top: 4px;
       border-radius: 1px;
-    }
-    .safety-chip {
-      padding: 3px 7px;
-      border-radius: 5px;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-    .safety-fire {
-      background: rgba(239, 68, 68, 0.2);
-      color: #F87171;
-      border: 1px solid rgba(239, 68, 68, 0.4);
-    }
-    .safety-med {
-      background: rgba(16, 185, 129, 0.2);
-      color: #34D399;
-      border: 1px solid rgba(16, 185, 129, 0.4);
     }
 
     /* PASSENGER ENTRANCE STAIRWELL */
@@ -1389,25 +1238,13 @@
     }
     .entrance-stairwell {
       width: 100%;
-      background: rgba(15, 23, 42, 0.7);
-      border: 1.5px dashed rgba(245, 158, 11, 0.45);
+      background: #FEF3C7;
+      border: 1.5px dashed #D97706;
       border-radius: 10px;
       padding: 8px 12px;
       display: flex;
       flex-direction: column;
       gap: 5px;
-    }
-    .step-tread-yellow {
-      height: 5px;
-      background: repeating-linear-gradient(
-        45deg,
-        #F59E0B,
-        #F59E0B 6px,
-        #1E293B 6px,
-        #1E293B 12px
-      );
-      border-radius: 2px;
-      box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
     }
     .stanchion-rail {
       display: inline-flex;
@@ -1415,7 +1252,7 @@
       gap: 6px;
       font-size: 11px;
       font-weight: 700;
-      color: #FBBF24;
+      color: #92400E;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
@@ -1423,66 +1260,23 @@
     /* REAR WHEEL ARCH BULGES (SPARKA) */
     .cabin-wheel-arch {
       position: absolute;
-      width: 14px;
-      height: 64px;
-      background: repeating-linear-gradient(
-        -45deg,
-        #1E293B,
-        #1E293B 4px,
-        #334155 4px,
-        #334155 8px
-      );
-      border: 1.5px solid #64748B;
-      border-radius: 6px;
-      box-shadow: inset 0 0 6px rgba(0,0,0,0.8);
+      width: 12px;
+      height: 60px;
+      background: #F1F5F9;
+      border: 1.5px solid #CBD5E1;
+      border-radius: 4px;
       z-index: 2;
     }
     .wheel-arch-left { left: 4px; }
     .wheel-arch-right { right: 4px; }
 
-    /* EMERGENCY GLASS BREAK HAMMERS */
-    .window-hammer {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #F87171;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-    }
-
-    /* ROOF EMERGENCY ESCAPE HATCHES */
-    .roof-escape-hatch {
-      margin: 6px auto;
-      width: 220px;
-      padding: 4px 12px;
-      background: rgba(30, 58, 138, 0.15);
-      border: 1.5px dashed rgba(56, 189, 248, 0.4);
-      border-radius: 7px;
-      text-align: center;
-      font-size: 9.5px;
-      font-weight: 700;
-      color: #7DD3FC;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      box-shadow: inset 0 0 8px rgba(56, 189, 248, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    /* SEAT ITEM GEOMETRY - REALISTIC COACH SEATS */
+    /* SEAT ITEM GEOMETRY */
     .seat-item {
       width: 54px;
       height: 56px;
-      background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
-      border: 1.5px solid #475569;
-      border-radius: 12px 12px 6px 6px;
+      background: #FFFFFF;
+      border: 1.5px dashed #CBD5E1;
+      border-radius: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1492,25 +1286,24 @@
       transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
       user-select: none;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
     }
     .seat-item:hover {
-      transform: translateY(-3px) scale(1.06);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.7);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       z-index: 10;
     }
     .seat-headrest-pillow {
       width: 32px;
       height: 13px;
-      background: rgba(255, 255, 255, 0.08);
+      background: #F1F5F9;
       border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
       font-size: 11px;
-      color: currentColor;
-      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.15);
+      color: #64748B;
       line-height: 1;
     }
     .seat-body-contour {
@@ -1524,8 +1317,8 @@
       font-size: 10.5px;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: #FFFFFF;
-      background: rgba(0, 0, 0, 0.4);
+      color: #0F172A;
+      background: rgba(0, 0, 0, 0.05);
       padding: 1px 4px;
       border-radius: 3px;
     }
@@ -1533,7 +1326,7 @@
       width: 18px;
       height: 2px;
       background: currentColor;
-      opacity: 0.3;
+      opacity: 0.2;
       border-radius: 1px;
     }
     .seat-armrest {
@@ -1542,9 +1335,8 @@
       right: -3px;
       width: 4px;
       height: 22px;
-      background: #475569;
+      background: #CBD5E1;
       border-radius: 2px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.5);
     }
     .seat-status-dot {
       position: absolute;
@@ -1553,51 +1345,52 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
+      background: #CBD5E1;
     }
 
     .seat-item.seat-boarded {
-      background: linear-gradient(180deg, rgba(16, 185, 129, 0.28) 0%, rgba(16, 185, 129, 0.12) 100%);
-      border-color: #10B981;
-      color: #34D399;
-      box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+      background: #DCFCE7;
+      border-color: #16A34A;
+      border-style: solid;
+      color: #166534;
     }
-    .seat-item.seat-boarded .seat-status-dot { background: #10B981; box-shadow: 0 0 6px #10B981; }
-    .seat-item.seat-boarded .seat-headrest-pillow { background: rgba(16, 185, 129, 0.25); }
+    .seat-item.seat-boarded .seat-status-dot { background: #15803D; }
+    .seat-item.seat-boarded .seat-headrest-pillow { background: #BBF7D0; color: #166534; }
+    .seat-item.seat-boarded .seat-passenger-badge { color: #166534; background: rgba(22, 101, 52, 0.12); }
 
     .seat-item.seat-pending {
-      background: linear-gradient(180deg, rgba(245, 158, 11, 0.28) 0%, rgba(245, 158, 11, 0.12) 100%);
-      border-color: #F59E0B;
-      color: #FBBF24;
-      box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+      background: #FEF3C7;
+      border-color: #D97706;
+      border-style: solid;
+      color: #92400E;
     }
-    .seat-item.seat-pending .seat-status-dot { background: #F59E0B; box-shadow: 0 0 6px #F59E0B; }
-    .seat-item.seat-pending .seat-headrest-pillow { background: rgba(245, 158, 11, 0.25); }
+    .seat-item.seat-pending .seat-status-dot { background: #D97706; }
+    .seat-item.seat-pending .seat-headrest-pillow { background: #FDE68A; color: #92400E; }
+    .seat-item.seat-pending .seat-passenger-badge { color: #92400E; background: rgba(146, 64, 14, 0.12); }
 
     .seat-item.seat-free {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1.5px dashed #475569;
-      color: #94A3B8;
+      background: #FFFFFF;
+      border: 1.5px dashed #CBD5E1;
+      color: #64748B;
     }
-    .seat-item.seat-free .seat-status-dot { background: #475569; }
+    .seat-item.seat-free .seat-status-dot { background: #CBD5E1; }
 
     .seat-item.seat-driver {
-      background: linear-gradient(180deg, rgba(30, 58, 138, 0.6) 0%, rgba(30, 58, 138, 0.25) 100%);
-      border-color: #38BDF8;
-      color: #38BDF8;
+      background: #EEF2FF;
+      border: 1.5px solid #1E3A8A;
+      color: #1E3A8A;
       cursor: default;
-      box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
       width: 58px;
       height: 60px;
     }
     .seat-item.seat-driver:hover {
       transform: none;
-      box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
     }
 
     .seat-item.seat-selected {
-      outline: 2.5px solid #FFFFFF;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.85);
-      transform: translateY(-2px) scale(1.05);
+      outline: 2.5px solid #1E3A8A;
+      box-shadow: 0 0 12px rgba(30, 58, 138, 0.35);
+      transform: translateY(-2px);
     }
 
     /* CABIN ROWS AND AISLE FLOOR TRACKS */
@@ -1617,7 +1410,7 @@
       flex: 1;
       text-align: center;
       font-size: 10.5px;
-      color: #64748B;
+      color: #94A3B8;
       letter-spacing: 0.16em;
       text-transform: uppercase;
       user-select: none;
@@ -1628,9 +1421,8 @@
     }
     .aisle-led-track {
       flex: 1;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), transparent);
-      box-shadow: 0 0 4px rgba(56, 189, 248, 0.3);
+      height: 1.5px;
+      background: #E2E8F0;
     }
     .cabin-pair {
       display: flex;
@@ -1642,15 +1434,15 @@
     .bus-rear-cargo {
       margin-top: 24px;
       padding-top: 18px;
-      border-top: 2px dashed rgba(255, 255, 255, 0.16);
+      border-top: 1.5px dashed #CBD5E1;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 14px;
       font-size: 12px;
-      color: #94A3B8;
-      background: rgba(15, 23, 42, 0.5);
+      color: #64748B;
+      background: #F8FAFC;
       border-radius: 8px;
       padding: 12px 14px;
     }
@@ -1660,7 +1452,7 @@
       justify-content: center;
       margin-top: 14px;
       padding-top: 10px;
-      border-top: 2px solid #334155;
+      border-top: 1.5px solid #CBD5E1;
       font-family: 'SF Mono', monospace;
       font-size: 10px;
       color: #64748B;
@@ -1673,29 +1465,28 @@
     .seat-inspector-panel {
       margin-top: 20px;
       padding: 18px 22px;
-      background: #111827;
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
       border-radius: 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 16px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     }
     .inspector-avatar {
-      width: 46px;
-      height: 46px;
-      border-radius: 10px;
-      background: #1E293B;
-      border: 1.5px solid #38BDF8;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: #EEF2FF;
+      border: 1.5px solid #1E3A8A;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 19px;
-      color: #38BDF8;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+      font-size: 18px;
+      color: #1E3A8A;
     }
 
     /* READINESS METER BAR */
@@ -1901,7 +1692,7 @@
               <div class="cutaway-toolbar">
                 <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                   <div>
-                    <label style="font-size: 11px; color: #94A3B8; text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 4px;">Модель автобуса / Схема компоновки:</label>
+                    <label style="font-size: 11px; color: #64748B; text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 4px;">Модель автобуса / Схема компоновки:</label>
                     <select class="cutaway-model-select" id="cutaway-model-selector" onchange="changeCutawayModel(this.value)">
                       <option value="sprinter19" selected>Mercedes-Benz Sprinter (19 мест, 2+1)</option>
                       <option value="crafter16">Volkswagen Crafter (16 мест, 2+1)</option>
@@ -1909,26 +1700,26 @@
                       <option value="coach49">MAN Lion's Coach (49 мест, 2+2)</option>
                     </select>
                   </div>
-                  <div style="font-size: 12px; color: #94A3B8; margin-top: 16px;">
+                  <div style="font-size: 12px; color: #64748B; margin-top: 16px;">
                     Нажмите на любое место для просмотра билета и отметки посадки
                   </div>
                 </div>
 
                 <div class="cutaway-legend">
                   <div class="cutaway-legend-item">
-                    <span class="legend-chip" style="background: #10B981;"></span>
+                    <span class="legend-chip" style="background: #DCFCE7; border: 1px solid #16A34A;"></span>
                     <span>Посажен (<span id="cutaway-stat-boarded">9</span>)</span>
                   </div>
                   <div class="cutaway-legend-item">
-                    <span class="legend-chip" style="background: #F59E0B;"></span>
+                    <span class="legend-chip" style="background: #FEF3C7; border: 1px solid #D97706;"></span>
                     <span>Ожидает (<span id="cutaway-stat-pending">5</span>)</span>
                   </div>
                   <div class="cutaway-legend-item">
-                    <span class="legend-chip" style="background: #475569;"></span>
+                    <span class="legend-chip" style="background: #FFFFFF; border: 1.5px dashed #CBD5E1;"></span>
                     <span>Свободно (<span id="cutaway-stat-free">5</span>)</span>
                   </div>
                   <div class="cutaway-legend-item">
-                    <span class="legend-chip" style="background: #38BDF8;"></span>
+                    <span class="legend-chip" style="background: #EEF2FF; border: 1px solid #1E3A8A;"></span>
                     <span>Кабина водителя</span>
                   </div>
                 </div>
@@ -1942,12 +1733,12 @@
               <!-- SEAT INSPECTOR DRAWER -->
               <div id="cutaway-seat-inspector" class="seat-inspector-panel" style="display: none;">
                 <div style="display: flex; align-items: center; gap: 14px;">
-                  <div style="width: 44px; height: 44px; border-radius: 8px; background: #0F172A; border: 1.5px solid #38BDF8; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; color: #38BDF8;" id="inspector-seat-num">
+                  <div class="inspector-avatar" id="inspector-seat-num">
                     4
                   </div>
                   <div>
-                    <div style="font-weight: 700; font-size: 14.5px; color: #F8FAFC;" id="inspector-passenger-name">Морозова Елена Павловна</div>
-                    <div style="font-size: 12px; color: #94A3B8; margin-top: 2px;" id="inspector-ticket-sub">Билет #BL-2026-04 &bull; Тел: +375 (29) 881-**-30 &bull; 1 место багажа</div>
+                    <div style="font-weight: 700; font-size: 14.5px; color: #0F172A;" id="inspector-passenger-name">Морозова Елена Павловна</div>
+                    <div style="font-size: 12px; color: #64748B; margin-top: 2px;" id="inspector-ticket-sub">Билет #BL-2026-04 &bull; Тел: +375 (29) 881-**-30 &bull; 1 место багажа</div>
                   </div>
                 </div>
                 <div style="display: flex; gap: 10px; align-items: center;">
@@ -3003,38 +2794,38 @@
 
       container.innerHTML = `
         <div class="cad-rescue-container">
-          <!-- CAD RESCUE SHEET HEADER BAR -->
+          <!-- CAD BLUEPRINT HEADER BAR -->
           <div class="cad-header-bar">
             <div class="cad-title-group">
-              <div class="cad-mb-star" title="Mercedes-Benz Rescue Sheet">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <div class="cad-mb-star" title="Схема салона">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 2 L12 12 L3.34 17 M12 12 L20.66 17" />
                 </svg>
               </div>
               <div>
-                <div class="cad-title-text">Mercedes-Benz rescue sheets &bull; Схема борта</div>
+                <div class="cad-title-text">Схема салона и кузова &bull; ${escapeHtml(cfg.name)}</div>
                 <div class="cad-sub-text">${escapeHtml(specs.chassis)} &bull; ${specs.dims} &bull; База: ${specs.wheelbase}</div>
               </div>
             </div>
             <div class="cad-view-toggle-btns">
               <button type="button" class="cad-view-btn ${cutawayOrientation === 'horizontal' ? 'active' : ''}" onclick="setCutawayOrientation('horizontal')">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
-                Rescue Sheet (CAD)
+                Горизонтальная схема
               </button>
               <button type="button" class="cad-view-btn ${cutawayOrientation === 'vertical' ? 'active' : ''}" onclick="setCutawayOrientation('vertical')">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="2" x2="12" y2="22"/></svg>
-                Вертикальный вид
+                Вертикальная схема
               </button>
             </div>
           </div>
 
-          <!-- RESCUE SHEET HORIZONTAL SVG BLUEPRINT -->
+          <!-- HORIZONTAL SVG BLUEPRINT -->
           <svg class="cad-blueprint-svg" viewBox="0 0 1060 450" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="cadGlassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.25"/>
-                <stop offset="100%" stop-color="#1E3A8A" stop-opacity="0.45"/>
+                <stop offset="0%" stop-color="#1E3A8A" stop-opacity="0.08"/>
+                <stop offset="100%" stop-color="#1E3A8A" stop-opacity="0.02"/>
               </linearGradient>
             </defs>
 
@@ -3066,238 +2857,112 @@
               Z
             " class="cad-chassis-inner" />
 
-            <!-- FRONT BUMPER & NOSE -->
-            <path d="M 50,105 Q 36,225 50,345" fill="none" stroke="#64748B" stroke-width="2.5" />
-            <rect x="25" y="200" width="10" height="50" rx="3" fill="#1E293B" stroke="#475569" stroke-width="1.5" />
+            <!-- FRONT BUMPER & NOSE OUTLINE -->
+            <path d="M 50,105 Q 36,225 50,345" fill="none" stroke="#CBD5E1" stroke-width="2" />
 
             <!-- MERCEDES-BENZ THREE-POINTED STAR EMBLEM -->
-            <circle cx="40" cy="225" r="12" fill="#0F172A" stroke="#E2E8F0" stroke-width="1.8" />
-            <line x1="40" y1="213" x2="40" y2="225" stroke="#E2E8F0" stroke-width="1.8" />
-            <line x1="40" y1="225" x2="30" y2="231" stroke="#E2E8F0" stroke-width="1.8" />
-            <line x1="40" y1="225" x2="50" y2="231" stroke="#E2E8F0" stroke-width="1.8" />
+            <circle cx="40" cy="225" r="12" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.8" />
+            <line x1="40" y1="213" x2="40" y2="225" stroke="#0F172A" stroke-width="1.8" />
+            <line x1="40" y1="225" x2="30" y2="231" stroke="#0F172A" stroke-width="1.8" />
+            <line x1="40" y1="225" x2="50" y2="231" stroke="#0F172A" stroke-width="1.8" />
 
-            <!-- HEADLIGHTS -->
-            <path d="M 52,95 Q 75,100 85,120 L 60,130 Z" fill="#111827" stroke="#38BDF8" stroke-width="1.8" />
-            <circle cx="68" cy="112" r="5" fill="#E0F2FE" />
-            <circle cx="78" cy="118" r="3.5" fill="#F59E0B" />
-
-            <path d="M 52,355 Q 75,350 85,330 L 60,320 Z" fill="#111827" stroke="#38BDF8" stroke-width="1.8" />
-            <circle cx="68" cy="338" r="5" fill="#E0F2FE" />
-            <circle cx="78" cy="332" r="3.5" fill="#F59E0B" />
-
-            <!-- SIDE MIRRORS WITH TURN REPEATERS -->
+            <!-- SIDE MIRRORS -->
             <!-- Top Right Mirror -->
-            <line x1="215" y1="65" x2="205" y2="28" stroke="#64748B" stroke-width="3" />
-            <rect x="185" y="14" width="38" height="16" rx="4" fill="#1E293B" stroke="#94A3B8" stroke-width="1.5" />
-            <line x1="188" y1="22" x2="204" y2="22" stroke="#F59E0B" stroke-width="2" />
+            <line x1="215" y1="65" x2="205" y2="28" stroke="#94A3B8" stroke-width="2.5" />
+            <rect x="185" y="14" width="38" height="16" rx="4" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5" />
+            <line x1="188" y1="22" x2="204" y2="22" stroke="#F59E0B" stroke-width="1.5" />
 
             <!-- Bottom Left Mirror (Driver Side) -->
-            <line x1="215" y1="385" x2="205" y2="422" stroke="#64748B" stroke-width="3" />
-            <rect x="185" y="420" width="38" height="16" rx="4" fill="#1E293B" stroke="#94A3B8" stroke-width="1.5" />
-            <line x1="188" y1="428" x2="204" y2="428" stroke="#F59E0B" stroke-width="2" />
+            <line x1="215" y1="385" x2="205" y2="422" stroke="#94A3B8" stroke-width="2.5" />
+            <rect x="185" y="420" width="38" height="16" rx="4" fill="#FFFFFF" stroke="#64748B" stroke-width="1.5" />
+            <line x1="188" y1="428" x2="204" y2="428" stroke="#F59E0B" stroke-width="1.5" />
 
             <!-- WINDSHIELD & WIPERS -->
-            <path d="M 198,72 Q 175,225 198,378 L 225,378 Q 206,225 225,72 Z" fill="url(#cadGlassGrad)" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.5" />
+            <path d="M 198,72 Q 175,225 198,378 L 225,378 Q 206,225 225,72 Z" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="1.5" />
             <!-- Wiper Arms -->
-            <line x1="188" y1="145" x2="218" y2="135" stroke="#94A3B8" stroke-width="2" />
-            <line x1="188" y1="290" x2="218" y2="280" stroke="#94A3B8" stroke-width="2" />
+            <line x1="188" y1="145" x2="218" y2="135" stroke="#64748B" stroke-width="2" />
+            <line x1="188" y1="290" x2="218" y2="280" stroke="#64748B" stroke-width="2" />
 
-            <!-- STAMPED METAL FLOOR CORRUGATION RIBS -->
-            <g>
-              <rect x="360" y="152" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="445" y="152" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="530" y="152" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="615" y="152" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="700" y="152" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="785" y="152" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              
-              <rect x="360" y="214" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="445" y="214" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="530" y="214" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="615" y="214" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="700" y="214" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="785" y="214" width="60" height="11" rx="3" class="cad-stamped-rib" />
-
-              <rect x="360" y="276" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="445" y="276" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="530" y="276" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="615" y="276" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="700" y="276" width="60" height="11" rx="3" class="cad-stamped-rib" />
-              <rect x="785" y="276" width="60" height="11" rx="3" class="cad-stamped-rib" />
-            </g>
-
-            <!-- AUTHENTIC RESCUE SHEET OVERLAYS (EXACTLY AS IN PHOTO) -->
-            <!-- 1. Fuel Tank (Dark Red / Burgundy Polygon Under Floor) -->
-            <path d="M 420,250 L 610,250 C 616,250 622,255 622,261 L 622,345 C 622,351 616,356 610,356 L 420,356 C 414,356 408,351 408,345 L 408,261 C 408,255 414,250 420,250 Z" class="cad-fuel-tank">
-              <title>Топливный бак 93 л (Дизельное топливо ДТ)</title>
-            </path>
-            <text x="515" y="306" font-size="9.5" font-weight="800" fill="#FDA4AF" text-anchor="middle" letter-spacing="0.1em" font-family="monospace">ТОПЛИВНЫЙ БАК 93L (DIESEL)</text>
-
-            <!-- 2. 12V Battery under hood (Yellow Box with Cell Caps from photo) -->
-            <g title="Тяговая/стартерная АКБ 12V 100Ah">
-              <rect x="85" y="322" width="55" height="42" rx="4" class="cad-battery-box" />
-              <circle cx="97" cy="334" r="3.5" fill="#F59E0B" />
-              <circle cx="112" cy="334" r="3.5" fill="#F59E0B" />
-              <circle cx="127" cy="334" r="3.5" fill="#F59E0B" />
-              <circle cx="97" cy="350" r="3.5" fill="#F59E0B" />
-              <circle cx="112" cy="350" r="3.5" fill="#F59E0B" />
-              <circle cx="127" cy="350" r="3.5" fill="#F59E0B" />
-              <text x="112" y="376" font-size="8.5" fill="#FBBF24" font-weight="800" text-anchor="middle" font-family="monospace">АКБ 12V</text>
-            </g>
-
-            <!-- 3. Primary Disconnection Point (1) with Resistor/Fuse Symbol -->
-            <g title="Место аварийного отключения электропитания (1)">
-              <rect x="278" y="248" width="38" height="36" rx="4" class="cad-battery-box" />
-              <!-- Resistor zigzag from rescue sheet -->
-              <path d="M 284,266 L 290,260 L 296,272 L 302,260 L 308,266" fill="none" stroke="#F59E0B" stroke-width="2" />
-              <!-- White Circle with 1 -->
-              <circle cx="297" cy="236" r="10" fill="#FFFFFF" stroke="#0F172A" stroke-width="2" />
-              <text x="297" y="240" font-size="11" font-weight="900" fill="#0F172A" text-anchor="middle">1</text>
-              <text x="297" y="296" font-size="8" fill="#FBBF24" font-weight="800" text-anchor="middle" font-family="monospace">ОТКЛ. СЕТИ</text>
-            </g>
-
-            <!-- 4. Pyro Seatbelt Tensioners & Airbag Modules on B-Pillars -->
-            <g title="Пиротехнический преднатяжитель ремня безопасности">
-              <rect x="345" y="52" width="22" height="20" rx="3" class="cad-pyro-box" />
-              <rect x="350" y="57" width="12" height="10" rx="1.5" fill="#A855F7" />
-              
-              <rect x="345" y="378" width="22" height="20" rx="3" class="cad-pyro-box" />
-              <rect x="350" y="383" width="12" height="10" rx="1.5" fill="#A855F7" />
-            </g>
-
-            <!-- 5. Driver Workstation: Steering Wheel with Blue Airbag Oval -->
-            <g title="Рулевое колесо с подушкой безопасности SRS (AIRBAG)">
-              <circle cx="255" cy="318" r="22" fill="none" stroke="#64748B" stroke-width="2.5" />
-              <ellipse cx="255" cy="318" rx="13" ry="8" class="cad-airbag-oval" />
-              <line x1="233" y1="318" x2="242" y2="318" stroke="#64748B" stroke-width="2" />
-              <line x1="268" y1="318" x2="277" y2="318" stroke="#64748B" stroke-width="2" />
-              <line x1="255" y1="326" x2="255" y2="340" stroke="#64748B" stroke-width="2" />
-              <text x="255" y="321" font-size="7.5" fill="#BAE6FD" font-weight="800" text-anchor="middle">AIRBAG</text>
+            <!-- DRIVER WORKSTATION: STEERING WHEEL & SEAT -->
+            <g title="Рабочее место водителя">
+              <circle cx="255" cy="318" r="20" fill="none" stroke="#64748B" stroke-width="2" />
+              <line x1="235" y1="318" x2="275" y2="318" stroke="#64748B" stroke-width="1.8" />
+              <line x1="255" y1="318" x2="255" y2="338" stroke="#64748B" stroke-width="1.8" />
             </g>
 
             <!-- Driver Seat Base -->
-            <rect x="285" y="298" width="46" height="42" rx="7" fill="#1E293B" stroke="#38BDF8" stroke-width="1.8">
-              <title>Рабочее место водителя (Grammer)</title>
+            <rect x="285" y="298" width="46" height="42" rx="7" fill="#EEF2FF" stroke="#1E3A8A" stroke-width="1.8">
+              <title>Рабочее место водителя</title>
             </rect>
-            <rect x="319" y="302" width="8" height="34" rx="2.5" fill="rgba(56, 189, 248, 0.3)" />
-            <text x="303" y="323" font-size="9" fill="#38BDF8" font-weight="800" text-anchor="middle">ВОДИТЕЛЬ</text>
+            <rect x="319" y="302" width="8" height="34" rx="2.5" fill="#DBEAFE" stroke="#1E3A8A" stroke-width="1" />
+            <text x="303" y="323" font-size="8.5" fill="#1E3A8A" font-weight="800" text-anchor="middle">ВОДИТЕЛЬ</text>
 
-            <!-- 6. Passenger Entrance Sliding Door Stepwell (Top Side) -->
-            <rect x="238" y="70" width="105" height="45" rx="4" fill="rgba(245, 158, 11, 0.12)" stroke="#F59E0B" stroke-dasharray="6 3">
-              <title>Проем сдвижной двери и двухступенчатая подножка с желтым кантом</title>
+            <!-- PASSENGER ENTRANCE DOOR & STEP -->
+            <rect x="238" y="70" width="105" height="45" rx="4" fill="#FEF3C7" stroke="#D97706" stroke-dasharray="4 2">
+              <title>Проем пассажирской двери и ступень</title>
             </rect>
-            <!-- Safety Tread Pattern -->
-            <line x1="242" y1="74" x2="250" y2="82" stroke="#F59E0B" stroke-width="1.5" />
-            <line x1="254" y1="74" x2="262" y2="82" stroke="#F59E0B" stroke-width="1.5" />
-            <line x1="266" y1="74" x2="274" y2="82" stroke="#F59E0B" stroke-width="1.5" />
-            <line x1="278" y1="74" x2="286" y2="82" stroke="#F59E0B" stroke-width="1.5" />
-            <line x1="290" y1="74" x2="298" y2="82" stroke="#F59E0B" stroke-width="1.5" />
-            <line x1="302" y1="74" x2="310" y2="82" stroke="#F59E0B" stroke-width="1.5" />
-            <line x1="314" y1="74" x2="322" y2="82" stroke="#F59E0B" stroke-width="1.5" />
-            <line x1="326" y1="74" x2="334" y2="82" stroke="#F59E0B" stroke-width="1.5" />
-            <text x="290" y="102" font-size="9" fill="#FBBF24" font-weight="800" text-anchor="middle">ВХОД &bull; ПОДНОЖКА</text>
-
-            <!-- Entrance Stanchion with STOP bell -->
-            <circle cx="240" cy="115" r="5" fill="#F59E0B" stroke="#F8FAFC" stroke-width="1.5">
-              <title>Поручень безопасности со звонком STOP</title>
-            </circle>
+            <text x="290" y="97" font-size="9" fill="#92400E" font-weight="800" text-anchor="middle">ВХОД / ПОДНОЖКА</text>
 
             <!-- Guide Seat if Present -->
             ${guideSeatSvg}
 
-            <!-- 7. Rear Wheel Arches (Dual Wheels / Спарка R16C) -->
+            <!-- REAR WHEEL ARCHES -->
             <g>
-              <!-- Top Wheel Arch -->
-              <rect x="620" y="65" width="85" height="24" rx="4" fill="#111827" stroke="#64748B" stroke-width="1.5">
-                <title>Арка заднего моста (спарка 2× 205/75 R16C)</title>
-              </rect>
-              <text x="662" y="79" font-size="8" fill="#94A3B8" font-weight="700" text-anchor="middle">СПАРКА R16C</text>
+              <rect x="620" y="66" width="85" height="20" rx="3" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.2" />
+              <text x="662" y="79" font-size="8" fill="#64748B" font-weight="700" text-anchor="middle">КОЛЕСНАЯ АРКА</text>
               
-              <!-- Bottom Wheel Arch -->
-              <rect x="620" y="361" width="85" height="24" rx="4" fill="#111827" stroke="#64748B" stroke-width="1.5">
-                <title>Арка заднего моста (спарка 2× 205/75 R16C)</title>
-              </rect>
-              <text x="662" y="375" font-size="8" fill="#94A3B8" font-weight="700" text-anchor="middle">СПАРКА R16C</text>
+              <rect x="620" y="364" width="85" height="20" rx="3" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.2" />
+              <text x="662" y="377" font-size="8" fill="#64748B" font-weight="700" text-anchor="middle">КОЛЕСНАЯ АРКА</text>
             </g>
 
-            <!-- 8. PASSENGER SEATS (ALL INTERACTIVE) -->
+            <!-- CENTRAL AISLE MARKER -->
+            <text x="560" y="222" font-size="9" font-weight="700" fill="#CBD5E1" letter-spacing="0.25em" text-anchor="middle">ПРОХОД</text>
+
+            <!-- PASSENGER SEATS LAYER -->
             <g class="cad-seats-layer">
               ${seatsSvg}
             </g>
 
-            <!-- 9. REAR LUGGAGE COMPARTMENT («БАГАЖНАЯ ЯМА» SMART CARGO) -->
-            <rect x="855" y="78" width="118" height="294" rx="6" fill="rgba(15, 23, 42, 0.7)" stroke="#334155" stroke-dasharray="4 2">
-              <title>Углубленный багажный отсек Smart Cargo (1.8 м³)</title>
+            <!-- REAR LUGGAGE COMPARTMENT -->
+            <rect x="855" y="78" width="118" height="294" rx="6" fill="#F8FAFC" stroke="#CBD5E1" stroke-dasharray="4 2">
+              <title>Багажный отсек (${escapeHtml(cfg.cargoDesc || '1.8 м³')})</title>
             </rect>
-            <!-- Lashing straps lines -->
-            <line x1="865" y1="120" x2="960" y2="120" stroke="#475569" stroke-dasharray="2 3" />
-            <line x1="865" y1="225" x2="960" y2="225" stroke="#475569" stroke-dasharray="2 3" />
-            <line x1="865" y1="330" x2="960" y2="330" stroke="#475569" stroke-dasharray="2 3" />
+            <line x1="865" y1="140" x2="960" y2="140" stroke="#E2E8F0" stroke-dasharray="2 3" />
+            <line x1="865" y1="225" x2="960" y2="225" stroke="#E2E8F0" stroke-dasharray="2 3" />
+            <line x1="865" y1="310" x2="960" y2="310" stroke="#E2E8F0" stroke-dasharray="2 3" />
             
-            <text x="914" y="200" font-size="9" fill="#94A3B8" font-weight="800" text-anchor="middle">БАГАЖНЫЙ ОТСЕК</text>
-            <text x="914" y="215" font-size="8" fill="#64748B" text-anchor="middle">SMART CARGO 1.8 М³</text>
-            
-            <!-- Rear Equipment Badges -->
-            <rect x="875" y="235" width="36" height="18" rx="3" fill="rgba(239, 68, 68, 0.25)" stroke="#EF4444" stroke-width="1">
-              <title>Огнетушитель ОП-2</title>
-            </rect>
-            <text x="893" y="247" font-size="8" fill="#FCA5A5" font-weight="800" text-anchor="middle">ОП-2</text>
+            <text x="914" y="218" font-size="9" fill="#64748B" font-weight="800" text-anchor="middle">БАГАЖНЫЙ ОТСЕК</text>
+            <text x="914" y="233" font-size="8" fill="#94A3B8" text-anchor="middle">1.8 М³</text>
 
-            <polygon points="935,235 947,253 923,253" fill="rgba(245, 158, 11, 0.25)" stroke="#F59E0B" stroke-width="1">
-              <title>Знак аварийной остановки СТБ ISO 20471</title>
-            </polygon>
-            <text x="935" y="250" font-size="7" fill="#FDE68A" font-weight="800" text-anchor="middle">АО</text>
-
-            <!-- 10. REAR 270° SWING DOORS & BUMPER -->
-            <!-- Split Doors Line -->
-            <line x1="970" y1="225" x2="1000" y2="225" stroke="#475569" stroke-width="2.5" />
-            <!-- Door Hinges -->
-            <rect x="990" y="70" width="8" height="14" rx="2" fill="#64748B" />
-            <rect x="990" y="366" width="8" height="14" rx="2" fill="#64748B" />
-            <!-- Rear Bumper Step -->
-            <rect x="998" y="160" width="14" height="130" rx="3" fill="#1E293B" stroke="#475569" stroke-width="1.5">
+            <!-- REAR 270° SWING DOORS & BUMPER -->
+            <line x1="970" y1="225" x2="1000" y2="225" stroke="#94A3B8" stroke-width="2" />
+            <rect x="990" y="70" width="8" height="14" rx="2" fill="#CBD5E1" />
+            <rect x="990" y="366" width="8" height="14" rx="2" fill="#CBD5E1" />
+            <rect x="998" y="160" width="12" height="130" rx="3" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5">
               <title>Задняя ступенька и бампер</title>
             </rect>
-            <line x1="1005" y1="170" x2="1005" y2="280" stroke="#F59E0B" stroke-width="2" stroke-dasharray="4 2" />
           </svg>
 
-          <!-- RESCUE SHEET COLOR LEGEND -->
+          <!-- CLEAN SEAT STATUS LEGEND -->
           <div class="cad-rescue-legend">
-            <div style="font-size: 11px; font-weight: 800; color: #F8FAFC; text-transform: uppercase; letter-spacing: 0.08em; margin-right: 6px;">
-              Обозначения Rescue Sheet:
+            <div style="font-size: 11px; font-weight: 700; color: #0F172A; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 6px;">
+              Статус мест:
             </div>
             <div class="cad-legend-chip">
-              <span class="cad-chip-color" style="background: rgba(245, 158, 11, 0.4); border-color: #F59E0B;"></span>
-              <span>АКБ 12V / Сеть</span>
-            </div>
-            <div class="cad-legend-chip">
-              <span class="cad-chip-color" style="background: #FFFFFF; border-color: #0F172A; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 900; color: #0F172A;">1</span>
-              <span>Откачка / Обесточивание</span>
-            </div>
-            <div class="cad-legend-chip">
-              <span class="cad-chip-color" style="background: rgba(159, 18, 57, 0.4); border-color: #F43F5E;"></span>
-              <span>Топливный бак 93L</span>
-            </div>
-            <div class="cad-legend-chip">
-              <span class="cad-chip-color" style="background: rgba(56, 189, 248, 0.4); border-color: #38BDF8;"></span>
-              <span>Подушка безопасности (SRS)</span>
-            </div>
-            <div class="cad-legend-chip">
-              <span class="cad-chip-color" style="background: rgba(168, 85, 247, 0.4); border-color: #C084FC;"></span>
-              <span>Пиропатрон ремня</span>
-            </div>
-            <div style="width: 1px; height: 16px; background: rgba(255, 255, 255, 0.15); margin: 0 4px;"></div>
-            <div class="cad-legend-chip">
-              <span class="cad-chip-color" style="background: #10B981;"></span>
+              <span class="cad-chip-color" style="background: #DCFCE7; border: 1px solid #16A34A;"></span>
               <span>Посажен (<span id="cad-stat-boarded">${boarded}</span>)</span>
             </div>
             <div class="cad-legend-chip">
-              <span class="cad-chip-color" style="background: #F59E0B;"></span>
+              <span class="cad-chip-color" style="background: #FEF3C7; border: 1px solid #D97706;"></span>
               <span>Ожидает (<span id="cad-stat-pending">${pending}</span>)</span>
             </div>
             <div class="cad-legend-chip">
-              <span class="cad-chip-color" style="background: #475569;"></span>
+              <span class="cad-chip-color" style="background: #FFFFFF; border: 1.5px dashed #CBD5E1;"></span>
               <span>Свободно (<span id="cad-stat-free">${free}</span>)</span>
+            </div>
+            <div class="cad-legend-chip">
+              <span class="cad-chip-color" style="background: #EEF2FF; border: 1px solid #1E3A8A;"></span>
+              <span>Кабина водителя</span>
             </div>
           </div>
         </div>
@@ -3305,30 +2970,11 @@
     }
 
     function renderVerticalCutaway(container, cfg, specs, boarded, pending, free) {
-      // Build rows with realistic engineering features
       let rowsHtml = '';
       cfg.rows.forEach((r, idx) => {
-        if (idx === 2) {
-          rowsHtml += `
-            <div class="roof-escape-hatch" title="Аварийно-вентиляционный потолочный люк">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/></svg>
-              АВАРИЙНЫЙ ЛЮК I &bull; EMERGENCY EXIT
-            </div>
-          `;
-        }
-
-        if (idx === 4) {
-          rowsHtml += `
-            <div class="roof-escape-hatch" title="Аварийно-вентиляционный потолочный люк">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/></svg>
-              АВАРИЙНЫЙ ЛЮК II &bull; EMERGENCY EXIT
-            </div>
-          `;
-        }
-
         if (r.rearCouch) {
           rowsHtml += `
-            <div class="cabin-row" style="margin-top: 10px; padding-top: 12px; border-top: 1.5px dashed rgba(255,255,255,0.12); justify-content: center; gap: 8px;">
+            <div class="cabin-row" style="margin-top: 10px; padding-top: 12px; border-top: 1.5px dashed #CBD5E1; justify-content: center; gap: 8px;">
               ${r.rearCouch.map(s => renderSeatUnit(s)).join('')}
             </div>
           `;
@@ -3336,22 +2982,17 @@
           const leftSeats = (r.left || []).map(s => renderSeatUnit(s)).join('');
           const rightSeats = (r.right || []).map(s => renderSeatUnit(s)).join('');
           const midInfo = r.middleDoor
-            ? `<span style="font-size:10px;color:#FBBF24;padding:3px 8px;border:1px dashed rgba(245,158,11,0.5);border-radius:4px;">${r.middleDoor}</span>`
-            : `<span class="aisle-led-track"></span><span style="font-size: 10px; color: #64748B; letter-spacing: 0.12em; font-weight: 700;">ПРОХОД</span><span class="aisle-led-track"></span>`;
+            ? `<span style="font-size:10px;color:#92400E;padding:3px 8px;border:1px dashed #D97706;border-radius:4px;background:#FEF3C7;">${r.middleDoor}</span>`
+            : `<span class="aisle-led-track"></span><span style="font-size: 10px; color: #94A3B8; letter-spacing: 0.12em; font-weight: 700;">ПРОХОД</span><span class="aisle-led-track"></span>`;
 
-          const wheelArchLeft = r.wheelArch ? `<div class="cabin-wheel-arch wheel-arch-left" title="Колесная арка задней спарки (2× 205/75 R16C)"></div>` : '';
-          const wheelArchRight = r.wheelArch ? `<div class="cabin-wheel-arch wheel-arch-right" title="Колесная арка задней спарки (2× 205/75 R16C)"></div>` : '';
-
-          const hammerBadge = (idx === 1 || idx === 3) 
-            ? `<span class="window-hammer" title="Аварийный молоток СТБ 1389"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>МОЛОТОК</span>` 
-            : '';
+          const wheelArchLeft = r.wheelArch ? `<div class="cabin-wheel-arch wheel-arch-left" title="Колесная арка"></div>` : '';
+          const wheelArchRight = r.wheelArch ? `<div class="cabin-wheel-arch wheel-arch-right" title="Колесная арка"></div>` : '';
 
           rowsHtml += `
             <div class="cabin-row">
               ${wheelArchLeft}
               <div class="cabin-pair" style="align-items: center;">
                 ${leftSeats}
-                ${hammerBadge ? `<div style="position: absolute; left: -14px; top: 50%; transform: translateY(-50%) rotate(-90deg);">${hammerBadge}</div>` : ''}
               </div>
               <div class="cabin-aisle">${midInfo}</div>
               <div class="cabin-pair" style="justify-content: flex-end; align-items: center;">
@@ -3364,7 +3005,7 @@
       });
 
       container.innerHTML = `
-        <!-- TECHNICAL BLUEPRINT SPECIFICATION BAR -->
+        <!-- SPECIFICATION BAR -->
         <div class="bus-spec-blueprint-bar">
           <div class="blueprint-meta-item">
             <span class="meta-label">БОРТ:</span>
@@ -3392,68 +3033,44 @@
           <div class="cad-view-toggle-btns">
             <button type="button" class="cad-view-btn ${cutawayOrientation === 'horizontal' ? 'active' : ''}" onclick="setCutawayOrientation('horizontal')">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
-              Rescue Sheet (CAD)
+              Горизонтальная схема
             </button>
             <button type="button" class="cad-view-btn ${cutawayOrientation === 'vertical' ? 'active' : ''}" onclick="setCutawayOrientation('vertical')">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="2" x2="12" y2="22"/></svg>
-              Вертикальный вид
+              Вертикальная схема
             </button>
           </div>
         </div>
 
         <div class="bus-hull">
-          <div class="bus-mirror-left">
-            <span class="mirror-repeater-led"></span>
-          </div>
-          <div class="bus-mirror-right">
-            <span class="mirror-repeater-led"></span>
-          </div>
+          <div class="bus-mirror-left"></div>
+          <div class="bus-mirror-right"></div>
 
-          <!-- FRONT AERODYNAMICS & RADIATOR GRILLE WITH MERCEDES-BENZ STAR -->
+          <!-- FRONT HOOD WITH STAR EMBLEM (NO HEADLIGHTS) -->
           <div class="bus-front-hood">
-            <div class="bus-grille-assembly">
-              <div class="headlight-cluster" title="LED High Performance оптика">
-                <span class="turn-signal"></span>
-                <span class="xenon-led"></span>
-                <span class="xenon-led"></span>
-              </div>
-              <div class="grille-center-badge" title="Официальная решетка радиатора Mercedes-Benz Sprinter">
-                <span class="grille-louver"></span>
-                <span class="star-emblem">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 2 L12 12 L3.34 17 M12 12 L20.66 17" />
-                  </svg>
-                </span>
-                <span class="grille-louver"></span>
-              </div>
-              <div class="headlight-cluster" title="LED High Performance оптика">
-                <span class="xenon-led"></span>
-                <span class="xenon-led"></span>
-                <span class="turn-signal"></span>
-              </div>
-            </div>
-
-            <!-- ROUTE MATRIX DESTINATION BOARD -->
-            <div class="bus-matrix-display" title="Электронное маршрутное табло (светодиодная матрица)">
-              <span>МИНСК (АВ ЦЕНТРАЛЬНЫЙ)</span>
-              <span>&bull; 07:30 &bull;</span>
-              <span>ВИЛЬНЮС (АЭРОПОРТ / АВ)</span>
+            <div class="grille-center-badge" title="${escapeHtml(cfg.name)}">
+              <span class="grille-louver"></span>
+              <span class="star-emblem">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 2 L12 12 L3.34 17 M12 12 L20.66 17" />
+                </svg>
+              </span>
+              <span class="grille-louver"></span>
             </div>
           </div>
 
-          <!-- WINDSHIELD WITH ADAS SENSOR & WIPERS -->
+          <!-- WINDSHIELD WITH WIPERS -->
           <div class="bus-windshield">
-            <div class="windshield-sensor" title="Камера контроля полосы движения и датчик дождя"></div>
             <div class="bus-wiper-left"></div>
             <div class="bus-wiper-right"></div>
-            <span>${escapeHtml(cfg.name)} &bull; ${cfg.capacity} МЕСТ &bull; ${cfg.layoutType} &bull; СТБ 1389-2003</span>
+            <span>${escapeHtml(cfg.name)} &bull; ${cfg.capacity} МЕСТ &bull; ${cfg.layoutType}</span>
           </div>
 
           <!-- COCKPIT: DRIVER WORKSTATION & PASSENGER ENTRANCE -->
           <div class="bus-cockpit">
             <div class="cockpit-driver-area">
-              <div class="seat-item seat-driver" title="Рабочее место водителя (кресло Grammer с пневмоподвеской)">
+              <div class="seat-item seat-driver" title="Рабочее место водителя">
                 <div style="margin-top: 2px;">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <circle cx="12" cy="12" r="10" />
@@ -3466,24 +3083,15 @@
                 <div style="font-size: 9.5px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">Водитель</div>
               </div>
               <div class="driver-controls">
-                <div style="font-size: 11px; color: #94A3B8; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;">
-                  Кабина управления
+                <div style="font-size: 11px; color: #64748B; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;">
+                  Кабина водителя
                 </div>
-                <div class="tachograph-display" title="Цифровой тахограф VDO DTCO 4.0">
-                  <span style="display:inline-block;width:6px;height:6px;background:#10B981;border-radius:50%;"></span>
-                  ТАХОГРАФ: СМЕНА АКТИВНА &bull; КАРТА [BY] OK
-                </div>
-                <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-                  <span class="safety-chip safety-med" title="Медицинская аптечка первой помощи СТБ 1389">АПТ-1</span>
-                  <span class="safety-chip safety-fire" title="Огнетушитель кабины ОП-2 (2 кг)">ОП-2</span>
-                  <span class="safety-chip" style="background: rgba(56, 189, 248, 0.2); color: #38BDF8; border: 1px solid rgba(56, 189, 248, 0.4);" title="Перегородка безопасности водителя">ПЕРЕГОРОДКА</span>
-                </div>
-                <div class="driver-partition-bar" title="Защитная перегородка водителя с поручнем"></div>
+                <div class="driver-partition-bar"></div>
               </div>
             </div>
 
             <div class="cockpit-door-area">
-              ${cfg.cockpit.guideSeat ? `
+              ${cfg.cockpit && cfg.cockpit.guideSeat ? `
                 <div class="seat-item ${typeof cfg.cockpit.guideSeat === 'number' ? (passengers.find(p=>p.seat===cfg.cockpit.guideSeat)?.boarded ? 'seat-boarded' : 'seat-pending') : 'seat-free'}" 
                      ${typeof cfg.cockpit.guideSeat === 'number' ? `onclick="inspectCutawaySeat(${cfg.cockpit.guideSeat})"` : ''}
                      title="Место гида / пассажира">
@@ -3493,50 +3101,40 @@
                   <span class="seat-status-dot"></span>
                 </div>
               ` : ''}
-              <div class="entrance-stairwell" title="Посадочный проем с электроприводной сдвижной дверью и подсветкой">
+              <div class="entrance-stairwell" title="Посадочный проем пассажирской двери">
                 <div class="stanchion-rail">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-                  <span>Вход в салон (Поручень STOP)</span>
-                </div>
-                <div class="step-tread-yellow" title="Противоскользящие ступени с желтым кантом"></div>
-                <div style="font-size: 10px; color: #94A3B8; display: flex; justify-content: space-between;">
-                  <span>Ступень 1 (Выдвижная)</span>
-                  <span>Ступень 2 (Салон)</span>
+                  <span>Вход в салон</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- CABIN SEATS GRID WITH REAR WHEEL ARCHES & ROOF HATCHES -->
+          <!-- CABIN SEATS GRID -->
           <div class="cabin-grid">
             ${rowsHtml}
           </div>
 
-          <!-- REAR LUGGAGE / SMART CARGO BAY («БАГАЖНАЯ ЯМА») -->
+          <!-- REAR LUGGAGE / CARGO BAY -->
           <div class="bus-rear-cargo">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); display: flex; align-items: center; justify-content: center;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              <div style="width: 32px; height: 32px; border-radius: 8px; background: #EEF2FF; border: 1px solid #C7D2FE; display: flex; align-items: center; justify-content: center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1E3A8A" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
               </div>
               <div>
-                <div style="font-weight: 700; color: #F8FAFC; font-size: 12.5px;">${cfg.cargoDesc}</div>
+                <div style="font-weight: 700; color: #0F172A; font-size: 12.5px;">${cfg.cargoDesc || 'Багажное отделение'}</div>
                 <div style="font-size: 11px; color: #64748B; margin-top: 2px;">
-                  Глубокий багажный отсек со стяжными ремнями &bull; Нагрузка до 450 кг
+                  Багажный отсек &bull; Нагрузка до 450 кг
                 </div>
               </div>
             </div>
-            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-              <span class="safety-chip safety-fire" title="Огнетушитель багажного отделения ОП-2">ОП-2 (2 КГ)</span>
-              <span class="safety-chip" style="background: rgba(245, 158, 11, 0.2); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.4);" title="Знак аварийной остановки СТБ ISO 20471">ЗНАК АО</span>
-              <span class="safety-chip" style="background: rgba(148, 163, 184, 0.2); color: #CBD5E1; border: 1px solid rgba(148, 163, 184, 0.4);" title="Комплект ЗИП и гидравлический домкрат">ЗИП / ДОМКРАТ</span>
-            </div>
           </div>
 
-          <!-- TWIN REAR 270° SWING DOORS -->
+          <!-- REAR DOORS -->
           <div class="rear-split-doors">
-            <span>&bull; ЛЕВАЯ СТВОРКА 270&deg; &bull;</span>
-            <span style="color: #38BDF8; font-weight: 800;">АВАРИЙНЫЙ ВЫХОД &bull; РАСПАШНЫЕ ДВЕРИ</span>
-            <span>&bull; ПРАВАЯ СТВОРКА 270&deg; &bull;</span>
+            <span>&bull; ЛЕВАЯ СТВОРКА &bull;</span>
+            <span style="color: #64748B; font-weight: 700;">РАСПАШНЫЕ ДВЕРИ</span>
+            <span>&bull; ПРАВАЯ СТВОРКА &bull;</span>
           </div>
         </div>
       `;
@@ -3628,8 +3226,9 @@
         if (subEl) subEl.innerText = `Место ${seatNum} доступно для свободной посадки или продажи в кассе`;
         if (badgeEl) {
           badgeEl.className = 'status-badge';
-          badgeEl.style.background = '#334155';
-          badgeEl.style.color = '#94A3B8';
+          badgeEl.style.background = '#F1F5F9';
+          badgeEl.style.color = '#64748B';
+          badgeEl.style.border = '1px solid #CBD5E1';
           badgeEl.innerText = 'Свободно';
         }
         if (btnEl) {
