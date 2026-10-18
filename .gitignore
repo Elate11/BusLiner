@@ -6,6 +6,10 @@ Thumbs.db
 *.docx
 *.doc
 
+# Images
+*.jpg
+*.jpeg
+
 # Environment & secrets
 .env
 .env.local
