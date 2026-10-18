@@ -1977,14 +1977,45 @@
     function handleWizardSubmit(e) {
       e.preventDefault();
       
-      document.getElementById('succ-org').innerText = document.getElementById('ob-company-name').value || '—';
-      document.getElementById('succ-tax').innerText = document.getElementById('ob-tax-id').value || '—';
+      const compName = document.getElementById('ob-company-name').value || '';
+      const taxId = document.getElementById('ob-tax-id').value || '';
+      const ibanVal = document.getElementById('ob-iban') ? document.getElementById('ob-iban').value : '';
+      const bankVal = document.getElementById('ob-bank-name') ? document.getElementById('ob-bank-name').value : '';
       const plate = document.getElementById('ob-veh-plate').value || '';
       const make = document.getElementById('ob-veh-make').value || '';
-      document.getElementById('succ-veh').innerText = (plate || make) ? `${plate} (${make})` : '—';
       const rFrom = document.getElementById('ob-route-from').value || '';
       const rTo = document.getElementById('ob-route-to').value || '';
+      const fullName = document.getElementById('ob-fullname') ? document.getElementById('ob-fullname').value : '';
+      const phone = document.getElementById('ob-phone') ? document.getElementById('ob-phone').value : '';
+
+      document.getElementById('succ-org').innerText = compName || '—';
+      document.getElementById('succ-tax').innerText = taxId || '—';
+      document.getElementById('succ-veh').innerText = (plate || make) ? `${plate} (${make})` : '—';
       document.getElementById('succ-route').innerText = (rFrom || rTo) ? `${rFrom} → ${rTo}` : '—';
+
+      // Send to backend SQLite DB
+      let storedTgUser = null;
+      try {
+        storedTgUser = JSON.parse(localStorage.getItem('busliner_telegram_user') || 'null');
+      } catch(ex) {}
+
+      fetch('http://localhost:8080/api/auth/register-carrier', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          company_name: compName,
+          tax_id: taxId,
+          iban: ibanVal,
+          bank_name: bankVal,
+          vehicle_make: make,
+          vehicle_plate: plate,
+          route_from: rFrom,
+          route_to: rTo,
+          full_name: fullName,
+          phone: phone,
+          telegram_user: storedTgUser
+        })
+      }).catch(() => {});
 
       for (let i = 1; i <= 4; i++) {
         const pane = document.getElementById(`step-pane-${i}`);

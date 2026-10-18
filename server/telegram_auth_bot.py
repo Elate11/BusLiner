@@ -18,11 +18,12 @@ import hmac
 import hashlib
 import secrets
 import threading
+import sqlite3
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 from urllib.request import Request, urlopen
 from urllib.error import URLError
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 
 # ==============================================================================
 # CONFIGURATION & SECURITY PARAMS
@@ -32,15 +33,140 @@ BOT_USERNAME = os.getenv("BUSLINER_BOT_USERNAME", "BusLinerFleetBot")
 SERVER_HOST = os.getenv("BUSLINER_AUTH_HOST", "0.0.0.0")
 SERVER_PORT = int(os.getenv("BUSLINER_AUTH_PORT", "8080"))
 AUTH_SESSION_TTL_SECONDS = 300  # 5 minutes maximum lifetime for challenge nonces
+DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db", "busliner.db")
 
 # In-memory cryptographically verified active sessions store
-# Structure: { session_token: { created_at, status, user_agent, client_ip, telegram_user, consumed } }
 ACTIVE_AUTH_SESSIONS: Dict[str, Dict[str, Any]] = {}
 USER_ROLES: Dict[int, str] = {}
 DRIVER_ORGANIZATIONS: Dict[int, Dict[str, Any]] = {}
 CARRIER_ORGS: Dict[int, Dict[str, Any]] = {}
 INVITE_TOKENS: Dict[str, Dict[str, Any]] = {}
 ACTIVE_TRIPS: Dict[int, Dict[str, Any]] = {}
+
+
+# ==============================================================================
+# PERSISTENT SQLITE DATABASE (db/busliner.db)
+# ==============================================================================
+def init_db() -> None:
+    """Initializes tables for carriers, drivers and authenticated users."""
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                telegram_id INTEGER UNIQUE,
+                username TEXT,
+                full_name TEXT,
+                phone TEXT,
+                role TEXT DEFAULT 'owner',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS carriers (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                telegram_id INTEGER UNIQUE,
+                company_name TEXT,
+                unp TEXT,
+                iban TEXT,
+                bank_name TEXT,
+                vehicle_model TEXT,
+                vehicle_plate TEXT,
+                route TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS drivers (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                telegram_id INTEGER UNIQUE,
+                full_name TEXT,
+                username TEXT,
+                phone TEXT,
+                carrier_id INTEGER,
+                carrier_name TEXT,
+                status TEXT DEFAULT 'unassigned',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        conn.commit()
+
+
+def save_or_update_user(telegram_id: int, username: str, full_name: str, role: str = "owner", phone: Optional[str] = None) -> None:
+    try:
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO users (telegram_id, username, full_name, role, phone)
+                VALUES (?, ?, ?, ?, ?)
+                ON CONFLICT(telegram_id) DO UPDATE SET
+                    username = excluded.username,
+                    full_name = excluded.full_name,
+                    role = excluded.role,
+                    phone = COALESCE(excluded.phone, users.phone)
+            """, (telegram_id, username, full_name, role, phone))
+            conn.commit()
+    except Exception as e:
+        print(f"[DB Error: save_or_update_user] {e}", file=sys.stderr)
+
+
+def save_carrier_registration(telegram_id: Optional[int], company_name: str, unp: str, iban: str, bank_name: str, vehicle_model: str, vehicle_plate: str, route: str) -> None:
+    try:
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO carriers (telegram_id, company_name, unp, iban, bank_name, vehicle_model, vehicle_plate, route)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(telegram_id) DO UPDATE SET
+                    company_name = excluded.company_name,
+                    unp = excluded.unp,
+                    iban = excluded.iban,
+                    bank_name = excluded.bank_name,
+                    vehicle_model = excluded.vehicle_model,
+                    vehicle_plate = excluded.vehicle_plate,
+                    route = excluded.route
+            """, (telegram_id, company_name, unp, iban, bank_name, vehicle_model, vehicle_plate, route))
+            conn.commit()
+    except Exception as e:
+        print(f"[DB Error: save_carrier_registration] {e}", file=sys.stderr)
+
+
+def save_or_update_driver(telegram_id: int, full_name: str, username: str, phone: Optional[str] = None, carrier_id: Optional[int] = None, carrier_name: Optional[str] = None, status: str = "unassigned") -> None:
+    try:
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO drivers (telegram_id, full_name, username, phone, carrier_id, carrier_name, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(telegram_id) DO UPDATE SET
+                    full_name = excluded.full_name,
+                    username = excluded.username,
+                    phone = COALESCE(excluded.phone, drivers.phone),
+                    carrier_id = COALESCE(excluded.carrier_id, drivers.carrier_id),
+                    carrier_name = COALESCE(excluded.carrier_name, drivers.carrier_name),
+                    status = excluded.status
+            """, (telegram_id, full_name, username, phone, carrier_id, carrier_name, status))
+            conn.commit()
+    except Exception as e:
+        print(f"[DB Error: save_or_update_driver] {e}", file=sys.stderr)
+
+
+def get_db_records() -> Dict[str, Any]:
+    try:
+        with sqlite3.connect(DB_PATH) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM users ORDER BY id DESC")
+            users = [dict(r) for r in cursor.fetchall()]
+            cursor.execute("SELECT * FROM carriers ORDER BY id DESC")
+            carriers = [dict(r) for r in cursor.fetchall()]
+            cursor.execute("SELECT * FROM drivers ORDER BY id DESC")
+            drivers = [dict(r) for r in cursor.fetchall()]
+            return {"users": users, "carriers": carriers, "drivers": drivers}
+    except Exception as e:
+        print(f"[DB Error: get_db_records] {e}", file=sys.stderr)
+        return {"users": [], "carriers": [], "drivers": []}
 
 
 # ==============================================================================
@@ -164,7 +290,11 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
         first_name = user.get("first_name", "Партнер")
         clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Партнер")
 
+        # Persist user profile in SQLite
+        save_or_update_user(user_id, clean_username, first_name, USER_ROLES.get(user_id, "owner"))
+
         if text.startswith("/start invite_"):
+
             USER_ROLES[user_id] = "driver"
             carrier_ref = text.replace("/start invite_", "").strip()
             org_info = None
@@ -504,6 +634,33 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 "reply_markup": keyboard
             })
 
+        elif text.startswith("/admin") or text.startswith("/users"):
+            db_data = get_db_records()
+            u_list = db_data.get("users", [])
+            c_list = db_data.get("carriers", [])
+            d_list = db_data.get("drivers", [])
+
+            carriers_txt = "\n".join([f"• *{c['company_name']}* (УНП: `{c['unp']}`, борт: {c['vehicle_plate'] or '—'})" for c in c_list[:5]]) if c_list else "— Нет зарегистрированных перевозчиков"
+            drivers_txt = "\n".join([f"• *{d['full_name']}* ({d['username']}) — _{d['carrier_name'] or 'Не прикреплен'}_" for d in d_list[:5]]) if d_list else "— Нет зарегистрированных водителей"
+
+            admin_msg = (
+                f"*Реестр базы данных BusLiner*\n\n"
+                f"📊 *Статистика регистрации:*\n"
+                f"• Пользователей в БД: *{len(u_list)}*\n"
+                f"• Перевозчиков (ИП / Юрлиц): *{len(c_list)}*\n"
+                f"• Водителей: *{len(d_list)}*\n\n"
+                f"🏢 *Перевозчики (первые 5):*\n{carriers_txt}\n\n"
+                f"🚍 *Водители (первые 5):*\n{drivers_txt}\n\n"
+                f"Команды проверки:\n"
+                f"• В терминале: `python3 server/view_db.py`\n"
+                f"• Через API: `GET http://localhost:8080/api/admin/users`"
+            )
+            send_telegram_api_request("sendMessage", {
+                "chat_id": chat_id,
+                "text": admin_msg,
+                "parse_mode": "Markdown"
+            })
+
         else:
             fallback_msg = (
                 f"*BusLiner Partners*\n\n"
@@ -786,7 +943,35 @@ class TelegramAuthHTTPHandler(BaseHTTPRequestHandler):
             })
             return
 
-        self._send_json_response(404, {"error": "Endpoint not found"})
+        # ----------------------------------------------------------------------
+        # ENDPOINT 4: REGISTER CARRIER ONBOARDING DATA (SAVES TO SQLITE DB)
+        # ----------------------------------------------------------------------
+        elif url.path == "/api/auth/register-carrier":
+            company_name = payload.get("company_name", "").strip()
+            unp = payload.get("tax_id", "").strip()
+            iban = payload.get("iban", "").strip()
+            bank_name = payload.get("bank_name", "").strip()
+            vehicle_model = payload.get("vehicle_make", "").strip()
+            vehicle_plate = payload.get("vehicle_plate", "").strip()
+            r_from = payload.get("route_from", "").strip()
+            r_to = payload.get("route_to", "").strip()
+            route = f"{r_from} — {r_to}" if (r_from or r_to) else ""
+            full_name = payload.get("full_name", "").strip()
+            phone = payload.get("phone", "").strip()
+            tg_user = payload.get("telegram_user") or {}
+            tg_id = tg_user.get("id")
+
+            save_carrier_registration(tg_id, company_name, unp, iban, bank_name, vehicle_model, vehicle_plate, route)
+            if tg_id:
+                save_or_update_user(tg_id, tg_user.get("username", ""), full_name or tg_user.get("first_name", "Перевозчик"), "owner", phone)
+
+            self._send_json_response(200, {
+                "success": True,
+                "message": "Перевозчик успешно сохранен в базе данных.",
+                "company_name": company_name
+            })
+            return
+
 
     def do_GET(self):
         url = urlparse(self.path)
@@ -838,6 +1023,23 @@ class TelegramAuthHTTPHandler(BaseHTTPRequestHandler):
             })
             return
 
+        # ----------------------------------------------------------------------
+        # ENDPOINT 5: GET ALL REGISTERED USERS, CARRIERS AND DRIVERS
+        # ----------------------------------------------------------------------
+        elif url.path == "/api/admin/users":
+            records = get_db_records()
+            self._send_json_response(200, {
+                "success": True,
+                "database": "db/busliner.db",
+                "counts": {
+                    "users": len(records.get("users", [])),
+                    "carriers": len(records.get("carriers", [])),
+                    "drivers": len(records.get("drivers", []))
+                },
+                "data": records
+            })
+            return
+
         self._send_json_response(404, {"error": "Endpoint not found"})
 
 
@@ -845,9 +1047,13 @@ class TelegramAuthHTTPHandler(BaseHTTPRequestHandler):
 # MAIN ENTRYPOINT & DAEMON RUNNER
 # ==============================================================================
 def run_auth_server(host: str = SERVER_HOST, port: int = SERVER_PORT):
+    # Ensure SQLite database and tables are created
+    init_db()
+
     # Start Telegram background polling thread
     polling_thread = threading.Thread(target=telegram_polling_worker, daemon=True)
     polling_thread.start()
+
 
     server_address = (host, port)
     httpd = HTTPServer(server_address, TelegramAuthHTTPHandler)
