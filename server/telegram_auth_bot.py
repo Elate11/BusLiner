@@ -38,6 +38,9 @@ AUTH_SESSION_TTL_SECONDS = 300  # 5 minutes maximum lifetime for challenge nonce
 ACTIVE_AUTH_SESSIONS: Dict[str, Dict[str, Any]] = {}
 USER_ROLES: Dict[int, str] = {}
 DRIVER_ORGANIZATIONS: Dict[int, Dict[str, Any]] = {}
+CARRIER_ORGS: Dict[int, Dict[str, Any]] = {}
+INVITE_TOKENS: Dict[str, Dict[str, Any]] = {}
+ACTIVE_TRIPS: Dict[int, Dict[str, Any]] = {}
 
 
 # ==============================================================================
@@ -161,29 +164,71 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
         first_name = user.get("first_name", "Партнер")
         clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Партнер")
 
-        if text.startswith("/start driver_invite"):
+        if text.startswith("/start invite_"):
             USER_ROLES[user_id] = "driver"
-            DRIVER_ORGANIZATIONS[user_id] = {
-                "name": "ООО «ТрансЛидер Экспресс»",
-                "unp": "193821049",
-                "type": "Юрлицо (ООО)",
-                "license": "№ 02190/77412 Минтранса РБ"
-            }
-            driver_welcome = (
-                f"*Приглашение принято!*\n\n"
-                f"Здравствуйте, {first_name}.\n"
-                f"Вы успешно привязаны к перевозчику:\n\n"
-                f"🏢 *Организация перевозчика:*\n"
-                f"• Компания: *ООО «ТрансЛидер Экспресс»*\n"
-                f"• Форма: Юрлицо (ООО)\n"
-                f"• УНП: `193821049`\n"
-                f"• Лицензия: № 02190/77412 Минтранса РБ\n\n"
-                f"Вам открыт доступ к ведомостям рейсов этой организации.\n\n"
-                f"Команды:\n"
-                f"/trip — открыть ведомость текущего рейса\n"
-                f"/status — организация, статус смены и автобус\n"
-                f"/help — оперативная поддержка в рейсе"
-            )
+            carrier_ref = text.replace("/start invite_", "").strip()
+            org_info = None
+            if carrier_ref.isdigit():
+                org_info = CARRIER_ORGS.get(int(carrier_ref))
+            if not org_info:
+                org_info = INVITE_TOKENS.get(carrier_ref)
+
+            if org_info:
+                DRIVER_ORGANIZATIONS[user_id] = org_info
+                driver_welcome = (
+                    f"*Приглашение принято!*\n\n"
+                    f"Здравствуйте, {first_name}.\n"
+                    f"Вы успешно привязаны к перевозчику:\n\n"
+                    f"🏢 *Организация перевозчика:*\n"
+                    f"• Компания: *{org_info.get('name', 'Перевозчик')}*\n"
+                    f"• Форма: {org_info.get('type', 'ИП / Юрлицо')}\n"
+                    f"• УНП: `{org_info.get('unp', '—')}`\n"
+                    f"• Лицензия: {org_info.get('license', 'Минтранс РБ')}\n\n"
+                    f"Вам открыт доступ к ведомостям рейсов этой организации.\n\n"
+                    f"Команды:\n"
+                    f"/trip — открыть ведомость текущего рейса\n"
+                    f"/status — организация, статус смены и автобус\n"
+                    f"/help — оперативная поддержка в рейсе"
+                )
+            else:
+                driver_welcome = (
+                    f"*Приглашение для водителя*\n\n"
+                    f"Здравствуйте, {first_name}.\n"
+                    f"Ссылка-приглашение не найдена или устарела.\n\n"
+                    f"Попросите вашего работодателя (ИП или юрлицо) отправить актуальную ссылку из команды /drivers в боте @{BOT_USERNAME}."
+                )
+            send_telegram_api_request("sendMessage", {
+                "chat_id": chat_id,
+                "text": driver_welcome,
+                "parse_mode": "Markdown"
+            })
+
+        elif text.startswith("/start driver_invite"):
+            USER_ROLES[user_id] = "driver"
+            org_info = DRIVER_ORGANIZATIONS.get(user_id)
+            if org_info:
+                driver_welcome = (
+                    f"*Профиль водителя*\n\n"
+                    f"Здравствуйте, {first_name}.\n\n"
+                    f"🏢 *Прикрепленная организация:* *{org_info.get('name', '—')}*\n"
+                    f"• УНП: `{org_info.get('unp', '—')}`\n\n"
+                    f"Команды:\n"
+                    f"/trip — ведомость текущего рейса\n"
+                    f"/status — статус смены\n"
+                    f"/help — поддержка"
+                )
+            else:
+                driver_welcome = (
+                    f"*Приглашение для водителя*\n\n"
+                    f"Здравствуйте, {first_name}.\n"
+                    f"Вы зарегистрированы в системе BusLiner как водитель.\n\n"
+                    f"🏢 *Организация перевозчика:* Не прикреплен\n"
+                    f"• Статус: Свободный водитель\n\n"
+                    f"Чтобы привязаться к автопарку, запросите персональную ссылку-приглашение у вашего перевозчика (команда /drivers в боте).\n\n"
+                    f"Команды:\n"
+                    f"/status — статус аккаунта\n"
+                    f"/help — служба поддержки"
+                )
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
                 "text": driver_welcome,
@@ -222,6 +267,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 "text": driver_welcome,
                 "parse_mode": "Markdown"
             })
+
 
         elif text.startswith("/start auth_"):
             token = text.replace("/start auth_", "").strip()
@@ -292,10 +338,17 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             })
 
         elif text.startswith("/drivers"):
+            CARRIER_ORGS.setdefault(user_id, {
+                "name": f"Перевозчик {clean_username}",
+                "unp": "Не указан",
+                "type": "ИП / Юрлицо",
+                "license": "Минтранс РБ"
+            })
+            invite_url = f"https://t.me/{BOT_USERNAME}?start=invite_{user_id}"
             drivers_msg = (
                 f"*Подключение водителей к перевозчику*\n\n"
-                f"Чтобы привязать водителя к вашей компании или ИП, отправьте ему эту ссылку:\n"
-                f"https://t.me/{BOT_USERNAME}?start=driver_invite\n\n"
+                f"Чтобы привязать водителя к вашей компании или ИП, отправьте ему персональную ссылку:\n"
+                f"{invite_url}\n\n"
                 f"Водитель получит доступ только к посадочной ведомости и сканеру билетов без доступа к вашей выручке и финансовым отчетам."
             )
             send_telegram_api_request("sendMessage", {
@@ -306,19 +359,27 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
 
         elif text.startswith("/trip"):
             org_info = DRIVER_ORGANIZATIONS.get(user_id)
-            if org_info:
+            trip_info = ACTIVE_TRIPS.get(user_id)
+            if org_info and trip_info:
+                passengers = trip_info.get("passengers", [])
+                p_lines = "\n".join([f"{i+1}. {p.get('name', 'Пассажир')} — Место {p.get('seat', '—')} [{p.get('status', 'Оплачено')}]" for i, p in enumerate(passengers)]) if passengers else "Пассажиров пока нет (свободная посадка)."
                 trip_msg = (
                     f"*Посадочная ведомость рейса*\n\n"
-                    f"🏢 Организация: *{org_info['name']}* (УНП {org_info['unp']})\n"
-                    f"Лицензия: {org_info.get('license', 'Минтранс РБ')}\n"
-                    f"Маршрут: Гомель — Минск (17:00)\n"
-                    f"Машина: VW Crafter (2023, 5192 AB-3)\n"
-                    f"Всего мест: 16 | Занято: 13 | Свободно: 3\n\n"
+                    f"🏢 Организация: *{org_info.get('name', '—')}* (УНП {org_info.get('unp', '—')})\n"
+                    f"Маршрут: {trip_info.get('route', '—')}\n"
+                    f"Машина: {trip_info.get('vehicle', '—')}\n"
+                    f"Всего мест: {trip_info.get('seats_total', 0)} | Занято: {len(passengers)}\n\n"
                     f"Пассажиры на посадку:\n"
-                    f"1. Смирнов Илья — Место 04 (у окна) [Оплачено онлайн]\n"
-                    f"2. Громов Максим — Место 07 (Тихая зона) [Оплачено онлайн]\n"
-                    f"3. Ковалева Анна — Место 11 (+1 Велосипед) [Оплачено онлайн]\n\n"
+                    f"{p_lines}\n\n"
                     f"Для сканирования QR-билетов используйте камеру телефона на сайте."
+                )
+            elif org_info:
+                trip_msg = (
+                    f"*Ведомость рейса*\n\n"
+                    f"🏢 Организация: *{org_info.get('name', '—')}*\n"
+                    f"• Статус смены: Вне смены (активных рейсов нет)\n\n"
+                    f"На текущую смену активных рейсов не назначено.\n"
+                    f"Когда организация назначит вас на рейс, здесь появится посадочная ведомость и список мест."
                 )
             else:
                 trip_msg = (
@@ -336,21 +397,25 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             user_role = USER_ROLES.get(user_id, "owner")
             if user_role == "driver":
                 org_info = DRIVER_ORGANIZATIONS.get(user_id)
+                trip_info = ACTIVE_TRIPS.get(user_id)
                 if org_info:
+                    veh_text = trip_info.get("vehicle", "Борт не назначен") if trip_info else "Борт не назначен"
+                    trip_text = trip_info.get("route", "Рейсы не запланированы") if trip_info else "Рейсы не запланированы"
+                    shift_status = "На линии (Рейс активен)" if trip_info else "Вне смены"
                     status_msg = (
                         f"*Статус водителя рейса*\n\n"
                         f"Водитель: {first_name} ({clean_username})\n"
                         f"Роль: Водитель рейса\n\n"
                         f"🏢 *Прикрепленная организация перевозчика:*\n"
-                        f"• Название: *{org_info['name']}*\n"
-                        f"• Юр. форма: {org_info.get('type', 'Юрлицо (ООО)')}\n"
-                        f"• УНП: `{org_info['unp']}`\n"
-                        f"• Лицензия: {org_info.get('license', '№ 02190/77412 Минтранс РБ')}\n"
+                        f"• Название: *{org_info.get('name', '—')}*\n"
+                        f"• Юр. форма: {org_info.get('type', 'Юрлицо / ИП')}\n"
+                        f"• УНП: `{org_info.get('unp', '—')}`\n"
+                        f"• Лицензия: {org_info.get('license', 'Минтранс РБ')}\n"
                         f"• Клиринг выручки: Прямой счет перевозчика (T+1)\n\n"
                         f"🚍 *Текущая смена:*\n"
-                        f"• Статус смены: На линии (Активен)\n"
-                        f"• Закрепленный борт: VW Crafter (5192 AB-3)\n"
-                        f"• Ближайший рейс: 17:00 Гомель — Минск\n\n"
+                        f"• Статус смены: {shift_status}\n"
+                        f"• Закрепленный борт: {veh_text}\n"
+                        f"• Ближайший рейс: {trip_text}\n\n"
                         f"Команда /trip показывает ведомость пассажиров."
                     )
                 else:
@@ -364,15 +429,18 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                         f"• Чтобы получать ведомости рейсов, работодатель (ИП или компания) должен добавить вас в свой автопарк."
                     )
             else:
+                org_data = CARRIER_ORGS.get(user_id, {})
+                org_name = org_data.get("name", "ИП / Юрлицо")
                 status_msg = (
                     f"*Статус перевозчика (ИП / Юрлицо)*\n\n"
                     f"Представитель: {first_name} ({clean_username})\n"
                     f"Роль: Перевозчик (ИП / Юрлицо)\n"
+                    f"Организация: {org_name}\n"
                     f"Регистрация в BusLiner: Подтверждена\n"
                     f"Статус аккаунта: Активен\n"
                     f"Доступ к управлению рейсами: Открыт\n"
                     f"Выплаты за рейсы: Каждый рабочий день на расчетный счет (T+1)\n\n"
-                    f"Команда /drivers дает ссылку для подключения водителей."
+                    f"Команда /drivers дает персональную ссылку для подключения водителей."
                 )
             send_telegram_api_request("sendMessage", {
                 "chat_id": chat_id,
@@ -669,7 +737,7 @@ class TelegramAuthHTTPHandler(BaseHTTPRequestHandler):
 
             # Constant-time comparison for OTP verification
             is_valid_otp = hmac.compare_digest(session.get("otp_code", ""), entered_otp)
-            if not is_valid_otp and entered_otp not in ["112233", "000000"]:
+            if not is_valid_otp:
                 self._send_json_response(403, {"success": False, "error": "Неверный одноразовый код подтверждения."})
                 return
 
