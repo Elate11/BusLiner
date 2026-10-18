@@ -305,6 +305,14 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
 
             if org_info:
                 DRIVER_ORGANIZATIONS[user_id] = org_info
+                save_or_update_driver(
+                    telegram_id=user_id,
+                    full_name=first_name,
+                    username=clean_username,
+                    carrier_id=int(carrier_ref) if carrier_ref.isdigit() else None,
+                    carrier_name=org_info.get("name"),
+                    status="assigned"
+                )
                 driver_welcome = (
                     f"*Приглашение принято!*\n\n"
                     f"Здравствуйте, {first_name}.\n"
@@ -336,6 +344,14 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
         elif text.startswith("/start driver_invite"):
             USER_ROLES[user_id] = "driver"
             org_info = DRIVER_ORGANIZATIONS.get(user_id)
+            save_or_update_driver(
+                telegram_id=user_id,
+                full_name=first_name,
+                username=clean_username,
+                carrier_id=None,
+                carrier_name=org_info.get("name") if org_info else None,
+                status="assigned" if org_info else "unassigned"
+            )
             if org_info:
                 driver_welcome = (
                     f"*Профиль водителя*\n\n"
@@ -368,6 +384,14 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
         elif text.startswith("/start driver_") or text == "/driver":
             USER_ROLES[user_id] = "driver"
             org_info = DRIVER_ORGANIZATIONS.get(user_id)
+            save_or_update_driver(
+                telegram_id=user_id,
+                full_name=first_name,
+                username=clean_username,
+                carrier_id=None,
+                carrier_name=org_info.get("name") if org_info else None,
+                status="assigned" if org_info else "unassigned"
+            )
             if org_info:
                 driver_welcome = (
                     f"*Профиль водителя*\n\n"
@@ -688,6 +712,9 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
 
         if cb_data == "role_owner":
             USER_ROLES[user_id] = "owner"
+            clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Партнер")
+            save_or_update_user(user_id, clean_username, first_name, "owner")
+            save_carrier_registration(user_id, f"ИП / Перевозчик {first_name}", "Не указан", "", "", "", "", "")
             send_telegram_api_request("answerCallbackQuery", {
                 "callback_query_id": cb_id,
                 "text": "Роль: Перевозчик (ИП / Юрлицо)"
@@ -713,7 +740,17 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
 
         elif cb_data == "role_driver":
             USER_ROLES[user_id] = "driver"
+            clean_username = f"@{user.get('username')}" if user.get("username") else user.get("first_name", "Партнер")
+            save_or_update_user(user_id, clean_username, first_name, "driver")
             org_info = DRIVER_ORGANIZATIONS.get(user_id)
+            save_or_update_driver(
+                telegram_id=user_id,
+                full_name=first_name,
+                username=clean_username,
+                carrier_id=None,
+                carrier_name=org_info.get("name") if org_info else None,
+                status="assigned" if org_info else "unassigned"
+            )
             if org_info:
                 send_telegram_api_request("answerCallbackQuery", {
                     "callback_query_id": cb_id,
