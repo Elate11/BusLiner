@@ -1375,30 +1375,41 @@
         </button>
 
         <div class="auth-divider">
-          <span>или вход по коду рейса / приглашению</span>
+          <span>или вход по номеру телефона</span>
         </div>
 
-        <form onsubmit="handleDriverCodeLogin(event)">
-          <div class="form-group">
-            <label class="form-label" for="driver-phone">Номер телефона водителя</label>
-            <input type="tel" id="driver-phone" class="form-input" placeholder="+375 (29) 000-00-00" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="driver-invite-code">Код перевозчика или номер рейса</label>
-            <input type="text" id="driver-invite-code" class="form-input" placeholder="Например: FLEET-771 или BL-1700" style="text-transform: uppercase;">
-            <span class="form-hint">Код выдает перевозчик (ИП или организация) при добавлении вас на рейс.</span>
+        <form onsubmit="handleDriverPhoneLogin(event)">
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label class="form-label" for="driver-phone">Номер телефона водителя *</label>
+            <input type="tel" id="driver-phone" class="form-input" placeholder="+375 (29) 714-22-10" required>
+            <span class="form-hint">Вход по номеру, зарегистрированному перевозчиком в реестре BusLiner</span>
           </div>
 
           <button type="submit" class="btn btn-accent" style="width: 100%; padding: 14px 24px; font-size: 14.5px;">
-            Открыть ведомость рейса &rarr;
+            Войти в терминал водителя &rarr;
           </button>
         </form>
 
-        <!-- LIVE DEMO TRIP MANIFEST PREVIEW -->
-        <div style="margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border-hairline);">
+        <!-- LIVE DEMO TRIP MANIFEST PREVIEW (ПОТОМ: ВЫБОР РЕЙСА И ВЕДОМОСТЬ) -->
+        <div id="driver-terminal-section" style="margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border-hairline);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.05em;">Терминал водителя рейса</span>
             <span class="badge-verified-status" style="background: var(--status-available-bg); color: var(--status-available);">Рейс активен</span>
+          </div>
+
+          <!-- CODE / FLIGHT SELECTION (ПОТОМ, ПЕРЕД ВЫХОДОМ НА ЛИНИЮ) -->
+          <div style="background: var(--surface-subtle); border: 1px dashed var(--border-hairline); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+              <label class="form-label" for="driver-invite-code" style="margin-bottom: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em;">Код автопарка или номер рейса</label>
+              <span style="font-size: 11px; color: var(--text-muted);">Вводится перед началом рейса</span>
+            </div>
+            <form onsubmit="handleApplyTripCode(event)" style="display: flex; gap: 8px;">
+              <input type="text" id="driver-invite-code" class="form-input" value="FLEET-771" placeholder="Например: FLEET-771 или BL-1700" style="text-transform: uppercase; font-size: 13px; padding: 10px 12px; flex: 1;">
+              <button type="submit" class="btn btn-secondary" style="padding: 10px 16px; font-size: 13px; white-space: nowrap;">
+                Загрузить рейс &rarr;
+              </button>
+            </form>
+            <span class="form-hint" style="margin-top: 6px; font-size: 11.5px; display: block;">Код выдает перевозчик (ИП или организация) перед посадкой для доступа к ведомости конкретного автобуса.</span>
           </div>
 
           <!-- CARRIER ORGANIZATION CONNECTION BADGE -->
@@ -1985,10 +1996,23 @@
       openTelegramModal('driver');
     };
 
-    window.handleDriverCodeLogin = function(e) {
-      e.preventDefault();
-      const phone = document.getElementById('driver-phone').value || '+375 (29) 714-22-10';
-      const rawCode = (document.getElementById('driver-invite-code').value || 'FLEET-771').trim().toUpperCase();
+    window.handleDriverPhoneLogin = function(e) {
+      if (e) e.preventDefault();
+      const phoneInput = document.getElementById('driver-phone');
+      const phone = phoneInput ? phoneInput.value : '+375 (29) 714-22-10';
+      showAuthToast('Вход выполнен', `Водитель ${phone} авторизован в BusLiner. Загрузка терминала рейсов...`);
+      const terminalSection = document.getElementById('driver-terminal-section');
+      if (terminalSection) {
+        terminalSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+
+    window.handleDriverCodeLogin = window.handleDriverPhoneLogin;
+
+    window.handleApplyTripCode = function(e) {
+      if (e) e.preventDefault();
+      const codeInput = document.getElementById('driver-invite-code');
+      const rawCode = (codeInput ? codeInput.value : 'FLEET-771').trim().toUpperCase() || 'FLEET-771';
 
       let orgName = 'ООО «ТрансЛидер Экспресс»';
       let orgType = 'Юрлицо (ООО)';
@@ -2020,10 +2044,7 @@
       if (codeBadge) codeBadge.innerText = rawCode;
       if (manifestName) manifestName.innerText = orgName;
 
-      showAuthToast('Организация подключена', `Водитель привязан к «${orgName}» (${orgType}). Загрузка ведомости...`);
-      setTimeout(() => {
-        showAuthToast('Терминал активен', `Посадочная ведомость 17:00 Гомель → Минск открыта. Перевозчик: ${orgName}`);
-      }, 750);
+      showAuthToast('Рейс привязан', `Код «${rawCode}» принят. Организация: ${orgName}. Ведомость открыта.`);
     };
 
     window.togglePassengerBoarded = function(btn) {
