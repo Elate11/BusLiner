@@ -876,17 +876,17 @@
       align-items: center;
       gap: 10px;
     }
-    .cad-mb-star {
+    .cad-bus-badge {
       width: 28px;
       height: 28px;
-      border-radius: 50%;
-      border: 1.5px solid #0F172A;
+      border-radius: 7px;
+      border: 1px solid #CBD5E1;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #0F172A;
-      background: #FFFFFF;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      color: #1E3A8A;
+      background: #EEF2FF;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
     }
     .cad-title-text {
       font-family: 'SF Mono', Monaco, monospace;
@@ -2262,38 +2262,38 @@
         }
       }
       const isSelected = selectedSeatInspection === seatNum ? ' seat-selected' : '';
-      const armrestY = isAisleTop ? (y - 4) : (y + 41);
+      const armrestY = isAisleTop ? (y - 3.5) : (y + 36.5);
 
       return `
         <g class="cad-seat-group ${statusClass}${isSelected}" onclick="inspectCutawaySeat(${seatNum})" data-seat="${seatNum}">
           <title>${escapeHtml(title)}</title>
           <!-- Seat Cushion Base -->
-          <rect x="${x}" y="${y}" width="48" height="42" rx="7" class="cad-seat-rect" />
-          <!-- Cushion Contour Stitch -->
-          <line x1="${x + 6}" y1="${y + 21}" x2="${x + 36}" y2="${y + 21}" stroke="currentColor" stroke-opacity="0.12" stroke-dasharray="2 2" />
-          <!-- 3-point Seatbelt Buckle Anchor -->
-          <circle cx="${x + 8}" cy="${y + 8}" r="2" fill="#E2E8F0" stroke="#94A3B8" stroke-width="0.8" />
+          <rect x="${x}" y="${y}" width="44" height="38" rx="6" class="cad-seat-rect" />
+          <!-- Cushion Contour Stitching -->
+          <line x1="${x + 6}" y1="${y + 19}" x2="${x + 32}" y2="${y + 19}" stroke="currentColor" stroke-opacity="0.12" stroke-dasharray="2 2" />
+          <!-- 3-point Seatbelt Buckle Dot -->
+          <circle cx="${x + 7}" cy="${y + 7}" r="1.8" fill="#E2E8F0" stroke="#94A3B8" stroke-width="0.8" />
           <!-- Headrest Cushion on Right (facing forward/left) -->
-          <rect x="${x + 36}" y="${y + 5}" width="9" height="32" rx="3" class="cad-seat-headrest" />
+          <rect x="${x + 33}" y="${y + 4}" width="8" height="30" rx="2.5" class="cad-seat-headrest" />
           <!-- Seat Number -->
-          <text x="${x + 19}" y="${y + 19}" class="cad-seat-num">${seatNum}</text>
+          <text x="${x + 16}" y="${y + 17}" class="cad-seat-num">${seatNum}</text>
           <!-- Passenger Initials if Booked -->
-          ${initials ? `<text x="${x + 19}" y="${y + 32}" class="cad-seat-initials">${escapeHtml(initials)}</text>` : ''}
-          <!-- Ergonomic Armrest with Pivot -->
-          <rect x="${x + 8}" y="${armrestY}" width="26" height="5" rx="2.5" class="cad-armrest" />
-          <circle cx="${x + 30}" cy="${armrestY + 2.5}" r="1.3" fill="#64748B" />
+          ${initials ? `<text x="${x + 16}" y="${y + 29}" class="cad-seat-initials">${escapeHtml(initials)}</text>` : ''}
+          <!-- Folding Armrest on Aisle Side -->
+          <rect x="${x + 7}" y="${armrestY}" width="24" height="4.5" rx="2" class="cad-armrest" />
+          <circle cx="${x + 27}" cy="${armrestY + 2.25}" r="1.1" fill="#64748B" />
           <!-- Boarding Status Dot -->
-          <circle cx="${x + 40}" cy="${y + 9}" r="3.5" class="cad-status-dot" />
+          <circle cx="${x + 36}" cy="${y + 8}" r="3" class="cad-status-dot" />
         </g>
       `;
     }
 
     function renderHorizontalCadCutaway(container, cfg, specs, boarded, pending, free) {
-      // Dynamic row layout calculations
+      // Proportional row calculations
       const numRows = cfg.rows.length;
-      const startX = 370;
-      const availableWidth = 550;
-      const stepX = numRows > 1 ? Math.min(95, availableWidth / (numRows - 1)) : 90;
+      const startX = 295;
+      const endX = 770;
+      const stepX = numRows > 1 ? (endX - startX) / (numRows - 1) : 95;
 
       let seatsSvg = '';
       cfg.rows.forEach((r, rowIdx) => {
@@ -2301,30 +2301,31 @@
         if (r.rearCouch) {
           const couchSeats = r.rearCouch;
           const count = couchSeats.length;
-          const minY = 95;
-          const maxY = 322;
+          // Spanning from top window (Y=72) to bottom window (Y=248)
+          const minY = 72;
+          const maxY = 248;
           const yStep = count > 1 ? (maxY - minY) / (count - 1) : 0;
           couchSeats.forEach((sNum, cIdx) => {
             const sy = minY + cIdx * yStep;
             seatsSvg += renderCadSeat(sNum, rx, sy, false);
           });
         } else {
-          // Left seats (driver side: bottom, Y = 270, 322)
+          // Left seats (driver side: bottom, Y = 202, 248)
           const lefts = r.left || [];
           if (lefts.length === 2) {
-            seatsSvg += renderCadSeat(lefts[0], rx, 270, true);  // aisle side
-            seatsSvg += renderCadSeat(lefts[1], rx, 322, false); // window side
+            seatsSvg += renderCadSeat(lefts[0], rx, 202, true);  // aisle side
+            seatsSvg += renderCadSeat(lefts[1], rx, 248, false); // window side
           } else if (lefts.length === 1) {
-            seatsSvg += renderCadSeat(lefts[0], rx, 322, false);
+            seatsSvg += renderCadSeat(lefts[0], rx, 248, false);
           }
 
-          // Right seats (curbside/door side: top, Y = 95, 148)
+          // Right seats (curbside/door side: top, Y = 72, 118)
           const rights = r.right || [];
           if (rights.length === 2) {
-            seatsSvg += renderCadSeat(rights[0], rx, 95, false); // window side
-            seatsSvg += renderCadSeat(rights[1], rx, 148, true);  // aisle side
+            seatsSvg += renderCadSeat(rights[0], rx, 72, false); // window side
+            seatsSvg += renderCadSeat(rights[1], rx, 118, true);  // aisle side
           } else if (rights.length === 1) {
-            seatsSvg += renderCadSeat(rights[0], rx, 95, false); // window side
+            seatsSvg += renderCadSeat(rights[0], rx, 72, false); // window side
           }
         }
       });
@@ -2332,7 +2333,7 @@
       // Guide seat in cockpit if configured
       let guideSeatSvg = '';
       if (cfg.cockpit && typeof cfg.cockpit.guideSeat === 'number') {
-        guideSeatSvg = renderCadSeat(cfg.cockpit.guideSeat, 290, 95, true);
+        guideSeatSvg = renderCadSeat(cfg.cockpit.guideSeat, 235, 72, true);
       }
 
       container.innerHTML = `
@@ -2340,26 +2341,26 @@
           <!-- CAD ARCHITECTURAL BLUEPRINT HEADER BAR -->
           <div class="cad-header-bar">
             <div class="cad-title-group">
-              <div class="cad-mb-star" title="${escapeHtml(cfg.name)}">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 2 L12 12 L3.34 17 M12 12 L20.66 17" />
+              <div class="cad-bus-badge" title="Схема салона маршрутки">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="16" rx="3"/>
+                  <path d="M3 10h18M7 15h.01M17 15h.01"/>
                 </svg>
               </div>
               <div>
-                <div class="cad-title-text">${escapeHtml(cfg.fullName || cfg.name)} &bull; ${cfg.capacity} МЕСТ (${cfg.layoutType || '2+1'})</div>
-                <div class="cad-sub-text">Архитектурный чертеж &bull; ${escapeHtml(specs.chassis)} &bull; Длина: ${specs.dims.split('×')[0] || specs.dims} &bull; База: ${specs.wheelbase}</div>
+                <div class="cad-title-text">Схема салона маршрутки &bull; ${escapeHtml(cfg.name)}</div>
+                <div class="cad-sub-text">${cfg.capacity} мест (${cfg.layoutType || '2+1'}) &bull; Длина: ${specs.dims.split('×')[0] || specs.dims} &bull; База: ${specs.wheelbase}</div>
               </div>
             </div>
             <div style="display: flex; align-items: center; gap: 8px;">
               <span class="status-badge" style="background:#F1F5F9; color:#475569; border:1px solid #CBD5E1; font-size:11px; font-weight:700;">
-                СТАНДАРТ ТР ТС 018/2011 &bull; КАТ. M2
+                СТАНДАРТ МАРШРУТНОГО ТС &bull; КАТ. M2
               </span>
             </div>
           </div>
 
           <!-- DETAILED HORIZONTAL CAD SVG BLUEPRINT -->
-          <svg class="cad-blueprint-svg" viewBox="0 0 1140 450" xmlns="http://www.w3.org/2000/svg">
+          <svg class="cad-blueprint-svg" viewBox="0 0 1020 380" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <!-- Glass tint gradient -->
               <linearGradient id="cadGlassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -2383,225 +2384,203 @@
 
             <!-- ================= DIMENSION LINES & SCALE BAR ================= -->
             <!-- Top Dimension: Overall Length -->
-            <line x1="60" y1="36" x2="60" y2="16" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="2 2" />
-            <line x1="1052" y1="36" x2="1052" y2="16" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="2 2" />
-            <line x1="66" y1="20" x2="1046" y2="20" stroke="#94A3B8" stroke-width="1.2" marker-start="url(#dimArrowStart)" marker-end="url(#dimArrowEnd)" />
-            <rect x="475" y="10" width="200" height="18" rx="4" fill="#FFFFFF" />
-            <text x="575" y="23" font-family="'SF Mono', monospace" font-size="9.5" font-weight="700" fill="#475569" text-anchor="middle">
+            <line x1="45" y1="36" x2="45" y2="16" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="2 2" />
+            <line x1="955" y1="36" x2="955" y2="16" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="2 2" />
+            <line x1="51" y1="20" x2="949" y2="20" stroke="#94A3B8" stroke-width="1.2" marker-start="url(#dimArrowStart)" marker-end="url(#dimArrowEnd)" />
+            <rect x="425" y="10" width="200" height="18" rx="4" fill="#FFFFFF" />
+            <text x="525" y="23" font-family="'SF Mono', monospace" font-size="9.5" font-weight="700" fill="#475569" text-anchor="middle">
               ГАБАРИТНАЯ ДЛИНА: ${escapeHtml(specs.dims.split('×')[0] || '7 367 мм')}
             </text>
 
             <!-- Bottom Dimensions: Wheelbase & Rear Overhang -->
-            <!-- Wheelbase: Front axle (x=240) to Rear dual axle (x=770) -->
-            <line x1="240" y1="414" x2="240" y2="436" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="2 2" />
-            <line x1="770" y1="414" x2="770" y2="436" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="2 2" />
-            <line x1="246" y1="430" x2="764" y2="430" stroke="#94A3B8" stroke-width="1.2" marker-start="url(#dimArrowStart)" marker-end="url(#dimArrowEnd)" />
-            <rect x="425" y="421" width="160" height="18" rx="4" fill="#FFFFFF" />
-            <text x="505" y="434" font-family="'SF Mono', monospace" font-size="9.5" font-weight="700" fill="#475569" text-anchor="middle">
+            <!-- Wheelbase: Front axle (x=185) to Rear dual axle (x=590) -->
+            <line x1="185" y1="344" x2="185" y2="366" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="2 2" />
+            <line x1="590" y1="344" x2="590" y2="366" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="2 2" />
+            <line x1="191" y1="360" x2="584" y2="360" stroke="#94A3B8" stroke-width="1.2" marker-start="url(#dimArrowStart)" marker-end="url(#dimArrowEnd)" />
+            <rect x="330" y="351" width="160" height="18" rx="4" fill="#FFFFFF" />
+            <text x="410" y="364" font-family="'SF Mono', monospace" font-size="9.5" font-weight="700" fill="#475569" text-anchor="middle">
               БАЗА: ${escapeHtml(specs.wheelbase || '4 325 мм')}
             </text>
 
-            <!-- Rear Overhang: Rear axle (x=770) to Rear Bumper (x=1052) -->
-            <line x1="1052" y1="414" x2="1052" y2="436" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="2 2" />
-            <line x1="776" y1="430" x2="1046" y2="430" stroke="#94A3B8" stroke-width="1.2" marker-start="url(#dimArrowStart)" marker-end="url(#dimArrowEnd)" />
-            <rect x="850" y="421" width="130" height="18" rx="4" fill="#FFFFFF" />
-            <text x="915" y="434" font-family="'SF Mono', monospace" font-size="9" font-weight="700" fill="#475569" text-anchor="middle">
+            <!-- Rear Overhang: Rear axle (x=590) to Rear Bumper (x=955) -->
+            <line x1="955" y1="344" x2="955" y2="366" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="2 2" />
+            <line x1="596" y1="360" x2="949" y2="360" stroke="#94A3B8" stroke-width="1.2" marker-start="url(#dimArrowStart)" marker-end="url(#dimArrowEnd)" />
+            <rect x="730" y="351" width="130" height="18" rx="4" fill="#FFFFFF" />
+            <text x="795" y="364" font-family="'SF Mono', monospace" font-size="9" font-weight="700" fill="#475569" text-anchor="middle">
               СВЕС: 2 017 ММ
             </text>
 
             <!-- Metric Scale Bar (Bottom Left) -->
-            <g transform="translate(60, 422)">
-              <rect x="0" y="0" width="30" height="6" fill="#0F172A" />
-              <rect x="30" y="0" width="30" height="6" fill="#CBD5E1" />
-              <rect x="60" y="0" width="30" height="6" fill="#0F172A" />
-              <rect x="0" y="0" width="90" height="6" fill="none" stroke="#0F172A" stroke-width="0.8" />
-              <text x="0" y="15" font-family="'SF Mono', monospace" font-size="7.5" fill="#64748B" text-anchor="middle">0</text>
-              <text x="30" y="15" font-family="'SF Mono', monospace" font-size="7.5" fill="#64748B" text-anchor="middle">1м</text>
-              <text x="60" y="15" font-family="'SF Mono', monospace" font-size="7.5" fill="#64748B" text-anchor="middle">2м</text>
-              <text x="90" y="15" font-family="'SF Mono', monospace" font-size="7.5" fill="#64748B" text-anchor="middle">3м</text>
-              <text x="125" y="12" font-family="'SF Mono', monospace" font-size="7.5" font-weight="700" fill="#475569">М 1:50</text>
+            <g transform="translate(45, 352)">
+              <rect x="0" y="0" width="25" height="5" fill="#0F172A" />
+              <rect x="25" y="0" width="25" height="5" fill="#CBD5E1" />
+              <rect x="50" y="0" width="25" height="5" fill="#0F172A" />
+              <rect x="0" y="0" width="75" height="5" fill="none" stroke="#0F172A" stroke-width="0.8" />
+              <text x="0" y="14" font-family="'SF Mono', monospace" font-size="7" fill="#64748B" text-anchor="middle">0</text>
+              <text x="25" y="14" font-family="'SF Mono', monospace" font-size="7" fill="#64748B" text-anchor="middle">1м</text>
+              <text x="50" y="14" font-family="'SF Mono', monospace" font-size="7" fill="#64748B" text-anchor="middle">2м</text>
+              <text x="75" y="14" font-family="'SF Mono', monospace" font-size="7" fill="#64748B" text-anchor="middle">3м</text>
+              <text x="105" y="11" font-family="'SF Mono', monospace" font-size="7" font-weight="700" fill="#475569">М 1:50</text>
             </g>
 
             <!-- ================= RUNNING GEAR (TIRES & AXLES) ================= -->
-            <!-- FRONT STEER AXLE (X = 240) -->
+            <!-- FRONT STEER AXLE (X = 185) -->
             <g id="cad-front-axle">
-              <line x1="240" y1="46" x2="240" y2="414" stroke="#94A3B8" stroke-width="2" stroke-dasharray="4 2" />
+              <line x1="185" y1="38" x2="185" y2="342" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="4 2" />
               <!-- Top Steer Wheel (Curbside) -->
-              <rect x="216" y="44" width="48" height="20" rx="4" fill="#1E293B" stroke="#0F172A" stroke-width="1.5" />
-              <rect x="222" y="47" width="36" height="14" rx="2" fill="#CBD5E1" />
-              <circle cx="240" cy="54" r="3" fill="#64748B" />
+              <rect x="163" y="36" width="44" height="18" rx="3" fill="#1E293B" stroke="#0F172A" stroke-width="1.2" />
+              <rect x="169" y="39" width="32" height="12" rx="2" fill="#CBD5E1" />
               <!-- Bottom Steer Wheel (Driver Side) -->
-              <rect x="216" y="396" width="48" height="20" rx="4" fill="#1E293B" stroke="#0F172A" stroke-width="1.5" />
-              <rect x="222" y="399" width="36" height="14" rx="2" fill="#CBD5E1" />
-              <circle cx="240" cy="406" r="3" fill="#64748B" />
+              <rect x="163" y="326" width="44" height="18" rx="3" fill="#1E293B" stroke="#0F172A" stroke-width="1.2" />
+              <rect x="169" y="329" width="32" height="12" rx="2" fill="#CBD5E1" />
             </g>
 
-            <!-- REAR DRIVE AXLE (X = 770) - DUAL REAR WHEELS (СПАРКА R16C) -->
+            <!-- REAR DRIVE AXLE (X = 590) - DUAL REAR WHEELS (СПАРКА R16C) -->
             <g id="cad-rear-dual-axle">
-              <line x1="770" y1="30" x2="770" y2="430" stroke="#94A3B8" stroke-width="2" stroke-dasharray="4 2" />
+              <line x1="590" y1="20" x2="590" y2="360" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="4 2" />
               <!-- Differential Casing -->
-              <circle cx="770" cy="230" r="14" fill="#E2E8F0" stroke="#94A3B8" stroke-width="1.5" />
-              <circle cx="770" cy="230" r="6" fill="#CBD5E1" />
+              <circle cx="590" cy="190" r="13" fill="#E2E8F0" stroke="#94A3B8" stroke-width="1.5" />
+              <circle cx="590" cy="190" r="5" fill="#CBD5E1" />
 
               <!-- Top Curbside Dual Wheels (2 wheels side-by-side) -->
-              <!-- Outer tire -->
-              <rect x="746" y="27" width="48" height="17" rx="3" fill="#0F172A" stroke="#0F172A" stroke-width="1.2" />
-              <!-- Inner tire -->
-              <rect x="746" y="46" width="48" height="17" rx="3" fill="#1E293B" stroke="#0F172A" stroke-width="1.2" />
-              <!-- Dual rim hub & studs -->
-              <rect x="752" y="38" width="36" height="14" rx="2" fill="#CBD5E1" />
-              <circle cx="770" cy="45" r="3.5" fill="#64748B" />
+              <rect x="568" y="18" width="44" height="15" rx="3" fill="#0F172A" />
+              <rect x="568" y="35" width="44" height="15" rx="3" fill="#1E293B" stroke="#0F172A" stroke-width="1" />
+              <rect x="574" y="28" width="32" height="12" rx="2" fill="#CBD5E1" />
 
               <!-- Bottom Driver Side Dual Wheels (2 wheels side-by-side) -->
-              <!-- Inner tire -->
-              <rect x="746" y="397" width="48" height="17" rx="3" fill="#1E293B" stroke="#0F172A" stroke-width="1.2" />
-              <!-- Outer tire -->
-              <rect x="746" y="416" width="48" height="17" rx="3" fill="#0F172A" stroke="#0F172A" stroke-width="1.2" />
-              <!-- Dual rim hub & studs -->
-              <rect x="752" y="408" width="36" height="14" rx="2" fill="#CBD5E1" />
-              <circle cx="770" cy="415" r="3.5" fill="#64748B" />
+              <rect x="568" y="330" width="44" height="15" rx="3" fill="#1E293B" stroke="#0F172A" stroke-width="1" />
+              <rect x="568" y="347" width="44" height="15" rx="3" fill="#0F172A" />
+              <rect x="574" y="340" width="32" height="12" rx="2" fill="#CBD5E1" />
             </g>
 
             <!-- ================= VEHICLE EXTERIOR HULL ================= -->
-            <!-- Aerodynamic Outlines (No Headlights) -->
+            <!-- Aerodynamic Outlines (No Headlights, No Mercedes Emblem) -->
             <path d="
-              M 60,230
-              C 60,170 70,120 110,95
-              C 150,75 190,65 240,65
-              L 1025,65
-              C 1045,65 1052,75 1052,95
-              L 1052,365
-              C 1052,385 1045,395 1025,395
-              L 240,395
-              C 190,395 150,385 110,365
-              C 70,340 60,290 60,230
+              M 45,190
+              C 45,140 55,95 85,75
+              C 120,58 160,52 205,52
+              L 935,52
+              C 948,52 955,60 955,75
+              L 955,305
+              C 955,320 948,328 935,328
+              L 205,328
+              C 160,328 120,322 85,305
+              C 55,285 45,240 45,190
               Z
             " class="cad-chassis-outline" />
 
-            <!-- Front Bumper Contours & Grille -->
-            <path d="M 68,140 Q 82,230 68,320" fill="none" stroke="#CBD5E1" stroke-width="2" />
-            <path d="M 85,150 L 85,310" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="3 3" />
+            <!-- Front Bumper Contours & Aerodynamic Louvers (No Emblem) -->
+            <path d="M 52,120 Q 64,190 52,260" fill="none" stroke="#CBD5E1" stroke-width="2" />
+            <line x1="68" y1="140" x2="68" y2="240" stroke="#CBD5E1" stroke-width="1.8" />
+            <line x1="78" y1="150" x2="78" y2="230" stroke="#E2E8F0" stroke-width="1.4" />
 
-            <!-- Mercedes-Benz Star Emblem in Grille Apex -->
-            <circle cx="68" cy="230" r="11" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.8" />
-            <line x1="68" y1="219" x2="68" y2="230" stroke="#0F172A" stroke-width="1.8" />
-            <line x1="68" y1="230" x2="59" y2="235.5" stroke="#0F172A" stroke-width="1.8" />
-            <line x1="68" y1="230" x2="77" y2="235.5" stroke="#0F172A" stroke-width="1.8" />
-
-            <!-- Front Hood Crease Lines -->
-            <line x1="90" y1="120" x2="225" y2="85" stroke="#E2E8F0" stroke-width="1.5" />
-            <line x1="90" y1="340" x2="225" y2="375" stroke="#E2E8F0" stroke-width="1.5" />
+            <!-- Front Hood Lines -->
+            <line x1="85" y1="95" x2="195" y2="68" stroke="#E2E8F0" stroke-width="1.5" />
+            <line x1="85" y1="285" x2="195" y2="312" stroke="#E2E8F0" stroke-width="1.5" />
 
             <!-- Double-wall Acoustic Insulation Perimeter -->
             <path d="
-              M 245,76
-              L 1038,76
-              C 1044,76 1046,80 1046,88
-              L 1046,372
-              C 1046,380 1044,384 1038,384
-              L 245,384
-              C 230,384 220,375 220,360
-              L 220,100
-              C 220,85 230,76 245,76
+              M 210,60
+              L 942,60
+              C 946,60 948,64 948,70
+              L 948,310
+              C 948,316 946,320 942,320
+              L 210,320
+              C 198,320 190,312 190,300
+              L 190,80
+              C 190,68 198,60 210,60
               Z
             " class="cad-chassis-inner" />
 
-            <!-- ================= STRUCTURAL PILLARS (BORON STEEL) ================= -->
-            <!-- A-Pillars (Windshield Frame) -->
-            <rect x="232" y="66" width="10" height="12" rx="1.5" fill="#334155" />
-            <rect x="232" y="382" width="10" height="12" rx="1.5" fill="#334155" />
-            <!-- B-Pillars (Behind Front Doors) -->
-            <rect x="350" y="66" width="9" height="11" rx="1.5" fill="#334155" />
-            <rect x="350" y="383" width="9" height="11" rx="1.5" fill="#334155" />
+            <!-- ================= STRUCTURAL PILLARS ================= -->
+            <!-- A-Pillars -->
+            <rect x="200" y="53" width="9" height="9" rx="1.5" fill="#334155" />
+            <rect x="200" y="318" width="9" height="9" rx="1.5" fill="#334155" />
+            <!-- B-Pillars -->
+            <rect x="320" y="53" width="8" height="9" rx="1.5" fill="#334155" />
+            <rect x="280" y="319" width="8" height="9" rx="1.5" fill="#334155" />
             <!-- C-Pillars -->
-            <rect x="525" y="66" width="8" height="11" rx="1.5" fill="#334155" />
-            <rect x="525" y="383" width="8" height="11" rx="1.5" fill="#334155" />
-            <!-- D-Pillars -->
-            <rect x="700" y="66" width="8" height="11" rx="1.5" fill="#334155" />
-            <rect x="700" y="383" width="8" height="11" rx="1.5" fill="#334155" />
-            <!-- E-Pillars (Wheelhouse Anchor) -->
-            <rect x="850" y="66" width="9" height="11" rx="1.5" fill="#334155" />
-            <rect x="850" y="383" width="9" height="11" rx="1.5" fill="#334155" />
-            <!-- F-Pillars (Rear Door Frame) -->
-            <rect x="1038" y="68" width="9" height="10" rx="1.5" fill="#334155" />
-            <rect x="1038" y="382" width="9" height="10" rx="1.5" fill="#334155" />
+            <rect x="475" y="53" width="8" height="9" rx="1.5" fill="#334155" />
+            <rect x="475" y="319" width="8" height="9" rx="1.5" fill="#334155" />
+            <!-- D-Pillars (Wheel Arch Support) -->
+            <rect x="635" y="53" width="8" height="9" rx="1.5" fill="#334155" />
+            <rect x="635" y="319" width="8" height="9" rx="1.5" fill="#334155" />
+            <!-- E-Pillars -->
+            <rect x="765" y="53" width="8" height="9" rx="1.5" fill="#334155" />
+            <rect x="765" y="319" width="8" height="9" rx="1.5" fill="#334155" />
+            <!-- F-Pillars (Rear Frame) -->
+            <rect x="942" y="54" width="8" height="8" rx="1.5" fill="#334155" />
+            <rect x="942" y="318" width="8" height="8" rx="1.5" fill="#334155" />
 
-            <!-- Bonded Panoramic Side Windows (Thermal Glazing) -->
-            <rect x="359" y="67" width="166" height="9" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
-            <rect x="533" y="67" width="167" height="9" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
-            <rect x="708" y="67" width="142" height="9" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
-            <rect x="859" y="67" width="179" height="9" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
+            <!-- Bonded Panoramic Side Windows -->
+            <rect x="328" y="54" width="147" height="7" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
+            <rect x="483" y="54" width="152" height="7" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
+            <rect x="643" y="54" width="122" height="7" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
+            <rect x="773" y="54" width="169" height="7" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
 
-            <rect x="359" y="384" width="166" height="9" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
-            <rect x="533" y="384" width="167" height="9" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
-            <rect x="708" y="384" width="142" height="9" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
-            <rect x="859" y="384" width="179" height="9" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
+            <rect x="288" y="319" width="187" height="7" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
+            <rect x="483" y="319" width="152" height="7" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
+            <rect x="643" y="319" width="122" height="7" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
+            <rect x="773" y="319" width="169" height="7" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="0.8" />
 
             <!-- ================= DUAL HEATED SIDE MIRRORS ================= -->
-            <!-- Curbside Mirror (Top) with Amber LED Repeater -->
-            <line x1="236" y1="65" x2="216" y2="24" stroke="#64748B" stroke-width="2.5" />
-            <rect x="188" y="14" width="40" height="16" rx="4" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.5" />
-            <line x1="192" y1="22" x2="210" y2="22" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" />
+            <!-- Curbside Mirror (Top) -->
+            <line x1="202" y1="52" x2="185" y2="18" stroke="#64748B" stroke-width="2.2" />
+            <rect x="160" y="10" width="36" height="14" rx="3.5" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.3" />
+            <line x1="164" y1="17" x2="180" y2="17" stroke="#F59E0B" stroke-width="1.8" stroke-linecap="round" />
 
-            <!-- Driver Side Mirror (Bottom) with Amber LED Repeater -->
-            <line x1="236" y1="395" x2="216" y2="436" stroke="#64748B" stroke-width="2.5" />
-            <rect x="188" y="430" width="40" height="16" rx="4" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.5" />
-            <line x1="192" y1="438" x2="210" y2="438" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" />
+            <!-- Driver Side Mirror (Bottom) -->
+            <line x1="202" y1="328" x2="185" y2="362" stroke="#64748B" stroke-width="2.2" />
+            <rect x="160" y="356" width="36" height="14" rx="3.5" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.3" />
+            <line x1="164" y1="363" x2="180" y2="363" stroke="#F59E0B" stroke-width="1.8" stroke-linecap="round" />
 
             <!-- ================= WINDSHIELD & WIPERS ================= -->
-            <path d="M 215,82 Q 190,230 215,378 L 240,378 Q 218,230 240,82 Z" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="1.5" />
-            <!-- Wiper Arms in Parked Rest -->
-            <line x1="205" y1="150" x2="232" y2="135" stroke="#475569" stroke-width="2" stroke-linecap="round" />
-            <line x1="205" y1="290" x2="232" y2="275" stroke="#475569" stroke-width="2" stroke-linecap="round" />
+            <path d="M 185,66 Q 165,190 185,314 L 205,314 Q 188,190 205,66 Z" fill="url(#cadGlassGrad)" stroke="#CBD5E1" stroke-width="1.5" />
+            <line x1="176" y1="120" x2="198" y2="108" stroke="#475569" stroke-width="1.8" stroke-linecap="round" />
+            <line x1="176" y1="240" x2="198" y2="228" stroke="#475569" stroke-width="1.8" stroke-linecap="round" />
 
             <!-- ================= COCKPIT / DRIVER WORKSTATION ================= -->
             <!-- Curved Dashboard Console -->
-            <path d="M 240,240 C 255,240 262,246 265,260 L 265,380 L 240,380 Z" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.2" />
-            <!-- Center Touchscreen (MBUX 10.25") & Air Vents -->
-            <rect x="250" y="246" width="12" height="24" rx="2" fill="#1E293B" stroke="#0F172A" stroke-width="1" />
+            <path d="M 205,200 C 218,200 224,206 226,220 L 226,318 L 205,318 Z" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.2" />
+            <!-- Center Touchscreen Console & HVAC -->
+            <rect x="212" y="206" width="10" height="20" rx="2" fill="#1E293B" stroke="#0F172A" stroke-width="1" />
             <!-- Multifunction Steering Wheel & Column -->
-            <line x1="252" y1="325" x2="268" y2="325" stroke="#334155" stroke-width="4" stroke-linecap="round" />
-            <circle cx="272" cy="325" r="19" fill="none" stroke="#0F172A" stroke-width="2.2" />
-            <circle cx="272" cy="325" r="5" fill="#334155" />
-            <line x1="253" y1="325" x2="291" y2="325" stroke="#334155" stroke-width="1.8" />
-            <line x1="272" y1="325" x2="272" y2="344" stroke="#334155" stroke-width="1.8" />
+            <line x1="214" y1="268" x2="225" y2="268" stroke="#334155" stroke-width="3.5" stroke-linecap="round" />
+            <circle cx="198" cy="268" r="17" fill="none" stroke="#0F172A" stroke-width="2" />
+            <circle cx="198" cy="268" r="4.5" fill="#334155" />
+            <line x1="181" y1="268" x2="215" y2="268" stroke="#334155" stroke-width="1.6" />
+            <line x1="198" y1="268" x2="198" y2="285" stroke="#334155" stroke-width="1.6" />
 
-            <!-- Grammer Pneumatic Suspension Driver Seat -->
+            <!-- Driver Seat Base -->
             <g id="cad-driver-seat">
-              <!-- Seat base -->
-              <rect x="296" y="302" width="48" height="42" rx="7" fill="#EEF2FF" stroke="#1E3A8A" stroke-width="2" />
-              <!-- Driver lumbar backrest -->
-              <rect x="333" y="306" width="9" height="34" rx="3" fill="#DBEAFE" stroke="#1E3A8A" stroke-width="1.2" />
-              <!-- Folding armrest -->
-              <rect x="303" y="297" width="24" height="4.5" rx="2" fill="#94A3B8" />
-              <!-- Typography label -->
-              <text x="315" y="325" font-family="'SF Mono', monospace" font-size="8.5" fill="#1E3A8A" font-weight="800" text-anchor="middle">ВОДИТЕЛЬ</text>
+              <rect x="225" y="248" width="44" height="38" rx="6" fill="#EEF2FF" stroke="#1E3A8A" stroke-width="2" />
+              <rect x="257" y="252" width="8" height="30" rx="2.5" fill="#DBEAFE" stroke="#1E3A8A" stroke-width="1.2" />
+              <rect x="230" y="244" width="22" height="4" rx="2" fill="#94A3B8" />
+              <text x="241" y="268" font-family="'SF Mono', monospace" font-size="8" fill="#1E3A8A" font-weight="800" text-anchor="middle">ВОДИТЕЛЬ</text>
             </g>
 
             <!-- Driver Partition Screen & Emergency Hammer -->
-            <line x1="350" y1="240" x2="350" y2="380" stroke="#94A3B8" stroke-width="2" stroke-dasharray="3 3" />
-            <!-- Emergency Hammer on Partition -->
-            <rect x="347" y="290" width="6" height="12" rx="1.5" fill="#EF4444" />
-            <text x="345" y="278" font-size="6.5" font-weight="700" fill="#EF4444" text-anchor="end">МОЛОТОК</text>
+            <line x1="278" y1="198" x2="278" y2="318" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="3 3" />
+            <rect x="275" y="238" width="5" height="10" rx="1.2" fill="#EF4444" />
 
             <!-- ================= PASSENGER ENTRANCE STAIRWELL ================= -->
             <g id="cad-passenger-entrance">
               <!-- Entrance Doorway Cutout -->
-              <rect x="248" y="74" width="100" height="46" rx="4" fill="#FEF3C7" stroke="#D97706" stroke-dasharray="4 2" stroke-width="1.2" />
+              <rect x="215" y="58" width="95" height="48" rx="4" fill="#FEF3C7" stroke="#D97706" stroke-dasharray="4 2" stroke-width="1.2" />
               <!-- 2-Stage Corrugated Anti-Slip Stairwell -->
-              <rect x="252" y="78" width="92" height="18" rx="2" fill="#FDE68A" stroke="#D97706" stroke-width="1" />
-              <line x1="254" y1="84" x2="342" y2="84" stroke="#B45309" stroke-width="1" stroke-dasharray="3 2" />
-              <rect x="252" y="98" width="92" height="18" rx="2" fill="#FEF3C7" stroke="#D97706" stroke-width="0.8" />
-              <line x1="254" y1="104" x2="342" y2="104" stroke="#B45309" stroke-width="1" stroke-dasharray="3 2" />
-              <!-- Stainless Steel Boarding Stanchion Rail (Поручень) -->
-              <line x1="256" y1="76" x2="256" y2="116" stroke="#475569" stroke-width="2.8" stroke-linecap="round" />
-              <circle cx="256" cy="96" r="3.5" fill="#CBD5E1" stroke="#334155" stroke-width="1" />
+              <rect x="219" y="62" width="87" height="19" rx="2" fill="#FDE68A" stroke="#D97706" stroke-width="1" />
+              <line x1="222" y1="68" x2="302" y2="68" stroke="#B45309" stroke-width="1" stroke-dasharray="3 2" />
+              <rect x="219" y="83" width="87" height="19" rx="2" fill="#FEF3C7" stroke="#D97706" stroke-width="0.8" />
+              <line x1="222" y1="89" x2="302" y2="89" stroke="#B45309" stroke-width="1" stroke-dasharray="3 2" />
+              <!-- Stainless Steel Boarding Stanchion Rail -->
+              <line x1="222" y1="60" x2="222" y2="100" stroke="#475569" stroke-width="2.5" stroke-linecap="round" />
+              <circle cx="222" cy="80" r="3" fill="#CBD5E1" stroke="#334155" stroke-width="1" />
               <!-- QR Validator Pole Terminal -->
-              <rect x="338" y="90" width="8" height="12" rx="2" fill="#1E3A8A" />
-              <circle cx="342" cy="96" r="1.5" fill="#38BDF8" />
-              <!-- Entrance Label -->
-              <text x="298" y="93" font-size="8.5" fill="#92400E" font-weight="800" text-anchor="middle">ВХОД В САЛОН</text>
-              <text x="298" y="111" font-size="7.5" fill="#B45309" font-weight="700" text-anchor="middle">СТУПЕНЬ &bull; ПОДНОЖКА</text>
+              <rect x="303" y="74" width="7" height="11" rx="1.5" fill="#1E3A8A" />
+              <circle cx="306.5" cy="79.5" r="1.3" fill="#38BDF8" />
+              <!-- Entrance Labels -->
+              <text x="262" y="75" font-size="8" fill="#92400E" font-weight="800" text-anchor="middle">ВХОД В САЛОН</text>
+              <text x="262" y="95" font-size="7" fill="#B45309" font-weight="700" text-anchor="middle">СТУПЕНЬ &bull; ПОДНОЖКА</text>
             </g>
 
             <!-- Guide Seat in Cockpit if Present -->
@@ -2609,28 +2588,25 @@
 
             <!-- ================= CABIN FLOOR & AIRLINE TRACKING ================= -->
             <!-- Airline Aluminum Seat Tracks (Floor Rails) -->
-            <line x1="365" y1="144" x2="910" y2="144" stroke="#E2E8F0" stroke-width="2" stroke-dasharray="6 3" />
-            <line x1="365" y1="194" x2="910" y2="194" stroke="#E2E8F0" stroke-width="2" stroke-dasharray="6 3" />
-            <line x1="365" y1="264" x2="910" y2="264" stroke="#E2E8F0" stroke-width="2" stroke-dasharray="6 3" />
-            <line x1="365" y1="316" x2="910" y2="316" stroke="#E2E8F0" stroke-width="2" stroke-dasharray="6 3" />
+            <line x1="290" y1="114" x2="825" y2="114" stroke="#E2E8F0" stroke-width="1.8" stroke-dasharray="5 3" />
+            <line x1="290" y1="198" x2="825" y2="198" stroke="#E2E8F0" stroke-width="1.8" stroke-dasharray="5 3" />
+            <line x1="290" y1="244" x2="825" y2="244" stroke="#E2E8F0" stroke-width="1.8" stroke-dasharray="5 3" />
 
             <!-- Central Aisle LED Night Running Track -->
-            <line x1="360" y1="230" x2="910" y2="230" stroke="#E2E8F0" stroke-width="1.5" />
-            <text x="590" y="226" font-size="9" font-weight="800" fill="#CBD5E1" letter-spacing="0.28em" text-anchor="middle">ПРОХОД</text>
+            <line x1="290" y1="158" x2="765" y2="158" stroke="#E2E8F0" stroke-width="1.2" />
+            <text x="535" y="154" font-size="8.5" font-weight="800" fill="#CBD5E1" letter-spacing="0.25em" text-anchor="middle">ПРОХОД</text>
 
             <!-- Roof Emergency Hatches / Escape Vents -->
-            <!-- Roof Hatch 1 (Front/Mid Saloon) -->
-            <rect x="495" y="217" width="46" height="26" rx="4" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" stroke-dasharray="3 2" />
-            <text x="518" y="233" font-size="6.5" font-weight="700" fill="#94A3B8" text-anchor="middle">ЛЮК 1</text>
-            <!-- Roof Hatch 2 (Rear Saloon) -->
-            <rect x="715" y="217" width="46" height="26" rx="4" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" stroke-dasharray="3 2" />
-            <text x="738" y="233" font-size="6.5" font-weight="700" fill="#94A3B8" text-anchor="middle">ЛЮК 2</text>
+            <rect x="425" y="146" width="42" height="24" rx="3.5" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="3 2" />
+            <text x="446" y="161" font-size="6.5" font-weight="700" fill="#94A3B8" text-anchor="middle">ЛЮК 1</text>
+            <rect x="670" y="146" width="42" height="24" rx="3.5" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="3 2" />
+            <text x="691" y="161" font-size="6.5" font-weight="700" fill="#94A3B8" text-anchor="middle">ЛЮК 2</text>
 
             <!-- Rear Wheel Arch Covers in Saloon Floor -->
-            <rect x="736" y="76" width="68" height="17" rx="3" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1" />
-            <text x="770" y="87" font-size="7.5" fill="#64748B" font-weight="700" text-anchor="middle">АРКА КОЛЕСА</text>
-            <rect x="736" y="367" width="68" height="17" rx="3" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1" />
-            <text x="770" y="378" font-size="7.5" fill="#64748B" font-weight="700" text-anchor="middle">АРКА КОЛЕСА</text>
+            <rect x="556" y="55" width="68" height="16" rx="3" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1" />
+            <text x="590" y="66" font-size="7" fill="#64748B" font-weight="700" text-anchor="middle">АРКА КОЛЕСА</text>
+            <rect x="556" y="309" width="68" height="16" rx="3" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1" />
+            <text x="590" y="320" font-size="7" fill="#64748B" font-weight="700" text-anchor="middle">АРКА КОЛЕСА</text>
 
             <!-- ================= PASSENGER SEATS LAYER ================= -->
             <g class="cad-seats-layer">
@@ -2640,61 +2616,57 @@
             <!-- ================= REAR SMART CARGO BAY ================= -->
             <g id="cad-cargo-bay">
               <!-- Partition Bulkhead -->
-              <line x1="935" y1="76" x2="935" y2="384" stroke="#94A3B8" stroke-width="2" stroke-dasharray="4 2" />
+              <line x1="828" y1="56" x2="828" y2="324" stroke="#94A3B8" stroke-width="2" stroke-dasharray="4 2" />
 
               <!-- Recessed Cargo Bay with Diamond Tread Floor -->
-              <rect x="942" y="80" width="100" height="300" rx="6" fill="url(#cadCargoTread)" stroke="#CBD5E1" stroke-width="1.2" />
+              <rect x="834" y="60" width="112" height="260" rx="5" fill="url(#cadCargoTread)" stroke="#CBD5E1" stroke-width="1.2" />
 
               <!-- Cargo Floor Tie-Down D-Rings & Lashing Straps -->
-              <circle cx="956" cy="110" r="3" fill="#94A3B8" />
-              <circle cx="1028" cy="110" r="3" fill="#94A3B8" />
-              <circle cx="956" cy="350" r="3" fill="#94A3B8" />
-              <circle cx="1028" cy="350" r="3" fill="#94A3B8" />
-              <!-- Criss-cross tie-down strap -->
-              <line x1="956" y1="110" x2="1028" y2="350" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="2 3" />
-              <line x1="956" y1="350" x2="1028" y2="110" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="2 3" />
+              <circle cx="848" cy="85" r="3" fill="#94A3B8" />
+              <circle cx="936" cy="85" r="3" fill="#94A3B8" />
+              <circle cx="848" cy="295" r="3" fill="#94A3B8" />
+              <circle cx="936" cy="295" r="3" fill="#94A3B8" />
+              <line x1="848" y1="85" x2="936" y2="295" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="2 3" />
+              <line x1="848" y1="295" x2="936" y2="85" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="2 3" />
 
-              <!-- Stylized Stowed Suitcases Silhouettes -->
-              <rect x="955" y="140" width="34" height="48" rx="4" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" />
-              <line x1="964" y1="140" x2="964" y2="135" stroke="#94A3B8" stroke-width="1.5" />
-              <rect x="996" y="150" width="36" height="52" rx="4" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" />
-              <line x1="1006" y1="150" x2="1006" y2="145" stroke="#94A3B8" stroke-width="1.5" />
+              <!-- Stowed Travel Suitcases -->
+              <rect x="846" y="110" width="32" height="42" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" />
+              <line x1="854" y1="110" x2="854" y2="105" stroke="#94A3B8" stroke-width="1.5" />
+              <rect x="888" y="120" width="34" height="46" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" />
+              <line x1="898" y1="120" x2="898" y2="115" stroke="#94A3B8" stroke-width="1.5" />
+              <rect x="856" y="225" width="36" height="44" rx="3" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" />
+              <line x1="866" y1="225" x2="866" y2="220" stroke="#94A3B8" stroke-width="1.5" />
 
-              <rect x="965" y="260" width="38" height="50" rx="4" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.2" />
-              <line x1="975" y1="260" x2="975" y2="255" stroke="#94A3B8" stroke-width="1.5" />
-
-              <!-- Emergency Equipment Silhouettes: Fire Extinguisher & First Aid -->
-              <g transform="translate(950, 205)">
-                <rect x="0" y="0" width="10" height="20" rx="2" fill="#EF4444" />
-                <rect x="2" y="-3" width="6" height="3" rx="1" fill="#475569" />
-                <text x="14" y="14" font-size="7" font-weight="800" fill="#EF4444">ОУ-2</text>
+              <!-- Emergency Equipment -->
+              <g transform="translate(842, 175)">
+                <rect x="0" y="0" width="9" height="18" rx="2" fill="#EF4444" />
+                <text x="13" y="13" font-size="6.5" font-weight="800" fill="#EF4444">ОУ-2</text>
               </g>
-              <g transform="translate(950, 232)">
-                <rect x="0" y="0" width="16" height="14" rx="2" fill="#10B981" />
-                <path d="M 8 3 L 8 11 M 4 7 L 12 7" stroke="#FFFFFF" stroke-width="1.5" />
-                <text x="20" y="11" font-size="7" font-weight="800" fill="#047857">АПТЕЧКА</text>
+              <g transform="translate(842, 200)">
+                <rect x="0" y="0" width="14" height="12" rx="2" fill="#10B981" />
+                <path d="M 7 2.5 L 7 9.5 M 3.5 6 L 10.5 6" stroke="#FFFFFF" stroke-width="1.2" />
+                <text x="18" y="10" font-size="6.5" font-weight="800" fill="#047857">АПТЕЧКА</text>
               </g>
 
               <!-- Cargo Typography -->
-              <text x="992" y="98" font-size="8.5" fill="#475569" font-weight="800" text-anchor="middle">SMART CARGO</text>
-              <text x="992" y="370" font-size="7.5" fill="#64748B" font-weight="700" text-anchor="middle">ОТСЕК 1.8 М³ / 450 КГ</text>
+              <text x="890" y="78" font-size="8" fill="#475569" font-weight="800" text-anchor="middle">БАГАЖНИК</text>
+              <text x="890" y="312" font-size="7" fill="#64748B" font-weight="700" text-anchor="middle">1.8 М³ / ДО 450 КГ</text>
             </g>
 
             <!-- ================= REAR 270° SWING DOORS & STEP BUMPER ================= -->
             <g id="cad-rear-doors">
               <!-- Split Door Central Weatherstrip Seal -->
-              <line x1="1046" y1="230" x2="1058" y2="230" stroke="#0F172A" stroke-width="2" />
+              <line x1="948" y1="190" x2="960" y2="190" stroke="#0F172A" stroke-width="2" />
               <!-- Heavy-Duty Exterior Hinges -->
-              <rect x="1047" y="74" width="7" height="14" rx="2" fill="#334155" />
-              <rect x="1047" y="372" width="7" height="14" rx="2" fill="#334155" />
+              <rect x="948" y="65" width="6" height="12" rx="1.5" fill="#334155" />
+              <rect x="948" y="303" width="6" height="12" rx="1.5" fill="#334155" />
               <!-- Integrated Rear Step Bumper with Anti-Slip Ridges -->
-              <rect x="1053" y="160" width="12" height="140" rx="3" fill="#F8FAFC" stroke="#0F172A" stroke-width="1.5" />
-              <line x1="1056" y1="175" x2="1062" y2="175" stroke="#CBD5E1" stroke-width="1" />
-              <line x1="1056" y1="195" x2="1062" y2="195" stroke="#CBD5E1" stroke-width="1" />
-              <line x1="1056" y1="215" x2="1062" y2="215" stroke="#CBD5E1" stroke-width="1" />
-              <line x1="1056" y1="245" x2="1062" y2="245" stroke="#CBD5E1" stroke-width="1" />
-              <line x1="1056" y1="265" x2="1062" y2="265" stroke="#CBD5E1" stroke-width="1" />
-              <line x1="1056" y1="285" x2="1062" y2="285" stroke="#CBD5E1" stroke-width="1" />
+              <rect x="955" y="130" width="10" height="120" rx="2.5" fill="#F8FAFC" stroke="#0F172A" stroke-width="1.3" />
+              <line x1="958" y1="145" x2="962" y2="145" stroke="#CBD5E1" stroke-width="1" />
+              <line x1="958" y1="165" x2="962" y2="165" stroke="#CBD5E1" stroke-width="1" />
+              <line x1="958" y1="185" x2="962" y2="185" stroke="#CBD5E1" stroke-width="1" />
+              <line x1="958" y1="205" x2="962" y2="205" stroke="#CBD5E1" stroke-width="1" />
+              <line x1="958" y1="225" x2="962" y2="225" stroke="#CBD5E1" stroke-width="1" />
             </g>
           </svg>
 
@@ -2717,7 +2689,7 @@
             </div>
             <div class="cad-legend-chip">
               <span class="cad-chip-color" style="background: #EEF2FF; border: 1.2px solid #1E3A8A;"></span>
-              <span>Кабина водителя (Grammer)</span>
+              <span>Кабина водителя</span>
             </div>
           </div>
         </div>
