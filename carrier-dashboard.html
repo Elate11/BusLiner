@@ -833,7 +833,7 @@
             <p>Выплаты выручки производятся автоматически каждое утро на расчетный счет IBAN без скрытых эквайринг-комиссий</p>
           </div>
           <div style="display: flex; gap: 8px;">
-            <button type="button" class="btn btn-secondary" onclick="showAuthToast('Акт сверки', 'Реестр выплат пуст. Данные появятся после первых поездок.')">
+            <button type="button" class="btn btn-secondary" onclick="showAuthToast('Акт сверки', 'Сводный акт сверки клиринга T+1 сформирован за 3 периода.')">
               Акт сверки (PDF)
             </button>
           </div>
@@ -854,17 +854,31 @@
             </thead>
             <tbody id="clearing-table-body">
               <tr>
-                <td colspan="7">
-                  <div class="empty-state-wrap">
-                    <div class="empty-state-icon">
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                    </div>
-                    <div class="empty-state-title">Реестр выплат пуст</div>
-                    <div class="empty-state-desc">
-                      Записи о ежедневных безналичных перечислениях T+1 на расчетный счет формируются автоматически после совершения первых оплаченных поездок.
-                    </div>
-                  </div>
-                </td>
+                <td class="mono font-medium">23.10.2026</td>
+                <td class="mono text-muted">#PP-894102-BY</td>
+                <td><span class="badge badge-success">8 рейсов (Sprinter)</span></td>
+                <td class="mono font-semibold">1,960.00 BYN</td>
+                <td class="mono text-muted">-127.40 BYN</td>
+                <td class="mono font-bold" style="color: var(--accent-institutional);">1,832.60 BYN</td>
+                <td><span class="status-badge executed"><span class="status-dot"></span>Выплачено на IBAN</span></td>
+              </tr>
+              <tr>
+                <td class="mono font-medium">22.10.2026</td>
+                <td class="mono text-muted">#PP-893845-BY</td>
+                <td><span class="badge badge-success">6 рейсов (Маршрутки)</span></td>
+                <td class="mono font-semibold">1,480.00 BYN</td>
+                <td class="mono text-muted">-96.20 BYN</td>
+                <td class="mono font-bold" style="color: var(--accent-institutional);">1,383.80 BYN</td>
+                <td><span class="status-badge executed"><span class="status-dot"></span>Выплачено на IBAN</span></td>
+              </tr>
+              <tr>
+                <td class="mono font-medium">21.10.2026</td>
+                <td class="mono text-muted">#PP-893210-BY</td>
+                <td><span class="badge badge-success">8 рейсов (Sprinter)</span></td>
+                <td class="mono font-semibold">2,140.00 BYN</td>
+                <td class="mono text-muted">-139.10 BYN</td>
+                <td class="mono font-bold" style="color: var(--accent-institutional);">2,000.90 BYN</td>
+                <td><span class="status-badge executed"><span class="status-dot"></span>Выплачено на IBAN</span></td>
               </tr>
             </tbody>
           </table>

@@ -1003,10 +1003,36 @@
     }
 
     /* ==========================================================================
-       SLIDE 4: COLLECTION DECK (WARM STONE #E8E2D6)
+       SLIDE 4: COLLECTION DECK (WARM STONE #E8E2D6 & WINTER HIGHWAY SPLIT)
        ========================================================================== */
     #slide4 {
       background: linear-gradient(180deg, #F0EAE0 0%, var(--canvas-bone) 100%);
+    }
+
+    .fleet-deck-split {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 32px;
+      align-items: stretch;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .fleet-deck-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .fleet-deck-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .fleet-deck-cards-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .collection-deck-grid {
@@ -1031,6 +1057,150 @@
       transform: translateY(-4px);
       box-shadow: 0 18px 40px -10px rgba(43, 42, 40, 0.12);
       border-color: var(--border-taupe);
+    }
+
+    /* Interactive Aerial Winter Road Showcase */
+    .winter-aerial-showcase {
+      position: relative;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border-taupe);
+      background: #141312;
+      box-shadow: 0 20px 48px -12px rgba(43, 42, 40, 0.22);
+      perspective: 1000px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 440px;
+    }
+
+    .winter-aerial-img-wrap {
+      position: absolute;
+      inset: -6%;
+      width: 112%;
+      height: 112%;
+      pointer-events: none;
+      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+    }
+
+    .winter-aerial-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.1) brightness(0.92) saturate(0.85);
+      animation: winterDriftMotion 24s ease-in-out infinite alternate;
+    }
+
+    @keyframes winterDriftMotion {
+      0% { transform: scale(1.0) translate(0, 0); }
+      100% { transform: scale(1.06) translate(-1%, -1.5%); }
+    }
+
+    .winter-aerial-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(20, 26, 24, 0.78) 0%, rgba(20, 26, 24, 0.25) 45%, rgba(20, 26, 24, 0.88) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .winter-aerial-hud {
+      position: relative;
+      z-index: 3;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .winter-hud-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .winter-hud-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #E8E2D6;
+      background: rgba(43, 42, 40, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 5px 10px;
+      border-radius: 2px;
+      border: 1px solid rgba(232, 226, 214, 0.2);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .winter-hud-telemetry {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: #D9CDB8;
+      letter-spacing: 0.08em;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    }
+
+    .winter-hud-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin: auto 0;
+    }
+
+    .winter-interactive-beacon {
+      position: relative;
+      cursor: pointer;
+      padding: 8px 16px;
+      background: rgba(28, 41, 35, 0.88);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(232, 226, 214, 0.35);
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.4);
+      color: #F5F1EA;
+    }
+
+    .winter-interactive-beacon:hover {
+      background: rgba(43, 62, 53, 0.98);
+      border-color: rgba(232, 226, 214, 0.7);
+      transform: scale(1.05);
+    }
+
+    .winter-beacon-dot {
+      width: 8px;
+      height: 8px;
+      background: #5C8374;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+      animation: beaconPulse 2s infinite ease-in-out;
+    }
+
+    @keyframes beaconPulse {
+      0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(92, 131, 116, 0.6); }
+      50% { opacity: 0.8; transform: scale(1.2); box-shadow: 0 0 0 8px rgba(92, 131, 116, 0); }
+    }
+
+    .winter-hud-bottom {
+      background: rgba(28, 27, 25, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(232, 226, 214, 0.18);
+      border-radius: 3px;
+      padding: 12px 16px;
+      font-size: 11.5px;
+      line-height: 1.55;
+      color: #D9CDB8;
     }
 
     .fleet-card-img-box {
@@ -1156,7 +1326,14 @@
     #slide6 {
       background: #EAE4D8;
       position: relative;
-      overflow: hidden;
+      overflow-y: auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: flex-start !important;
+      padding-top: 84px !important;
+      padding-bottom: 60px !important;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-taupe) transparent;
     }
 
     .slide-highway-bg-canvas {
@@ -1756,7 +1933,7 @@
       </div>
     </section>
 
-    <!-- SLIDE 04: COLLECTION DECK -->
+    <!-- SLIDE 04: COLLECTION DECK (SPRINTER & INTERCITY MINIBUS FLEET + WINTER ROAD AERIAL) -->
     <section class="deck-slide next" id="slide4">
       <div class="container">
         
@@ -1772,61 +1949,100 @@
           </div>
         </div>
 
-        <div class="collection-deck-grid vector-stagger-card stagger-3">
+        <div class="fleet-deck-split vector-stagger-card stagger-3">
           
-          <div class="fleet-monograph-card" data-cursor="hover" style="padding: 28px 24px;">
-            <div>
-              <div style="font-family: var(--font-mono); font-size: 10px; color: var(--color-oxblood); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px;">
-                SPRINTER 519 CDI &bull; 01
+          <!-- Left: 2x2 Grid of Vehicles -->
+          <div class="fleet-deck-cards-grid">
+            
+            <div class="fleet-monograph-card" data-cursor="hover" style="padding: 24px 22px;">
+              <div>
+                <div style="font-family: var(--font-mono); font-size: 10px; color: var(--color-oxblood); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px;">
+                  SPRINTER 519 CDI &bull; 01
+                </div>
+                <h3 class="fleet-card-title" style="font-size: 21px; margin-bottom: 8px;">Sprinter Executive</h3>
+                <p class="fleet-card-desc" style="font-size: 12.5px; line-height: 1.55;">Флагманские микроавтобусы на 19 мест: анатомические кресла Nappa, столик, подстаканник и 220V.</p>
               </div>
-              <h3 class="fleet-card-title" style="font-size: 24px; margin-bottom: 10px;">Sprinter Executive</h3>
-              <p class="fleet-card-desc">Флагманские микроавтобусы на 19 мест: анатомические капитанские кресла Nappa, столик, подстаканник и 220V у каждого пассажира.</p>
+              <div class="fleet-card-foot" style="margin-top: 18px; border-top: 1px dashed var(--border-taupe); padding-top: 14px;">
+                <strong>от 28 BYN</strong>
+                <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
+              </div>
             </div>
-            <div class="fleet-card-foot" style="margin-top: 24px; border-top: 1px dashed var(--border-taupe); padding-top: 16px;">
-              <strong>от 28 BYN</strong>
-              <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
+
+            <div class="fleet-monograph-card" data-cursor="hover" style="padding: 24px 22px;">
+              <div>
+                <div style="font-family: var(--font-mono); font-size: 10px; color: var(--color-taupe); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px;">
+                  МАРШРУТКА ЭКСПРЕСС &bull; 02
+                </div>
+                <h3 class="fleet-card-title" style="font-size: 21px; margin-bottom: 8px;">Скоростная линия</h3>
+                <p class="fleet-card-desc" style="font-size: 12.5px; line-height: 1.55;">Быстрые междугородние маршрутки на 15&ndash;17 мест между Минском, Гродно, Брестом и Гомелем. Без задержек.</p>
+              </div>
+              <div class="fleet-card-foot" style="margin-top: 18px; border-top: 1px dashed var(--border-taupe); padding-top: 14px;">
+                <strong>от 28 BYN</strong>
+                <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
+              </div>
             </div>
+
+            <div class="fleet-monograph-card" data-cursor="hover" style="padding: 24px 22px;">
+              <div>
+                <div style="font-family: var(--font-mono); font-size: 10px; color: var(--color-forest); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px;">
+                  SPRINTER AIRPORT &bull; 03
+                </div>
+                <h3 class="fleet-card-title" style="font-size: 21px; margin-bottom: 8px;">Шаттл в аэропорты</h3>
+                <p class="fleet-card-desc" style="font-size: 12.5px; line-height: 1.55;">Микроавтобусы Sprinter в аэропорты Вильнюса и Варшавы с выделенной полосой границы и большим багажником.</p>
+              </div>
+              <div class="fleet-card-foot" style="margin-top: 18px; border-top: 1px dashed var(--border-taupe); padding-top: 14px;">
+                <strong>от 85 BYN</strong>
+                <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
+              </div>
+            </div>
+
+            <div class="fleet-monograph-card" data-cursor="hover" style="padding: 24px 22px;">
+              <div>
+                <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-graphite); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px;">
+                  ФРАХТ МИКРОАВТОБУСА &bull; 04
+                </div>
+                <h3 class="fleet-card-title" style="font-size: 21px; margin-bottom: 8px;">Заказ Спринтера</h3>
+                <p class="fleet-card-desc" style="font-size: 12.5px; line-height: 1.55;">Аренда микроавтобуса Mercedes-Benz Sprinter с водителем для корпоративных трансферов и мероприятий.</p>
+              </div>
+              <div class="fleet-card-foot" style="margin-top: 18px; border-top: 1px dashed var(--border-taupe); padding-top: 14px;">
+                <strong>По запросу</strong>
+                <a href="busliner-partners.html" class="link-fleet-reserve">Заявка &rarr;</a>
+              </div>
+            </div>
+
           </div>
 
-          <div class="fleet-monograph-card" data-cursor="hover" style="padding: 28px 24px;">
-            <div>
-              <div style="font-family: var(--font-mono); font-size: 10px; color: var(--color-taupe); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px;">
-                МАРШРУТКА ЭКСПРЕСС &bull; 02
+          <!-- Right: Interactive Aerial Winter Highway Showcase -->
+          <div class="winter-aerial-showcase" id="winterAerialShowcase" data-cursor="hover">
+            <div class="winter-aerial-img-wrap" id="winterAerialImgWrap">
+              <img src="assets/img/winter-road-aerial.webp" alt="Зимняя трасса через сосновый лес, вид сверху" id="winterRoadImg">
+            </div>
+            <div class="winter-aerial-overlay"></div>
+            
+            <div class="winter-aerial-hud">
+              <div class="winter-hud-top">
+                <div class="winter-hud-tag">
+                  <span class="winter-beacon-dot"></span>
+                  ТРАССА М6 &bull; ЗИМНИЙ РЕЙС
+                </div>
+                <div class="winter-hud-telemetry" id="winterTelemetryText">
+                  БОРТ BL-212 &bull; 96 КМ/Ч &bull; -4&deg;C
+                </div>
               </div>
-              <h3 class="fleet-card-title" style="font-size: 24px; margin-bottom: 10px;">Скоростная линия</h3>
-              <p class="fleet-card-desc">Быстрые междугородние маршрутки на 15&ndash;17 мест между Минском, Гродно, Брестом и Гомелем. Без лишних остановок, строго по графику.</p>
-            </div>
-            <div class="fleet-card-foot" style="margin-top: 24px; border-top: 1px dashed var(--border-taupe); padding-top: 16px;">
-              <strong>от 28 BYN</strong>
-              <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
-            </div>
-          </div>
 
-          <div class="fleet-monograph-card" data-cursor="hover" style="padding: 28px 24px;">
-            <div>
-              <div style="font-family: var(--font-mono); font-size: 10px; color: var(--color-forest); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px;">
-                SPRINTER AIRPORT &bull; 03
+              <div class="winter-hud-center">
+                <div class="winter-interactive-beacon" onclick="toggleWinterTelemetry()" title="Нажмите для переключения телеметрии">
+                  <span class="winter-beacon-dot"></span>
+                  <span>Ошмяны &bull; км 86 &bull; Спринтер на линии &rarr;</span>
+                </div>
               </div>
-              <h3 class="fleet-card-title" style="font-size: 24px; margin-bottom: 10px;">Шаттл в аэропорты</h3>
-              <p class="fleet-card-desc">Специальные микроавтобусы Sprinter в аэропорты Вильнюса и Варшавы с выделенной полосой прохождения границы и увеличенным багажником.</p>
-            </div>
-            <div class="fleet-card-foot" style="margin-top: 24px; border-top: 1px dashed var(--border-taupe); padding-top: 16px;">
-              <strong>от 85 BYN</strong>
-              <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
-            </div>
-          </div>
 
-          <div class="fleet-monograph-card" data-cursor="hover" style="padding: 28px 24px;">
-            <div>
-              <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-graphite); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px;">
-                ФРАХТ МИКРОАВТОБУСА &bull; 04
+              <div class="winter-hud-bottom">
+                <div style="font-family: var(--font-mono); font-size: 10px; color: #B8A99A; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.12em;">
+                  ЗИМНИЙ СТАНДАРТ БЕЗОПАСНОСТИ
+                </div>
+                Система курсовой устойчивости ESP 9.3, зимняя ошиповка Michelin и раздельный салонный обогрев +22&deg;C на всех маршрутах.
               </div>
-              <h3 class="fleet-card-title" style="font-size: 24px; margin-bottom: 10px;">Заказ Спринтера</h3>
-              <p class="fleet-card-desc">Аренда всего микроавтобуса Mercedes-Benz Sprinter с опытным водителем для корпоративных трансферов, делегаций и мероприятий.</p>
-            </div>
-            <div class="fleet-card-foot" style="margin-top: 24px; border-top: 1px dashed var(--border-taupe); padding-top: 16px;">
-              <strong>По запросу</strong>
-              <a href="busliner-partners.html" class="link-fleet-reserve">Заявка &rarr;</a>
             </div>
           </div>
 
@@ -2485,6 +2701,44 @@
         status.innerText = 'МЕСТО ЗАКРЕПЛЕНО (0.38С)';
       }, 70);
     };
+
+    // 5. INTERACTIVE 3D MOUSE TILT & WINTER ROAD PORTAL (SLIDE 04)
+    (function initWinterAerialShowcase() {
+      const showcase = document.getElementById('winterAerialShowcase');
+      const imgWrap = document.getElementById('winterAerialImgWrap');
+      const telemetryEl = document.getElementById('winterTelemetryText');
+      if (!showcase || !imgWrap) return;
+
+      showcase.addEventListener('mousemove', (e) => {
+        const bounds = showcase.getBoundingClientRect();
+        const x = e.clientX - bounds.left;
+        const y = e.clientY - bounds.top;
+        const xPercent = (x / bounds.width - 0.5) * 2;
+        const yPercent = (y / bounds.height - 0.5) * 2;
+
+        const tiltX = -yPercent * 9;
+        const tiltY = xPercent * 9;
+
+        imgWrap.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.06)`;
+      });
+
+      showcase.addEventListener('mouseleave', () => {
+        imgWrap.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+      });
+
+      window.toggleWinterTelemetry = function() {
+        if (!telemetryEl) return;
+        const modes = [
+          'БОРТ BL-212 • 96 КМ/Ч • -4°C • ТРАССА М6 (ОШМЯНЫ)',
+          'ЗИМНИЙ РЕЖИМ • АСФАЛЬТ ЧИСТЫЙ • В ПУТИ 01ч 12мин',
+          'САЛОН: +22°C • ОБОГРЕВ • ВСЕ СИСТЕМЫ В НОРМЕ'
+        ];
+        const current = parseInt(telemetryEl.getAttribute('data-mode') || '0', 10);
+        const nextMode = (current + 1) % modes.length;
+        telemetryEl.setAttribute('data-mode', nextMode);
+        telemetryEl.innerText = modes[nextMode];
+      };
+    })();
 
     // Initialize slide 1 state and counters on load
     document.addEventListener('DOMContentLoaded', () => {
