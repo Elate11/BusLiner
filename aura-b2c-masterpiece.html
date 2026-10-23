@@ -294,40 +294,6 @@
       transform: translateX(3px);
     }
 
-    /* Audio Toggle */
-    .sound-discreet-toggle {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-faint);
-      padding: 6px 0;
-      transition: color var(--duration-rapid) ease;
-    }
-
-    .sound-discreet-toggle:hover {
-      color: var(--text-graphite);
-    }
-
-    .sound-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--accent-olive);
-      transition: opacity var(--duration-rapid) ease;
-    }
-
-    .sound-discreet-toggle.muted .sound-dot {
-      background: var(--border-taupe);
-      opacity: 0.5;
-    }
-
     /* ==========================================================================
        HERO SECTION: AIR, ARISTOCRATIC PROPORTIONS & RESTRAINT
        ========================================================================== */
@@ -1379,13 +1345,8 @@
           <li><a href="busliner-partners.html" class="nav-item-link" data-cursor="hover">Перевозчикам</a></li>
         </ul>
 
-        <!-- Action / Sound -->
+        <!-- Header Action -->
         <div class="header-actions">
-          <button class="sound-discreet-toggle" id="soundToggle" onclick="toggleAudio()" title="Акустический отклик" data-cursor="hover">
-            <span class="sound-dot"></span>
-            <span id="soundLabel">Звук</span>
-          </button>
-
           <a href="driver-terminal.html" class="link-subtle-cta" data-cursor="hover">
             <span>Терминал</span>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -1937,7 +1898,7 @@
   </footer>
 
   <!-- =========================================================================
-       MOTION SCRIPTS: INTERSECTION OBSERVER, LERP CURSOR & WEB AUDIO
+       MOTION SCRIPTS: INTERSECTION OBSERVER & LERP CURSOR
        ========================================================================= -->
   <script>
     // 1. CUSTOM LERP CURSOR (Tactile Quiet Luxury Follower)
@@ -1990,83 +1951,7 @@
       document.querySelectorAll('.fade-up-element').forEach(el => observer.observe(el));
     })();
 
-    // 3. DISCREET WEB AUDIO SYSTEM (Calm Acoustic Chimes)
-    let audioCtx = null;
-    let isSoundOn = true;
-
-    function getAudioCtx() {
-      if (!audioCtx) {
-        const AudioClass = window.AudioContext || window.webkitAudioContext;
-        if (AudioClass) audioCtx = new AudioClass();
-      }
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      return audioCtx;
-    }
-
-    function toggleAudio() {
-      isSoundOn = !isSoundOn;
-      const btn = document.getElementById('soundToggle');
-      const label = document.getElementById('soundLabel');
-      if (btn && label) {
-        if (isSoundOn) {
-          btn.classList.remove('muted');
-          label.innerText = 'Звук';
-          playWarmWoodChime();
-        } else {
-          btn.classList.add('muted');
-          label.innerText = 'Тишина';
-        }
-      }
-    }
-
-    function playWarmWoodChime() {
-      if (!isSoundOn) return;
-      try {
-        const ctx = getAudioCtx();
-        if (!ctx) return;
-        const now = ctx.currentTime;
-        // Warm organic chime (sine harmonics)
-        [440, 554.37, 659.25].forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now + idx * 0.04);
-          gain.gain.setValueAtTime(0.025, now + idx * 0.04);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.04 + 0.45);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now + idx * 0.04);
-          osc.stop(now + idx * 0.04 + 0.48);
-        });
-      } catch(e) {}
-    }
-
-    function playConciergeLatchChime() {
-      if (!isSoundOn) return;
-      try {
-        const ctx = getAudioCtx();
-        if (!ctx) return;
-        const now = ctx.currentTime;
-
-        // Elegant double chime (harmonious luxury confirmation)
-        [587.33, 880.0].forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-          gain.gain.setValueAtTime(0.03, now + idx * 0.08);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.5);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now + idx * 0.08);
-          osc.stop(now + idx * 0.08 + 0.55);
-        });
-      } catch(e) {}
-    }
-
-    // 4. INTERACTION HELPERS
+    // 3. INTERACTION HELPERS
     window.swapDestinations = function() {
       const from = document.getElementById('inputFrom');
       const to = document.getElementById('inputTo');
@@ -2074,7 +1959,6 @@
         const tmp = from.value;
         from.value = to.value;
         to.value = tmp;
-        playWarmWoodChime();
       }
     };
 
@@ -2084,26 +1968,22 @@
       if (from && to) {
         from.value = fromVal;
         to.value = toVal;
-        playWarmWoodChime();
         scrollToTimetable();
       }
     };
 
     window.scrollToTimetable = function() {
-      playWarmWoodChime();
       const target = document.getElementById('timetable');
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // 5. TACTILE CONCIERGE ALLOCATION SIMULATION
+    // 4. TACTILE CONCIERGE ALLOCATION SIMULATION
     window.triggerTactileConciergeAllocation = function() {
       const ticket = document.getElementById('archivalTicket');
       const seal = document.getElementById('ticketSeal');
       const statusPill = document.getElementById('ticketStatusPill');
 
       if (!ticket || !seal) return;
-
-      playConciergeLatchChime();
 
       // Reset
       seal.classList.remove('active');
