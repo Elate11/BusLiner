@@ -3,38 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>BusLiner &mdash; Презентация межгородской мобильности</title>
+  <title>BusLiner &mdash; Динамический люкс межгородской мобильности</title>
   
-  <meta name="description" content="BusLiner — Интерактивная презентация межгородского сервиса первого класса. Тихий люкс Loro Piana, кинематографичные переходы Lando Norris.">
+  <meta name="description" content="BusLiner — Полноэкранная интерактивная презентация межгородских поездок первого класса. Эстетика Loro Piana, кинематика и векторный драйв Lando Norris.">
   <meta name="theme-color" content="#F5F1EA">
 
   <!-- FONTS: Cormorant Garamond (Aristocratic Editorial Serif) + Plus Jakarta Sans (Humanist Grotesk) + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     /* ==========================================================================
-       BUSLINER // PRESENTATION DECK DESIGN SYSTEM
+       BUSLINER // DYNAMIC QUIET LUXURY & ERGONOMICS ARCHITECTURE
        Aesthetic: Loro Piana / The Row / Bottega Veneta / Aesop
-       Motion: Lando Norris Keynote Slide Transitions (Full-bleed deck flipping)
-       Zero 3D, Zero WebGL, Zero Sounds, Zero Gunshots
+       Motion DNA: Lando Norris kinetic drive (vector direction, inertial braking)
+       Palette: Ivory, Bone, Sand, Alpine Forest (#23312A), Oxblood (#5C2E2E), Graphite (#2B2A28)
+       Zero 3D, Zero WebGL, Zero Sound, Zero Gunshot, Zero Emojis
        ========================================================================== */
 
     :root {
-      /* Warm Palette with Depth (No pure white #FFF, no pure black #000) */
+      /* Warm Neutrals (No pure white #FFF, no pure black #000) */
       --canvas-ivory: #F5F1EA;
       --canvas-bone: #E8E2D6;
       --canvas-sand: #D9CDB8;
       --canvas-stone: #CEBEA5;
 
-      /* Deep Accents */
+      /* Deep Accent Tones */
       --color-graphite: #2B2A28;
-      --color-graphite-dark: #201F1D;
+      --color-graphite-dark: #1E1D1B;
       --color-forest: #23312A;
       --color-forest-surface: #2C3E35;
       --color-oxblood: #5C2E2E;
-      --color-oxblood-surface: #4E2626;
+      --color-oxblood-surface: #4B2424;
       --color-terracotta: #A8674F;
       --color-dusty-blue: #6E8294;
 
@@ -46,15 +47,21 @@
       --text-light-muted: #C8C2B7;
       --text-light-faint: #9E978B;
 
-      /* Hairlines */
+      /* Borders & Hairlines */
       --border-taupe: #B8A99A;
-      --border-hairline: rgba(184, 169, 154, 0.4);
-      --border-subtle: rgba(184, 169, 154, 0.22);
+      --border-hairline: rgba(184, 169, 154, 0.42);
+      --border-subtle: rgba(184, 169, 154, 0.24);
       --border-dark: rgba(245, 241, 234, 0.16);
 
-      /* Motion Curves */
-      --ease-deck: cubic-bezier(0.16, 1, 0.3, 1);
-      --ease-card: cubic-bezier(0.25, 1, 0.5, 1);
+      /* Kinetic Drive Motion Curves */
+      --ease-drive: cubic-bezier(0.22, 1, 0.36, 1); /* Fast acceleration, smooth deceleration */
+      --ease-exit: cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+      /* Durations */
+      --dur-fast: 220ms;
+      --dur-medium: 520ms;
+      --dur-slide: 920ms;
 
       /* Fonts */
       --font-display: 'Cormorant Garamond', Garamond, Georgia, serif;
@@ -62,11 +69,12 @@
       --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
 
       /* Fluid Type Scales */
-      --fs-hero: clamp(2.8rem, 5vw + 0.8rem, 5.5rem);
-      --fs-h1: clamp(2.2rem, 3.8vw + 0.6rem, 4.2rem);
-      --fs-h2: clamp(1.7rem, 2.5vw + 0.5rem, 2.8rem);
-      --fs-h3: clamp(1.2rem, 1.4vw + 0.4rem, 1.6rem);
-      --fs-body: clamp(0.95rem, 0.2vw + 0.9rem, 1.08rem);
+      --fs-hero: clamp(3.1rem, 5.8vw + 0.8rem, 6.2rem);
+      --fs-h1: clamp(2.3rem, 4vw + 0.6rem, 4.4rem);
+      --fs-h2: clamp(1.75rem, 2.6vw + 0.5rem, 2.9rem);
+      --fs-h3: clamp(1.2rem, 1.4vw + 0.4rem, 1.65rem);
+      --fs-body: clamp(0.96rem, 0.22vw + 0.9rem, 1.1rem);
+      --fs-small: clamp(0.82rem, 0.15vw + 0.76rem, 0.92rem);
       --fs-meta: 0.76rem;
 
       --radius-sm: 3px;
@@ -94,7 +102,7 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Subtle Paper Texture Noise Overlay */
+    /* Tactile Artisanal Paper Grain Overlay */
     .paper-grain-overlay {
       position: fixed;
       inset: 0;
@@ -104,7 +112,7 @@
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
-    /* Lerp Cursor */
+    /* Nimble Lerp Cursor with Kinetic Contraction */
     .custom-cursor-follower {
       position: fixed;
       top: 0;
@@ -116,8 +124,8 @@
       pointer-events: none;
       z-index: 10000;
       transform: translate(-50%, -50%);
-      transition: width 0.3s var(--ease-deck), height 0.3s var(--ease-deck), border-color 0.3s ease, background 0.3s ease;
-      opacity: 0.8;
+      transition: width 0.28s var(--ease-drive), height 0.28s var(--ease-drive), border-color 0.28s ease, background 0.28s ease;
+      opacity: 0.85;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -129,10 +137,17 @@
     }
 
     .custom-cursor-follower.hovering {
-      width: 48px;
-      height: 48px;
+      width: 50px;
+      height: 50px;
       border-color: var(--color-forest);
-      background: rgba(35, 49, 42, 0.06);
+      background: rgba(35, 49, 42, 0.08);
+      animation: cursorPulse 0.35s var(--ease-elastic);
+    }
+
+    @keyframes cursorPulse {
+      0% { transform: translate(-50%, -50%) scale(0.85); }
+      50% { transform: translate(-50%, -50%) scale(1.15); }
+      100% { transform: translate(-50%, -50%) scale(1); }
     }
 
     /* Container Utility */
@@ -144,8 +159,37 @@
       position: relative;
     }
 
+    /* Typography */
+    .serif { font-family: var(--font-display); }
+    .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .italic { font-style: italic; }
+
+    /* Growing Boundary Dividing Line (scaleX 0 -> 1 on reveal) */
+    .growing-line-separator {
+      width: 100%;
+      height: 1px;
+      background: var(--border-hairline);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.8s var(--ease-drive) 0.2s;
+    }
+
+    .deck-slide.active .growing-line-separator {
+      transform: scaleX(1);
+    }
+
+    /* Magnetic Button Wrapper */
+    .btn-magnetic {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: transform 0.2s var(--ease-drive);
+      will-change: transform;
+    }
+
     /* ==========================================================================
-       TOP FIXED NAVIGATION BAR
+       FIXED TOP NAVIGATION HEADER
        ========================================================================== */
     header.site-header {
       position: fixed;
@@ -161,21 +205,13 @@
       border-bottom: 1px solid transparent;
     }
 
-    header.site-header.scrolled {
-      background: rgba(245, 241, 234, 0.94);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom-color: var(--border-hairline);
-    }
-
     header.site-header.on-dark-slide {
       background: rgba(35, 49, 42, 0.95);
       border-bottom-color: var(--border-dark);
     }
 
     header.site-header.on-dark-slide .brand-wordmark,
-    header.site-header.on-dark-slide .slide-nav-link,
-    header.site-header.on-dark-slide .slide-index-counter {
+    header.site-header.on-dark-slide .slide-nav-link {
       color: var(--text-light-primary);
     }
 
@@ -217,7 +253,7 @@
       color: var(--text-faint);
     }
 
-    /* Header Deck Menu */
+    /* Header Nav Links with Forward Shift Hover */
     .deck-nav-menu {
       display: flex;
       align-items: center;
@@ -236,7 +272,8 @@
       cursor: pointer;
       position: relative;
       padding: 6px 0;
-      transition: color 0.2s ease;
+      transition: color 0.2s ease, transform 0.2s var(--ease-drive);
+      display: inline-block;
     }
 
     .slide-nav-link::after {
@@ -249,7 +286,12 @@
       background: currentColor;
       transform: scaleX(0);
       transform-origin: left;
-      transition: transform 0.4s var(--ease-deck);
+      transition: transform 0.4s var(--ease-drive);
+    }
+
+    .slide-nav-link:hover {
+      transform: translateX(3px);
+      color: var(--text-graphite);
     }
 
     .slide-nav-link.active::after,
@@ -271,15 +313,17 @@
       padding: 8px 16px;
       border: 1px solid var(--border-taupe);
       border-radius: var(--radius-sm);
-      transition: all 0.3s var(--ease-deck);
+      transition: all 0.25s var(--ease-drive);
+      min-height: 44px;
     }
 
     .link-subtle-cta:hover {
       background: var(--canvas-bone);
+      transform: translateX(3px);
     }
 
     /* ==========================================================================
-       SIDE DECK CONTROLS & PAGINATION (KEYNOTE PRESENTATION RAIL)
+       SIDE DECK CONTROLS (PRESENTATION KEYNOTE RAIL)
        ========================================================================== */
     .presentation-side-rail {
       position: fixed;
@@ -302,6 +346,7 @@
       border: none;
       padding: 4px 0;
       outline: none;
+      min-height: 36px;
     }
 
     .deck-rail-label {
@@ -311,8 +356,8 @@
       text-transform: uppercase;
       color: var(--text-faint);
       opacity: 0;
-      transform: translateX(10px);
-      transition: all 0.3s var(--ease-deck);
+      transform: translateX(12px);
+      transition: all 0.3s var(--ease-drive);
       pointer-events: none;
     }
 
@@ -322,11 +367,11 @@
     }
 
     .deck-rail-indicator {
-      width: 24px;
+      width: 22px;
       height: 2px;
       background: var(--border-taupe);
       border-radius: 1px;
-      transition: all 0.4s var(--ease-deck);
+      transition: all 0.35s var(--ease-drive);
     }
 
     .deck-rail-item.active .deck-rail-indicator {
@@ -342,7 +387,7 @@
       font-weight: 700;
     }
 
-    /* Deck Bottom Progress Bar & Arrows */
+    /* Bottom Status & Keynote Controls */
     .deck-bottom-bar {
       position: fixed;
       bottom: 24px;
@@ -371,24 +416,25 @@
     }
 
     .deck-arrow-btn {
-      width: 36px;
-      height: 36px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       border: 1px solid var(--border-taupe);
-      background: rgba(245, 241, 234, 0.85);
+      background: rgba(245, 241, 234, 0.9);
       backdrop-filter: blur(8px);
       color: var(--text-graphite);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.2s var(--ease-deck);
+      transition: all 0.2s var(--ease-drive);
     }
 
     .deck-arrow-btn:hover {
       background: var(--text-graphite);
       color: var(--canvas-ivory);
       border-color: var(--text-graphite);
+      transform: translateY(-2px);
     }
 
     /* ==========================================================================
@@ -413,7 +459,7 @@
       opacity: 0;
       pointer-events: none;
       transform: translateY(100%);
-      transition: transform 0.95s var(--ease-deck), opacity 0.85s ease, filter 0.85s ease;
+      transition: transform var(--dur-slide) var(--ease-drive), opacity 0.85s ease, filter 0.85s ease;
       will-change: transform, opacity, filter;
       padding: 80px 0 60px;
     }
@@ -427,7 +473,7 @@
     }
 
     .deck-slide.prev {
-      opacity: 0.15;
+      opacity: 0.12;
       transform: translateY(-20%) scale(0.96);
       filter: blur(3px);
       z-index: 5;
@@ -439,32 +485,70 @@
       z-index: 15;
     }
 
-    /* Slide Stagger Reveal Sequence */
-    .slide-stagger-item {
+    /* Vector Directional Staggers (Left-to-right & Bottom-to-up) */
+    .vector-stagger-text {
       opacity: 0;
-      transform: translateY(28px);
-      transition: transform 0.85s var(--ease-deck), opacity 0.85s ease;
+      transform: translateX(-28px);
+      transition: transform 0.8s var(--ease-drive), opacity 0.8s ease;
       will-change: transform, opacity;
     }
 
-    .deck-slide.active .slide-stagger-item:nth-child(1) { transition-delay: 120ms; transform: translateY(0); opacity: 1; }
-    .deck-slide.active .slide-stagger-item:nth-child(2) { transition-delay: 200ms; transform: translateY(0); opacity: 1; }
-    .deck-slide.active .slide-stagger-item:nth-child(3) { transition-delay: 280ms; transform: translateY(0); opacity: 1; }
-    .deck-slide.active .slide-stagger-item:nth-child(4) { transition-delay: 360ms; transform: translateY(0); opacity: 1; }
-    .deck-slide.active .slide-stagger-item:nth-child(5) { transition-delay: 440ms; transform: translateY(0); opacity: 1; }
+    .vector-stagger-card {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: transform 0.8s var(--ease-drive), opacity 0.8s ease;
+      will-change: transform, opacity;
+    }
+
+    .deck-slide.active .stagger-1 { transition-delay: 60ms; transform: translate(0, 0); opacity: 1; }
+    .deck-slide.active .stagger-2 { transition-delay: 140ms; transform: translate(0, 0); opacity: 1; }
+    .deck-slide.active .stagger-3 { transition-delay: 220ms; transform: translate(0, 0); opacity: 1; }
+    .deck-slide.active .stagger-4 { transition-delay: 300ms; transform: translate(0, 0); opacity: 1; }
+    .deck-slide.active .stagger-5 { transition-delay: 380ms; transform: translate(0, 0); opacity: 1; }
 
     /* Curtain Mask on Slide Images */
     .slide-curtain-image {
       clip-path: inset(100% 0 0 0);
-      transition: clip-path 1.1s var(--ease-deck) 0.15s;
+      transition: clip-path 1.15s var(--ease-drive) 0.15s;
     }
 
     .deck-slide.active .slide-curtain-image {
       clip-path: inset(0 0 0 0);
     }
 
+    /* Slow Ken Burns Motion on Images */
+    .ken-burns-active {
+      animation: kenBurnsMotion 24s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    @keyframes kenBurnsMotion {
+      0% { transform: scale(1.0); }
+      100% { transform: scale(1.06); }
+    }
+
+    /* Word Reveal Momentum */
+    .word-wrap {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: top;
+      margin-right: 0.22em;
+    }
+
+    .word-inner {
+      display: inline-block;
+      transform: translateX(-16px) translateY(115%);
+      opacity: 0;
+      transition: transform 0.85s var(--ease-drive), opacity 0.85s ease;
+    }
+
+    .deck-slide.active .word-inner {
+      transform: translate(0, 0);
+      opacity: 1;
+    }
+
     /* ==========================================================================
-       SLIDE 1: COVER & HERO (WARM IVORY #F5F1EA)
+       SLIDE 1: COVER & HERO (ASYMMETRIC 60/40 SPLIT WITH VECTOR DRIVE)
        ========================================================================== */
     #slide1 {
       background: linear-gradient(180deg, var(--canvas-ivory) 0%, #EFE8DD 100%);
@@ -472,7 +556,7 @@
 
     .hero-slide-grid {
       display: grid;
-      grid-template-columns: 1.15fr 0.95fr;
+      grid-template-columns: 1.18fr 0.92fr;
       gap: 56px;
       align-items: center;
     }
@@ -484,17 +568,27 @@
       text-transform: uppercase;
       color: var(--color-forest);
       margin-bottom: 12px;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-deck-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-forest);
     }
 
     .hero-deck-title {
       font-family: var(--font-display);
       font-size: var(--fs-hero);
       font-weight: 300;
-      line-height: 1.05;
+      line-height: 1.02;
       letter-spacing: -0.015em;
       color: var(--text-graphite);
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .hero-deck-title em {
@@ -507,10 +601,10 @@
       color: var(--text-muted);
       line-height: 1.7;
       max-width: 540px;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
-    /* Search Box in Slide 1 */
+    /* Search Monograph Capsule */
     .search-monograph-capsule {
       background: #FAF8F5;
       border: 1px solid var(--border-hairline);
@@ -552,29 +646,36 @@
       font-size: 20px;
       font-weight: 400;
       color: var(--text-graphite);
-      padding: 4px 0;
+      padding: 6px 0;
       outline: none;
       width: 100%;
+      border-radius: 0;
+      transition: border-color 0.2s ease;
+    }
+
+    .field-box input:focus {
+      border-color: var(--text-graphite);
     }
 
     .btn-swap-city {
       background: transparent;
       border: 1px solid var(--border-hairline);
       border-radius: 50%;
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       color: var(--text-muted);
       margin-bottom: 4px;
-      transition: all 0.2s ease;
+      transition: all 0.2s var(--ease-drive);
     }
 
     .btn-swap-city:hover {
       transform: rotate(180deg);
       border-color: var(--text-graphite);
+      color: var(--text-graphite);
     }
 
     .btn-action-deck {
@@ -583,7 +684,7 @@
       border: 1px solid var(--text-graphite);
       border-radius: var(--radius-sm);
       font-family: var(--font-body);
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -592,16 +693,22 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.2s var(--ease-deck);
+      transition: all 0.25s var(--ease-drive);
+      min-height: 44px;
     }
 
     .btn-action-deck:hover {
       background: var(--color-forest);
       border-color: var(--color-forest);
-      transform: translateY(-2px);
+      transform: translateX(4px);
+      box-shadow: 0 8px 24px -6px rgba(35, 49, 42, 0.35);
     }
 
-    /* Cover Photo Frame */
+    .btn-action-deck:active {
+      transform: scale(0.98);
+    }
+
+    /* Cover Photo Frame with Ken Burns & Reveal */
     .hero-photo-frame {
       height: 520px;
       position: relative;
@@ -614,11 +721,11 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: saturate(0.8) sepia(0.08) contrast(1.02);
+      filter: saturate(0.75) sepia(0.08) contrast(1.04);
     }
 
     /* ==========================================================================
-       SLIDE 2: THE MANIFESTO (WARM SAND #D9CDB8 & LINEN)
+       SLIDE 2: THE MANIFESTO (WARM SAND #D9CDB8 & LINEN ATMOSPHERE)
        ========================================================================== */
     #slide2 {
       background: linear-gradient(180deg, #EAE2D3 0%, var(--canvas-sand) 100%);
@@ -653,10 +760,17 @@
     }
 
     .deck-triad-card {
-      background: rgba(245, 241, 234, 0.85);
+      background: rgba(245, 241, 234, 0.88);
       border: 1px solid var(--border-hairline);
       padding: 28px;
       border-radius: var(--radius-sm);
+      transition: transform 0.3s var(--ease-drive), box-shadow 0.3s ease;
+    }
+
+    .deck-triad-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px -10px rgba(43, 42, 40, 0.1);
+      border-color: var(--border-taupe);
     }
 
     .deck-triad-num {
@@ -707,7 +821,14 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: saturate(0.85) contrast(1.05) brightness(0.9);
+      filter: saturate(0.8) contrast(1.05) brightness(0.9);
+    }
+
+    .count-up-number {
+      font-family: var(--font-mono);
+      font-size: 28px;
+      font-weight: 600;
+      color: #E8E2D6;
     }
 
     /* ==========================================================================
@@ -732,12 +853,12 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: all 0.3s var(--ease-deck);
+      transition: all 0.35s var(--ease-drive);
     }
 
     .fleet-monograph-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 16px 36px -10px rgba(43, 42, 40, 0.1);
+      box-shadow: 0 18px 40px -10px rgba(43, 42, 40, 0.12);
       border-color: var(--border-taupe);
     }
 
@@ -751,7 +872,12 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: saturate(0.8) sepia(0.06);
+      filter: saturate(0.75) sepia(0.06);
+      transition: transform 0.6s var(--ease-drive);
+    }
+
+    .fleet-monograph-card:hover .fleet-card-img-box img {
+      transform: scale(1.03);
     }
 
     .fleet-card-body {
@@ -782,6 +908,22 @@
       justify-content: space-between;
       align-items: center;
       font-size: 12px;
+    }
+
+    .link-fleet-reserve {
+      color: var(--text-graphite);
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      transition: transform 0.2s var(--ease-drive);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .link-fleet-reserve:hover {
+      transform: translateX(3px);
+      color: var(--color-forest);
     }
 
     /* ==========================================================================
@@ -825,7 +967,7 @@
       text-align: center;
       pointer-events: none;
       opacity: 0;
-      transition: all 0.4s var(--ease-deck);
+      transition: all 0.4s var(--ease-drive);
       background: rgba(245, 241, 234, 0.95);
       backdrop-filter: blur(6px);
       box-shadow: 0 8px 24px -4px rgba(92, 46, 46, 0.14);
@@ -875,6 +1017,16 @@
       font-size: 14px;
     }
 
+    .timetable-slide-table tr:hover td {
+      background: #EFE8DD;
+    }
+
+    /* Accessibility / Focus Visible */
+    :focus-visible {
+      outline: 2px solid var(--color-forest);
+      outline-offset: 3px;
+    }
+
     /* Responsive */
     @media (max-width: 1024px) {
       .hero-slide-grid, .sanctuary-deck-split, .concierge-deck-split {
@@ -896,6 +1048,27 @@
       .search-row-grid { grid-template-columns: 1fr; }
       .custom-cursor-follower { display: none; }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .vector-stagger-text,
+      .vector-stagger-card,
+      .word-inner {
+        transform: none !important;
+        opacity: 1 !important;
+      }
+      .slide-curtain-image {
+        clip-path: none !important;
+      }
+      .custom-cursor-follower {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -907,7 +1080,7 @@
   <div class="custom-cursor-follower" id="cursorFollower"></div>
 
   <!-- =========================================================================
-       FIXED HEADER
+       FIXED TOP NAVIGATION HEADER
        ========================================================================= -->
   <header class="site-header" id="siteHeader">
     <div class="container">
@@ -928,7 +1101,7 @@
         </ul>
 
         <div style="display: flex; gap: 14px; align-items: center;">
-          <a href="driver-terminal.html" class="link-subtle-cta" data-cursor="hover">
+          <a href="driver-terminal.html" class="link-subtle-cta btn-magnetic" data-cursor="hover">
             <span>Терминал</span>
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
           </a>
@@ -994,52 +1167,58 @@
         <div class="hero-slide-grid">
           
           <div>
-            <span class="hero-deck-badge slide-stagger-item">
+            <span class="hero-deck-badge vector-stagger-text stagger-1">
               N&deg; 01 &bull; ОФИЦИАЛЬНАЯ ЛИНИЯ МЕЖГОРОДСКОГО СООБЩЕНИЯ
             </span>
 
-            <h1 class="hero-deck-title slide-stagger-item">
-              Искусство неспешных<br>
-              <em>межгородских перемещений.</em>
+            <h1 class="hero-deck-title vector-stagger-text stagger-2">
+              <span class="word-wrap"><span class="word-inner">Искусство</span></span>
+              <span class="word-wrap"><span class="word-inner">неспешных</span></span><br>
+              <em>
+                <span class="word-wrap"><span class="word-inner">межгородских</span></span>
+                <span class="word-wrap"><span class="word-inner">перемещений.</span></span>
+              </em>
             </h1>
 
-            <p class="hero-deck-lead slide-stagger-item">
+            <p class="hero-deck-lead vector-stagger-text stagger-3">
               Регулярные рейсы между столицами и областными центрами в микроавтобусах первого класса. Без спешки, вокзального шума и очередей.
             </p>
 
-            <div class="search-monograph-capsule slide-stagger-item">
+            <div class="search-monograph-capsule vector-stagger-card stagger-4">
               <div class="search-row-grid">
                 <div class="field-box">
-                  <label>Отправление</label>
-                  <input type="text" id="inputFrom" value="Минск (Центральный АВ)">
+                  <label for="inputFrom">Отправление</label>
+                  <input type="text" id="inputFrom" value="Минск (Центральный АВ)" autocomplete="off">
                 </div>
-                <button class="btn-swap-city" onclick="swapDestinations()" title="Поменять местами">
+                <button class="btn-swap-city" onclick="swapDestinations()" title="Поменять города местами" aria-label="Поменять местами">
                   &harr;
                 </button>
                 <div class="field-box">
-                  <label>Прибытие</label>
-                  <input type="text" id="inputTo" value="Вильнюс (Центральный АВ)">
+                  <label for="inputTo">Прибытие</label>
+                  <input type="text" id="inputTo" value="Вильнюс (Центральный АВ)" autocomplete="off">
                 </div>
                 <div class="field-box">
-                  <label>Дата</label>
-                  <input type="text" id="inputDate" value="Сегодня, 24 октября">
+                  <label for="inputDate">Дата поездки</label>
+                  <input type="text" id="inputDate" value="Сегодня, 24 октября" autocomplete="off">
                 </div>
               </div>
 
-              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+              <div class="growing-line-separator"></div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                 <div style="display: flex; gap: 14px; font-size: 12px; color: var(--text-faint);">
-                  <span>Минск &mdash; Вильнюс <strong>85 BYN</strong></span>
-                  <span>Минск &mdash; Гродно <strong>28 BYN</strong></span>
+                  <span style="cursor: pointer;" onclick="setPreset('Минск', 'Вильнюс')" data-cursor="hover">Минск &mdash; Вильнюс <strong>85 BYN</strong></span>
+                  <span style="cursor: pointer;" onclick="setPreset('Минск', 'Гродно')" data-cursor="hover">Минск &mdash; Гродно <strong>28 BYN</strong></span>
                 </div>
-                <button class="btn-action-deck" onclick="jumpToSlide(5)">
-                  <span>Посмотреть рейсы &rarr;</span>
+                <button class="btn-action-deck btn-magnetic" onclick="jumpToSlide(5)" data-cursor="hover">
+                  <span>Выбрать рейс &rarr;</span>
                 </button>
               </div>
             </div>
           </div>
 
-          <div class="hero-photo-frame slide-stagger-item slide-curtain-image">
-            <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80" alt="Mercedes-Benz Sprinter Executive Mobility">
+          <div class="hero-photo-frame vector-stagger-card stagger-4 slide-curtain-image">
+            <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80" alt="Mercedes-Benz Sprinter Executive" class="ken-burns-active">
           </div>
 
         </div>
@@ -1051,23 +1230,23 @@
       <div class="container">
         <div class="manifesto-deck-content">
           
-          <div class="hero-deck-badge slide-stagger-item" style="color: var(--color-oxblood);">
+          <div class="hero-deck-badge vector-stagger-text stagger-1" style="color: var(--color-oxblood);">
             N&deg; 02 &bull; ФИЛОСОФИЯ И РЕГЛАМЕНТ
           </div>
 
-          <blockquote class="manifesto-lead-quote slide-stagger-item">
+          <blockquote class="manifesto-lead-quote vector-stagger-text stagger-2">
             &laquo;Настоящая роскошь в дороге &mdash; это не блеск и не позолота. Это возможность закрыть глаза и знать, что <em>ваше время и покой неприкосновенны</em>&raquo;.
           </blockquote>
 
-          <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint);" class="slide-stagger-item">
+          <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint);" class="vector-stagger-text stagger-3">
             &mdash; Манифест BusLiner, 2026
           </div>
 
-          <div class="triad-deck-columns slide-stagger-item">
+          <div class="triad-deck-columns vector-stagger-card stagger-4">
             <div class="deck-triad-card">
               <div class="deck-triad-num">[ ПРИНЦИП I ]</div>
               <h3 class="deck-triad-heading">Тихий салон</h3>
-              <p class="deck-triad-text">Запрет на громкие звонки и просмотр видео без наушников. Полная акустическая изоляция.</p>
+              <p class="deck-triad-text">Запрет на громкие звонки и воспроизведение видео без наушников. Полная акустическая изоляция.</p>
             </div>
             <div class="deck-triad-card">
               <div class="deck-triad-num">[ ПРИНЦИП II ]</div>
@@ -1091,36 +1270,36 @@
         <div class="sanctuary-deck-split">
           
           <div>
-            <span class="hero-deck-badge slide-stagger-item" style="color: #D9CDB8;">
+            <span class="hero-deck-badge vector-stagger-text stagger-1" style="color: #D9CDB8;">
               N&deg; 03 &bull; САНКТУАРИЙ САЛОНА
             </span>
 
-            <h2 class="hero-deck-title slide-stagger-item" style="color: var(--text-light-primary);">
+            <h2 class="hero-deck-title vector-stagger-text stagger-2" style="color: var(--text-light-primary);">
               Оазис безмятежности<br>
               <em>на скорости 100 км/ч.</em>
             </h2>
 
-            <p class="hero-deck-lead slide-stagger-item" style="color: var(--text-light-muted);">
+            <p class="hero-deck-lead vector-stagger-text stagger-3" style="color: var(--text-light-muted);">
               Двойное атермальное остекление, вибропоглощающая пневматическая подвеска и приглушённый свет 2700K для комфортной работы за ноутбуком или глубокого сна.
             </p>
 
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; border-top: 1px solid var(--border-dark); padding-top: 24px;" class="slide-stagger-item">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; border-top: 1px solid var(--border-dark); padding-top: 24px;" class="vector-stagger-card stagger-4">
               <div>
-                <div style="font-family: var(--font-mono); font-size: 26px; color: #E8E2D6;">86 см</div>
+                <div class="count-up-number" data-count="86" data-suffix=" см">0 см</div>
                 <div style="font-size: 11px; color: var(--text-light-faint);">Шаг между креслами</div>
               </div>
               <div>
-                <div style="font-family: var(--font-mono); font-size: 26px; color: #E8E2D6;">220V</div>
+                <div class="count-up-number" data-count="220" data-suffix="V">0V</div>
                 <div style="font-size: 11px; color: var(--text-light-faint);">Розетка у каждого места</div>
               </div>
               <div>
-                <div style="font-family: var(--font-mono); font-size: 26px; color: #E8E2D6;">&lt; 58 дБ</div>
+                <div class="count-up-number" data-count="58" data-prefix="< " data-suffix=" дБ">< 0 дБ</div>
                 <div style="font-size: 11px; color: var(--text-light-faint);">Шумоизоляция в пути</div>
               </div>
             </div>
           </div>
 
-          <div class="sanctuary-deck-photo slide-stagger-item slide-curtain-image">
+          <div class="sanctuary-deck-photo vector-stagger-card stagger-4 slide-curtain-image">
             <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80" alt="Quiet Architecture & Travel Light">
           </div>
 
@@ -1132,7 +1311,7 @@
     <section class="deck-slide next" id="slide4">
       <div class="container">
         
-        <div style="display: flex; justify-content: space-between; align-items: flex-end;" class="slide-stagger-item">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end;" class="vector-stagger-text stagger-1">
           <div>
             <span class="hero-deck-badge">N&deg; 04 &bull; МОНОГРАФИЯ ФЛОТА</span>
             <h2 style="font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 300;">
@@ -1144,9 +1323,9 @@
           </div>
         </div>
 
-        <div class="collection-deck-grid slide-stagger-item">
+        <div class="collection-deck-grid vector-stagger-card stagger-3">
           
-          <div class="fleet-monograph-card">
+          <div class="fleet-monograph-card" data-cursor="hover">
             <div class="fleet-card-img-box">
               <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80" alt="Sprinter 519 Executive">
             </div>
@@ -1156,11 +1335,11 @@
             </div>
             <div class="fleet-card-foot">
               <strong>от 28 BYN</strong>
-              <a href="seat-picker-3d-demo.html" style="color: var(--text-graphite); text-decoration: none;">Выбрать &rarr;</a>
+              <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
             </div>
           </div>
 
-          <div class="fleet-monograph-card">
+          <div class="fleet-monograph-card" data-cursor="hover">
             <div class="fleet-card-img-box">
               <img src="https://images.unsplash.com/photo-1494515843206-f3117d3f51b7?auto=format&fit=crop&w=800&q=80" alt="Airport Priority Corridor">
             </div>
@@ -1170,11 +1349,11 @@
             </div>
             <div class="fleet-card-foot">
               <strong>от 85 BYN</strong>
-              <a href="seat-picker-3d-demo.html" style="color: var(--text-graphite); text-decoration: none;">Выбрать &rarr;</a>
+              <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
             </div>
           </div>
 
-          <div class="fleet-monograph-card">
+          <div class="fleet-monograph-card" data-cursor="hover">
             <div class="fleet-card-img-box">
               <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80" alt="Night Sleeper Lounge">
             </div>
@@ -1184,11 +1363,11 @@
             </div>
             <div class="fleet-card-foot">
               <strong>от 34 BYN</strong>
-              <a href="seat-picker-3d-demo.html" style="color: var(--text-graphite); text-decoration: none;">Выбрать &rarr;</a>
+              <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
             </div>
           </div>
 
-          <div class="fleet-monograph-card">
+          <div class="fleet-monograph-card" data-cursor="hover">
             <div class="fleet-card-img-box">
               <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80" alt="Private Charter">
             </div>
@@ -1198,7 +1377,7 @@
             </div>
             <div class="fleet-card-foot">
               <strong>По запросу</strong>
-              <a href="busliner-partners.html" style="color: var(--text-graphite); text-decoration: none;">Заявка &rarr;</a>
+              <a href="busliner-partners.html" class="link-fleet-reserve">Заявка &rarr;</a>
             </div>
           </div>
 
@@ -1213,38 +1392,38 @@
         <div class="concierge-deck-split">
           
           <div>
-            <span class="hero-deck-badge slide-stagger-item" style="color: var(--color-oxblood);">
+            <span class="hero-deck-badge vector-stagger-text stagger-1" style="color: var(--color-oxblood);">
               N&deg; 05 &bull; ЛИСТ ОЖИДАНИЯ &bull; КОНСЬЕРЖ 0.38с
             </span>
 
-            <h2 class="hero-deck-title slide-stagger-item">
+            <h2 class="hero-deck-title vector-stagger-text stagger-2">
               Билетов нет в продаже?<br>
               <em>Консьерж закрепит за вами место.</em>
             </h2>
 
-            <p class="hero-deck-lead slide-stagger-item">
+            <p class="hero-deck-lead vector-stagger-text stagger-3">
               В пиковые дни рейсы раскупаются за недели. Когда другой пассажир оформляет возврат, интеллектуальный алгоритм перехватывает его за 0.38 секунды и моментально закрепляет за вашим бронированием.
             </p>
 
-            <div style="display: flex; gap: 32px; margin-bottom: 28px;" class="slide-stagger-item">
+            <div style="display: flex; gap: 36px; margin-bottom: 28px;" class="vector-stagger-card stagger-4">
               <div>
-                <div style="font-family: var(--font-mono); font-size: 32px; color: var(--color-oxblood);">0.38 с</div>
+                <div class="count-up-number" style="color: var(--color-oxblood);" data-count="0.38" data-suffix=" с" data-decimal="2">0.00 с</div>
                 <div style="font-size: 11px; color: var(--text-faint);">Скорость закрепления</div>
               </div>
               <div>
-                <div style="font-family: var(--font-mono); font-size: 32px; color: var(--color-oxblood);">99.4%</div>
+                <div class="count-up-number" style="color: var(--color-oxblood);" data-count="99.4" data-suffix="%" data-decimal="1">0.0%</div>
                 <div style="font-size: 11px; color: var(--text-faint);">Точность выкупа</div>
               </div>
             </div>
 
-            <div class="slide-stagger-item">
-              <button class="btn-action-deck" onclick="simulateConcierge()" style="background: var(--color-oxblood); border-color: var(--color-oxblood);">
+            <div class="vector-stagger-card stagger-5">
+              <button class="btn-action-deck btn-magnetic" onclick="simulateConcierge()" style="background: var(--color-oxblood); border-color: var(--color-oxblood);" data-cursor="hover">
                 <span>Смоделировать перехват (0.38с)</span>
               </button>
             </div>
           </div>
 
-          <div style="display: flex; justify-content: center;" class="slide-stagger-item">
+          <div style="display: flex; justify-content: center;" class="vector-stagger-card stagger-4">
             <div class="ticket-paper-frame" id="slideTicket">
               <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-taupe); padding-bottom: 14px; margin-bottom: 20px;">
                 <span style="font-family: var(--font-mono); font-size: 10px; color: var(--text-faint);">BL &bull; 089-ARCHIVE</span>
@@ -1285,7 +1464,7 @@
     <section class="deck-slide next" id="slide6">
       <div class="container">
         
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px;" class="slide-stagger-item">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;" class="vector-stagger-text stagger-1">
           <div>
             <span class="hero-deck-badge">N&deg; 06 &bull; РЕГУЛЯРНЫЙ РЕЕСТР</span>
             <h2 style="font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 300;">
@@ -1297,7 +1476,7 @@
           </div>
         </div>
 
-        <div class="timetable-slide-box slide-stagger-item">
+        <div class="timetable-slide-box vector-stagger-card stagger-3">
           <table class="timetable-slide-table">
             <thead>
               <tr>
@@ -1315,7 +1494,7 @@
                 <td style="color: var(--text-muted);">Каждые 2 часа</td>
                 <td style="font-family: var(--font-mono); font-size: 18px; font-weight: 600;">85.00 BYN</td>
                 <td style="text-align: right;">
-                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta">Выбрать кресло &rarr;</a>
+                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" data-cursor="hover">Выбрать кресло &rarr;</a>
                 </td>
               </tr>
               <tr>
@@ -1324,7 +1503,7 @@
                 <td style="color: var(--text-muted);">Каждые 90 минут</td>
                 <td style="font-family: var(--font-mono); font-size: 18px; font-weight: 600;">28.00 BYN</td>
                 <td style="text-align: right;">
-                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta">Выбрать кресло &rarr;</a>
+                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" data-cursor="hover">Выбрать кресло &rarr;</a>
                 </td>
               </tr>
               <tr>
@@ -1333,7 +1512,7 @@
                 <td style="color: var(--text-muted);">Каждые 2 часа</td>
                 <td style="font-family: var(--font-mono); font-size: 18px; font-weight: 600;">32.00 BYN</td>
                 <td style="text-align: right;">
-                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta">Выбрать кресло &rarr;</a>
+                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" data-cursor="hover">Выбрать кресло &rarr;</a>
                 </td>
               </tr>
               <tr>
@@ -1342,14 +1521,14 @@
                 <td style="color: var(--text-muted);">Каждые 2 часа</td>
                 <td style="font-family: var(--font-mono); font-size: 18px; font-weight: 600;">28.00 BYN</td>
                 <td style="text-align: right;">
-                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta">Выбрать кресло &rarr;</a>
+                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" data-cursor="hover">Выбрать кресло &rarr;</a>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 28px; font-size: 12px; color: var(--text-faint);" class="slide-stagger-item">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; font-size: 12px; color: var(--text-faint);" class="vector-stagger-text stagger-4">
           <div>&copy; 2026 BusLiner Technologies. Сдержанность как наивысшая форма роскоши.</div>
           <div style="display: flex; gap: 20px;">
             <a href="driver-terminal.html" style="color: var(--text-muted); text-decoration: none;">Терминал посадки</a>
@@ -1364,7 +1543,7 @@
   </main>
 
   <!-- =========================================================================
-       PRESENTATION DECK TRANSITION ENGINE SCRIPT
+       DYNAMIC LUXURY MOTION ENGINE (KEYNOTE SLIDE DECK & KINETIC MICROPHYSICS)
        ========================================================================= -->
   <script>
     // 1. PRESENTATION SLIDE CONTROLLER (WHEEL DEBOUNCE, TOUCH SWIPE & KEYBOARD)
@@ -1387,6 +1566,36 @@
     let isTransitioning = false;
     const totalSlides = slides.length;
 
+    function runCountUpAnimations(slideElement) {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const counters = slideElement.querySelectorAll('.count-up-number');
+      counters.forEach(counter => {
+        const target = parseFloat(counter.getAttribute('data-count'));
+        const prefix = counter.getAttribute('data-prefix') || '';
+        const suffix = counter.getAttribute('data-suffix') || '';
+        const decimals = parseInt(counter.getAttribute('data-decimal') || '0', 10);
+        
+        let start = 0;
+        const duration = 850;
+        const startTime = performance.now();
+
+        function step(now) {
+          const progress = Math.min((now - startTime) / duration, 1);
+          // Ease-out expo curve for numbers
+          const easeProgress = 1 - Math.pow(2, -10 * progress);
+          const currentVal = (start + (target - start) * easeProgress).toFixed(decimals);
+          counter.innerText = prefix + currentVal + suffix;
+
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else {
+            counter.innerText = prefix + target.toFixed(decimals) + suffix;
+          }
+        }
+        requestAnimationFrame(step);
+      });
+    }
+
     function updateDeckState(newIndex) {
       if (newIndex < 0 || newIndex >= totalSlides) return;
       isTransitioning = true;
@@ -1396,6 +1605,7 @@
         slide.classList.remove('active', 'prev', 'next');
         if (idx === newIndex) {
           slide.classList.add('active');
+          runCountUpAnimations(slide);
         } else if (idx < newIndex) {
           slide.classList.add('prev');
         } else {
@@ -1433,7 +1643,7 @@
 
       setTimeout(() => {
         isTransitioning = false;
-      }, 950);
+      }, 920);
     }
 
     window.jumpToSlide = function(idx) {
@@ -1463,13 +1673,13 @@
       clearTimeout(wheelTimer);
 
       wheelTimer = setTimeout(() => {
-        if (wheelDeltaSum > 40) {
+        if (wheelDeltaSum > 38) {
           nextSlide();
-        } else if (wheelDeltaSum < -40) {
+        } else if (wheelDeltaSum < -38) {
           prevSlide();
         }
         wheelDeltaSum = 0;
-      }, 50);
+      }, 45);
     }, { passive: false });
 
     // Keyboard Controller
@@ -1493,14 +1703,14 @@
       if (isTransitioning) return;
       const touchEndY = e.changedTouches[0].clientY;
       const diffY = touchStartY - touchEndY;
-      if (diffY > 60) {
+      if (diffY > 55) {
         nextSlide();
-      } else if (diffY < -60) {
+      } else if (diffY < -55) {
         prevSlide();
       }
     }, { passive: true });
 
-    // 2. TACTILE LERP CURSOR
+    // 2. KINETIC LERP CURSOR WITH DYNAMIC ELASTICITY
     (function initCursor() {
       const cursor = document.getElementById('cursorFollower');
       if (!cursor || window.innerWidth < 768) return;
@@ -1516,8 +1726,8 @@
       }, { passive: true });
 
       function render() {
-        cursorX += (mouseX - cursorX) * 0.16;
-        cursorY += (mouseY - cursorY) * 0.16;
+        cursorX += (mouseX - cursorX) * 0.22; // High responsiveness
+        cursorY += (mouseY - cursorY) * 0.22;
         cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
         requestAnimationFrame(render);
       }
@@ -1529,7 +1739,30 @@
       });
     })();
 
-    // 3. INTERACTION HELPERS
+    // 3. MAGNETIC BUTTONS (ATTRACTION UP TO 14PX)
+    (function initMagneticButtons() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.innerWidth < 768) return;
+
+      const magnets = document.querySelectorAll('.btn-magnetic');
+      magnets.forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+          const rect = btn.getBoundingClientRect();
+          const btnCenterX = rect.left + rect.width / 2;
+          const btnCenterY = rect.top + rect.height / 2;
+          const deltaX = (e.clientX - btnCenterX) * 0.35;
+          const deltaY = (e.clientY - btnCenterY) * 0.35;
+          const clampedX = Math.max(-14, Math.min(14, deltaX));
+          const clampedY = Math.max(-14, Math.min(14, deltaY));
+          btn.style.transform = `translate(${clampedX}px, ${clampedY}px)`;
+        });
+
+        btn.addEventListener('mouseleave', () => {
+          btn.style.transform = 'translate(0, 0)';
+        });
+      });
+    })();
+
+    // 4. INTERACTION HELPERS
     window.swapDestinations = function() {
       const from = document.getElementById('inputFrom');
       const to = document.getElementById('inputTo');
@@ -1537,6 +1770,16 @@
         const tmp = from.value;
         from.value = to.value;
         to.value = tmp;
+      }
+    };
+
+    window.setPreset = function(fromVal, toVal) {
+      const from = document.getElementById('inputFrom');
+      const to = document.getElementById('inputTo');
+      if (from && to) {
+        from.value = fromVal;
+        to.value = toVal;
+        jumpToSlide(5); // Jump to timetable
       }
     };
 
@@ -1556,8 +1799,13 @@
         status.style.color = '#F5F1EA';
         status.style.borderColor = 'var(--color-oxblood)';
         status.innerText = 'МЕСТО ЗАКРЕПЛЕНО (0.38С)';
-      }, 80);
+      }, 70);
     };
+
+    // Initialize slide 1 counters on load
+    document.addEventListener('DOMContentLoaded', () => {
+      runCountUpAnimations(slides[0]);
+    });
   </script>
 </body>
 </html>
