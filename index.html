@@ -2094,6 +2094,59 @@
       border-color: var(--text-graphite);
     }
 
+    .btn-google-auth {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      background: #FFFFFF;
+      color: #1F1F1F;
+      border: 1px solid #DADCE0;
+      border-radius: var(--radius-sm);
+      padding: 13px 20px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(60, 64, 67, 0.08);
+      transition: all 0.22s var(--ease-drive);
+    }
+
+    .btn-google-auth:hover {
+      background: #F8FAFD;
+      border-color: #4285F4;
+      box-shadow: 0 4px 12px rgba(66, 133, 244, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .auth-or-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 16px 0;
+      color: var(--text-faint);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .auth-or-divider::before,
+    .auth-or-divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px dashed var(--border-taupe);
+    }
+
+    .auth-or-divider:not(:empty)::before {
+      margin-right: 12px;
+    }
+
+    .auth-or-divider:not(:empty)::after {
+      margin-left: 12px;
+    }
+
     .client-ticket-card-preview {
       background: #FFFFFF;
       border: 1px solid var(--border-hairline);
@@ -2773,7 +2826,7 @@
         <!-- Standout Prominent Action Buttons: Telegram Bot & Partners -->
         <div class="footer-prominent-actions vector-stagger-card stagger-2">
           
-          <a href="https://t.me/BusLinerFleetBot" target="_blank" rel="noopener noreferrer" class="footer-btn-card tg-btn-card btn-magnetic" data-cursor="hover">
+          <a href="https://t.me/BusLinerPassBot" target="_blank" rel="noopener noreferrer" class="footer-btn-card tg-btn-card btn-magnetic" data-cursor="hover">
             <div class="footer-btn-left">
               <div class="footer-btn-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2782,9 +2835,9 @@
                 </svg>
               </div>
               <div>
-                <div class="footer-btn-kicker">ОФИЦИАЛЬНЫЙ ТЕЛЕГРАМ-БОТ</div>
-                <div class="footer-btn-headline">@BusLinerFleetBot</div>
-                <div class="footer-btn-caption">Выбор кресла за 15 секунд, уведомления о посадке, трекинг борта на карте и моментальный возврат</div>
+                <div class="footer-btn-kicker">ОФИЦИАЛЬНЫЙ ТЕЛЕГРАМ-БОТ ПАССАЖИРА</div>
+                <div class="footer-btn-headline">@BusLinerPassBot</div>
+                <div class="footer-btn-caption">Регистрация и вход, посадочные талоны за 15 секунд, уведомления о рейсе и живой GPS-радар автобуса</div>
               </div>
             </div>
             <div class="footer-btn-action-badge">
@@ -2860,7 +2913,7 @@
               <li><a href="driver-terminal.html" style="color: #E8E2D6; text-decoration: none;">Войти в терминал посадки экипажа</a></li>
               <li><a href="carrier-dashboard.html" style="color: #E8E2D6; text-decoration: none;">Диспетчерская перевозчика</a></li>
               <li><span style="color: #8F887D;">Лист ожидания (перехват 0.38с)</span></li>
-              <li><a href="https://t.me/BusLinerFleetBot" target="_blank" rel="noopener noreferrer" style="color: #E8E2D6; text-decoration: none;">Telegram бот: @BusLinerFleetBot &rarr;</a></li>
+              <li><a href="https://t.me/BusLinerPassBot" target="_blank" rel="noopener noreferrer" style="color: #E8E2D6; text-decoration: none;">Telegram бот пассажира: @BusLinerPassBot &rarr;</a></li>
             </ul>
           </div>
 
@@ -2919,7 +2972,7 @@
 
       <div class="client-auth-tabs" style="grid-template-columns: 1fr 1fr 1fr;">
         <button type="button" class="client-auth-tab-btn active" id="tabBtnTg" onclick="switchClientAuthTab('tg')">Telegram-бот</button>
-        <button type="button" class="client-auth-tab-btn" id="tabBtnPhone" onclick="switchClientAuthTab('phone')">По телефону</button>
+        <button type="button" class="client-auth-tab-btn" id="tabBtnGoogle" onclick="switchClientAuthTab('google')">Google аккаунт</button>
         <button type="button" class="client-auth-tab-btn" id="tabBtnRegister" onclick="switchClientAuthTab('register')">Регистрация</button>
       </div>
 
@@ -2936,13 +2989,13 @@
               </div>
               <div>
                 <div style="font-family: var(--font-display); font-size: 17px; font-weight: 500; color: var(--text-graphite); margin-bottom: 4px;">Быстрый вход без паролей</div>
-                <div style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5;">Все ваши купленные билеты, уведомления о посадке и GPS-трекинг борта синхронизированы с ботом @BusLinerFleetBot.</div>
+                <div style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5;">Все ваши купленные билеты, посадочные талоны и GPS-радар борта синхронизированы с ботом @BusLinerPassBot.</div>
               </div>
             </div>
           </div>
 
-          <a href="https://t.me/BusLinerFleetBot" target="_blank" rel="noopener noreferrer" class="btn-action-deck btn-magnetic" style="width: 100%; justify-content: center; background: #2AABEE; border-color: #2AABEE; color: #FFFFFF; padding: 15px 24px;" data-cursor="hover">
-            <span>Войти через Telegram</span>
+          <a href="https://t.me/BusLinerPassBot" target="_blank" rel="noopener noreferrer" class="btn-action-deck btn-magnetic" style="width: 100%; justify-content: center; background: #2AABEE; border-color: #2AABEE; color: #FFFFFF; padding: 15px 24px;" data-cursor="hover">
+            <span>Войти через @BusLinerPassBot</span>
             <span>&rarr;</span>
           </a>
 
@@ -2952,29 +3005,31 @@
           </div>
         </div>
 
-        <!-- Tab Pane 2: Phone SMS login -->
-        <div class="client-auth-tab-pane" id="panePhone">
-          <div id="phoneStep1">
-            <label for="clientPhoneInput" style="display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px;">
-              Номер телефона пассажира
+        <!-- Tab Pane 2: Google Account / Google Mail Login -->
+        <div class="client-auth-tab-pane" id="paneGoogle">
+          <div id="googleStep1">
+            <button type="button" class="btn-google-auth" onclick="simulateGoogleLogin()" data-cursor="hover">
+              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.27 21.39 7.33 24 12 24z"/>
+                <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.17 0 9.97 0 12s.45 3.83 1.25 5.42l4.03-3.15z"/>
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.27 2.61 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+              </svg>
+              <span>Продолжить с Google</span>
+            </button>
+
+            <div class="auth-or-divider"><span>или через Google почту</span></div>
+
+            <label for="clientGoogleEmailInput" style="display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px;">
+              Google почта (@gmail.com)
             </label>
-            <input type="tel" id="clientPhoneInput" class="client-phone-field" placeholder="+375 (29) 123-45-67" value="+375 (29) ">
-            <button type="button" class="btn-action-deck btn-magnetic" style="width: 100%; justify-content: center; padding: 14px 20px;" onclick="requestClientSmsCode()" data-cursor="hover">
-              <span>Получить код в СМС &rarr;</span>
+            <input type="email" id="clientGoogleEmailInput" class="client-phone-field" placeholder="passenger@gmail.com" value="alex.passenger@gmail.com">
+            <button type="button" class="btn-action-deck btn-magnetic" style="width: 100%; justify-content: center; padding: 14px 20px;" onclick="verifyGoogleEmail()" data-cursor="hover">
+              <span>Войти по почте Google &rarr;</span>
             </button>
           </div>
 
-          <div id="phoneStep2" style="display: none;">
-            <div style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 12px;">
-              Код отправлен на указанный номер. Введите 4 цифры для входа:
-            </div>
-            <input type="text" id="clientSmsInput" class="client-phone-field" placeholder="0000" maxlength="4" style="text-align: center; letter-spacing: 0.3em; font-size: 24px;">
-            <button type="button" class="btn-action-deck btn-magnetic" style="width: 100%; justify-content: center; padding: 14px 20px; background: var(--color-forest); border-color: var(--color-forest);" onclick="verifyClientSmsCode()" data-cursor="hover">
-              <span>Подтвердить вход &rarr;</span>
-            </button>
-          </div>
-
-          <div id="phoneActiveBooking" style="display: none;" class="client-ticket-card-preview">
+          <div id="googleActiveBooking" style="display: none;" class="client-ticket-card-preview">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--border-taupe); padding-bottom: 10px;">
               <span style="font-family: var(--font-mono); font-size: 12px; color: var(--color-forest); font-weight: 600;">БИЛЕТ АКТИВЕН &bull; PREMI&Egrave;RE</span>
               <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-faint);">BL-8942</span>
@@ -2982,12 +3037,15 @@
             <div style="font-family: var(--font-display); font-size: 20px; font-weight: 500; color: var(--text-graphite); margin-top: 4px;">
               Минск &rarr; Вильнюс (Sprinter Executive)
             </div>
-            <div style="font-size: 13.5px; color: var(--text-muted);">
+            <div style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">
+              Google аккаунт: <strong id="googleLoggedInEmail" style="color: var(--text-graphite); font-family: var(--font-mono);">alex.passenger@gmail.com</strong>
+            </div>
+            <div style="font-size: 13.5px; color: var(--text-muted); margin-top: 2px;">
               Сегодня, 18:45 &bull; Перрон первого класса &numero; 3 &bull; Кресло <strong>04A</strong>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 10px;">
               <a href="seat-picker-3d-demo.html" class="link-subtle-cta" style="flex: 1; justify-content: center; font-size: 12px; min-height: 36px; padding: 6px 12px;">3D Салон</a>
-              <a href="https://t.me/BusLinerFleetBot" target="_blank" rel="noopener noreferrer" class="link-subtle-cta" style="flex: 1; justify-content: center; font-size: 12px; min-height: 36px; padding: 6px 12px; background: var(--color-forest); color: #F5F1EA; border-color: var(--color-forest);">Посадочный талон &rarr;</a>
+              <a href="https://t.me/BusLinerPassBot" target="_blank" rel="noopener noreferrer" class="link-subtle-cta" style="flex: 1; justify-content: center; font-size: 12px; min-height: 36px; padding: 6px 12px; background: var(--color-forest); color: #F5F1EA; border-color: var(--color-forest);">Талон в @BusLinerPassBot &rarr;</a>
             </div>
           </div>
 
@@ -3004,30 +3062,30 @@
               <label for="regNameInput" style="display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px;">
                 Имя и фамилия пассажира
               </label>
-              <input type="text" id="regNameInput" class="client-phone-field" placeholder="Константин Белов" style="font-family: var(--font-display); font-size: 17px; margin-bottom: 0;">
+              <input type="text" id="regNameInput" class="client-phone-field" placeholder="Александр Орлов" style="font-family: var(--font-display); font-size: 17px; margin-bottom: 0;">
             </div>
 
             <div style="margin-bottom: 14px;">
-              <label for="regPhoneInput" style="display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px;">
-                Номер телефона (для билетов и посадки)
+              <label for="regEmailInput" style="display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px;">
+                Почта Google (@gmail.com) для входа и билетов
               </label>
-              <input type="tel" id="regPhoneInput" class="client-phone-field" placeholder="+375 (29) 123-45-67" value="+375 (29) " style="margin-bottom: 0;">
+              <input type="email" id="regEmailInput" class="client-phone-field" placeholder="alexander@gmail.com" value="alexander.busliner@gmail.com" style="font-size: 15px; margin-bottom: 0;">
             </div>
 
             <div style="margin-bottom: 18px;">
-              <label for="regEmailInput" style="display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px;">
-                Электронная почта (для чеков и билетов)
+              <label for="regPhoneInput" style="display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px;">
+                Telegram или телефон (для оперативной посадки)
               </label>
-              <input type="email" id="regEmailInput" class="client-phone-field" placeholder="passenger@busliner.by" style="font-size: 15px; margin-bottom: 0;">
+              <input type="text" id="regPhoneInput" class="client-phone-field" placeholder="@username или +375 (29) 123-45-67" style="margin-bottom: 0;">
             </div>
 
             <button type="button" class="btn-action-deck btn-magnetic" style="width: 100%; justify-content: center; padding: 14px 20px; background: var(--color-forest); border-color: var(--color-forest);" onclick="submitRegistration()" data-cursor="hover">
-              <span>Зарегистрироваться &rarr;</span>
+              <span>Зарегистрироваться через Google &rarr;</span>
             </button>
 
             <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border-taupe); text-align: center;">
               <span style="font-size: 13.5px; color: var(--text-muted);">Уже есть профиль?</span>
-              <button type="button" onclick="switchClientAuthTab('phone')" style="background: none; border: none; font-family: var(--font-body); font-size: 13.5px; font-weight: 600; color: var(--text-graphite); text-decoration: underline; cursor: pointer; margin-left: 6px;">Войти</button>
+              <button type="button" onclick="switchClientAuthTab('google')" style="background: none; border: none; font-family: var(--font-body); font-size: 13.5px; font-weight: 600; color: var(--text-graphite); text-decoration: underline; cursor: pointer; margin-left: 6px;">Войти</button>
             </div>
           </div>
 
@@ -3040,11 +3098,12 @@
             <div style="font-family: var(--font-display); font-size: 19px; font-weight: 500; color: var(--text-graphite); margin-top: 4px;" id="regSuccessName">
               Добро пожаловать в BusLiner Club
             </div>
-            <div style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5;">
-              Ваш персональный аккаунт создан. Вы получаете скидку 10 BYN на первую поездку и приоритетный перехват мест за 0.38 секунды.
+            <div style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5; margin-top: 6px;">
+              Ваш персональный аккаунт Google синхронизирован. Вы получаете скидку 10 BYN на первую поездку, мгновенную доставку билетов и доступ в бот @BusLinerPassBot.
             </div>
-            <div style="margin-top: 12px;">
-              <a href="seat-picker-3d-demo.html" class="btn-action-deck" style="width: 100%; justify-content: center; font-size: 13.5px; padding: 11px 18px; text-decoration: none;">Выбрать рейс и кресло &rarr;</a>
+            <div style="margin-top: 14px; display: flex; gap: 10px;">
+              <a href="seat-picker-3d-demo.html" class="btn-action-deck" style="flex: 1; justify-content: center; font-size: 13.5px; padding: 11px 18px; text-decoration: none;">Выбрать кресло &rarr;</a>
+              <a href="https://t.me/BusLinerPassBot" target="_blank" rel="noopener noreferrer" class="link-subtle-cta" style="flex: 1; justify-content: center; font-size: 13px; min-height: 42px; padding: 6px 12px; background: #2AABEE; color: #FFFFFF; border-color: #2AABEE;">Бот @BusLinerPassBot &rarr;</a>
             </div>
           </div>
         </div>
@@ -3326,29 +3385,27 @@
 
     window.switchClientAuthTab = function(tabName) {
       const btnTg = document.getElementById('tabBtnTg');
-      const btnPhone = document.getElementById('tabBtnPhone');
+      const btnGoogle = document.getElementById('tabBtnGoogle');
       const btnReg = document.getElementById('tabBtnRegister');
       const paneTg = document.getElementById('paneTg');
-      const panePhone = document.getElementById('panePhone');
+      const paneGoogle = document.getElementById('paneGoogle');
       const paneReg = document.getElementById('paneRegister');
       const modalTitle = document.getElementById('clientAuthTitle');
 
-      if (!btnTg || !btnPhone || !paneTg || !panePhone) return;
-
-      const allBtns = [btnTg, btnPhone, btnReg];
-      const allPanes = [paneTg, panePhone, paneReg];
+      const allBtns = [btnTg, btnGoogle, btnReg];
+      const allPanes = [paneTg, paneGoogle, paneReg];
 
       allBtns.forEach(btn => { if (btn) btn.classList.remove('active'); });
       allPanes.forEach(pane => { if (pane) pane.classList.remove('active'); });
 
       if (tabName === 'tg') {
-        btnTg.classList.add('active');
-        paneTg.classList.add('active');
+        if (btnTg) btnTg.classList.add('active');
+        if (paneTg) paneTg.classList.add('active');
         if (modalTitle) modalTitle.innerText = 'Вход для клиентов';
-      } else if (tabName === 'phone') {
-        btnPhone.classList.add('active');
-        panePhone.classList.add('active');
-        if (modalTitle) modalTitle.innerText = 'Вход для клиентов';
+      } else if (tabName === 'google' || tabName === 'phone') {
+        if (btnGoogle) btnGoogle.classList.add('active');
+        if (paneGoogle) paneGoogle.classList.add('active');
+        if (modalTitle) modalTitle.innerText = 'Вход через Google';
       } else if (tabName === 'register') {
         if (btnReg) btnReg.classList.add('active');
         if (paneReg) paneReg.classList.add('active');
@@ -3356,13 +3413,43 @@
       }
     };
 
+    window.simulateGoogleLogin = function() {
+      const emailField = document.getElementById('clientGoogleEmailInput');
+      const email = (emailField && emailField.value.trim()) || 'alex.passenger@gmail.com';
+      const step1 = document.getElementById('googleStep1');
+      const preview = document.getElementById('googleActiveBooking');
+      const loggedInEmail = document.getElementById('googleLoggedInEmail');
+
+      if (loggedInEmail) loggedInEmail.innerText = email;
+      if (step1 && preview) {
+        step1.style.display = 'none';
+        preview.style.display = 'block';
+      }
+    };
+
+    window.verifyGoogleEmail = function() {
+      const emailField = document.getElementById('clientGoogleEmailInput');
+      const email = (emailField && emailField.value.trim()) || 'passenger@gmail.com';
+      const step1 = document.getElementById('googleStep1');
+      const preview = document.getElementById('googleActiveBooking');
+      const loggedInEmail = document.getElementById('googleLoggedInEmail');
+
+      if (loggedInEmail) loggedInEmail.innerText = email;
+      if (step1 && preview) {
+        step1.style.display = 'none';
+        preview.style.display = 'block';
+      }
+    };
+
     window.submitRegistration = function() {
       const nameInput = document.getElementById('regNameInput');
+      const emailInput = document.getElementById('regEmailInput');
       const fields = document.getElementById('regFormFields');
       const success = document.getElementById('regSuccessState');
       const successName = document.getElementById('regSuccessName');
 
       const nameVal = (nameInput && nameInput.value.trim()) || 'Пассажир';
+      const emailVal = (emailInput && emailInput.value.trim()) || 'alexander.busliner@gmail.com';
       if (successName) {
         successName.innerText = `Добро пожаловать, ${nameVal}!`;
       }
@@ -3370,26 +3457,6 @@
       if (fields && success) {
         fields.style.display = 'none';
         success.style.display = 'block';
-      }
-    };
-
-    window.requestClientSmsCode = function() {
-      const step1 = document.getElementById('phoneStep1');
-      const step2 = document.getElementById('phoneStep2');
-      if (step1 && step2) {
-        step1.style.display = 'none';
-        step2.style.display = 'block';
-        const smsInput = document.getElementById('clientSmsInput');
-        if (smsInput) smsInput.focus();
-      }
-    };
-
-    window.verifyClientSmsCode = function() {
-      const step2 = document.getElementById('phoneStep2');
-      const preview = document.getElementById('phoneActiveBooking');
-      if (step2 && preview) {
-        step2.style.display = 'none';
-        preview.style.display = 'flex';
       }
     };
 
