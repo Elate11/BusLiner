@@ -68,14 +68,14 @@
       --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
 
-      /* Fluid Type Scales */
-      --fs-hero: clamp(3.1rem, 5.8vw + 0.8rem, 6.2rem);
-      --fs-h1: clamp(2.3rem, 4vw + 0.6rem, 4.4rem);
-      --fs-h2: clamp(1.75rem, 2.6vw + 0.5rem, 2.9rem);
-      --fs-h3: clamp(1.2rem, 1.4vw + 0.4rem, 1.65rem);
-      --fs-body: clamp(0.96rem, 0.22vw + 0.9rem, 1.1rem);
-      --fs-small: clamp(0.82rem, 0.15vw + 0.76rem, 0.92rem);
-      --fs-meta: 0.76rem;
+      /* Fluid Medium Type Scales (Balanced & Confident) */
+      --fs-hero: clamp(2.1rem, 2.7vw + 0.3rem, 2.9rem);
+      --fs-h1: clamp(1.8rem, 2.2vw + 0.3rem, 2.4rem);
+      --fs-h2: clamp(1.45rem, 1.7vw + 0.3rem, 2.05rem);
+      --fs-h3: clamp(1.15rem, 1.1vw + 0.2rem, 1.35rem);
+      --fs-body: 15.5px;
+      --fs-small: 13.5px;
+      --fs-meta: 12px;
 
       --radius-sm: 3px;
       --radius-md: 6px;
@@ -636,8 +636,8 @@
 
     .hero-deck-badge {
       font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.16em;
+      font-size: 12px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--color-forest);
       margin-bottom: 12px;
@@ -657,11 +657,11 @@
     .hero-deck-title {
       font-family: var(--font-display);
       font-size: var(--fs-hero);
-      font-weight: 300;
-      line-height: 1.02;
-      letter-spacing: -0.015em;
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
       color: var(--text-graphite);
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .hero-deck-title em {
@@ -672,9 +672,9 @@
     .hero-deck-lead {
       font-size: var(--fs-body);
       color: var(--text-muted);
-      line-height: 1.7;
-      max-width: 540px;
-      margin-bottom: 24px;
+      line-height: 1.65;
+      max-width: 620px;
+      margin-bottom: 22px;
     }
 
     /* Search Monograph Capsule */
@@ -704,7 +704,7 @@
 
     .field-box label {
       font-family: var(--font-mono);
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -716,8 +716,8 @@
       border: none;
       border-bottom: 1px solid var(--border-taupe);
       font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 400;
+      font-size: 18px;
+      font-weight: 500;
       color: var(--text-graphite);
       padding: 6px 0;
       outline: none;
@@ -757,9 +757,9 @@
       border: 1px solid var(--text-graphite);
       border-radius: var(--radius-sm);
       font-family: var(--font-body);
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
       padding: 12px 24px;
       cursor: pointer;
@@ -845,27 +845,27 @@
 
     .manifesto-lead-quote {
       font-family: var(--font-display);
-      font-size: clamp(2rem, 3.2vw + 0.4rem, 3.2rem);
-      font-weight: 300;
-      line-height: 1.32;
+      font-size: clamp(1.65rem, 2.2vw + 0.3rem, 2.25rem);
+      font-weight: 400;
+      line-height: 1.36;
       color: var(--text-graphite);
       margin: 0 auto 16px;
-      max-width: 980px;
+      max-width: 920px;
     }
 
     .manifesto-citation {
       font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.16em;
+      font-size: 12px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--text-faint);
-      margin-bottom: 38px;
+      margin-bottom: 34px;
     }
 
     .deck-principles-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 26px;
+      gap: 24px;
       text-align: left;
       width: 100%;
     }
@@ -876,7 +876,7 @@
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(217, 205, 184, 0.65);
       border-radius: var(--radius-sm);
-      padding: 30px 26px 24px;
+      padding: 26px 22px 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -895,12 +895,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .principle-num-badge {
       font-family: var(--font-mono);
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 600;
       width: 26px;
       height: 26px;
@@ -915,45 +915,45 @@
 
     .principle-category-tag {
       font-family: var(--font-mono);
-      font-size: 9.5px;
-      letter-spacing: 0.14em;
+      font-size: 11px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--text-faint);
     }
 
     .principle-card-title {
       font-family: var(--font-display);
-      font-size: 23px;
-      font-weight: 500;
+      font-size: 21px;
+      font-weight: 600;
       color: var(--text-graphite);
-      margin: 0 0 12px 0;
+      margin: 0 0 10px 0;
     }
 
     .principle-card-divider {
       height: 1px;
       width: 100%;
       background: rgba(217, 205, 184, 0.5);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .principle-card-text {
-      font-size: 13.5px;
-      line-height: 1.62;
+      font-size: 14.5px;
+      line-height: 1.58;
       color: var(--text-muted);
-      margin: 0 0 22px 0;
+      margin: 0 0 18px 0;
       flex-grow: 1;
     }
 
     .principle-card-meta {
       font-family: var(--font-mono);
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text-faint);
-      letter-spacing: 0.06em;
+      letter-spacing: 0.05em;
       display: flex;
       align-items: center;
       gap: 8px;
       border-top: 1px dashed rgba(217, 205, 184, 0.6);
-      padding-top: 14px;
+      padding-top: 12px;
     }
 
     .meta-dot {
@@ -1748,7 +1748,11 @@
           
           <div>
 
-            <h1 class="hero-deck-title vector-stagger-text stagger-2" style="color: #F5F1EA; margin-bottom: 20px;">
+            <div class="hero-deck-badge vector-stagger-text stagger-1" style="color: #E8E2D6; margin-bottom: 14px;">
+              РЕЙСЫ МИНСК &bull; ВИЛЬНЮС &bull; ГРОДНО &bull; БРЕСТ &bull; ГОМЕЛЬ &bull; БОЛЕЕ 14 000 ПАССАЖИРОВ В МЕСЯЦ
+            </div>
+
+            <h1 class="hero-deck-title vector-stagger-text stagger-2" style="color: #F5F1EA; margin-bottom: 18px;">
               <span class="word-wrap"><span class="word-inner">Искусство</span></span>
               <span class="word-wrap"><span class="word-inner">неспешных</span></span><br>
               <em>
@@ -1757,8 +1761,8 @@
               </em>
             </h1>
 
-            <p class="hero-deck-lead vector-stagger-text stagger-3" style="color: #D9CDB8; margin-bottom: 28px;">
-              Регулярные междугородние рейсы на флагманских Mercedes-Benz Sprinter и комфортабельных маршрутках первого класса. Без спешки, вокзального шума и очередей.
+            <p class="hero-deck-lead vector-stagger-text stagger-3" style="color: #D9CDB8; margin-bottom: 24px; font-size: 16px; line-height: 1.65;">
+              Комфорт первого класса по цене обычной междугородней маршрутки &mdash; от 28 BYN. Выбор точного кресла онлайн, розетки 220V для ноутбука, быстрый Wi-Fi и отправление точно по расписанию без очередей.
             </p>
 
             <div class="search-monograph-capsule vector-stagger-card stagger-4">
@@ -1783,12 +1787,13 @@
               <div class="growing-line-separator"></div>
 
               <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-                <div style="display: flex; gap: 14px; font-size: 12px; color: var(--text-faint);">
+                <div style="display: flex; gap: 16px; font-size: 13px; color: var(--text-faint);">
                   <span style="cursor: pointer;" onclick="setPreset('Минск', 'Вильнюс')" data-cursor="hover">Минск &mdash; Вильнюс <strong>85 BYN</strong></span>
                   <span style="cursor: pointer;" onclick="setPreset('Минск', 'Гродно')" data-cursor="hover">Минск &mdash; Гродно <strong>28 BYN</strong></span>
+                  <span style="cursor: pointer;" onclick="setPreset('Минск', 'Брест')" data-cursor="hover">Минск &mdash; Брест <strong>32 BYN</strong></span>
                 </div>
                 <button class="btn-action-deck btn-magnetic" onclick="jumpToSlide(5)" data-cursor="hover">
-                  <span>Выбрать рейс &rarr;</span>
+                  <span>Выбрать рейс и кресло &rarr;</span>
                 </button>
               </div>
             </div>
@@ -1803,16 +1808,16 @@
       <div class="container">
         <div class="manifesto-deck-center">
           
-          <div class="hero-deck-badge vector-stagger-text stagger-1" style="color: var(--color-oxblood); margin: 0 auto 20px;">
-            N&deg; 02 &bull; ФИЛОСОФИЯ И ПАССАЖИРСКИЙ РЕГЛАМЕНТ
+          <div class="hero-deck-badge vector-stagger-text stagger-1" style="color: var(--color-oxblood); margin: 0 auto 18px;">
+            ФИЛОСОФИЯ ПОКОЯ &bull; ПОЧЕМУ ПАССАЖИРЫ ВЫБИРАЮТ BUSLINER
           </div>
 
           <blockquote class="manifesto-lead-quote vector-stagger-text stagger-2">
-            &laquo;Настоящая роскошь в дороге &mdash; это не блеск и не позолота. Это возможность закрыть глаза и знать, что <em>ваше время и покой неприкосновенны</em>&raquo;.
+            &laquo;Настоящий комфорт в поездке &mdash; когда за 28 рублей вы получаете абсолютную тишину, личное кресло с розеткой и уверенность в каждой минуте пути&raquo;.
           </blockquote>
 
           <div class="manifesto-citation vector-stagger-text stagger-3">
-            &mdash; Регламент пассажирского достоинства BusLiner &bull; Минск, 2026
+            &mdash; Стандарт пассажирского сервиса BusLiner &bull; Минск, 2026
           </div>
 
           <div class="deck-principles-grid vector-stagger-card stagger-4">
@@ -1821,12 +1826,12 @@
             <div class="deck-principle-card" data-cursor="hover">
               <div class="principle-card-top">
                 <span class="principle-num-badge">I</span>
-                <span class="principle-category-tag">АКУСТИЧЕСКИЙ БАРЬЕР</span>
+                <span class="principle-category-tag">ТИХИЙ САЛОН</span>
               </div>
-              <h3 class="principle-card-title">Тихий салон</h3>
+              <h3 class="principle-card-title">Тишина и покой</h3>
               <div class="principle-card-divider"></div>
               <p class="principle-card-text">
-                Абсолютный запрет на громкие звонки и видео без наушников. Двойные атермальные стеклопакеты и вибропоглощающая шумоизоляция моторного отсека.
+                Запрет на громкие звонки, видео без наушников и шансон. Двойные атермальные стеклопакеты и шумоизоляция кузова для спокойной работы с ноутбуком или отдыха.
               </p>
               <div class="principle-card-meta">
                 <span class="meta-dot forest"></span>
@@ -1838,16 +1843,16 @@
             <div class="deck-principle-card" data-cursor="hover">
               <div class="principle-card-top">
                 <span class="principle-num-badge">II</span>
-                <span class="principle-category-tag">ПРОСТРАНСТВО & САЛОН</span>
+                <span class="principle-category-tag">ПРОСТРАНСТВО НОГ</span>
               </div>
               <h3 class="principle-card-title">Спринтеры и маршрутки</h3>
               <div class="principle-card-divider"></div>
               <p class="principle-card-text">
-                Просторные междугородние маршрутки и микроавтобусы Mercedes-Benz Sprinter. Увеличенный шаг сидений 86 см, капитанские кресла и багажное отделение.
+                Просторные междугородние микроавтобусы с шагом сидений 86 см. Ваши колени никогда не упрутся в спинку впереди. Анатомические кресла Nappa и столики.
               </p>
               <div class="principle-card-meta">
                 <span class="meta-dot taupe"></span>
-                <span>Формат: 15 &bull; 17 &bull; 19 мест</span>
+                <span>Формат: 15 &bull; 17 &bull; 19 кресел</span>
               </div>
             </div>
 
@@ -1855,12 +1860,12 @@
             <div class="deck-principle-card" data-cursor="hover">
               <div class="principle-card-top">
                 <span class="principle-num-badge">III</span>
-                <span class="principle-category-tag">РЕГЛАМЕНТ & СЕРВИС</span>
+                <span class="principle-category-tag">ПУНКТУАЛЬНОСТЬ</span>
               </div>
-              <h3 class="principle-card-title">Точность секунды</h3>
+              <h3 class="principle-card-title">Точность до минуты</h3>
               <div class="principle-card-divider"></div>
               <p class="principle-card-text">
-                Отправление строго по графику с Центрального автовокзала без задержек. Личный экипаж высшей категории в форменном костюме.
+                Отправление строго по графику с перрона Центрального автовокзала. 99.8% рейсов прибывают точно вовремя без заездов на случайные попутные остановки.
               </p>
               <div class="principle-card-meta">
                 <span class="meta-dot oxblood"></span>
@@ -1881,50 +1886,50 @@
           
           <div>
             <span class="hero-deck-badge vector-stagger-text stagger-1" style="color: #D9CDB8;">
-              N&deg; 03 &bull; САНКТУАРИЙ САЛОНА
+              СТАНДАРТЫ САЛОНА &bull; МАКСИМАЛЬНЫЙ КОМФОРТ В ПУТИ
             </span>
 
-            <h2 class="hero-deck-title vector-stagger-text stagger-2" style="color: var(--text-light-primary);">
-              Оазис безмятежности<br>
+            <h2 class="hero-deck-title vector-stagger-text stagger-2" style="color: var(--text-light-primary); font-size: var(--fs-h2); font-weight: 400; line-height: 1.25;">
+              Оазис тишины и продуктивности<br>
               <em>на скорости 100 км/ч.</em>
             </h2>
 
-            <p class="hero-deck-lead vector-stagger-text stagger-3" style="color: var(--text-light-muted);">
-              Двойное атермальное остекление, вибропоглощающая пневматическая подвеска и приглушённый свет 2700K для комфортной работы за ноутбуком или глубокого сна.
+            <p class="hero-deck-lead vector-stagger-text stagger-3" style="color: var(--text-light-muted); font-size: 15.5px; line-height: 1.65; margin-bottom: 24px;">
+              Двойные атермальные стеклопакеты, мягкая пневмоподвеска и климат-контроль +22&deg;C. Забудьте о тесных сиденьях: в наших Спринтерах и маршрутках вы спокойно работаете за ноутбуком или отдыхаете в тишине.
             </p>
 
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; border-top: 1px solid var(--border-dark); padding-top: 24px;" class="vector-stagger-card stagger-4">
               <div>
-                <div class="count-up-number" data-count="86" data-suffix=" см">0 см</div>
-                <div style="font-size: 11px; color: var(--text-light-faint);">Шаг между креслами</div>
+                <div class="count-up-number" data-count="86" data-suffix=" см" style="font-size: 26px;">0 см</div>
+                <div style="font-size: 12.5px; color: var(--text-light-faint); margin-top: 4px; line-height: 1.4;">Шаг между креслами: колени свободны</div>
               </div>
               <div>
-                <div class="count-up-number" data-count="220" data-suffix="V">0V</div>
-                <div style="font-size: 11px; color: var(--text-light-faint);">Розетка у каждого места</div>
+                <div class="count-up-number" data-count="220" data-suffix="V" style="font-size: 26px;">0V</div>
+                <div style="font-size: 12.5px; color: var(--text-light-faint); margin-top: 4px; line-height: 1.4;">Розетка и USB у каждого ряда</div>
               </div>
               <div>
-                <div class="count-up-number" data-count="58" data-prefix="< " data-suffix=" дБ">< 0 дБ</div>
-                <div style="font-size: 11px; color: var(--text-light-faint);">Шумоизоляция в пути</div>
+                <div class="count-up-number" data-count="58" data-prefix="< " data-suffix=" дБ" style="font-size: 26px;">< 0 дБ</div>
+                <div style="font-size: 12.5px; color: var(--text-light-faint); margin-top: 4px; line-height: 1.4;">Шумоизоляция: тишина в дороге</div>
               </div>
             </div>
           </div>
 
-          <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-dark); border-radius: var(--radius-sm); padding: 36px 32px;" class="vector-stagger-card stagger-4">
-            <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #D9CDB8; margin-bottom: 24px;">
-              СТАНДАРТЫ САЛОНА &bull; SPRINTER & МАРШРУТКИ
+          <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-dark); border-radius: var(--radius-sm); padding: 32px 28px;" class="vector-stagger-card stagger-4">
+            <div style="font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #D9CDB8; margin-bottom: 22px;">
+              СТАНДАРТЫ САЛОНА &bull; SPRINTER И МЕЖГОРОДСКИЕ МАРШРУТКИ
             </div>
             <div style="display: flex; flex-direction: column; gap: 20px;">
               <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 16px;">
-                <div style="font-family: var(--font-display); font-size: 20px; color: #F5F1EA; margin-bottom: 4px;">Капитанские кресла Nappa</div>
-                <div style="font-size: 13px; color: var(--text-light-muted); line-height: 1.55;">Анатомические кресла с увеличенным шагом 86 см, боковой поддержкой, индивидуальными столиками и наклоном спинки до 140&deg;.</div>
+                <div style="font-family: var(--font-display); font-size: 19px; font-weight: 500; color: #F5F1EA; margin-bottom: 6px;">Анатомические кресла Nappa</div>
+                <div style="font-size: 14px; color: var(--text-light-muted); line-height: 1.55;">Увеличенный шаг 86 см, выраженная боковая поддержка, персональные столики и наклон спинки до 140&deg; для полноценного отдыха.</div>
               </div>
               <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 16px;">
-                <div style="font-family: var(--font-display); font-size: 20px; color: #F5F1EA; margin-bottom: 4px;">Акустический барьер 58 дБ</div>
-                <div style="font-size: 13px; color: var(--text-light-muted); line-height: 1.55;">Трёхслойная шумоизоляция кузова, моторного отсека и двойные атермальные стеклопакеты в каждом микроавтобусе.</div>
+                <div style="font-family: var(--font-display); font-size: 19px; font-weight: 500; color: #F5F1EA; margin-bottom: 6px;">Акустический барьер и тишина</div>
+                <div style="font-size: 14px; color: var(--text-light-muted); line-height: 1.55;">Трёхслойная вибро- и шумоизоляция моторного отсека и двойные стеклопакеты надёжно защищают от шума трассы и непогоды.</div>
               </div>
               <div>
-                <div style="font-family: var(--font-display); font-size: 20px; color: #F5F1EA; margin-bottom: 4px;">Бортовые удобства и багаж</div>
-                <div style="font-size: 13px; color: var(--text-light-muted); line-height: 1.55;">Раздельный кондиционер с индивидуальными дефлекторами, розетки 220V/Type-C у каждого ряда и вместительный багажный отсек.</div>
+                <div style="font-family: var(--font-display); font-size: 19px; font-weight: 500; color: #F5F1EA; margin-bottom: 6px;">Климат +22&deg;C и вместительный багаж</div>
+                <div style="font-size: 14px; color: var(--text-light-muted); line-height: 1.55;">Раздельный кондиционер с индивидуальными дефлекторами, мягкая вечерняя подсветка 2700K и изолированный чистый отсек для чемоданов.</div>
               </div>
             </div>
           </div>
@@ -1939,12 +1944,12 @@
         
         <div style="display: flex; justify-content: space-between; align-items: flex-end;" class="vector-stagger-text stagger-1">
           <div>
-            <span class="hero-deck-badge">N&deg; 04 &bull; ФЛОТ МАРШРУТОК И СПРИНТЕРОВ</span>
-            <h2 style="font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 300;">
+            <span class="hero-deck-badge">АВТОПАРК 2026 &bull; МЕЖГОРОДСКИЕ СПРИНТЕРЫ И СКОРОСТНЫЕ МАРШРУТКИ</span>
+            <h2 style="font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 400; margin: 0;">
               Флагманские Спринтеры <em>и маршрутки.</em>
             </h2>
           </div>
-          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); letter-spacing: 0.08em; text-transform: uppercase;">
+          <div style="font-family: var(--font-mono); font-size: 11.5px; color: var(--text-faint); letter-spacing: 0.08em; text-transform: uppercase;">
             MERCEDES-BENZ SPRINTER &bull; МЕЖГОРОДСКИЕ МАРШРУТКИ &bull; 15&ndash;19 МЕСТ
           </div>
         </div>
@@ -1954,59 +1959,59 @@
           <!-- Left: 2x2 Grid of Vehicles -->
           <div class="fleet-deck-cards-grid">
             
-            <div class="fleet-monograph-card" data-cursor="hover" style="padding: 24px 22px;">
+            <div class="fleet-monograph-card" data-cursor="hover" style="padding: 22px 20px;">
               <div>
-                <div style="font-family: var(--font-mono); font-size: 10px; color: var(--color-oxblood); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px;">
-                  SPRINTER 519 CDI &bull; 01
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--color-oxblood); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px;">
+                  MERCEDES-BENZ SPRINTER &bull; 19 МЕСТ
                 </div>
-                <h3 class="fleet-card-title" style="font-size: 21px; margin-bottom: 8px;">Sprinter Executive</h3>
-                <p class="fleet-card-desc" style="font-size: 12.5px; line-height: 1.55;">Флагманские микроавтобусы на 19 мест: анатомические кресла Nappa, столик, подстаканник и 220V.</p>
+                <h3 class="fleet-card-title" style="font-size: 20px; margin-bottom: 6px;">Sprinter Executive</h3>
+                <p class="fleet-card-desc" style="font-size: 13.5px; line-height: 1.55;">Флагманские микроавтобусы: анатомические кресла Nappa, шаг 86 см, индивидуальный столик и розетка 220V.</p>
               </div>
-              <div class="fleet-card-foot" style="margin-top: 18px; border-top: 1px dashed var(--border-taupe); padding-top: 14px;">
-                <strong>от 28 BYN</strong>
-                <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
+              <div class="fleet-card-foot" style="margin-top: 16px; border-top: 1px dashed var(--border-taupe); padding-top: 12px;">
+                <strong style="font-family: var(--font-mono); font-size: 15px;">от 28 BYN</strong>
+                <a href="seat-picker-3d-demo.html" class="link-fleet-reserve" style="font-size: 13px;">Выбрать кресло &rarr;</a>
               </div>
             </div>
 
-            <div class="fleet-monograph-card" data-cursor="hover" style="padding: 24px 22px;">
+            <div class="fleet-monograph-card" data-cursor="hover" style="padding: 22px 20px;">
               <div>
-                <div style="font-family: var(--font-mono); font-size: 10px; color: var(--color-taupe); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px;">
-                  МАРШРУТКА ЭКСПРЕСС &bull; 02
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--color-taupe); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px;">
+                  СКОРОСТНАЯ МАРШРУТКА &bull; 15&ndash;17 МЕСТ
                 </div>
-                <h3 class="fleet-card-title" style="font-size: 21px; margin-bottom: 8px;">Скоростная линия</h3>
-                <p class="fleet-card-desc" style="font-size: 12.5px; line-height: 1.55;">Быстрые междугородние маршрутки на 15&ndash;17 мест между Минском, Гродно, Брестом и Гомелем. Без задержек.</p>
+                <h3 class="fleet-card-title" style="font-size: 20px; margin-bottom: 6px;">Маршрутка Экспресс</h3>
+                <p class="fleet-card-desc" style="font-size: 13.5px; line-height: 1.55;">Быстрые прямые рейсы между Минском, Гродно, Брестом и Гомелем. Без заездов и лишних попутных остановок.</p>
               </div>
-              <div class="fleet-card-foot" style="margin-top: 18px; border-top: 1px dashed var(--border-taupe); padding-top: 14px;">
-                <strong>от 28 BYN</strong>
-                <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
+              <div class="fleet-card-foot" style="margin-top: 16px; border-top: 1px dashed var(--border-taupe); padding-top: 12px;">
+                <strong style="font-family: var(--font-mono); font-size: 15px;">от 28 BYN</strong>
+                <a href="seat-picker-3d-demo.html" class="link-fleet-reserve" style="font-size: 13px;">Выбрать кресло &rarr;</a>
               </div>
             </div>
 
-            <div class="fleet-monograph-card" data-cursor="hover" style="padding: 24px 22px;">
+            <div class="fleet-monograph-card" data-cursor="hover" style="padding: 22px 20px;">
               <div>
-                <div style="font-family: var(--font-mono); font-size: 10px; color: var(--color-forest); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px;">
-                  SPRINTER AIRPORT &bull; 03
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--color-forest); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px;">
+                  МЕЖДУНАРОДНЫЙ СПРИНТЕР &bull; АЭРОПОРТЫ
                 </div>
-                <h3 class="fleet-card-title" style="font-size: 21px; margin-bottom: 8px;">Шаттл в аэропорты</h3>
-                <p class="fleet-card-desc" style="font-size: 12.5px; line-height: 1.55;">Микроавтобусы Sprinter в аэропорты Вильнюса и Варшавы с выделенной полосой границы и большим багажником.</p>
+                <h3 class="fleet-card-title" style="font-size: 20px; margin-bottom: 6px;">Шаттл в аэропорты</h3>
+                <p class="fleet-card-desc" style="font-size: 13.5px; line-height: 1.55;">Рейсы в аэропорты Вильнюса и Варшавы: приоритетная полоса границы, большой багажник и прибытие точно к вылету.</p>
               </div>
-              <div class="fleet-card-foot" style="margin-top: 18px; border-top: 1px dashed var(--border-taupe); padding-top: 14px;">
-                <strong>от 85 BYN</strong>
-                <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
+              <div class="fleet-card-foot" style="margin-top: 16px; border-top: 1px dashed var(--border-taupe); padding-top: 12px;">
+                <strong style="font-family: var(--font-mono); font-size: 15px;">от 85 BYN</strong>
+                <a href="seat-picker-3d-demo.html" class="link-fleet-reserve" style="font-size: 13px;">Выбрать рейс &rarr;</a>
               </div>
             </div>
 
-            <div class="fleet-monograph-card" data-cursor="hover" style="padding: 24px 22px;">
+            <div class="fleet-monograph-card" data-cursor="hover" style="padding: 22px 20px;">
               <div>
-                <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-graphite); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px;">
-                  ФРАХТ МИКРОАВТОБУСА &bull; 04
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-graphite); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px;">
+                  ИНДИВИДУАЛЬНЫЙ ФРАХТ &bull; С ВОДИТЕЛЕМ
                 </div>
-                <h3 class="fleet-card-title" style="font-size: 21px; margin-bottom: 8px;">Заказ Спринтера</h3>
-                <p class="fleet-card-desc" style="font-size: 12.5px; line-height: 1.55;">Аренда микроавтобуса Mercedes-Benz Sprinter с водителем для корпоративных трансферов и мероприятий.</p>
+                <h3 class="fleet-card-title" style="font-size: 20px; margin-bottom: 6px;">Заказ Спринтера</h3>
+                <p class="fleet-card-desc" style="font-size: 13.5px; line-height: 1.55;">Аренда микроавтобуса Mercedes-Benz с опытным водителем для делегаций, семейных поездок и корпоративных трансферов.</p>
               </div>
-              <div class="fleet-card-foot" style="margin-top: 18px; border-top: 1px dashed var(--border-taupe); padding-top: 14px;">
-                <strong>По запросу</strong>
-                <a href="busliner-partners.html" class="link-fleet-reserve">Заявка &rarr;</a>
+              <div class="fleet-card-foot" style="margin-top: 16px; border-top: 1px dashed var(--border-taupe); padding-top: 12px;">
+                <strong style="font-family: var(--font-mono); font-size: 15px;">от 180 BYN</strong>
+                <a href="busliner-partners.html" class="link-fleet-reserve" style="font-size: 13px;">Заявка &rarr;</a>
               </div>
             </div>
 
@@ -2038,10 +2043,12 @@
               </div>
 
               <div class="winter-hud-bottom">
-                <div style="font-family: var(--font-mono); font-size: 10px; color: #B8A99A; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.12em;">
+                <div style="font-family: var(--font-mono); font-size: 11px; color: #B8A99A; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.12em;">
                   ЗИМНИЙ СТАНДАРТ БЕЗОПАСНОСТИ
                 </div>
-                Система курсовой устойчивости ESP 9.3, зимняя ошиповка Michelin и раздельный салонный обогрев +22&deg;C на всех маршрутах.
+                <div style="font-size: 13px; line-height: 1.5; color: #D9CDB8;">
+                  Система курсовой устойчивости ESP 9.3, зимняя ошиповка Michelin и раздельный салонный обогрев +22&deg;C на всех маршрутах.
+                </div>
               </div>
             </div>
           </div>
@@ -2058,32 +2065,32 @@
           
           <div>
             <span class="hero-deck-badge vector-stagger-text stagger-1" style="color: var(--color-oxblood);">
-              N&deg; 05 &bull; ЛИСТ ОЖИДАНИЯ &bull; КОНСЬЕРЖ 0.38с
+              ГАРАНТИЯ БРОНИРОВАНИЯ &bull; АВТОМАТИЧЕСКИЙ ПЕРЕХВАТ ЗА 0.38 СЕКУНДЫ
             </span>
 
-            <h2 class="hero-deck-title vector-stagger-text stagger-2">
+            <h2 class="hero-deck-title vector-stagger-text stagger-2" style="font-size: var(--fs-h2); font-weight: 400; line-height: 1.25;">
               Билетов нет в продаже?<br>
-              <em>Консьерж закрепит за вами место.</em>
+              <em>Консьерж закрепит за вами освободившееся кресло.</em>
             </h2>
 
-            <p class="hero-deck-lead vector-stagger-text stagger-3">
-              В пиковые дни рейсы раскупаются за недели. Когда другой пассажир оформляет возврат, интеллектуальный алгоритм перехватывает его за 0.38 секунды и моментально закрепляет за вашим бронированием.
+            <p class="hero-deck-lead vector-stagger-text stagger-3" style="font-size: 15.5px; line-height: 1.65; margin-bottom: 24px;">
+              В пиковые дни и выходные рейсы раскупаются за считанные часы. Когда другой пассажир оформляет возврат, наш алгоритм перехватывает его за 0.38 секунды и моментально закрепляет за вашим бронированием без очередей и переплат.
             </p>
 
             <div style="display: flex; gap: 36px; margin-bottom: 28px;" class="vector-stagger-card stagger-4">
               <div>
-                <div class="count-up-number" style="color: var(--color-oxblood);" data-count="0.38" data-suffix=" с" data-decimal="2">0.00 с</div>
-                <div style="font-size: 11px; color: var(--text-faint);">Скорость закрепления</div>
+                <div class="count-up-number" style="color: var(--color-oxblood); font-size: 26px;" data-count="0.38" data-suffix=" с" data-decimal="2">0.00 с</div>
+                <div style="font-size: 12.5px; color: var(--text-faint); margin-top: 4px;">Скорость перехвата возврата</div>
               </div>
               <div>
-                <div class="count-up-number" style="color: var(--color-oxblood);" data-count="99.4" data-suffix="%" data-decimal="1">0.0%</div>
-                <div style="font-size: 11px; color: var(--text-faint);">Точность выкупа</div>
+                <div class="count-up-number" style="color: var(--color-oxblood); font-size: 26px;" data-count="99.4" data-suffix="%" data-decimal="1">0.0%</div>
+                <div style="font-size: 12.5px; color: var(--text-faint); margin-top: 4px;">Точность успешного выкупа</div>
               </div>
             </div>
 
             <div class="vector-stagger-card stagger-5">
-              <button class="btn-action-deck btn-magnetic" onclick="simulateConcierge()" style="background: var(--color-oxblood); border-color: var(--color-oxblood);" data-cursor="hover">
-                <span>Смоделировать перехват (0.38с)</span>
+              <button class="btn-action-deck btn-magnetic" onclick="simulateConcierge()" style="background: var(--color-oxblood); border-color: var(--color-oxblood); font-size: 14px;" data-cursor="hover">
+                <span>Смоделировать перехват кресла (0.38с) &rarr;</span>
               </button>
             </div>
           </div>
@@ -2091,30 +2098,30 @@
           <div style="display: flex; justify-content: center;" class="vector-stagger-card stagger-4">
             <div class="ticket-paper-frame" id="slideTicket">
               <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-taupe); padding-bottom: 14px; margin-bottom: 20px;">
-                <span style="font-family: var(--font-mono); font-size: 10px; color: var(--text-faint);">BL &bull; 089-ARCHIVE</span>
-                <span id="ticketStatus" style="font-family: var(--font-mono); font-size: 10px; padding: 2px 8px; border: 1px solid var(--border-taupe); border-radius: 3px; background: var(--canvas-bone);">ОЖИДАНИЕ ВОЗВРАТА</span>
+                <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint);">BL &bull; 089-ARCHIVE</span>
+                <span id="ticketStatus" style="font-family: var(--font-mono); font-size: 11px; padding: 3px 8px; border: 1px solid var(--border-taupe); border-radius: 3px; background: var(--canvas-bone);">ОЖИДАНИЕ ВОЗВРАТА</span>
               </div>
 
               <div>
-                <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); text-transform: uppercase;">Посадочный талон</div>
-                <div style="font-family: var(--font-display); font-size: 26px; font-weight: 500;">Минск &rarr; Вильнюс</div>
-                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 18px;">Сегодня, 18:45 &bull; Центральный АВ</div>
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); text-transform: uppercase;">Посадочный талон</div>
+                <div style="font-family: var(--font-display); font-size: 24px; font-weight: 500;">Минск &rarr; Вильнюс</div>
+                <div style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 18px;">Сегодня, 18:45 &bull; Центральный АВ</div>
               </div>
 
               <div style="background: var(--canvas-ivory); border: 1px solid var(--border-hairline); padding: 12px 16px; border-radius: 3px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <span style="font-size: 12px; color: var(--text-muted);">Кресло у окна</span>
+                <span style="font-size: 13.5px; color: var(--text-muted);">Кресло у окна</span>
                 <span style="font-family: var(--font-mono); font-size: 20px; font-weight: 600;">04A</span>
               </div>
 
               <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-hairline); padding-top: 14px;">
-                <span style="font-family: var(--font-mono); font-size: 10px; color: var(--text-faint);">ТАРИФ PREMI&Egrave;RE</span>
+                <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint);">ТАРИФ PREMI&Egrave;RE</span>
                 <span style="font-family: var(--font-mono); font-size: 18px; font-weight: 600;">85.00 BYN</span>
               </div>
 
               <!-- Verification Seal -->
               <div class="seal-priority-tag" id="ticketSeal">
                 <div style="font-family: var(--font-display); font-size: 20px; font-weight: 600;">BL</div>
-                <div style="font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase;">
+                <div style="font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.4;">
                   ПОДТВЕРЖДЕНО<br>ВЫКУП 0.38С<br>РЕЕСТР 2026
                 </div>
               </div>
@@ -2131,14 +2138,14 @@
         
         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;" class="vector-stagger-text stagger-1">
           <div>
-            <span class="hero-deck-badge">N&deg; 06 &bull; РЕГУЛЯРНЫЙ РЕЕСТР РЕЙСОВ</span>
-            <h2 style="font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 300; margin: 0;">
+            <span class="hero-deck-badge">ОФИЦИАЛЬНОЕ РАСПИСАНИЕ &bull; ПРЯМЫЕ РЕЙСЫ БЕЗ СКРЫТЫХ НАЦЕНОК</span>
+            <h2 style="font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 400; margin: 0;">
               Магистральные рейсы <em>на сегодня.</em>
             </h2>
           </div>
-          <div style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); text-align: right; line-height: 1.5;">
+          <div style="font-size: 12.5px; color: var(--text-muted); font-family: var(--font-mono); text-align: right; line-height: 1.5;">
             Лицензия Минтранса РБ &numero; 02190/4482<br>
-            <span style="color: var(--color-forest);">&bull; Синхронизировано с ЕРИП и вокзалами</span>
+            <span style="color: var(--color-forest);">&bull; Оплата через ЕРИП, картой или водителю с чеком</span>
           </div>
         </div>
 
@@ -2158,7 +2165,7 @@
               <tr>
                 <th>Рейс &bull; Отправление</th>
                 <th>Маршрут & Перрон</th>
-                <th>Класс флота</th>
+                <th>Класс транспорта</th>
                 <th>Наличие мест</th>
                 <th>Тариф</th>
                 <th style="text-align: right;">Бронирование</th>
@@ -2169,114 +2176,114 @@
                 <td>
                   <span class="trip-code-badge">BL-104</span>
                   <strong style="font-family: var(--font-mono); font-size: 15px;">08:30 &rarr; 11:15</strong>
-                  <div style="font-size: 11px; color: var(--text-faint); margin-top: 2px;">В пути: 02ч 45мин</div>
+                  <div style="font-size: 11.5px; color: var(--text-faint); margin-top: 2px;">В пути: 02ч 45мин</div>
                 </td>
                 <td>
-                  <div style="font-family: var(--font-display); font-size: 19px; font-weight: 500;">Минск &mdash; Вильнюс (Аэропорт)</div>
-                  <div class="trip-platform-tag">Центральный АВ &bull; Перрон 3 &bull; Express Lane</div>
+                  <div style="font-family: var(--font-display); font-size: 18px; font-weight: 500;">Минск &mdash; Вильнюс (Аэропорт)</div>
+                  <div class="trip-platform-tag" style="font-size: 11.5px;">Центральный АВ &bull; Перрон 3 &bull; Express Lane</div>
                 </td>
-                <td><span style="font-family: var(--font-mono); font-size: 11px; color: var(--color-oxblood); letter-spacing: 0.05em; background: rgba(92, 46, 46, 0.08); padding: 4px 8px; border-radius: 2px;">Sprinter Airport Shuttel (16м)</span></td>
+                <td><span style="font-family: var(--font-mono); font-size: 11.5px; color: var(--color-oxblood); letter-spacing: 0.05em; background: rgba(92, 46, 46, 0.08); padding: 4px 8px; border-radius: 2px;">Sprinter Airport Shuttle (16м)</span></td>
                 <td><span class="seat-status-pill low"><span class="meta-dot oxblood"></span>Осталось 2 места</span></td>
                 <td style="font-family: var(--font-mono); font-size: 17px; font-weight: 600;">85.00 BYN</td>
                 <td style="text-align: right;">
-                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" data-cursor="hover">Выбрать кресло &rarr;</a>
+                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" style="font-size: 13.5px;" data-cursor="hover">Выбрать кресло &rarr;</a>
                 </td>
               </tr>
               <tr data-route="grodno">
                 <td>
                   <span class="trip-code-badge">BL-212</span>
                   <strong style="font-family: var(--font-mono); font-size: 15px;">09:15 &rarr; 12:25</strong>
-                  <div style="font-size: 11px; color: var(--text-faint); margin-top: 2px;">В пути: 03ч 10мин</div>
+                  <div style="font-size: 11.5px; color: var(--text-faint); margin-top: 2px;">В пути: 03ч 10мин</div>
                 </td>
                 <td>
-                  <div style="font-family: var(--font-display); font-size: 19px; font-weight: 500;">Минск &mdash; Гродно Экспресс</div>
-                  <div class="trip-platform-tag">Центральный АВ &bull; Перрон 5 &bull; Трасса М6</div>
+                  <div style="font-family: var(--font-display); font-size: 18px; font-weight: 500;">Минск &mdash; Гродно Экспресс</div>
+                  <div class="trip-platform-tag" style="font-size: 11.5px;">Центральный АВ &bull; Перрон 5 &bull; Трасса М6</div>
                 </td>
-                <td><span style="font-family: var(--font-mono); font-size: 11px; color: var(--color-forest); letter-spacing: 0.05em; background: rgba(58, 74, 63, 0.08); padding: 4px 8px; border-radius: 2px;">Sprinter 519 CDI (19м)</span></td>
+                <td><span style="font-family: var(--font-mono); font-size: 11.5px; color: var(--color-forest); letter-spacing: 0.05em; background: rgba(58, 74, 63, 0.08); padding: 4px 8px; border-radius: 2px;">Sprinter 519 CDI (19м)</span></td>
                 <td><span class="seat-status-pill available"><span class="meta-dot forest"></span>Свободно 7 мест</span></td>
                 <td style="font-family: var(--font-mono); font-size: 17px; font-weight: 600;">28.00 BYN</td>
                 <td style="text-align: right;">
-                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" data-cursor="hover">Выбрать кресло &rarr;</a>
+                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" style="font-size: 13.5px;" data-cursor="hover">Выбрать кресло &rarr;</a>
                 </td>
               </tr>
               <tr data-route="brest">
                 <td>
                   <span class="trip-code-badge">BL-318</span>
                   <strong style="font-family: var(--font-mono); font-size: 15px;">10:00 &rarr; 13:30</strong>
-                  <div style="font-size: 11px; color: var(--text-faint); margin-top: 2px;">В пути: 03ч 30мин</div>
+                  <div style="font-size: 11.5px; color: var(--text-faint); margin-top: 2px;">В пути: 03ч 30мин</div>
                 </td>
                 <td>
-                  <div style="font-family: var(--font-display); font-size: 19px; font-weight: 500;">Минск &mdash; Брест Экспресс</div>
-                  <div class="trip-platform-tag">Центральный АВ &bull; Перрон 2 &bull; Трасса М1</div>
+                  <div style="font-family: var(--font-display); font-size: 18px; font-weight: 500;">Минск &mdash; Брест Экспресс</div>
+                  <div class="trip-platform-tag" style="font-size: 11.5px;">Центральный АВ &bull; Перрон 2 &bull; Трасса М1</div>
                 </td>
-                <td><span style="font-family: var(--font-mono); font-size: 11px; color: var(--color-terracotta); letter-spacing: 0.05em; background: rgba(168, 103, 79, 0.08); padding: 4px 8px; border-radius: 2px;">Маршрутка Экспресс (17м)</span></td>
+                <td><span style="font-family: var(--font-mono); font-size: 11.5px; color: var(--color-terracotta); letter-spacing: 0.05em; background: rgba(168, 103, 79, 0.08); padding: 4px 8px; border-radius: 2px;">Маршрутка Экспресс (17м)</span></td>
                 <td><span class="seat-status-pill available"><span class="meta-dot forest"></span>Свободно 6 мест</span></td>
                 <td style="font-family: var(--font-mono); font-size: 17px; font-weight: 600;">32.00 BYN</td>
                 <td style="text-align: right;">
-                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" data-cursor="hover">Выбрать кресло &rarr;</a>
+                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" style="font-size: 13.5px;" data-cursor="hover">Выбрать кресло &rarr;</a>
                 </td>
               </tr>
               <tr data-route="vilnius">
                 <td>
                   <span class="trip-code-badge">BL-108</span>
                   <strong style="font-family: var(--font-mono); font-size: 15px;">13:45 &rarr; 16:30</strong>
-                  <div style="font-size: 11px; color: var(--text-faint); margin-top: 2px;">В пути: 02ч 45мин</div>
+                  <div style="font-size: 11.5px; color: var(--text-faint); margin-top: 2px;">В пути: 02ч 45мин</div>
                 </td>
                 <td>
-                  <div style="font-family: var(--font-display); font-size: 19px; font-weight: 500;">Минск &mdash; Вильнюс (Центр / АВ)</div>
-                  <div class="trip-platform-tag">Центральный АВ &bull; Перрон 3 &bull; Express Lane</div>
+                  <div style="font-family: var(--font-display); font-size: 18px; font-weight: 500;">Минск &mdash; Вильнюс (Центр / АВ)</div>
+                  <div class="trip-platform-tag" style="font-size: 11.5px;">Центральный АВ &bull; Перрон 3 &bull; Express Lane</div>
                 </td>
-                <td><span style="font-family: var(--font-mono); font-size: 11px; color: var(--color-oxblood); letter-spacing: 0.05em; background: rgba(92, 46, 46, 0.08); padding: 4px 8px; border-radius: 2px;">Sprinter Airport Shuttel (16м)</span></td>
+                <td><span style="font-family: var(--font-mono); font-size: 11.5px; color: var(--color-oxblood); letter-spacing: 0.05em; background: rgba(92, 46, 46, 0.08); padding: 4px 8px; border-radius: 2px;">Sprinter Airport Shuttle (16м)</span></td>
                 <td><span class="seat-status-pill low"><span class="meta-dot oxblood"></span>Осталось 1 место</span></td>
                 <td style="font-family: var(--font-mono); font-size: 17px; font-weight: 600;">85.00 BYN</td>
                 <td style="text-align: right;">
-                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" data-cursor="hover">Выбрать кресло &rarr;</a>
+                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" style="font-size: 13.5px;" data-cursor="hover">Выбрать кресло &rarr;</a>
                 </td>
               </tr>
               <tr data-route="grodno">
                 <td>
                   <span class="trip-code-badge">BL-226</span>
                   <strong style="font-family: var(--font-mono); font-size: 15px;">16:30 &rarr; 19:40</strong>
-                  <div style="font-size: 11px; color: var(--text-faint); margin-top: 2px;">В пути: 03ч 10мин</div>
+                  <div style="font-size: 11.5px; color: var(--text-faint); margin-top: 2px;">В пути: 03ч 10мин</div>
                 </td>
                 <td>
-                  <div style="font-family: var(--font-display); font-size: 19px; font-weight: 500;">Минск &mdash; Гродно Экспресс</div>
-                  <div class="trip-platform-tag">Центральный АВ &bull; Перрон 5 &bull; Трасса М6</div>
+                  <div style="font-family: var(--font-display); font-size: 18px; font-weight: 500;">Минск &mdash; Гродно Экспресс</div>
+                  <div class="trip-platform-tag" style="font-size: 11.5px;">Центральный АВ &bull; Перрон 5 &bull; Трасса М6</div>
                 </td>
-                <td><span style="font-family: var(--font-mono); font-size: 11px; color: var(--color-forest); letter-spacing: 0.05em; background: rgba(58, 74, 63, 0.08); padding: 4px 8px; border-radius: 2px;">Sprinter 519 CDI (19м)</span></td>
+                <td><span style="font-family: var(--font-mono); font-size: 11.5px; color: var(--color-forest); letter-spacing: 0.05em; background: rgba(58, 74, 63, 0.08); padding: 4px 8px; border-radius: 2px;">Sprinter 519 CDI (19м)</span></td>
                 <td><span class="seat-status-pill available"><span class="meta-dot forest"></span>Свободно 5 мест</span></td>
                 <td style="font-family: var(--font-mono); font-size: 17px; font-weight: 600;">28.00 BYN</td>
                 <td style="text-align: right;">
-                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" data-cursor="hover">Выбрать кресло &rarr;</a>
+                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" style="font-size: 13.5px;" data-cursor="hover">Выбрать кресло &rarr;</a>
                 </td>
               </tr>
               <tr data-route="gomel">
                 <td>
                   <span class="trip-code-badge">BL-504</span>
                   <strong style="font-family: var(--font-mono); font-size: 15px;">18:20 &rarr; 21:40</strong>
-                  <div style="font-size: 11px; color: var(--text-faint); margin-top: 2px;">В пути: 03ч 20мин</div>
+                  <div style="font-size: 11.5px; color: var(--text-faint); margin-top: 2px;">В пути: 03ч 20мин</div>
                 </td>
                 <td>
-                  <div style="font-family: var(--font-display); font-size: 19px; font-weight: 500;">Гомель &mdash; Минск Магистраль</div>
-                  <div class="trip-platform-tag">Привокзальная пл. &bull; Перрон 1 &bull; Трасса М5</div>
+                  <div style="font-family: var(--font-display); font-size: 18px; font-weight: 500;">Гомель &mdash; Минск Магистраль</div>
+                  <div class="trip-platform-tag" style="font-size: 11.5px;">Привокзальная пл. &bull; Перрон 1 &bull; Трасса М5</div>
                 </td>
-                <td><span style="font-family: var(--font-mono); font-size: 11px; color: var(--color-forest); letter-spacing: 0.05em; background: rgba(58, 74, 63, 0.08); padding: 4px 8px; border-radius: 2px;">Sprinter 519 CDI (19м)</span></td>
+                <td><span style="font-family: var(--font-mono); font-size: 11.5px; color: var(--color-forest); letter-spacing: 0.05em; background: rgba(58, 74, 63, 0.08); padding: 4px 8px; border-radius: 2px;">Sprinter 519 CDI (19м)</span></td>
                 <td><span class="seat-status-pill available"><span class="meta-dot forest"></span>Свободно 4 места</span></td>
                 <td style="font-family: var(--font-mono); font-size: 17px; font-weight: 600;">28.00 BYN</td>
                 <td style="text-align: right;">
-                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" data-cursor="hover">Выбрать кресло &rarr;</a>
+                  <a href="seat-picker-3d-demo.html" class="link-subtle-cta btn-magnetic" style="font-size: 13.5px;" data-cursor="hover">Выбрать кресло &rarr;</a>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 12px; color: var(--text-faint);" class="vector-stagger-text stagger-4">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 12.5px; color: var(--text-faint);" class="vector-stagger-text stagger-4">
           <div>&copy; 2026 BusLiner Technologies. Сдержанность как наивысшая форма роскоши.</div>
           <div style="display: flex; gap: 20px; align-items: center;">
             <a href="driver-terminal.html" style="color: var(--text-muted); text-decoration: none;">Терминал посадки</a>
             <a href="carrier-dashboard.html" style="color: var(--text-muted); text-decoration: none;">Диспетчерская</a>
-            <button onclick="jumpToSlide(6)" class="link-subtle-cta" style="padding: 4px 12px; font-size: 11px; cursor: pointer;">
+            <button onclick="jumpToSlide(6)" class="link-subtle-cta" style="padding: 5px 14px; font-size: 12px; cursor: pointer;">
               Реквизиты и консьерж 24/7 &darr;
             </button>
           </div>
@@ -2291,14 +2298,14 @@
         
         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;" class="vector-stagger-text stagger-1">
           <div>
-            <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-taupe); margin-bottom: 8px;">
-              N&deg; 07 &bull; РЕКВИЗИТЫ &bull; РЕГЛАМЕНТ &bull; КОНСЬЕРЖ 24/7
+            <div style="font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-taupe); margin-bottom: 8px;">
+              КОНТАКТЫ И РЕКВИЗИТЫ &bull; СЛУЖБА ЗАБОТЫ О ПАССАЖИРАХ 24/7
             </div>
-            <h2 style="font-family: var(--font-display); font-size: clamp(2.2rem, 3.5vw + 0.5rem, 3.6rem); font-weight: 300; color: #F5F1EA; letter-spacing: -0.01em; margin: 0;">
-              BusLiner. <em>Первый класс в пути.</em>
+            <h2 style="font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 400; color: #F5F1EA; letter-spacing: -0.01em; margin: 0;">
+              BusLiner. <em>Первый класс по цене обычной маршрутки.</em>
             </h2>
           </div>
-          <div style="font-family: var(--font-mono); font-size: 11px; color: #8F887D; text-align: right; line-height: 1.6;">
+          <div style="font-family: var(--font-mono); font-size: 11.5px; color: #8F887D; text-align: right; line-height: 1.6;">
             ЛИЦЕНЗИЯ МИНТРАНСА РБ &numero; 02190/4482<br>
             УНП 193728491 &bull; РЕЕСТР ПЕРЕВОЗЧИКОВ РБ
           </div>
@@ -2318,7 +2325,7 @@
               <div>
                 <div class="footer-btn-kicker">ОФИЦИАЛЬНЫЙ ТЕЛЕГРАМ-БОТ</div>
                 <div class="footer-btn-headline">@BusLinerFleetBot</div>
-                <div class="footer-btn-caption">Моментальный выкуп мест за 0.38с, трекинг борта и электронный билет</div>
+                <div class="footer-btn-caption">Выбор кресла за 15 секунд, уведомления о посадке, трекинг борта на карте и моментальный возврат</div>
               </div>
             </div>
             <div class="footer-btn-action-badge">
@@ -2339,8 +2346,8 @@
               </div>
               <div>
                 <div class="footer-btn-kicker">ПАРТНЁРАМ И ПЕРЕВОЗЧИКАМ</div>
-                <div class="footer-btn-headline">Диспетчерская и фрахт</div>
-                <div class="footer-btn-caption">Подключение транспорта к реестру BusLiner, API-интеграция и заявки</div>
+                <div class="footer-btn-headline">Диспетчерская и подключение к рейсам</div>
+                <div class="footer-btn-caption">Подключение Спринтеров и маршруток к единому реестру BusLiner, гарантированная загрузка и выплаты</div>
               </div>
             </div>
             <div class="footer-btn-action-badge">
@@ -2357,13 +2364,13 @@
           
           <!-- Col 1: Philosophy & Hub -->
           <div>
-            <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8A99A; margin-bottom: 14px;">
+            <div style="font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8A99A; margin-bottom: 14px;">
               ФИЛОСОФИЯ ПОКОЯ
             </div>
-            <p style="font-size: 13px; line-height: 1.65; color: #C4BCB1; margin-bottom: 16px;">
+            <p style="font-size: 13.5px; line-height: 1.65; color: #C4BCB1; margin-bottom: 16px;">
               Межгородские перевозки повышенного достоинства. Флагманские микроавтобусы Mercedes-Benz Sprinter на 19 мест и комфортабельные скоростные маршрутки между столицей и областными центрами.
             </p>
-            <div style="font-size: 12px; color: #8F887D; line-height: 1.6;">
+            <div style="font-size: 12.5px; color: #8F887D; line-height: 1.6;">
               Центральный автовокзал, ул. Бобруйская 6, Минск<br>
               Посадочный перрон первого класса &numero; 3
             </div>
@@ -2371,10 +2378,10 @@
 
           <!-- Col 2: Routes -->
           <div>
-            <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8A99A; margin-bottom: 14px;">
+            <div style="font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8A99A; margin-bottom: 14px;">
               ЛИНИИ МАРШРУТОВ
             </div>
-            <ul style="list-style: none; padding: 0; margin: 0; font-size: 13px; line-height: 2; color: #C4BCB1;">
+            <ul style="list-style: none; padding: 0; margin: 0; font-size: 13.5px; line-height: 2.1; color: #C4BCB1;">
               <li><a href="seat-picker-3d-demo.html" style="color: #E8E2D6; text-decoration: none;">Минск &mdash; Вильнюс (Sprinter Airport)</a></li>
               <li><a href="seat-picker-3d-demo.html" style="color: #E8E2D6; text-decoration: none;">Минск &mdash; Гродно (Sprinter 519 CDI)</a></li>
               <li><a href="seat-picker-3d-demo.html" style="color: #E8E2D6; text-decoration: none;">Минск &mdash; Брест (Маршрутка Экспресс)</a></li>
@@ -2385,10 +2392,10 @@
 
           <!-- Col 3: Ecosystem -->
           <div>
-            <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8A99A; margin-bottom: 14px;">
+            <div style="font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8A99A; margin-bottom: 14px;">
               ЦИФРОВЫЕ СЕРВИСЫ
             </div>
-            <ul style="list-style: none; padding: 0; margin: 0; font-size: 13px; line-height: 2; color: #C4BCB1;">
+            <ul style="list-style: none; padding: 0; margin: 0; font-size: 13.5px; line-height: 2.1; color: #C4BCB1;">
               <li><a href="seat-picker-3d-demo.html" style="color: #E8E2D6; text-decoration: none;">3D Выбор кресла Sprinter (19 мест)</a></li>
               <li><a href="driver-terminal.html" style="color: #E8E2D6; text-decoration: none;">Терминал посадки водителя</a></li>
               <li><a href="carrier-dashboard.html" style="color: #E8E2D6; text-decoration: none;">Диспетчерская перевозчика</a></li>
@@ -2399,22 +2406,22 @@
 
           <!-- Col 4: Concierge 24/7 -->
           <div>
-            <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8A99A; margin-bottom: 14px;">
+            <div style="font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8A99A; margin-bottom: 14px;">
               КРУГЛОСУТОЧНЫЙ КОНСЬЕРЖ
             </div>
             <div style="margin-bottom: 12px;">
-              <div style="font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: #F5F1EA;">
+              <div style="font-family: var(--font-mono); font-size: 19px; font-weight: 600; color: #F5F1EA;">
                 +375 (29) 190-20-26
               </div>
-              <div style="font-size: 11px; color: #8F887D;">Единая линия бронирования (A1 / МТС)</div>
+              <div style="font-size: 12px; color: #8F887D;">Единая линия бронирования (A1 / МТС)</div>
             </div>
             <div style="margin-bottom: 14px;">
-              <div style="font-family: var(--font-mono); font-size: 13px; color: #D9CDB8;">
+              <div style="font-family: var(--font-mono); font-size: 14px; color: #D9CDB8;">
                 concierge@busliner.by
               </div>
-              <div style="font-size: 11px; color: #8F887D;">Служба клиентского сопровождения</div>
+              <div style="font-size: 12px; color: #8F887D;">Служба клиентского сопровождения</div>
             </div>
-            <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid rgba(232, 226, 214, 0.2); border-radius: 3px; font-size: 10px; font-family: var(--font-mono); color: #B8A99A;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid rgba(232, 226, 214, 0.2); border-radius: 3px; font-size: 11px; font-family: var(--font-mono); color: #B8A99A;">
               <span style="width: 6px; height: 6px; background: #5C8374; border-radius: 50%;"></span>
               ЭКИПАЖИ НА ЛИНИИ 24/7
             </div>
@@ -2422,7 +2429,7 @@
 
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(232, 226, 214, 0.12); padding-top: 20px; font-size: 11.5px; color: #8F887D;" class="vector-stagger-text stagger-4">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(232, 226, 214, 0.12); padding-top: 20px; font-size: 12px; color: #8F887D;" class="vector-stagger-text stagger-4">
           <div>
             &copy; 2026 BusLiner Technologies Inc. Сдержанность как наивысшая форма роскоши.
           </div>
