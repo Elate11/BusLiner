@@ -221,10 +221,19 @@
     }
 
     .header-inner {
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
       width: 100%;
+    }
+
+    .header-left-meta {
+      display: flex;
+      align-items: center;
+    }
+
+    header.site-header.on-dark-slide .header-left-meta .brand-meta-badge {
+      color: var(--text-light-faint);
     }
 
     .brand-mark-group {
@@ -395,7 +404,7 @@
       right: 48px;
       z-index: 1000;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       pointer-events: none;
     }
@@ -1021,6 +1030,90 @@
       background: #EFE8DD;
     }
 
+    /* ==========================================================================
+       DYNAMIC LUXURY TOP-DOWN HIGHWAY TELEMETRY
+       ========================================================================== */
+    .highway-telemetry-wrapper {
+      background: var(--canvas-bone);
+      border: 1px solid var(--border-taupe);
+      border-radius: var(--radius-sm);
+      padding: 10px 18px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 18px -6px rgba(43, 42, 40, 0.06);
+    }
+
+    .telemetry-hud-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    .telemetry-live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #5C8374;
+      box-shadow: 0 0 6px #5C8374;
+      animation: pulseGreenLed 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseGreenLed {
+      0%, 100% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .telemetry-hud-speed {
+      margin-left: auto;
+      font-weight: 600;
+      color: var(--color-oxblood);
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .highway-svg-stage {
+      width: 100%;
+      height: 84px;
+      display: block;
+      overflow: visible;
+    }
+
+    /* ==========================================================================
+       SLIDE 07: THE GRAND FOOTER (#1C1B19)
+       ========================================================================== */
+    #slide7 {
+      background: #1C1B19;
+      color: #E8E2D6;
+    }
+
+    .footer-deck-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1.2fr;
+      gap: 48px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 1024px) {
+      .footer-deck-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 28px !important;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .footer-deck-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+      }
+    }
+
     /* Accessibility / Focus Visible */
     :focus-visible {
       outline: 2px solid var(--color-forest);
@@ -1086,21 +1179,15 @@
     <div class="container">
       <div class="header-inner">
         
-        <a href="#slide-0" class="brand-mark-group" onclick="jumpToSlide(0); return false;" data-cursor="hover">
+        <div class="header-left-meta">
+          <span class="brand-meta-badge">Ligne Officielle &bull; 2026</span>
+        </div>
+
+        <a href="#slide-0" class="brand-mark-group" onclick="jumpToSlide(0); return false;" data-cursor="hover" style="justify-self: center; text-decoration: none;">
           <span class="brand-wordmark">BusLiner</span>
-          <span class="brand-meta-badge">Ligne Officielle</span>
         </a>
 
-        <ul class="deck-nav-menu">
-          <li><a class="slide-nav-link active" onclick="jumpToSlide(0)" data-cursor="hover">01 // Обложка</a></li>
-          <li><a class="slide-nav-link" onclick="jumpToSlide(1)" data-cursor="hover">02 // Манифест</a></li>
-          <li><a class="slide-nav-link" onclick="jumpToSlide(2)" data-cursor="hover">03 // Салон</a></li>
-          <li><a class="slide-nav-link" onclick="jumpToSlide(3)" data-cursor="hover">04 // Флот</a></li>
-          <li><a class="slide-nav-link" onclick="jumpToSlide(4)" data-cursor="hover">05 // Консьерж</a></li>
-          <li><a class="slide-nav-link" onclick="jumpToSlide(5)" data-cursor="hover">06 // Реестр</a></li>
-        </ul>
-
-        <div style="display: flex; gap: 14px; align-items: center;">
+        <div style="display: flex; gap: 14px; align-items: center; justify-self: end;">
           <a href="driver-terminal.html" class="link-subtle-cta btn-magnetic" data-cursor="hover">
             <span>Терминал</span>
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
@@ -1116,40 +1203,46 @@
        ========================================================================= -->
   <aside class="presentation-side-rail" aria-label="Презентация">
     <button class="deck-rail-item active" onclick="jumpToSlide(0)">
-      <span class="deck-rail-label">01 // Обложка</span>
+      <span class="deck-rail-label">Обложка</span>
       <span class="deck-rail-indicator"></span>
     </button>
     <button class="deck-rail-item" onclick="jumpToSlide(1)">
-      <span class="deck-rail-label">02 // Манифест</span>
+      <span class="deck-rail-label">Манифест</span>
       <span class="deck-rail-indicator"></span>
     </button>
     <button class="deck-rail-item" onclick="jumpToSlide(2)">
-      <span class="deck-rail-label">03 // Салон 519</span>
+      <span class="deck-rail-label">Салон</span>
       <span class="deck-rail-indicator"></span>
     </button>
     <button class="deck-rail-item" onclick="jumpToSlide(3)">
-      <span class="deck-rail-label">04 // Классы флота</span>
+      <span class="deck-rail-label">Флот</span>
       <span class="deck-rail-indicator"></span>
     </button>
     <button class="deck-rail-item" onclick="jumpToSlide(4)">
-      <span class="deck-rail-label">05 // Лист ожидания</span>
+      <span class="deck-rail-label">Консьерж</span>
       <span class="deck-rail-indicator"></span>
     </button>
     <button class="deck-rail-item" onclick="jumpToSlide(5)">
-      <span class="deck-rail-label">06 // Расписание</span>
+      <span class="deck-rail-label">Реестр</span>
+      <span class="deck-rail-indicator"></span>
+    </button>
+    <button class="deck-rail-item" onclick="jumpToSlide(6)">
+      <span class="deck-rail-label">Футтер</span>
       <span class="deck-rail-indicator"></span>
     </button>
   </aside>
 
-  <!-- Bottom Telemetry & Slide Arrows -->
+  <!-- Bottom Slide Arrows -->
   <div class="deck-bottom-bar">
-    <div class="deck-telemetry-badge" id="deckTelemetry">
-      СЛАЙД 01 / 06 &bull; ОБЛОЖКА &bull; ЛИНИЯ ПЕРВОГО КЛАССА
-    </div>
     <div class="deck-arrow-controls">
       <button class="deck-arrow-btn" onclick="prevSlide()" title="Предыдущий слайд (Стрелка вверх)">
         &uarr;
       </button>
+      <button class="deck-arrow-btn" onclick="nextSlide()" title="Следующий слайд (Стрелка вниз)">
+        &darr;
+      </button>
+    </div>
+  </div>
       <button class="deck-arrow-btn" onclick="nextSlide()" title="Следующий слайд (Стрелка вниз)">
         &darr;
       </button>
@@ -1482,16 +1575,82 @@
     <section class="deck-slide next" id="slide6">
       <div class="container">
         
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;" class="vector-stagger-text stagger-1">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px;" class="vector-stagger-text stagger-1">
           <div>
             <span class="hero-deck-badge">N&deg; 06 &bull; РЕГУЛЯРНЫЙ РЕЕСТР</span>
             <h2 style="font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 300;">
               Магистральные линии <em>сезона.</em>
             </h2>
           </div>
-          <div style="font-size: 13px; color: var(--text-muted);">
+          <div style="font-size: 13px; color: var(--text-muted); font-family: var(--font-mono);">
             Лицензия Минтранса РБ &numero; 02190/4482
           </div>
+        </div>
+
+        <!-- DYNAMIC LUXURY TOP-DOWN HIGHWAY TELEMETRY (TOP-DOWN MINIBUS CRUISING) -->
+        <div class="highway-telemetry-wrapper vector-stagger-card stagger-2">
+          <div class="telemetry-hud-header">
+            <span class="telemetry-live-dot"></span>
+            <span>GPS ТЕЛЕМЕТРИЯ РЕЙСА &bull; МИНСК &mdash; ВИЛЬНЮС &bull; В ПУТИ</span>
+            <span class="telemetry-hud-speed" id="hudSpeedometer">98.4 КМ/Ч</span>
+          </div>
+
+          <svg class="highway-svg-stage" viewBox="0 0 1100 110" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="headlightBeamGrad" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="0%" stop-color="#F5F1EA" stop-opacity="0.55" />
+                <stop offset="65%" stop-color="#F5F1EA" stop-opacity="0.16" />
+                <stop offset="100%" stop-color="#F5F1EA" stop-opacity="0" />
+              </linearGradient>
+              <filter id="carDropShadow" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1A1918" flood-opacity="0.35" />
+              </filter>
+            </defs>
+
+            <!-- Highway Road Surface & Asphalt Borders -->
+            <path id="highwayTrackRoadBorder" d="M -50,55 C 220,10 440,100 680,45 C 880,-5 1000,85 1150,55" 
+                  fill="none" stroke="rgba(184, 169, 154, 0.4)" stroke-width="32" stroke-linecap="round"/>
+            <path id="highwayTrackRoadSurface" d="M -50,55 C 220,10 440,100 680,45 C 880,-5 1000,85 1150,55" 
+                  fill="none" stroke="rgba(232, 226, 214, 0.55)" stroke-width="28" stroke-linecap="round"/>
+
+            <!-- Center Dashed Highway Line -->
+            <path id="highwayTrackRoadDashed" d="M -50,55 C 220,10 440,100 680,45 C 880,-5 1000,85 1150,55" 
+                  fill="none" stroke="rgba(143, 136, 125, 0.65)" stroke-width="1.5" stroke-dasharray="8 12"/>
+
+            <!-- Road Mileage Waypoints -->
+            <g class="highway-waypoint-markers" font-family="var(--font-mono)" font-size="9" fill="var(--text-faint)" letter-spacing="0.1em">
+              <circle cx="90" cy="42" r="3" fill="var(--color-oxblood)" />
+              <text x="98" y="45">[ МИНСК &bull; КМ 0 ]</text>
+
+              <circle cx="560" cy="55" r="3" fill="var(--color-taupe)" />
+              <text x="568" y="58">[ ОШМЯНЫ &bull; КМ 86 ]</text>
+
+              <circle cx="980" cy="72" r="3" fill="var(--color-forest)" />
+              <text x="900" y="88">[ АЭРОПОРТ ВИЛЬНЮС &bull; КМ 174 ]</text>
+            </g>
+
+            <!-- The Top-Down Executive Minibus with Forward Headlights & Tail Lights -->
+            <g id="highwayVehicleGroup" filter="url(#carDropShadow)">
+              <!-- Twin Forward Headlight Beams (Illuminating the Asphalt ahead) -->
+              <polygon points="18,-4 110,-28 110,-4 18,-1" fill="url(#headlightBeamGrad)"/>
+              <polygon points="18,4 110,4 110,28 18,1" fill="url(#headlightBeamGrad)"/>
+
+              <!-- Sprinter Minibus Aerodynamic Chassis (Top-down view) -->
+              <rect x="-18" y="-9" width="36" height="18" rx="4" ry="4" fill="#2B2A28" stroke="#484540" stroke-width="0.8"/>
+              
+              <!-- Smoked Panoramic Glass Windshield & Roof -->
+              <path d="M 4 -7 L 12 -5 Q 14 0 12 5 L 4 7 Z" fill="#141312"/>
+              <rect x="-8" y="-6.5" width="10" height="13" rx="2" fill="#1C1B1A" opacity="0.9"/>
+              
+              <!-- Aerodynamic Side Mirrors -->
+              <rect x="6" y="-12" width="3" height="3" rx="1" fill="#3D3B38"/>
+              <rect x="6" y="9" width="3" height="3" rx="1" fill="#3D3B38"/>
+
+              <!-- Rear Luxury Ruby Tail Lights -->
+              <rect x="-18" y="-8" width="2" height="4" rx="0.5" fill="#8B2626"/>
+              <rect x="-18" y="4" width="2" height="4" rx="0.5" fill="#8B2626"/>
+            </g>
+          </svg>
         </div>
 
         <div class="timetable-slide-box vector-stagger-card stagger-3">
@@ -1546,12 +1705,118 @@
           </table>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; font-size: 12px; color: var(--text-faint);" class="vector-stagger-text stagger-4">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 12px; color: var(--text-faint);" class="vector-stagger-text stagger-4">
           <div>&copy; 2026 BusLiner Technologies. Сдержанность как наивысшая форма роскоши.</div>
-          <div style="display: flex; gap: 20px;">
+          <div style="display: flex; gap: 20px; align-items: center;">
             <a href="driver-terminal.html" style="color: var(--text-muted); text-decoration: none;">Терминал посадки</a>
             <a href="carrier-dashboard.html" style="color: var(--text-muted); text-decoration: none;">Диспетчерская</a>
-            <a href="seat-picker-3d-demo.html" style="color: var(--text-muted); text-decoration: none;">3D Салон Sprinter</a>
+            <button onclick="jumpToSlide(6)" class="link-subtle-cta" style="padding: 4px 12px; font-size: 11px; cursor: pointer;">
+              Реквизиты и контакты (Футтер) &darr;
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 07: THE GRAND FOOTER (#1C1B19) -->
+    <section class="deck-slide next" id="slide7">
+      <div class="container" style="max-width: 1280px;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px;" class="vector-stagger-text stagger-1">
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-taupe); margin-bottom: 8px;">
+              N&deg; 07 &bull; РЕКВИЗИТЫ &bull; РЕГЛАМЕНТ &bull; КОНСЬЕРЖ 24/7
+            </div>
+            <h2 style="font-family: var(--font-display); font-size: clamp(2.2rem, 3.5vw + 0.5rem, 3.6rem); font-weight: 300; color: #F5F1EA; letter-spacing: -0.01em; margin: 0;">
+              BusLiner. <em>Первый класс в пути.</em>
+            </h2>
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 11px; color: #8F887D; text-align: right; line-height: 1.6;">
+            ЛИЦЕНЗИЯ МИНТРАНСА РБ &numero; 02190/4482<br>
+            УНП 193728491 &bull; РЕЕСТР ПЕРЕВОЗЧИКОВ РБ
+          </div>
+        </div>
+
+        <div class="growing-line-separator" style="margin-bottom: 36px; background: rgba(232, 226, 214, 0.15);"></div>
+
+        <div class="footer-deck-grid vector-stagger-card stagger-3">
+          
+          <!-- Col 1: Philosophy & Hub -->
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8A99A; margin-bottom: 14px;">
+              [ ФИЛОСОФИЯ ПОКОЯ ]
+            </div>
+            <p style="font-size: 13px; line-height: 1.65; color: #C4BCB1; margin-bottom: 16px;">
+              Межгородские перевозки повышенного достоинства. Просторные микроавтобусы Mercedes-Benz Sprinter 519 CDI на 19 мест вместо стандартных 22.
+            </p>
+            <div style="font-size: 12px; color: #8F887D; line-height: 1.6;">
+              Центральный автовокзал, ул. Бобруйская 6, Минск<br>
+              Посадочный перрон первого класса &numero; 3
+            </div>
+          </div>
+
+          <!-- Col 2: Routes -->
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8A99A; margin-bottom: 14px;">
+              [ ЛИНИИ МАРШРУТОВ ]
+            </div>
+            <ul style="list-style: none; padding: 0; margin: 0; font-size: 13px; line-height: 2; color: #C4BCB1;">
+              <li><a href="seat-picker-3d-demo.html" style="color: #E8E2D6; text-decoration: none;">Минск &mdash; Вильнюс (Аэропорт)</a></li>
+              <li><a href="seat-picker-3d-demo.html" style="color: #E8E2D6; text-decoration: none;">Минск &mdash; Гродно Экспресс</a></li>
+              <li><a href="seat-picker-3d-demo.html" style="color: #E8E2D6; text-decoration: none;">Минск &mdash; Брест (Трасса М1)</a></li>
+              <li><a href="seat-picker-3d-demo.html" style="color: #E8E2D6; text-decoration: none;">Гомель &mdash; Минск Магистраль</a></li>
+              <li><a href="busliner-partners.html" style="color: #B8A99A; text-decoration: none;">Индивидуальный фрахт &rarr;</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 3: Ecosystem -->
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8A99A; margin-bottom: 14px;">
+              [ ЦИФРОВЫЕ СЕРВИСЫ ]
+            </div>
+            <ul style="list-style: none; padding: 0; margin: 0; font-size: 13px; line-height: 2; color: #C4BCB1;">
+              <li><a href="seat-picker-3d-demo.html" style="color: #E8E2D6; text-decoration: none;">3D Выбор кресла Sprinter</a></li>
+              <li><a href="driver-terminal.html" style="color: #E8E2D6; text-decoration: none;">Терминал посадки водителя</a></li>
+              <li><a href="carrier-dashboard.html" style="color: #E8E2D6; text-decoration: none;">Диспетчерская перевозчика</a></li>
+              <li><span style="color: #8F887D;">Лист ожидания (перехват 0.38с)</span></li>
+              <li><span style="color: #8F887D;">Telegram бот: @BusLiner_bot</span></li>
+            </ul>
+          </div>
+
+          <!-- Col 4: Concierge 24/7 -->
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #B8A99A; margin-bottom: 14px;">
+              [ КРУГЛОСУТОЧНЫЙ КОНСЬЕРЖ ]
+            </div>
+            <div style="margin-bottom: 12px;">
+              <div style="font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: #F5F1EA;">
+                +375 (29) 190-20-26
+              </div>
+              <div style="font-size: 11px; color: #8F887D;">Единая линия бронирования (A1 / МТС)</div>
+            </div>
+            <div style="margin-bottom: 14px;">
+              <div style="font-family: var(--font-mono); font-size: 13px; color: #D9CDB8;">
+                concierge@busliner.by
+              </div>
+              <div style="font-size: 11px; color: #8F887D;">Служба клиентского сопровождения</div>
+            </div>
+            <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid rgba(232, 226, 214, 0.2); border-radius: 3px; font-size: 10px; font-family: var(--font-mono); color: #B8A99A;">
+              <span style="width: 6px; height: 6px; background: #5C8374; border-radius: 50%;"></span>
+              ЭКИПАЖИ НА ЛИНИИ 24/7
+            </div>
+          </div>
+
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(232, 226, 214, 0.12); padding-top: 20px; font-size: 11.5px; color: #8F887D;" class="vector-stagger-text stagger-4">
+          <div>
+            &copy; 2026 BusLiner Technologies Inc. Сдержанность как наивысшая форма роскоши.
+          </div>
+          <div style="display: flex; gap: 24px;">
+            <a href="#" style="color: #8F887D; text-decoration: none;">Политика конфиденциальности</a>
+            <a href="#" style="color: #8F887D; text-decoration: none;">Публичная оферта</a>
+            <a href="#" style="color: #8F887D; text-decoration: none;">Правила перевозок</a>
           </div>
         </div>
 
@@ -1568,17 +1833,7 @@
     const slides = document.querySelectorAll('.deck-slide');
     const railItems = document.querySelectorAll('.deck-rail-item');
     const navLinks = document.querySelectorAll('.slide-nav-link');
-    const telemetryBadge = document.getElementById('deckTelemetry');
     const siteHeader = document.getElementById('siteHeader');
-
-    const slideTitles = [
-      'СЛАЙД 01 / 06 &bull; ОБЛОЖКА &bull; ЛИНИЯ ПЕРВОГО КЛАССА',
-      'СЛАЙД 02 / 06 &bull; МАНИФЕСТ &bull; ФИЛОСОФИЯ ПОКОЯ',
-      'СЛАЙД 03 / 06 &bull; САНКТУАРИЙ &bull; САЛОН SPRINTER 519',
-      'СЛАЙД 04 / 06 &bull; ФЛОТ &bull; ЧЕТЫРЕ КЛАССА КОМФОРТА',
-      'СЛАЙД 05 / 06 &bull; КОНСЬЕРЖ &bull; ЛИСТ ОЖИДАНИЯ 0.38С',
-      'СЛАЙД 06 / 06 &bull; РАСПИСАНИЕ &bull; РЕЕСТР МАГИСТРАЛЕЙ'
-    ];
 
     let currentSlide = 0;
     let isTransitioning = false;
@@ -1637,20 +1892,15 @@
         else item.classList.remove('active');
       });
 
-      // Update header links
+      // Update header links (if any present)
       navLinks.forEach((link, idx) => {
         if (idx === newIndex) link.classList.add('active');
         else link.classList.remove('active');
       });
 
-      // Update telemetry
-      if (telemetryBadge) {
-        telemetryBadge.innerHTML = slideTitles[newIndex] || '';
-      }
-
-      // Header on dark slide 3
+      // Header on dark slides (Slide 3: Sanctuary, Slide 7: Footer)
       if (siteHeader) {
-        if (newIndex === 2) {
+        if (newIndex === 2 || newIndex === 6) {
           siteHeader.classList.add('on-dark-slide');
         } else {
           siteHeader.classList.remove('on-dark-slide');
@@ -1819,6 +2069,35 @@
         status.innerText = 'МЕСТО ЗАКРЕПЛЕНО (0.38С)';
       }, 70);
     };
+
+    // 5. DYNAMIC LUXURY TOP-DOWN HIGHWAY TELEMETRY (SPRINTER CRUISING MOTION)
+    (function initHighwayTelemetry() {
+      const highwayPath = document.getElementById('highwayTrackRoadBorder');
+      const vehicleGroup = document.getElementById('highwayVehicleGroup');
+      const hudSpeedometer = document.getElementById('hudSpeedometer');
+
+      if (!highwayPath || !vehicleGroup) return;
+
+      let carDistance = 0;
+      const pathLength = highwayPath.getTotalLength();
+
+      function stepHighway() {
+        carDistance = (carDistance + 1.25) % pathLength;
+        const p1 = highwayPath.getPointAtLength(carDistance);
+        const p2 = highwayPath.getPointAtLength((carDistance + 2) % pathLength);
+        const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * (180 / Math.PI);
+
+        vehicleGroup.setAttribute('transform', `translate(${p1.x}, ${p1.y}) rotate(${angle})`);
+
+        if (hudSpeedometer && Math.random() < 0.04) {
+          const speed = (97.4 + Math.random() * 2.8).toFixed(1);
+          hudSpeedometer.textContent = `${speed} КМ/Ч`;
+        }
+
+        requestAnimationFrame(stepHighway);
+      }
+      requestAnimationFrame(stepHighway);
+    })();
 
     // Initialize slide 1 counters on load
     document.addEventListener('DOMContentLoaded', () => {
