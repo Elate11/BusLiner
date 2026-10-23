@@ -2917,9 +2917,10 @@
         <p class="client-auth-subtitle">Управление бронированием, посадочные талоны и статус рейса</p>
       </div>
 
-      <div class="client-auth-tabs">
+      <div class="client-auth-tabs" style="grid-template-columns: 1fr 1fr 1fr;">
         <button type="button" class="client-auth-tab-btn active" id="tabBtnTg" onclick="switchClientAuthTab('tg')">Telegram-бот</button>
-        <button type="button" class="client-auth-tab-btn" id="tabBtnPhone" onclick="switchClientAuthTab('phone')">По номеру телефона</button>
+        <button type="button" class="client-auth-tab-btn" id="tabBtnPhone" onclick="switchClientAuthTab('phone')">По телефону</button>
+        <button type="button" class="client-auth-tab-btn" id="tabBtnRegister" onclick="switchClientAuthTab('register')">Регистрация</button>
       </div>
 
       <div class="client-auth-body">
@@ -2944,6 +2945,11 @@
             <span>Войти через Telegram</span>
             <span>&rarr;</span>
           </a>
+
+          <div style="margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--border-taupe); text-align: center;">
+            <span style="font-size: 13.5px; color: var(--text-muted);">Впервые в BusLiner?</span>
+            <button type="button" onclick="switchClientAuthTab('register')" style="background: none; border: none; font-family: var(--font-body); font-size: 13.5px; font-weight: 600; color: var(--color-oxblood); text-decoration: underline; cursor: pointer; margin-left: 6px;">Регистрация</button>
+          </div>
         </div>
 
         <!-- Tab Pane 2: Phone SMS login -->
@@ -2982,6 +2988,63 @@
             <div style="display: flex; gap: 10px; margin-top: 10px;">
               <a href="seat-picker-3d-demo.html" class="link-subtle-cta" style="flex: 1; justify-content: center; font-size: 12px; min-height: 36px; padding: 6px 12px;">3D Салон</a>
               <a href="https://t.me/BusLinerFleetBot" target="_blank" rel="noopener noreferrer" class="link-subtle-cta" style="flex: 1; justify-content: center; font-size: 12px; min-height: 36px; padding: 6px 12px; background: var(--color-forest); color: #F5F1EA; border-color: var(--color-forest);">Посадочный талон &rarr;</a>
+            </div>
+          </div>
+
+          <div style="margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--border-taupe); text-align: center;">
+            <span style="font-size: 13.5px; color: var(--text-muted);">Впервые в BusLiner?</span>
+            <button type="button" onclick="switchClientAuthTab('register')" style="background: none; border: none; font-family: var(--font-body); font-size: 13.5px; font-weight: 600; color: var(--color-oxblood); text-decoration: underline; cursor: pointer; margin-left: 6px;">Регистрация</button>
+          </div>
+        </div>
+
+        <!-- Tab Pane 3: Passenger Registration Form -->
+        <div class="client-auth-tab-pane" id="paneRegister">
+          <div id="regFormFields">
+            <div style="margin-bottom: 14px;">
+              <label for="regNameInput" style="display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px;">
+                Имя и фамилия пассажира
+              </label>
+              <input type="text" id="regNameInput" class="client-phone-field" placeholder="Константин Белов" style="font-family: var(--font-display); font-size: 17px; margin-bottom: 0;">
+            </div>
+
+            <div style="margin-bottom: 14px;">
+              <label for="regPhoneInput" style="display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px;">
+                Номер телефона (для билетов и посадки)
+              </label>
+              <input type="tel" id="regPhoneInput" class="client-phone-field" placeholder="+375 (29) 123-45-67" value="+375 (29) " style="margin-bottom: 0;">
+            </div>
+
+            <div style="margin-bottom: 18px;">
+              <label for="regEmailInput" style="display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px;">
+                Электронная почта (для чеков и билетов)
+              </label>
+              <input type="email" id="regEmailInput" class="client-phone-field" placeholder="passenger@busliner.by" style="font-size: 15px; margin-bottom: 0;">
+            </div>
+
+            <button type="button" class="btn-action-deck btn-magnetic" style="width: 100%; justify-content: center; padding: 14px 20px; background: var(--color-forest); border-color: var(--color-forest);" onclick="submitRegistration()" data-cursor="hover">
+              <span>Зарегистрироваться &rarr;</span>
+            </button>
+
+            <div style="margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border-taupe); text-align: center;">
+              <span style="font-size: 13.5px; color: var(--text-muted);">Уже есть профиль?</span>
+              <button type="button" onclick="switchClientAuthTab('phone')" style="background: none; border: none; font-family: var(--font-body); font-size: 13.5px; font-weight: 600; color: var(--text-graphite); text-decoration: underline; cursor: pointer; margin-left: 6px;">Войти</button>
+            </div>
+          </div>
+
+          <!-- Registration Success View -->
+          <div id="regSuccessState" style="display: none;" class="client-ticket-card-preview">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--border-taupe); padding-bottom: 10px;">
+              <span style="font-family: var(--font-mono); font-size: 12px; color: var(--color-forest); font-weight: 600;">ПРОФИЛЬ АКТИВИРОВАН</span>
+              <span style="font-family: var(--font-mono); font-size: 12px; color: var(--color-oxblood);">БОНУС 10 BYN</span>
+            </div>
+            <div style="font-family: var(--font-display); font-size: 19px; font-weight: 500; color: var(--text-graphite); margin-top: 4px;" id="regSuccessName">
+              Добро пожаловать в BusLiner Club
+            </div>
+            <div style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5;">
+              Ваш персональный аккаунт создан. Вы получаете скидку 10 BYN на первую поездку и приоритетный перехват мест за 0.38 секунды.
+            </div>
+            <div style="margin-top: 12px;">
+              <a href="seat-picker-3d-demo.html" class="btn-action-deck" style="width: 100%; justify-content: center; font-size: 13.5px; padding: 11px 18px; text-decoration: none;">Выбрать рейс и кресло &rarr;</a>
             </div>
           </div>
         </div>
@@ -3264,21 +3327,49 @@
     window.switchClientAuthTab = function(tabName) {
       const btnTg = document.getElementById('tabBtnTg');
       const btnPhone = document.getElementById('tabBtnPhone');
+      const btnReg = document.getElementById('tabBtnRegister');
       const paneTg = document.getElementById('paneTg');
       const panePhone = document.getElementById('panePhone');
+      const paneReg = document.getElementById('paneRegister');
+      const modalTitle = document.getElementById('clientAuthTitle');
 
       if (!btnTg || !btnPhone || !paneTg || !panePhone) return;
 
+      const allBtns = [btnTg, btnPhone, btnReg];
+      const allPanes = [paneTg, panePhone, paneReg];
+
+      allBtns.forEach(btn => { if (btn) btn.classList.remove('active'); });
+      allPanes.forEach(pane => { if (pane) pane.classList.remove('active'); });
+
       if (tabName === 'tg') {
         btnTg.classList.add('active');
-        btnPhone.classList.remove('active');
         paneTg.classList.add('active');
-        panePhone.classList.remove('active');
-      } else {
+        if (modalTitle) modalTitle.innerText = 'Вход для клиентов';
+      } else if (tabName === 'phone') {
         btnPhone.classList.add('active');
-        btnTg.classList.remove('active');
         panePhone.classList.add('active');
-        paneTg.classList.remove('active');
+        if (modalTitle) modalTitle.innerText = 'Вход для клиентов';
+      } else if (tabName === 'register') {
+        if (btnReg) btnReg.classList.add('active');
+        if (paneReg) paneReg.classList.add('active');
+        if (modalTitle) modalTitle.innerText = 'Регистрация пассажира';
+      }
+    };
+
+    window.submitRegistration = function() {
+      const nameInput = document.getElementById('regNameInput');
+      const fields = document.getElementById('regFormFields');
+      const success = document.getElementById('regSuccessState');
+      const successName = document.getElementById('regSuccessName');
+
+      const nameVal = (nameInput && nameInput.value.trim()) || 'Пассажир';
+      if (successName) {
+        successName.innerText = `Добро пожаловать, ${nameVal}!`;
+      }
+
+      if (fields && success) {
+        fields.style.display = 'none';
+        success.style.display = 'block';
       }
     };
 
