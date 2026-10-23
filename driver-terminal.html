@@ -10,7 +10,86 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Nunito:wght@700;800;900&family=Varela+Round&display=swap" rel="stylesheet">
 
   <!-- Three.js + OrbitControls for 3D Minibus Cabin -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
+    // =========================================================================
+    // COCKPIT TACTICAL AUDIO SYSTEM & NIGHT MODE TOGGLE
+    // =========================================================================
+    window.CockpitAudio = {
+      ctx: null,
+      getAudioContext() {
+        if (!this.ctx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) this.ctx = new AudioContextClass();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+        return this.ctx;
+      },
+
+      playBoardSuccess() {
+        try {
+          const ctx = this.getAudioContext();
+          if (!ctx) return;
+          const now = ctx.currentTime;
+          // Dual-tone affirmative chord
+          [523.25, 783.99].forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.03);
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.03);
+            osc.stop(now + 0.2);
+          });
+        } catch(e) {}
+      },
+
+      playBoardUndo() {
+        try {
+          const ctx = this.getAudioContext();
+          if (!ctx) return;
+          const now = ctx.currentTime;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(330, now);
+          osc.frequency.exponentialRampToValueAtTime(220, now + 0.14);
+          gain.gain.setValueAtTime(0.07, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.16);
+        } catch(e) {}
+      }
+    };
+
+    window.toggleCockpitNightMode = function() {
+      const isNight = document.body.classList.toggle('cockpit-night-mode');
+      const lbl = document.getElementById('night-mode-label');
+      if (lbl) {
+        lbl.innerText = isNight ? 'День (High-Contrast)' : 'Ночь OLED';
+      }
+      try {
+        localStorage.setItem('busliner_cockpit_night', isNight ? '1' : '0');
+      } catch(e) {}
+      if (window.CockpitAudio) CockpitAudio.playBoardSuccess();
+    };
+
+    // Load saved night mode preference
+    try {
+      if (localStorage.getItem('busliner_cockpit_night') === '1') {
+        document.body.classList.add('cockpit-night-mode');
+        const lbl = document.getElementById('night-mode-label');
+        if (lbl) lbl.innerText = 'День (High-Contrast)';
+      }
+    } catch(e) {}
+
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
   <style>
@@ -1378,6 +1457,81 @@
       .profile-unp { display: none; }
       .stats-tiles-grid { grid-template-columns: 1fr; }
     }
+  
+    /* OLED HIGHWAY NIGHT COCKPIT MODE */
+    body.cockpit-night-mode {
+      --canvas: #050507;
+      --surface-card: #0D0E13;
+      --surface-subtle: #14161F;
+      --surface-elevated: #181A24;
+      --border-hairline: #202330;
+      --text-primary: #F3F4F6;
+      --text-muted: #9CA3AF;
+      --text-dim: #6B7280;
+      background-color: #050507;
+      color: #F3F4F6;
+    }
+    body.cockpit-night-mode .dashboard-nav {
+      background: rgba(13, 14, 19, 0.95);
+      border-bottom-color: #202330;
+    }
+    body.cockpit-night-mode .console-header-card,
+    body.cockpit-night-mode .kpi-tile,
+    body.cockpit-night-mode .monolith-card,
+    body.cockpit-night-mode .viewport-3d-card,
+    body.cockpit-night-mode .modal-card,
+    body.cockpit-night-mode .modal-profile-twitter {
+      background: #0D0E13;
+      border-color: #202330;
+    }
+    body.cockpit-night-mode .btn-secondary-hairline,
+    body.cockpit-night-mode .btn-action-undo {
+      background: #14161F;
+      border-color: #282C3C;
+      color: #D1D5DB;
+    }
+    body.cockpit-night-mode .btn-action-board {
+      background: #1E3A8A;
+      border-color: #2563EB;
+      color: #FFFFFF;
+    }
+    body.cockpit-night-mode .manifest-table th {
+      background: #14161F;
+      color: #9CA3AF;
+      border-bottom-color: #202330;
+    }
+    body.cockpit-night-mode .manifest-table td {
+      border-bottom-color: #1A1C26;
+      color: #E5E7EB;
+    }
+    body.cockpit-night-mode .manifest-table tr:hover td {
+      background: #14161F;
+    }
+    body.cockpit-night-mode .badge-free {
+      background: #14161F;
+      border-color: #282C3C;
+      color: #9CA3AF;
+    }
+    .cockpit-mode-btn {
+      height: 38px;
+      padding: 0 12px;
+      border-radius: 9999px;
+      border: 1px solid var(--border-hairline);
+      background: var(--surface-card);
+      color: var(--text-primary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .cockpit-mode-btn:hover {
+      background: var(--surface-subtle);
+      border-color: var(--text-dim);
+    }
+
   </style>
 </head>
 
@@ -1399,6 +1553,12 @@
     <!-- RIGHT NAV ACTIONS: CLOCK AND DRIVER PROFILE IN THE CORNER -->
     <div class="nav-actions">
       <div class="clock-badge" id="clock-display">07:22:45</div>
+      <!-- OLED NIGHT / DAYLIGHT COCKPIT SWITCHER -->
+      <button type="button" class="cockpit-mode-btn" id="btn-night-mode" onclick="toggleCockpitNightMode()" title="Переключить ночной режим OLED для предотвращения ослепления">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <span id="night-mode-label">Ночь OLED</span>
+      </button>
+
 
       <!-- DRIVER PROFILE PILL — PROMINENT IN THE CORNER -->
       <div class="profile-pill" onclick="openDriverProfileModal()" title="Нажмите, чтобы настроить профиль и посмотреть статистику водителя">

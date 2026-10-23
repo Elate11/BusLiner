@@ -1790,6 +1790,105 @@
     .cta-center .btn-accent:hover {
       transform: translateY(-2px);
     }
+  
+    /* PREDICTIVE INTENT BAR (CONVERSION ACCELERATOR) */
+    .search-predictive-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      align-items: center;
+      justify-content: center;
+    }
+    .predictive-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-dim);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-right: 4px;
+    }
+    .intent-pill {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-hairline);
+      padding: 5px 13px;
+      border-radius: 9999px;
+      font-family: var(--font-body);
+      font-size: 11.5px;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+    .intent-pill:hover {
+      background: #FFFFFF;
+      border-color: var(--accent-border);
+      color: var(--accent-institutional);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08);
+    }
+    .intent-pill .pill-highlight {
+      color: var(--accent-institutional);
+      font-weight: 700;
+      margin-left: 2px;
+    }
+    .intent-pill:active {
+      transform: translateY(0);
+    }
+
+    /* SCARCITY & LIVE DEMAND BADGES */
+    .linear-scarcity-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: #FEF2F2;
+      color: #991B1B;
+      border: 1px solid #FECACA;
+    }
+    .badge-pulse-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #DC2626;
+      animation: badgePulse 1.8s infinite;
+    }
+    @keyframes badgePulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.3); }
+    }
+    .linear-viewers-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-left: 8px;
+    }
+
+    /* 3D PERSPECTIVE RECOIL FOR SNIPER TICKET */
+    .paper-recoiling {
+      animation: sniperPaperRecoil3D 0.58s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+    @keyframes sniperPaperRecoil3D {
+      0% { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0); }
+      16% { transform: perspective(1000px) rotateX(-5.8deg) rotateY(3.4deg) translateZ(-26px) scale(0.98); }
+      38% { transform: perspective(1000px) rotateX(2.6deg) rotateY(-1.6deg) translateZ(8px); }
+      68% { transform: perspective(1000px) rotateX(-0.8deg) rotateY(0.4deg) translateZ(-2px); }
+      100% { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0); }
+    }
+
   </style>
 </head>
 <body>
@@ -1912,6 +2011,26 @@
         </div>
 
       </form>
+      <!-- PREDICTIVE INTENT BAR (CONVERSION ACCELERATOR) -->
+      <div class="search-predictive-pills" id="search-predictive-pills">
+        <span class="predictive-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Часто выбирают:
+        </span>
+        <button type="button" class="intent-pill" onclick="applyPresetRoute('Гомель, Автовокзал', 'Минск, Центральный')">
+          Гомель &rarr; Минск <strong class="pill-highlight">Сегодня 18:20</strong>
+        </button>
+        <button type="button" class="intent-pill" onclick="applyPresetRoute('Минск, Центральный', 'Гродно, Автовокзал')">
+          Минск &rarr; Гродно <strong class="pill-highlight">Завтра 07:30</strong>
+        </button>
+        <button type="button" class="intent-pill" onclick="applyPresetRoute('Минск, Центральный', 'Брест, Варшавский')">
+          Минск &rarr; Брест <strong class="pill-highlight">Пятница 17:45</strong>
+        </button>
+        <button type="button" class="intent-pill" onclick="applyPresetRoute('Минск, Центральный', 'Вильнюс, Аэропорт')">
+          Минск &rarr; Вильнюс <strong class="pill-highlight">Каждые 2 часа</strong>
+        </button>
+      </div>
+
 
       <!-- 4 PUNCHY PROMISES (HORIZONTAL MODULAR GRID) -->
       <div class="features-hero-row scroll-reveal stagger-4">
@@ -2737,11 +2856,13 @@
           valChance.textContent = 'Гомель, платформа 3 • Сегодня в 17:00';
           valChance.style.color = 'var(--text-primary)';
         }
-        if (note) note.innerHTML = '<strong style="color: #15803D;">Успешно!</strong> Снайпер перехватил отказной билет за 0.38 сек.';
+        if (note) if (window.BusLinerSoundSystem) BusLinerSoundSystem.playTicketLock();
+        note.innerHTML = '<strong style="color: #15803D;">Успешно!</strong> Снайпер перехватил отказной билет за 0.38 сек.';
       }
 
       // Fire supersonic sniper bullet across the entire screen
       function fireSniperShot() {
+        if (window.BusLinerSoundSystem) BusLinerSoundSystem.playSniperShot();
         if (isAnimating) {
           cancelAnimationFrame(animId);
           isAnimating = false;
@@ -3077,6 +3198,114 @@
         }
       }, 200);
     })();
+  
+    // =========================================================================
+    // BUSLINER WEB AUDIO SOUND ENGINE (ZERO EXTERNAL ASSETS)
+    // =========================================================================
+    window.BusLinerSoundSystem = {
+      ctx: null,
+      getAudioContext() {
+        if (!this.ctx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) this.ctx = new AudioContextClass();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+        return this.ctx;
+      },
+
+      playSniperShot() {
+        try {
+          const ctx = this.getAudioContext();
+          if (!ctx) return;
+          const now = ctx.currentTime;
+
+          // 1. Supersonic crack noise burst
+          const bufferSize = Math.floor(ctx.sampleRate * 0.08);
+          const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.018));
+          }
+
+          const noise = ctx.createBufferSource();
+          noise.buffer = buffer;
+
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(3600, now);
+          filter.frequency.exponentialRampToValueAtTime(320, now + 0.075);
+
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0.4, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+          noise.start(now);
+
+          // 2. Sub-bass kinetic thump (body punch)
+          const subOsc = ctx.createOscillator();
+          const subGain = ctx.createGain();
+          subOsc.type = 'sine';
+          subOsc.frequency.setValueAtTime(140, now);
+          subOsc.frequency.exponentialRampToValueAtTime(38, now + 0.16);
+
+          subGain.gain.setValueAtTime(0.35, now);
+          subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+
+          subOsc.connect(subGain);
+          subGain.connect(ctx.destination);
+          subOsc.start(now);
+          subOsc.stop(now + 0.2);
+        } catch (e) {}
+      },
+
+      playTicketLock() {
+        try {
+          const ctx = this.getAudioContext();
+          if (!ctx) return;
+          const now = ctx.currentTime;
+
+          // Crisp mechanical lock-on chord (Success)
+          [659.25, 880.00, 1318.51].forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.035);
+
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.09, now + idx * 0.035 + 0.008);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.035);
+            osc.stop(now + 0.35);
+          });
+        } catch (e) {}
+      }
+    };
+
+    // PRESET ROUTE APPLIER
+    window.applyPresetRoute = function(fromVal, toVal) {
+      const inpFrom = document.getElementById('input-from');
+      const inpTo = document.getElementById('input-to');
+      if (inpFrom) inpFrom.value = fromVal;
+      if (inpTo) inpTo.value = toVal;
+
+      const scheduleEl = document.getElementById('slide-schedule');
+      if (scheduleEl) {
+        scheduleEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      if (window.BusLinerSoundSystem) {
+        BusLinerSoundSystem.playTicketLock();
+      }
+    };
+
   </script>
 
 </body>
