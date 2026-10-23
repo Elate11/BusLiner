@@ -216,8 +216,63 @@
     }
 
     header.site-header.on-dark-slide .link-subtle-cta {
-      border-color: var(--border-dark);
-      color: var(--text-light-primary);
+      border-color: rgba(232, 226, 214, 0.25);
+      color: #F5F1EA;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    header.site-header.on-dark-slide .link-subtle-cta:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(232, 226, 214, 0.45);
+    }
+
+    /* Dual Action Navigation: Client Portal & Terminal Entrance */
+    .header-client-btn {
+      background: var(--canvas-bone);
+      border-color: var(--border-taupe);
+      cursor: pointer;
+    }
+
+    .header-client-btn:hover {
+      background: var(--text-graphite);
+      color: #FAF8F5 !important;
+      border-color: var(--text-graphite);
+    }
+
+    header.site-header.on-dark-slide .header-client-btn {
+      background: rgba(232, 226, 214, 0.14);
+      border-color: rgba(232, 226, 214, 0.35);
+      color: #F5F1EA;
+    }
+
+    header.site-header.on-dark-slide .header-client-btn:hover {
+      background: #F5F1EA;
+      color: #141312 !important;
+      border-color: #F5F1EA;
+    }
+
+    .header-terminal-btn {
+      background: transparent;
+      border-color: var(--border-taupe);
+    }
+
+    header.site-header.on-dark-slide .header-terminal-btn {
+      border-color: rgba(232, 226, 214, 0.22);
+      color: #E8E2D6;
+    }
+
+    header.site-header.on-dark-slide .header-terminal-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(232, 226, 214, 0.45);
+      color: #FFFFFF;
+    }
+
+    @media (max-width: 768px) {
+      .header-client-btn, .header-terminal-btn {
+        padding: 7px 12px;
+        font-size: 12px;
+        min-height: 38px;
+      }
     }
 
     .header-inner {
@@ -1596,6 +1651,173 @@
         display: none !important;
       }
     }
+
+    /* ==========================================================================
+       CLIENT AUTH MODAL (QUIET LUXURY PASSENGER PORTAL)
+       ========================================================================== */
+    .client-auth-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 2500;
+      background: rgba(18, 17, 16, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s var(--ease-drive);
+    }
+
+    .client-auth-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .client-auth-modal {
+      background: #FAF8F5;
+      border: 1px solid var(--border-taupe);
+      border-radius: var(--radius-sm);
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 28px 72px -16px rgba(0, 0, 0, 0.42);
+      position: relative;
+      overflow: hidden;
+      transform: translateY(24px) scale(0.97);
+      transition: transform 0.35s var(--ease-drive);
+    }
+
+    .client-auth-backdrop.active .client-auth-modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .client-auth-head {
+      padding: 26px 28px 18px;
+      border-bottom: 1px solid var(--border-hairline);
+      position: relative;
+      background: #FDFBF7;
+    }
+
+    .client-auth-close-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--border-hairline);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      line-height: 1;
+      transition: all 0.2s ease;
+    }
+
+    .client-auth-close-btn:hover {
+      background: var(--canvas-bone);
+      color: var(--text-graphite);
+      border-color: var(--border-taupe);
+    }
+
+    .client-auth-kicker {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-oxblood);
+      margin-bottom: 6px;
+    }
+
+    .client-auth-title {
+      font-family: var(--font-display);
+      font-size: 25px;
+      font-weight: 500;
+      color: var(--text-graphite);
+      margin-bottom: 4px;
+    }
+
+    .client-auth-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .client-auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border-hairline);
+      background: var(--canvas-ivory);
+    }
+
+    .client-auth-tab-btn {
+      padding: 13px 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-faint);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .client-auth-tab-btn.active {
+      color: var(--text-graphite);
+      font-weight: 700;
+      border-bottom-color: var(--color-forest);
+      background: #FAF8F5;
+    }
+
+    .client-auth-body {
+      padding: 24px 28px 28px;
+    }
+
+    .client-auth-tab-pane {
+      display: none;
+    }
+
+    .client-auth-tab-pane.active {
+      display: block;
+    }
+
+    .client-phone-field {
+      width: 100%;
+      background: #FFFFFF;
+      border: 1px solid var(--border-taupe);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      font-family: var(--font-mono);
+      font-size: 18px;
+      color: var(--text-graphite);
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .client-phone-field:focus {
+      border-color: var(--text-graphite);
+    }
+
+    .client-ticket-card-preview {
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      padding: 18px 20px;
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 4px 16px -4px rgba(43, 42, 40, 0.06);
+    }
   </style>
 </head>
 <body>
@@ -1619,9 +1841,16 @@
           <span class="brand-wordmark">BusLiner</span>
         </a>
 
-        <div style="display: flex; gap: 14px; align-items: center; justify-self: end;">
-          <a href="driver-terminal.html" class="link-subtle-cta btn-magnetic" data-cursor="hover">
-            <span>Терминал</span>
+        <div style="display: flex; gap: 12px; align-items: center; justify-self: end;">
+          <button type="button" class="link-subtle-cta btn-magnetic header-client-btn" onclick="openClientAuthModal()" data-cursor="hover" title="Личный кабинет пассажира">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Вход для клиентов</span>
+          </button>
+          <a href="driver-terminal.html" class="link-subtle-cta btn-magnetic header-terminal-btn" data-cursor="hover" title="Терминал экипажа и диспетчерской">
+            <span>Войти</span>
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
           </a>
         </div>
@@ -2167,8 +2396,9 @@
               ЦИФРОВЫЕ СЕРВИСЫ
             </div>
             <ul class="footer-routes-list" style="list-style: none; padding: 0; margin: 0; color: #C4BCB1;">
+              <li><a href="#" onclick="openClientAuthModal(); return false;" style="color: #E8E2D6; text-decoration: none;">Вход для клиентов (Личный кабинет)</a></li>
               <li><a href="seat-picker-3d-demo.html" style="color: #E8E2D6; text-decoration: none;">3D Выбор кресла (Спринтеры и лайнеры)</a></li>
-              <li><a href="driver-terminal.html" style="color: #E8E2D6; text-decoration: none;">Терминал посадки водителя</a></li>
+              <li><a href="driver-terminal.html" style="color: #E8E2D6; text-decoration: none;">Войти в терминал посадки экипажа</a></li>
               <li><a href="carrier-dashboard.html" style="color: #E8E2D6; text-decoration: none;">Диспетчерская перевозчика</a></li>
               <li><span style="color: #8F887D;">Лист ожидания (перехват 0.38с)</span></li>
               <li><a href="https://t.me/BusLinerFleetBot" target="_blank" rel="noopener noreferrer" style="color: #E8E2D6; text-decoration: none;">Telegram бот: @BusLinerFleetBot &rarr;</a></li>
@@ -2215,6 +2445,91 @@
     </section>
 
   </main>
+
+  <!-- =========================================================================
+       CLIENT AUTH MODAL (PASSENGER PORTAL & TRIP ACCESS)
+       ========================================================================= -->
+  <div class="client-auth-backdrop" id="clientAuthModal" onclick="handleAuthBackdropClick(event)" role="dialog" aria-modal="true" aria-labelledby="clientAuthTitle">
+    <div class="client-auth-modal">
+      <div class="client-auth-head">
+        <button type="button" class="client-auth-close-btn" onclick="closeClientAuthModal()" title="Закрыть">&times;</button>
+        <div class="client-auth-kicker">BUSLINER &bull; ЛИЧНЫЙ КАБИНЕТ</div>
+        <h2 class="client-auth-title" id="clientAuthTitle">Вход для клиентов</h2>
+        <p class="client-auth-subtitle">Управление бронированием, посадочные талоны и статус рейса</p>
+      </div>
+
+      <div class="client-auth-tabs">
+        <button type="button" class="client-auth-tab-btn active" id="tabBtnTg" onclick="switchClientAuthTab('tg')">Telegram-бот</button>
+        <button type="button" class="client-auth-tab-btn" id="tabBtnPhone" onclick="switchClientAuthTab('phone')">По номеру телефона</button>
+      </div>
+
+      <div class="client-auth-body">
+        <!-- Tab Pane 1: Telegram 1-click login -->
+        <div class="client-auth-tab-pane active" id="paneTg">
+          <div style="background: var(--canvas-bone); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 18px 20px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 14px; align-items: flex-start;">
+              <div style="width: 38px; height: 38px; border-radius: 50%; background: #2AABEE; color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </div>
+              <div>
+                <div style="font-family: var(--font-display); font-size: 17px; font-weight: 500; color: var(--text-graphite); margin-bottom: 4px;">Быстрый вход без паролей</div>
+                <div style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5;">Все ваши купленные билеты, уведомления о посадке и GPS-трекинг борта синхронизированы с ботом @BusLinerFleetBot.</div>
+              </div>
+            </div>
+          </div>
+
+          <a href="https://t.me/BusLinerFleetBot" target="_blank" rel="noopener noreferrer" class="btn-action-deck btn-magnetic" style="width: 100%; justify-content: center; background: #2AABEE; border-color: #2AABEE; color: #FFFFFF; padding: 15px 24px;" data-cursor="hover">
+            <span>Войти через Telegram</span>
+            <span>&rarr;</span>
+          </a>
+        </div>
+
+        <!-- Tab Pane 2: Phone SMS login -->
+        <div class="client-auth-tab-pane" id="panePhone">
+          <div id="phoneStep1">
+            <label for="clientPhoneInput" style="display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px;">
+              Номер телефона пассажира
+            </label>
+            <input type="tel" id="clientPhoneInput" class="client-phone-field" placeholder="+375 (29) 123-45-67" value="+375 (29) ">
+            <button type="button" class="btn-action-deck btn-magnetic" style="width: 100%; justify-content: center; padding: 14px 20px;" onclick="requestClientSmsCode()" data-cursor="hover">
+              <span>Получить код в СМС &rarr;</span>
+            </button>
+          </div>
+
+          <div id="phoneStep2" style="display: none;">
+            <div style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 12px;">
+              Код отправлен на указанный номер. Введите 4 цифры для входа:
+            </div>
+            <input type="text" id="clientSmsInput" class="client-phone-field" placeholder="0000" maxlength="4" style="text-align: center; letter-spacing: 0.3em; font-size: 24px;">
+            <button type="button" class="btn-action-deck btn-magnetic" style="width: 100%; justify-content: center; padding: 14px 20px; background: var(--color-forest); border-color: var(--color-forest);" onclick="verifyClientSmsCode()" data-cursor="hover">
+              <span>Подтвердить вход &rarr;</span>
+            </button>
+          </div>
+
+          <div id="phoneActiveBooking" style="display: none;" class="client-ticket-card-preview">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--border-taupe); padding-bottom: 10px;">
+              <span style="font-family: var(--font-mono); font-size: 12px; color: var(--color-forest); font-weight: 600;">БИЛЕТ АКТИВЕН &bull; PREMI&Egrave;RE</span>
+              <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-faint);">BL-8942</span>
+            </div>
+            <div style="font-family: var(--font-display); font-size: 20px; font-weight: 500; color: var(--text-graphite); margin-top: 4px;">
+              Минск &rarr; Вильнюс (Sprinter Executive)
+            </div>
+            <div style="font-size: 13.5px; color: var(--text-muted);">
+              Сегодня, 18:45 &bull; Перрон первого класса &numero; 3 &bull; Кресло <strong>04A</strong>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+              <a href="seat-picker-3d-demo.html" class="link-subtle-cta" style="flex: 1; justify-content: center; font-size: 12px; min-height: 36px; padding: 6px 12px;">3D Салон</a>
+              <a href="https://t.me/BusLinerFleetBot" target="_blank" rel="noopener noreferrer" class="link-subtle-cta" style="flex: 1; justify-content: center; font-size: 12px; min-height: 36px; padding: 6px 12px; background: var(--color-forest); color: #F5F1EA; border-color: var(--color-forest);">Посадочный талон &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 
   <!-- =========================================================================
        DYNAMIC LUXURY MOTION ENGINE (KEYNOTE SLIDE DECK & KINETIC MICROPHYSICS)
@@ -2463,6 +2778,76 @@
         status.innerText = 'МЕСТО ЗАКРЕПЛЕНО (0.38С)';
       }, 70);
     };
+
+    // 5. CLIENT AUTH MODAL (PASSENGER PORTAL & TRIP ACCESS)
+    window.openClientAuthModal = function() {
+      const modal = document.getElementById('clientAuthModal');
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    };
+
+    window.closeClientAuthModal = function() {
+      const modal = document.getElementById('clientAuthModal');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    };
+
+    window.handleAuthBackdropClick = function(e) {
+      if (e.target && e.target.id === 'clientAuthModal') {
+        window.closeClientAuthModal();
+      }
+    };
+
+    window.switchClientAuthTab = function(tabName) {
+      const btnTg = document.getElementById('tabBtnTg');
+      const btnPhone = document.getElementById('tabBtnPhone');
+      const paneTg = document.getElementById('paneTg');
+      const panePhone = document.getElementById('panePhone');
+
+      if (!btnTg || !btnPhone || !paneTg || !panePhone) return;
+
+      if (tabName === 'tg') {
+        btnTg.classList.add('active');
+        btnPhone.classList.remove('active');
+        paneTg.classList.add('active');
+        panePhone.classList.remove('active');
+      } else {
+        btnPhone.classList.add('active');
+        btnTg.classList.remove('active');
+        panePhone.classList.add('active');
+        paneTg.classList.remove('active');
+      }
+    };
+
+    window.requestClientSmsCode = function() {
+      const step1 = document.getElementById('phoneStep1');
+      const step2 = document.getElementById('phoneStep2');
+      if (step1 && step2) {
+        step1.style.display = 'none';
+        step2.style.display = 'block';
+        const smsInput = document.getElementById('clientSmsInput');
+        if (smsInput) smsInput.focus();
+      }
+    };
+
+    window.verifyClientSmsCode = function() {
+      const step2 = document.getElementById('phoneStep2');
+      const preview = document.getElementById('phoneActiveBooking');
+      if (step2 && preview) {
+        step2.style.display = 'none';
+        preview.style.display = 'flex';
+      }
+    };
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        window.closeClientAuthModal();
+      }
+    });
 
     // Initialize slide 1 state and counters on load
     document.addEventListener('DOMContentLoaded', () => {
