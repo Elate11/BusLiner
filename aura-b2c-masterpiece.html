@@ -332,18 +332,32 @@
     }
 
     /* ==========================================================================
-       SIDE DECK CONTROLS (PRESENTATION KEYNOTE RAIL)
+       SIDE DECK CONTROLS (PRESENTATION KEYNOTE RAIL - UNIVERSAL VISIBILITY)
        ========================================================================== */
     .presentation-side-rail {
       position: fixed;
-      right: 36px;
+      right: 24px;
       top: 50%;
       transform: translateY(-50%);
       z-index: 1000;
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 16px;
+      gap: 12px;
+      padding: 14px 12px;
+      border-radius: 30px;
+      background: rgba(245, 241, 234, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(184, 169, 154, 0.45);
+      box-shadow: 0 8px 30px -6px rgba(43, 42, 40, 0.14);
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    .presentation-side-rail.on-dark-slide {
+      background: rgba(28, 27, 25, 0.7);
+      border-color: rgba(232, 226, 214, 0.25);
+      box-shadow: 0 8px 30px -6px rgba(0, 0, 0, 0.4);
     }
 
     .deck-rail-item {
@@ -355,7 +369,7 @@
       border: none;
       padding: 4px 0;
       outline: none;
-      min-height: 36px;
+      min-height: 28px;
     }
 
     .deck-rail-label {
@@ -363,36 +377,57 @@
       font-size: 10px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--text-faint);
+      color: var(--text-graphite);
       opacity: 0;
-      transform: translateX(12px);
-      transition: all 0.3s var(--ease-drive);
+      transform: translateX(10px);
+      transition: all 0.25s var(--ease-drive);
       pointer-events: none;
+      white-space: nowrap;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+    }
+
+    .presentation-side-rail.on-dark-slide .deck-rail-label {
+      color: #E8E2D6;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
     }
 
     .deck-rail-item:hover .deck-rail-label {
-      opacity: 1;
+      opacity: 0.95;
       transform: translateX(0);
     }
 
     .deck-rail-indicator {
-      width: 22px;
-      height: 2px;
-      background: var(--border-taupe);
-      border-radius: 1px;
+      width: 18px;
+      height: 3px;
+      background: rgba(43, 42, 40, 0.4);
+      border-radius: 2px;
       transition: all 0.35s var(--ease-drive);
     }
 
+    .presentation-side-rail.on-dark-slide .deck-rail-indicator {
+      background: rgba(232, 226, 214, 0.45);
+    }
+
     .deck-rail-item.active .deck-rail-indicator {
-      width: 44px;
-      height: 2px;
-      background: var(--color-forest);
+      width: 38px;
+      height: 3px;
+      background: var(--text-graphite);
+    }
+
+    .presentation-side-rail.on-dark-slide .deck-rail-item.active .deck-rail-indicator {
+      background: #F5F1EA;
+      box-shadow: 0 0 10px rgba(245, 241, 234, 0.7);
     }
 
     .deck-rail-item.active .deck-rail-label {
       opacity: 1;
       transform: translateX(0);
-      color: var(--color-forest);
+      font-weight: 700;
+      color: var(--text-graphite);
+    }
+
+    .presentation-side-rail.on-dark-slide .deck-rail-item.active .deck-rail-label {
+      color: #F5F1EA;
       font-weight: 700;
     }
 
@@ -1252,9 +1287,6 @@
         <div style="max-width: 860px;">
           
           <div>
-            <span class="hero-deck-badge vector-stagger-text stagger-1" style="color: #D9CDB8;">
-              N&deg; 01 &bull; ОФИЦИАЛЬНАЯ ЛИНИЯ МЕЖГОРОДСКОГО СООБЩЕНИЯ
-            </span>
 
             <h1 class="hero-deck-title vector-stagger-text stagger-2" style="color: #F5F1EA; margin-bottom: 20px;">
               <span class="word-wrap"><span class="word-inner">Искусство</span></span>
@@ -1309,50 +1341,44 @@
     <!-- SLIDE 02: THE MANIFESTO -->
     <section class="deck-slide next" id="slide2">
       <div class="container">
-        <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center;">
+        <div style="max-width: 1080px; margin: 0 auto; text-align: center;">
           
-          <div>
-            <div class="hero-deck-badge vector-stagger-text stagger-1" style="color: var(--color-oxblood);">
-              N&deg; 02 &bull; ФИЛОСОФИЯ И ПАССАЖИРСКИЙ РЕГЛАМЕНТ
-            </div>
-
-            <blockquote class="manifesto-lead-quote vector-stagger-text stagger-2" style="text-align: left; font-size: clamp(1.8rem, 2.8vw + 0.5rem, 3rem); margin-bottom: 20px;">
-              &laquo;Настоящая роскошь в дороге &mdash; это не блеск и не позолота. Это возможность закрыть глаза и знать, что <em>ваше время и покой неприкосновенны</em>&raquo;.
-            </blockquote>
-
-            <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 28px;" class="vector-stagger-text stagger-3">
-              &mdash; Регламент перевозок BusLiner, 2026
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 14px;" class="vector-stagger-card stagger-4">
-              <div class="deck-triad-card" style="padding: 16px 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
-                  <strong style="font-family: var(--font-display); font-size: 18px; color: var(--text-graphite);">Тихий салон первого класса</strong>
-                  <span class="deck-triad-num">[ ПРИНЦИП I ]</span>
-                </div>
-                <p class="deck-triad-text">Запрет на громкие звонки и видео без наушников. Вы можете спать или работать.</p>
-              </div>
-
-              <div class="deck-triad-card" style="padding: 16px 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
-                  <strong style="font-family: var(--font-display); font-size: 18px; color: var(--text-graphite);">19 мест вместо 22</strong>
-                  <span class="deck-triad-num">[ ПРИНЦИП II ]</span>
-                </div>
-                <p class="deck-triad-text">Шаг между рядами 86 см, капитанские кресла у окна с наклоном спинки до 135&deg;.</p>
-              </div>
-
-              <div class="deck-triad-card" style="padding: 16px 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
-                  <strong style="font-family: var(--font-display); font-size: 18px; color: var(--text-graphite);">Точность отправления</strong>
-                  <span class="deck-triad-num">[ ПРИНЦИП III ]</span>
-                </div>
-                <p class="deck-triad-text">Отправление строго по графику с Центрального автовокзала без задержек.</p>
-              </div>
-            </div>
+          <div class="hero-deck-badge vector-stagger-text stagger-1" style="color: var(--color-oxblood); margin-bottom: 20px;">
+            N&deg; 02 &bull; ФИЛОСОФИЯ И ПАССАЖИРСКИЙ РЕГЛАМЕНТ
           </div>
 
-          <div class="hero-photo-frame vector-stagger-card stagger-4 slide-curtain-image" style="height: 480px;">
-            <img src="https://images.unsplash.com/photo-1506015391300-4802dc74de2e?auto=format&fit=crop&w=1200&q=80" alt="Пассажир в пути через панорамное окно микроавтобуса" class="ken-burns-active">
+          <blockquote class="manifesto-lead-quote vector-stagger-text stagger-2" style="font-size: clamp(2rem, 3.2vw + 0.5rem, 3.4rem); line-height: 1.28; margin-bottom: 20px;">
+            &laquo;Настоящая роскошь в дороге &mdash; это не блеск и не позолота. Это возможность закрыть глаза и знать, что <em>ваше время и покой неприкосновенны</em>&raquo;.
+          </blockquote>
+
+          <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 40px;" class="vector-stagger-text stagger-3">
+            &mdash; Регламент перевозок BusLiner, 2026
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: left;" class="vector-stagger-card stagger-4">
+            <div class="deck-triad-card" style="padding: 24px 28px;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                <strong style="font-family: var(--font-display); font-size: 20px; color: var(--text-graphite);">Тихий салон</strong>
+                <span class="deck-triad-num">[ ПРИНЦИП I ]</span>
+              </div>
+              <p class="deck-triad-text">Запрет на громкие звонки и видео без наушников. Полная акустическая изоляция.</p>
+            </div>
+
+            <div class="deck-triad-card" style="padding: 24px 28px;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                <strong style="font-family: var(--font-display); font-size: 20px; color: var(--text-graphite);">19 мест вместо 22</strong>
+                <span class="deck-triad-num">[ ПРИНЦИП II ]</span>
+              </div>
+              <p class="deck-triad-text">Шаг между рядами 86 см, капитанские кресла у окна с наклоном спинки до 135&deg;.</p>
+            </div>
+
+            <div class="deck-triad-card" style="padding: 24px 28px;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                <strong style="font-family: var(--font-display); font-size: 20px; color: var(--text-graphite);">Точность времени</strong>
+                <span class="deck-triad-num">[ ПРИНЦИП III ]</span>
+              </div>
+              <p class="deck-triad-text">Отправление строго по графику с Центрального автовокзала без задержек.</p>
+            </div>
           </div>
 
         </div>
@@ -1394,8 +1420,24 @@
             </div>
           </div>
 
-          <div class="sanctuary-deck-photo vector-stagger-card stagger-4 slide-curtain-image">
-            <img src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80" alt="Анатомическое кожаное капитанское кресло с подголовником" class="ken-burns-active">
+          <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-dark); border-radius: var(--radius-sm); padding: 36px 32px;" class="vector-stagger-card stagger-4">
+            <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #D9CDB8; margin-bottom: 24px;">
+              СПЕЦИФИКАЦИЯ САЛОНА &bull; SPRINTER 519 CDI
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 16px;">
+                <div style="font-family: var(--font-display); font-size: 20px; color: #F5F1EA; margin-bottom: 4px;">Анатомические кресла Nappa</div>
+                <div style="font-size: 13px; color: var(--text-light-muted); line-height: 1.55;">Капитанские сиденья с боковой поддержкой, индивидуальными подлокотниками и углом наклона 135&deg;.</div>
+              </div>
+              <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 16px;">
+                <div style="font-family: var(--font-display); font-size: 20px; color: #F5F1EA; margin-bottom: 4px;">Акустический барьер 58 дБ</div>
+                <div style="font-size: 13px; color: var(--text-light-muted); line-height: 1.55;">Трёхслойная шумоизоляция моторного отсека, арок и двойные атермальные стеклопакеты.</div>
+              </div>
+              <div>
+                <div style="font-family: var(--font-display); font-size: 20px; color: #F5F1EA; margin-bottom: 4px;">Микроклимат с HEPA-фильтрацией</div>
+                <div style="font-size: 13px; color: var(--text-light-muted); line-height: 1.55;">Раздельный климат-контроль салона с непрерывным очищением и подачей свежего воздуха.</div>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -1420,57 +1462,57 @@
 
         <div class="collection-deck-grid vector-stagger-card stagger-3">
           
-          <div class="fleet-monograph-card" data-cursor="hover">
-            <div class="fleet-card-img-box">
-              <img src="https://images.unsplash.com/photo-1550355291-bbee04a92027?auto=format&fit=crop&w=800&q=80" alt="Интерьер кабины и салона бизнес-лайнера">
-            </div>
-            <div class="fleet-card-body">
-              <h3 class="fleet-card-title">Classe Première</h3>
+          <div class="fleet-monograph-card" data-cursor="hover" style="padding: 28px 24px;">
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 10px; color: var(--color-oxblood); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px;">
+                [ PREMIÈRE &bull; 01 ]
+              </div>
+              <h3 class="fleet-card-title" style="font-size: 24px; margin-bottom: 10px;">Classe Première</h3>
               <p class="fleet-card-desc">19 капитанских кресел Nappa, столик, подстаканник и 220V для ноутбука.</p>
             </div>
-            <div class="fleet-card-foot">
+            <div class="fleet-card-foot" style="margin-top: 24px; border-top: 1px dashed var(--border-taupe); padding-top: 16px;">
               <strong>от 28 BYN</strong>
               <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
             </div>
           </div>
 
-          <div class="fleet-monograph-card" data-cursor="hover">
-            <div class="fleet-card-img-box">
-              <img src="https://images.unsplash.com/photo-1530521954074-e64f6810b32d?auto=format&fit=crop&w=800&q=80" alt="Трансфер в международный аэропорт">
-            </div>
-            <div class="fleet-card-body">
-              <h3 class="fleet-card-title">Navette Express</h3>
+          <div class="fleet-monograph-card" data-cursor="hover" style="padding: 28px 24px;">
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 10px; color: var(--color-taupe); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px;">
+                [ AIRPORT &bull; 02 ]
+              </div>
+              <h3 class="fleet-card-title" style="font-size: 24px; margin-bottom: 10px;">Navette Express</h3>
               <p class="fleet-card-desc">Прямой трансфер в аэропорты Вильнюса и Варшавы с выделенной полосой границы.</p>
             </div>
-            <div class="fleet-card-foot">
+            <div class="fleet-card-foot" style="margin-top: 24px; border-top: 1px dashed var(--border-taupe); padding-top: 16px;">
               <strong>от 85 BYN</strong>
               <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
             </div>
           </div>
 
-          <div class="fleet-monograph-card" data-cursor="hover">
-            <div class="fleet-card-img-box">
-              <img src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80" alt="Ночной рейс по освещённой трассе">
-            </div>
-            <div class="fleet-card-body">
-              <h3 class="fleet-card-title">Salon de Nuit</h3>
+          <div class="fleet-monograph-card" data-cursor="hover" style="padding: 28px 24px;">
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 10px; color: var(--color-forest); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px;">
+                [ NIGHT SLEEPER &bull; 03 ]
+              </div>
+              <h3 class="fleet-card-title" style="font-size: 24px; margin-bottom: 10px;">Salon de Nuit</h3>
               <p class="fleet-card-desc">Ночные рейсы с глубоким наклоном кресел 140&deg;, набором для сна и водой.</p>
             </div>
-            <div class="fleet-card-foot">
+            <div class="fleet-card-foot" style="margin-top: 24px; border-top: 1px dashed var(--border-taupe); padding-top: 16px;">
               <strong>от 34 BYN</strong>
               <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать &rarr;</a>
             </div>
           </div>
 
-          <div class="fleet-monograph-card" data-cursor="hover">
-            <div class="fleet-card-img-box">
-              <img src="https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&w=800&q=80" alt="Индивидуальный междугородний маршрут по сосновому шоссе">
-            </div>
-            <div class="fleet-card-body">
-              <h3 class="fleet-card-title">Service Privé</h3>
+          <div class="fleet-monograph-card" data-cursor="hover" style="padding: 28px 24px;">
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-graphite); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px;">
+                [ CHARTER &bull; 04 ]
+              </div>
+              <h3 class="fleet-card-title" style="font-size: 24px; margin-bottom: 10px;">Service Privé</h3>
               <p class="fleet-card-desc">Индивидуальный чартер всего лайнера с персональным экипажем высшей категории.</p>
             </div>
-            <div class="fleet-card-foot">
+            <div class="fleet-card-foot" style="margin-top: 24px; border-top: 1px dashed var(--border-taupe); padding-top: 16px;">
               <strong>По запросу</strong>
               <a href="busliner-partners.html" class="link-fleet-reserve">Заявка &rarr;</a>
             </div>
@@ -1518,12 +1560,8 @@
             </div>
           </div>
 
-          <div style="display: flex; gap: 24px; align-items: center; justify-content: center; flex-wrap: wrap;" class="vector-stagger-card stagger-4">
-            <div class="hero-photo-frame slide-curtain-image" style="width: 220px; height: 380px; flex-shrink: 0; box-shadow: var(--shadow-subtle);">
-              <img src="https://images.unsplash.com/photo-1542296332-2e4473faf563?auto=format&fit=crop&w=800&q=80" alt="Посадка пассажира в междугородний лайнер BusLiner" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-
-            <div class="ticket-paper-frame" id="slideTicket" style="flex: 1; min-width: 280px; max-width: 370px;">
+          <div style="display: flex; justify-content: center;" class="vector-stagger-card stagger-4">
+            <div class="ticket-paper-frame" id="slideTicket">
               <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-taupe); padding-bottom: 14px; margin-bottom: 20px;">
                 <span style="font-family: var(--font-mono); font-size: 10px; color: var(--text-faint);">BL &bull; 089-ARCHIVE</span>
                 <span id="ticketStatus" style="font-family: var(--font-mono); font-size: 10px; padding: 2px 8px; border: 1px solid var(--border-taupe); border-radius: 3px; background: var(--canvas-bone);">ОЖИДАНИЕ ВОЗВРАТА</span>
@@ -1561,68 +1599,7 @@
 
     <!-- SLIDE 06: TIMETABLE & REGISTRY -->
     <section class="deck-slide next" id="slide6">
-      
-      <!-- Full-bleed Ambient Background Highway & Cruising Minibus -->
-      <div class="slide-highway-bg-canvas" aria-hidden="true">
-        <svg viewBox="0 0 1920 1080" preserveAspectRatio="none" style="width: 100%; height: 100%; display: block;">
-          <defs>
-            <linearGradient id="roadHeadlightBeam" x1="0%" y1="50%" x2="100%" y2="50%">
-              <stop offset="0%" stop-color="#FFFDF7" stop-opacity="0.65" />
-              <stop offset="60%" stop-color="#FFFDF7" stop-opacity="0.18" />
-              <stop offset="100%" stop-color="#FFFDF7" stop-opacity="0" />
-            </linearGradient>
-            <filter id="carAmbientShadow" x="-40%" y="-40%" width="180%" height="180%">
-              <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#1A1918" flood-opacity="0.25" />
-            </filter>
-          </defs>
-
-          <!-- Full-Bleed Highway Road Ribbon -->
-          <path id="highwayTrackRoadBorder" d="M -80,520 C 380,320 620,740 1020,440 C 1380,180 1620,680 2000,480" 
-                fill="none" stroke="rgba(184, 169, 154, 0.45)" stroke-width="44" stroke-linecap="round"/>
-          <path id="highwayTrackRoadSurface" d="M -80,520 C 380,320 620,740 1020,440 C 1380,180 1620,680 2000,480" 
-                fill="none" stroke="rgba(240, 235, 226, 0.65)" stroke-width="38" stroke-linecap="round"/>
-
-          <!-- Center Dashed Highway Line -->
-          <path id="highwayTrackRoadDashed" d="M -80,520 C 380,320 620,740 1020,440 C 1380,180 1620,680 2000,480" 
-                fill="none" stroke="rgba(143, 136, 125, 0.75)" stroke-width="2" stroke-dasharray="14 18"/>
-
-          <!-- Ambient Highway Waypoints -->
-          <g font-family="var(--font-mono)" font-size="11" fill="var(--text-faint)" letter-spacing="0.12em">
-            <circle cx="160" cy="455" r="4" fill="var(--color-oxblood)" />
-            <text x="175" y="459">[ ТЕРМИНАЛ МИНСК &bull; КМ 0 ]</text>
-
-            <circle cx="880" cy="530" r="4" fill="var(--color-taupe)" />
-            <text x="895" y="534">[ ТРАССА М7 &bull; ОШМЯНЫ &bull; КМ 86 ]</text>
-
-            <circle cx="1720" cy="555" r="4" fill="var(--color-forest)" />
-            <text x="1560" y="585">[ АЭРОПОРТ ВИЛЬНЮС &bull; КМ 174 ]</text>
-          </g>
-
-          <!-- The Top-Down Executive Minibus with Headlights & Tail Lights -->
-          <g id="highwayVehicleGroup" filter="url(#carAmbientShadow)">
-            <!-- Twin Forward Headlight Beams -->
-            <polygon points="22,-5 140,-34 140,-5 22,-2" fill="url(#roadHeadlightBeam)"/>
-            <polygon points="22,5 140,5 140,34 22,2" fill="url(#roadHeadlightBeam)"/>
-
-            <!-- Sprinter Minibus Aerodynamic Body -->
-            <rect x="-24" y="-12" width="48" height="24" rx="5" ry="5" fill="#2B2A28" stroke="#484540" stroke-width="1"/>
-            
-            <!-- Smoked Panoramic Glass Windshield & Roof -->
-            <path d="M 6 -9 L 16 -6 Q 19 0 16 6 L 6 9 Z" fill="#141312"/>
-            <rect x="-10" y="-8.5" width="14" height="17" rx="3" fill="#1C1B1A" opacity="0.95"/>
-            
-            <!-- Side Mirrors -->
-            <rect x="8" y="-15" width="4" height="3" rx="1" fill="#3D3B38"/>
-            <rect x="8" y="12" width="4" height="3" rx="1" fill="#3D3B38"/>
-
-            <!-- Rear Luxury Ruby Tail Lights -->
-            <rect x="-24" y="-10" width="3" height="5" rx="1" fill="#8B2626"/>
-            <rect x="-24" y="5" width="3" height="5" rx="1" fill="#8B2626"/>
-          </g>
-        </svg>
-      </div>
-
-      <div class="container" style="position: relative; z-index: 2;">
+      <div class="container">
         
         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;" class="vector-stagger-text stagger-1">
           <div>
@@ -1881,13 +1858,18 @@
         else link.classList.remove('active');
       });
 
-      // Header on dark slides (Slide 1: Video Hero, Slide 3: Sanctuary, Slide 7: Footer)
+      // Header and Side Rail on dark slides (Slide 1: Video Hero, Slide 3: Sanctuary, Slide 7: Footer)
+      const sideRail = document.querySelector('.presentation-side-rail');
+      const isDarkSlide = (newIndex === 0 || newIndex === 2 || newIndex === 6);
+
       if (siteHeader) {
-        if (newIndex === 0 || newIndex === 2 || newIndex === 6) {
-          siteHeader.classList.add('on-dark-slide');
-        } else {
-          siteHeader.classList.remove('on-dark-slide');
-        }
+        if (isDarkSlide) siteHeader.classList.add('on-dark-slide');
+        else siteHeader.classList.remove('on-dark-slide');
+      }
+
+      if (sideRail) {
+        if (isDarkSlide) sideRail.classList.add('on-dark-slide');
+        else sideRail.classList.remove('on-dark-slide');
       }
 
       currentSlide = newIndex;
@@ -2051,33 +2033,11 @@
       }, 70);
     };
 
-    // 5. DYNAMIC LUXURY TOP-DOWN HIGHWAY TELEMETRY (SPRINTER CRUISING MOTION)
-    (function initHighwayTelemetry() {
-      const highwayPath = document.getElementById('highwayTrackRoadBorder');
-      const vehicleGroup = document.getElementById('highwayVehicleGroup');
-      const hudSpeedometer = document.getElementById('hudSpeedometer');
-
-      if (!highwayPath || !vehicleGroup) return;
-
-      let carDistance = 0;
-      const pathLength = highwayPath.getTotalLength();
-
-      function stepHighway() {
-        carDistance = (carDistance + 1.8) % pathLength;
-        const p1 = highwayPath.getPointAtLength(carDistance);
-        const p2 = highwayPath.getPointAtLength((carDistance + 3) % pathLength);
-        const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * (180 / Math.PI);
-
-        vehicleGroup.setAttribute('transform', `translate(${p1.x}, ${p1.y}) rotate(${angle})`);
-
-        requestAnimationFrame(stepHighway);
-      }
-      requestAnimationFrame(stepHighway);
-    })();
-
     // Initialize slide 1 state and counters on load
     document.addEventListener('DOMContentLoaded', () => {
       if (siteHeader) siteHeader.classList.add('on-dark-slide');
+      const sideRail = document.querySelector('.presentation-side-rail');
+      if (sideRail) sideRail.classList.add('on-dark-slide');
       runCountUpAnimations(slides[0]);
     });
   </script>
