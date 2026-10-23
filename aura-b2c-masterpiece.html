@@ -482,9 +482,8 @@
     }
 
     .deck-slide.prev {
-      opacity: 0.12;
-      transform: translateY(-20%) scale(0.96);
-      filter: blur(3px);
+      opacity: 0;
+      transform: translateY(-100%);
       z-index: 5;
     }
 
@@ -577,17 +576,12 @@
 
     .hero-bg-video {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      transform: translate(-50%, -50%);
+      inset: 0;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       /* Quiet Luxury Film Color Grading (35mm Cine Look) */
       filter: saturate(0.68) sepia(0.18) contrast(1.12) brightness(0.66);
-      will-change: transform;
     }
 
     .hero-video-scrim {
@@ -1024,19 +1018,36 @@
     }
 
     /* ==========================================================================
-       SLIDE 6: TIMETABLE & ARCHITECTURAL FOOTER
+       SLIDE 6: TIMETABLE & FULL-BLEED AMBIENT HIGHWAY BACKGROUND
        ========================================================================== */
     #slide6 {
-      background: linear-gradient(180deg, var(--canvas-ivory) 0%, #E8E2D6 100%);
+      background: #EAE4D8;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-highway-bg-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+      opacity: 0.75;
     }
 
     .timetable-slide-box {
       width: 100%;
-      background: #FAF8F5;
-      border: 1px solid var(--border-hairline);
+      background: rgba(253, 251, 247, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--border-taupe);
       border-radius: var(--radius-sm);
       padding: 32px;
-      box-shadow: 0 16px 36px -12px rgba(43, 42, 40, 0.06);
+      box-shadow: 0 16px 36px -12px rgba(43, 42, 40, 0.08);
+      position: relative;
+      z-index: 2;
     }
 
     .timetable-slide-table {
@@ -1062,62 +1073,7 @@
     }
 
     .timetable-slide-table tr:hover td {
-      background: #EFE8DD;
-    }
-
-    /* ==========================================================================
-       DYNAMIC LUXURY TOP-DOWN HIGHWAY TELEMETRY
-       ========================================================================== */
-    .highway-telemetry-wrapper {
-      background: var(--canvas-bone);
-      border: 1px solid var(--border-taupe);
-      border-radius: var(--radius-sm);
-      padding: 10px 18px;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 18px -6px rgba(43, 42, 40, 0.06);
-    }
-
-    .telemetry-hud-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 4px;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text-faint);
-    }
-
-    .telemetry-live-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #5C8374;
-      box-shadow: 0 0 6px #5C8374;
-      animation: pulseGreenLed 2s infinite ease-in-out;
-    }
-
-    @keyframes pulseGreenLed {
-      0%, 100% { opacity: 0.4; transform: scale(0.9); }
-      50% { opacity: 1; transform: scale(1.2); }
-    }
-
-    .telemetry-hud-speed {
-      margin-left: auto;
-      font-weight: 600;
-      color: var(--color-oxblood);
-      font-family: var(--font-mono);
-      font-size: 11px;
-    }
-
-    .highway-svg-stage {
-      width: 100%;
-      height: 84px;
-      display: block;
-      overflow: visible;
+      background: rgba(239, 232, 221, 0.75);
     }
 
     /* ==========================================================================
@@ -1214,9 +1170,7 @@
     <div class="container">
       <div class="header-inner">
         
-        <div class="header-left-meta">
-          <span class="brand-meta-badge">Ligne Officielle &bull; 2026</span>
-        </div>
+        <div class="header-left-meta"></div>
 
         <a href="#slide-0" class="brand-mark-group" onclick="jumpToSlide(0); return false;" data-cursor="hover" style="justify-self: center; text-decoration: none;">
           <span class="brand-wordmark">BusLiner</span>
@@ -1607,9 +1561,70 @@
 
     <!-- SLIDE 06: TIMETABLE & REGISTRY -->
     <section class="deck-slide next" id="slide6">
-      <div class="container">
+      
+      <!-- Full-bleed Ambient Background Highway & Cruising Minibus -->
+      <div class="slide-highway-bg-canvas" aria-hidden="true">
+        <svg viewBox="0 0 1920 1080" preserveAspectRatio="none" style="width: 100%; height: 100%; display: block;">
+          <defs>
+            <linearGradient id="roadHeadlightBeam" x1="0%" y1="50%" x2="100%" y2="50%">
+              <stop offset="0%" stop-color="#FFFDF7" stop-opacity="0.65" />
+              <stop offset="60%" stop-color="#FFFDF7" stop-opacity="0.18" />
+              <stop offset="100%" stop-color="#FFFDF7" stop-opacity="0" />
+            </linearGradient>
+            <filter id="carAmbientShadow" x="-40%" y="-40%" width="180%" height="180%">
+              <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#1A1918" flood-opacity="0.25" />
+            </filter>
+          </defs>
+
+          <!-- Full-Bleed Highway Road Ribbon -->
+          <path id="highwayTrackRoadBorder" d="M -80,520 C 380,320 620,740 1020,440 C 1380,180 1620,680 2000,480" 
+                fill="none" stroke="rgba(184, 169, 154, 0.45)" stroke-width="44" stroke-linecap="round"/>
+          <path id="highwayTrackRoadSurface" d="M -80,520 C 380,320 620,740 1020,440 C 1380,180 1620,680 2000,480" 
+                fill="none" stroke="rgba(240, 235, 226, 0.65)" stroke-width="38" stroke-linecap="round"/>
+
+          <!-- Center Dashed Highway Line -->
+          <path id="highwayTrackRoadDashed" d="M -80,520 C 380,320 620,740 1020,440 C 1380,180 1620,680 2000,480" 
+                fill="none" stroke="rgba(143, 136, 125, 0.75)" stroke-width="2" stroke-dasharray="14 18"/>
+
+          <!-- Ambient Highway Waypoints -->
+          <g font-family="var(--font-mono)" font-size="11" fill="var(--text-faint)" letter-spacing="0.12em">
+            <circle cx="160" cy="455" r="4" fill="var(--color-oxblood)" />
+            <text x="175" y="459">[ ТЕРМИНАЛ МИНСК &bull; КМ 0 ]</text>
+
+            <circle cx="880" cy="530" r="4" fill="var(--color-taupe)" />
+            <text x="895" y="534">[ ТРАССА М7 &bull; ОШМЯНЫ &bull; КМ 86 ]</text>
+
+            <circle cx="1720" cy="555" r="4" fill="var(--color-forest)" />
+            <text x="1560" y="585">[ АЭРОПОРТ ВИЛЬНЮС &bull; КМ 174 ]</text>
+          </g>
+
+          <!-- The Top-Down Executive Minibus with Headlights & Tail Lights -->
+          <g id="highwayVehicleGroup" filter="url(#carAmbientShadow)">
+            <!-- Twin Forward Headlight Beams -->
+            <polygon points="22,-5 140,-34 140,-5 22,-2" fill="url(#roadHeadlightBeam)"/>
+            <polygon points="22,5 140,5 140,34 22,2" fill="url(#roadHeadlightBeam)"/>
+
+            <!-- Sprinter Minibus Aerodynamic Body -->
+            <rect x="-24" y="-12" width="48" height="24" rx="5" ry="5" fill="#2B2A28" stroke="#484540" stroke-width="1"/>
+            
+            <!-- Smoked Panoramic Glass Windshield & Roof -->
+            <path d="M 6 -9 L 16 -6 Q 19 0 16 6 L 6 9 Z" fill="#141312"/>
+            <rect x="-10" y="-8.5" width="14" height="17" rx="3" fill="#1C1B1A" opacity="0.95"/>
+            
+            <!-- Side Mirrors -->
+            <rect x="8" y="-15" width="4" height="3" rx="1" fill="#3D3B38"/>
+            <rect x="8" y="12" width="4" height="3" rx="1" fill="#3D3B38"/>
+
+            <!-- Rear Luxury Ruby Tail Lights -->
+            <rect x="-24" y="-10" width="3" height="5" rx="1" fill="#8B2626"/>
+            <rect x="-24" y="5" width="3" height="5" rx="1" fill="#8B2626"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="container" style="position: relative; z-index: 2;">
         
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px;" class="vector-stagger-text stagger-1">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;" class="vector-stagger-text stagger-1">
           <div>
             <span class="hero-deck-badge">N&deg; 06 &bull; РЕГУЛЯРНЫЙ РЕЕСТР</span>
             <h2 style="font-family: var(--font-display); font-size: var(--fs-h2); font-weight: 300;">
@@ -1619,72 +1634,6 @@
           <div style="font-size: 13px; color: var(--text-muted); font-family: var(--font-mono);">
             Лицензия Минтранса РБ &numero; 02190/4482
           </div>
-        </div>
-
-        <!-- DYNAMIC LUXURY TOP-DOWN HIGHWAY TELEMETRY (TOP-DOWN MINIBUS CRUISING) -->
-        <div class="highway-telemetry-wrapper vector-stagger-card stagger-2">
-          <div class="telemetry-hud-header">
-            <span class="telemetry-live-dot"></span>
-            <span>GPS ТЕЛЕМЕТРИЯ РЕЙСА &bull; МИНСК &mdash; ВИЛЬНЮС &bull; В ПУТИ</span>
-            <span class="telemetry-hud-speed" id="hudSpeedometer">98.4 КМ/Ч</span>
-          </div>
-
-          <svg class="highway-svg-stage" viewBox="0 0 1100 110" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="headlightBeamGrad" x1="0%" y1="50%" x2="100%" y2="50%">
-                <stop offset="0%" stop-color="#F5F1EA" stop-opacity="0.55" />
-                <stop offset="65%" stop-color="#F5F1EA" stop-opacity="0.16" />
-                <stop offset="100%" stop-color="#F5F1EA" stop-opacity="0" />
-              </linearGradient>
-              <filter id="carDropShadow" x="-30%" y="-30%" width="160%" height="160%">
-                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1A1918" flood-opacity="0.35" />
-              </filter>
-            </defs>
-
-            <!-- Highway Road Surface & Asphalt Borders -->
-            <path id="highwayTrackRoadBorder" d="M -50,55 C 220,10 440,100 680,45 C 880,-5 1000,85 1150,55" 
-                  fill="none" stroke="rgba(184, 169, 154, 0.4)" stroke-width="32" stroke-linecap="round"/>
-            <path id="highwayTrackRoadSurface" d="M -50,55 C 220,10 440,100 680,45 C 880,-5 1000,85 1150,55" 
-                  fill="none" stroke="rgba(232, 226, 214, 0.55)" stroke-width="28" stroke-linecap="round"/>
-
-            <!-- Center Dashed Highway Line -->
-            <path id="highwayTrackRoadDashed" d="M -50,55 C 220,10 440,100 680,45 C 880,-5 1000,85 1150,55" 
-                  fill="none" stroke="rgba(143, 136, 125, 0.65)" stroke-width="1.5" stroke-dasharray="8 12"/>
-
-            <!-- Road Mileage Waypoints -->
-            <g class="highway-waypoint-markers" font-family="var(--font-mono)" font-size="9" fill="var(--text-faint)" letter-spacing="0.1em">
-              <circle cx="90" cy="42" r="3" fill="var(--color-oxblood)" />
-              <text x="98" y="45">[ МИНСК &bull; КМ 0 ]</text>
-
-              <circle cx="560" cy="55" r="3" fill="var(--color-taupe)" />
-              <text x="568" y="58">[ ОШМЯНЫ &bull; КМ 86 ]</text>
-
-              <circle cx="980" cy="72" r="3" fill="var(--color-forest)" />
-              <text x="900" y="88">[ АЭРОПОРТ ВИЛЬНЮС &bull; КМ 174 ]</text>
-            </g>
-
-            <!-- The Top-Down Executive Minibus with Forward Headlights & Tail Lights -->
-            <g id="highwayVehicleGroup" filter="url(#carDropShadow)">
-              <!-- Twin Forward Headlight Beams (Illuminating the Asphalt ahead) -->
-              <polygon points="18,-4 110,-28 110,-4 18,-1" fill="url(#headlightBeamGrad)"/>
-              <polygon points="18,4 110,4 110,28 18,1" fill="url(#headlightBeamGrad)"/>
-
-              <!-- Sprinter Minibus Aerodynamic Chassis (Top-down view) -->
-              <rect x="-18" y="-9" width="36" height="18" rx="4" ry="4" fill="#2B2A28" stroke="#484540" stroke-width="0.8"/>
-              
-              <!-- Smoked Panoramic Glass Windshield & Roof -->
-              <path d="M 4 -7 L 12 -5 Q 14 0 12 5 L 4 7 Z" fill="#141312"/>
-              <rect x="-8" y="-6.5" width="10" height="13" rx="2" fill="#1C1B1A" opacity="0.9"/>
-              
-              <!-- Aerodynamic Side Mirrors -->
-              <rect x="6" y="-12" width="3" height="3" rx="1" fill="#3D3B38"/>
-              <rect x="6" y="9" width="3" height="3" rx="1" fill="#3D3B38"/>
-
-              <!-- Rear Luxury Ruby Tail Lights -->
-              <rect x="-18" y="-8" width="2" height="4" rx="0.5" fill="#8B2626"/>
-              <rect x="-18" y="4" width="2" height="4" rx="0.5" fill="#8B2626"/>
-            </g>
-          </svg>
         </div>
 
         <div class="timetable-slide-box vector-stagger-card stagger-3">
@@ -2114,17 +2063,12 @@
       const pathLength = highwayPath.getTotalLength();
 
       function stepHighway() {
-        carDistance = (carDistance + 1.25) % pathLength;
+        carDistance = (carDistance + 1.8) % pathLength;
         const p1 = highwayPath.getPointAtLength(carDistance);
-        const p2 = highwayPath.getPointAtLength((carDistance + 2) % pathLength);
+        const p2 = highwayPath.getPointAtLength((carDistance + 3) % pathLength);
         const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * (180 / Math.PI);
 
         vehicleGroup.setAttribute('transform', `translate(${p1.x}, ${p1.y}) rotate(${angle})`);
-
-        if (hudSpeedometer && Math.random() < 0.04) {
-          const speed = (97.4 + Math.random() * 2.8).toFixed(1);
-          hudSpeedometer.textContent = `${speed} КМ/Ч`;
-        }
 
         requestAnimationFrame(stepHighway);
       }
