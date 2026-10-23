@@ -61,7 +61,7 @@
       /* Durations */
       --dur-fast: 220ms;
       --dur-medium: 520ms;
-      --dur-slide: 920ms;
+      --dur-slide: 520ms;
 
       /* Fonts */
       --font-display: 'Cormorant Garamond', Garamond, Georgia, serif;
@@ -468,7 +468,7 @@
       opacity: 0;
       pointer-events: none;
       transform: translateY(100%);
-      transition: transform var(--dur-slide) var(--ease-drive), opacity 0.85s ease, filter 0.85s ease;
+      transition: transform var(--dur-slide) var(--ease-drive), opacity 0.48s ease, filter 0.48s ease;
       will-change: transform, opacity, filter;
       padding: 80px 0 60px;
     }
@@ -557,10 +557,45 @@
     }
 
     /* ==========================================================================
-       SLIDE 1: COVER & HERO (ASYMMETRIC 60/40 SPLIT WITH VECTOR DRIVE)
+       SLIDE 1: COVER & HERO (ATMOSPHERIC FILM VIDEO BACKGROUND)
        ========================================================================== */
     #slide1 {
-      background: linear-gradient(180deg, var(--canvas-ivory) 0%, #EFE8DD 100%);
+      background: #141312;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-video-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-bg-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+      /* Quiet Luxury Film Color Grading (35mm Cine Look) */
+      filter: saturate(0.68) sepia(0.18) contrast(1.12) brightness(0.66);
+      will-change: transform;
+    }
+
+    .hero-video-scrim {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(32, 30, 27, 0.38) 0%, rgba(20, 19, 18, 0.78) 100%),
+                  linear-gradient(180deg, rgba(20, 19, 18, 0.65) 0%, rgba(20, 19, 18, 0.25) 50%, rgba(20, 19, 18, 0.85) 100%);
+      pointer-events: none;
     }
 
     .hero-slide-grid {
@@ -1243,11 +1278,6 @@
       </button>
     </div>
   </div>
-      <button class="deck-arrow-btn" onclick="nextSlide()" title="Следующий слайд (Стрелка вниз)">
-        &darr;
-      </button>
-    </div>
-  </div>
 
   <!-- =========================================================================
        PRESENTATION DECK STAGE (THE FULL-BLEED SLIDES)
@@ -1256,24 +1286,32 @@
     
     <!-- SLIDE 01: COVER & HERO -->
     <section class="deck-slide active" id="slide1">
-      <div class="container">
-        <div class="hero-slide-grid">
+      <!-- Full-bleed Ambient Background Video with Film Color Grading -->
+      <div class="hero-video-container">
+        <video class="hero-bg-video" autoplay muted loop playsinline preload="auto">
+          <source src="assets/video/hero-city.mp4" type="video/mp4">
+        </video>
+        <div class="hero-video-scrim"></div>
+      </div>
+
+      <div class="container" style="position: relative; z-index: 2;">
+        <div style="max-width: 860px;">
           
           <div>
-            <span class="hero-deck-badge vector-stagger-text stagger-1">
+            <span class="hero-deck-badge vector-stagger-text stagger-1" style="color: #D9CDB8;">
               N&deg; 01 &bull; ОФИЦИАЛЬНАЯ ЛИНИЯ МЕЖГОРОДСКОГО СООБЩЕНИЯ
             </span>
 
-            <h1 class="hero-deck-title vector-stagger-text stagger-2">
+            <h1 class="hero-deck-title vector-stagger-text stagger-2" style="color: #F5F1EA; margin-bottom: 20px;">
               <span class="word-wrap"><span class="word-inner">Искусство</span></span>
               <span class="word-wrap"><span class="word-inner">неспешных</span></span><br>
               <em>
-                <span class="word-wrap"><span class="word-inner">межгородских</span></span>
-                <span class="word-wrap"><span class="word-inner">перемещений.</span></span>
+                <span class="word-wrap"><span class="word-inner" style="color: #E8E2D6;">межгородских</span></span>
+                <span class="word-wrap"><span class="word-inner" style="color: #E8E2D6;">перемещений.</span></span>
               </em>
             </h1>
 
-            <p class="hero-deck-lead vector-stagger-text stagger-3">
+            <p class="hero-deck-lead vector-stagger-text stagger-3" style="color: #D9CDB8; margin-bottom: 28px;">
               Регулярные рейсы между столицами и областными центрами в микроавтобусах первого класса. Без спешки, вокзального шума и очередей.
             </p>
 
@@ -1308,10 +1346,6 @@
                 </button>
               </div>
             </div>
-          </div>
-
-          <div class="hero-photo-frame vector-stagger-card stagger-4 slide-curtain-image">
-            <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=80" alt="Mercedes-Benz Sprinter Executive" class="ken-burns-active">
           </div>
 
         </div>
@@ -1898,9 +1932,9 @@
         else link.classList.remove('active');
       });
 
-      // Header on dark slides (Slide 3: Sanctuary, Slide 7: Footer)
+      // Header on dark slides (Slide 1: Video Hero, Slide 3: Sanctuary, Slide 7: Footer)
       if (siteHeader) {
-        if (newIndex === 2 || newIndex === 6) {
+        if (newIndex === 0 || newIndex === 2 || newIndex === 6) {
           siteHeader.classList.add('on-dark-slide');
         } else {
           siteHeader.classList.remove('on-dark-slide');
@@ -1911,7 +1945,7 @@
 
       setTimeout(() => {
         isTransitioning = false;
-      }, 920);
+      }, 480);
     }
 
     window.jumpToSlide = function(idx) {
@@ -1929,25 +1963,23 @@
       updateDeckState(currentSlide - 1);
     };
 
-    // Wheel Scroll Controller (Normalized for trackpads and mice)
-    let wheelDeltaSum = 0;
-    let wheelTimer = null;
+    // Responsive Kinetic Wheel Controller (Zero Input Latency, Instant Snap)
+    let lastWheelTime = 0;
+    const WHEEL_LOCK_MS = 480;
 
     window.addEventListener('wheel', (e) => {
       e.preventDefault();
-      if (isTransitioning) return;
+      const now = performance.now();
+      if (isTransitioning || (now - lastWheelTime < WHEEL_LOCK_MS)) return;
 
-      wheelDeltaSum += e.deltaY;
-      clearTimeout(wheelTimer);
-
-      wheelTimer = setTimeout(() => {
-        if (wheelDeltaSum > 38) {
+      if (Math.abs(e.deltaY) > 14) {
+        lastWheelTime = now;
+        if (e.deltaY > 0) {
           nextSlide();
-        } else if (wheelDeltaSum < -38) {
+        } else {
           prevSlide();
         }
-        wheelDeltaSum = 0;
-      }, 45);
+      }
     }, { passive: false });
 
     // Keyboard Controller
@@ -1961,7 +1993,7 @@
       }
     });
 
-    // Touch Swipes
+    // Touch Swipes (Ultra-responsive 34px threshold)
     let touchStartY = 0;
     window.addEventListener('touchstart', (e) => {
       touchStartY = e.touches[0].clientY;
@@ -1971,9 +2003,9 @@
       if (isTransitioning) return;
       const touchEndY = e.changedTouches[0].clientY;
       const diffY = touchStartY - touchEndY;
-      if (diffY > 55) {
+      if (diffY > 34) {
         nextSlide();
-      } else if (diffY < -55) {
+      } else if (diffY < -34) {
         prevSlide();
       }
     }, { passive: true });
@@ -2099,8 +2131,9 @@
       requestAnimationFrame(stepHighway);
     })();
 
-    // Initialize slide 1 counters on load
+    // Initialize slide 1 state and counters on load
     document.addEventListener('DOMContentLoaded', () => {
+      if (siteHeader) siteHeader.classList.add('on-dark-slide');
       runCountUpAnimations(slides[0]);
     });
   </script>
