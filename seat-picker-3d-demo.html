@@ -1,0 +1,3589 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BusLiner 3D &bull; Mercedes-Benz Sprinter 170" High Roof (19 мест)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Three.js + OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    :root {
+      --sp-canvas: #F1F5F9;
+      --sp-surface: #FFFFFF;
+      --sp-border: #CBD5E1;
+      --sp-border-dark: #0F172A;
+      --sp-text-main: #0F172A;
+      --sp-text-muted: #475569;
+      --sp-brand-primary: #0F172A;
+      --sp-brand-hover: #1E293B;
+      --sp-accent-cyan: #0284C7;
+      --sp-status-green: #10B981;
+      --sp-status-orange: #F97316;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--sp-canvas);
+      color: var(--sp-text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 16px 20px 80px;
+      line-height: 1.5;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .demo-wrapper {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .demo-header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding: 12px 18px;
+      background: #FFFFFF;
+      border: 1.5px solid var(--sp-border);
+      border-radius: 8px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 18px;
+      color: #0F172A;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-badge {
+      width: 34px;
+      height: 34px;
+      background: #0F172A;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+    }
+
+    .nav-links-cluster {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .nav-quick-link {
+      font-size: 12px;
+      font-weight: 700;
+      color: #334155;
+      text-decoration: none;
+      padding: 6px 12px;
+      border: 1px solid #CBD5E1;
+      border-radius: 6px;
+      background: #F8FAFC;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-quick-link:hover {
+      background: #0F172A;
+      color: #FFFFFF;
+      border-color: #0F172A;
+    }
+
+    .meta-tag {
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #0F172A;
+      background: #E2E8F0;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid #CBD5E1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* 3D Viewport Card - Crisp, Sharp, High-Contrast */
+    .viewport-card {
+      position: relative;
+      width: 100%;
+      height: 680px;
+      background: #E2E8F0;
+      border-radius: 8px;
+      border: 2px solid var(--sp-border-dark);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    #three-canvas-container {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+    #three-canvas-container:active { cursor: grabbing; }
+
+    /* UI Overlay */
+    .hud-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px;
+      z-index: 10;
+    }
+    .hud-overlay * { pointer-events: auto; }
+
+    .hud-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .vehicle-badge-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--sp-border);
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .veh-carrier {
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #0F172A;
+      margin-bottom: 2px;
+    }
+    .veh-model {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+    .veh-specs {
+      font-size: 12px;
+      color: #475569;
+      margin-top: 2px;
+    }
+
+    .hud-right-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .control-pill {
+      display: flex;
+      background: #FFFFFF;
+      padding: 4px;
+      border-radius: 6px;
+      border: 1.5px solid var(--sp-border);
+      gap: 4px;
+    }
+
+    .pill-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+    .pill-btn:hover { color: #0F172A; background: #F1F5F9; border-color: #CBD5E1; }
+    .pill-btn.active {
+      background: #0F172A;
+      color: #FFFFFF;
+      border-color: #0F172A;
+    }
+
+    /* Floating Tooltip - Sharp & Direct */
+    .floating-tooltip {
+      position: absolute;
+      top: 0; left: 0;
+      width: 230px;
+      background: #0F172A;
+      color: #FFFFFF;
+      border-radius: 6px;
+      padding: 10px 14px;
+      border: 1.5px solid #334155;
+      pointer-events: none;
+      font-size: 12px;
+      z-index: 50;
+      display: none;
+      transform: translate(-50%, -120%);
+    }
+    .tt-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 4px;
+    }
+    .tt-num { font-size: 13px; font-weight: 800; color: #FFFFFF; }
+    .tt-price { font-size: 14px; font-weight: 800; color: #38BDF8; font-family: 'JetBrains Mono', monospace; }
+    .tt-type { font-size: 11px; color: #94A3B8; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; }
+    .tt-features { font-size: 11px; color: #CBD5E1; margin: 0; padding-left: 14px; line-height: 1.4; }
+
+    /* Compact Legend - Sharp & Direct */
+    .compact-legend {
+      align-self: flex-start;
+      margin-top: 10px;
+      background: #FFFFFF;
+      border: 1.5px solid var(--sp-border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px 14px;
+      font-size: 11.5px;
+      color: #0F172A;
+      font-weight: 600;
+    }
+    .leg-item { display: flex; align-items: center; gap: 8px; }
+    .leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.15); }
+    .dot-avail { background: #FFFFFF; border-color: #64748B; }
+    .dot-sel { background: #10B981; border-color: #059669; }
+    .dot-occ { background: #94A3B8; border-color: #64748B; }
+    .dot-vip { background: #0F172A; border-color: #000; }
+    .dot-dis { background: #2563EB; border-color: #1D4ED8; }
+    .dot-blocked { background: #CBD5E1; border-color: #94A3B8; }
+
+    /* Sticky Bottom Bar - Sharp & Solid */
+    .sticky-bar {
+      background: #FFFFFF;
+      border: 2px solid var(--sp-border-dark);
+      border-radius: 8px;
+      padding: 14px 20px;
+      margin-top: auto;
+    }
+    .bar-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+    .summary-left { display: flex; flex-direction: column; }
+    .prompt-main { font-size: 14px; font-weight: 800; color: #0F172A; }
+    .prompt-sub { font-size: 12px; color: #475569; margin-top: 2px; }
+
+    .proceed-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #0F172A;
+      color: #FFFFFF;
+      border: 1.5px solid #0F172A;
+      border-radius: 6px;
+      padding: 12px 24px;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+    .proceed-btn:hover:not(:disabled) {
+      background: #1E293B;
+      border-color: #1E293B;
+    }
+    .proceed-btn:disabled {
+      background: #E2E8F0;
+      border-color: #CBD5E1;
+      color: #94A3B8;
+      cursor: not-allowed;
+    }
+
+    .chip-tag {
+      background: #F1F5F9;
+      color: #0F172A;
+      border: 1.5px solid #CBD5E1;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      cursor: pointer;
+      user-select: none;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .chip-tag:hover {
+      background: #FEE2E2 !important;
+      color: #DC2626 !important;
+      border-color: #DC2626 !important;
+    }
+
+    .chip-close-icon {
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1;
+      opacity: 0.75;
+    }
+
+    .chip-tag:hover .chip-close-icon {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .viewport-card { height: 560px; }
+      .compact-legend { display: none; }
+      .bar-content { flex-direction: column; align-items: stretch; gap: 12px; }
+      .proceed-btn { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="demo-wrapper">
+    <div class="demo-header-nav">
+      <a href="index.html" class="brand-mark">
+        <div class="brand-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </div>
+        <span>BusLiner Fleet 3D</span>
+      </a>
+
+      <div class="nav-links-cluster">
+        <a href="driver-terminal.html#manifest" class="nav-quick-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+          Терминал посадки
+        </a>
+        <a href="carrier-dashboard.html" class="nav-quick-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Кабинет парка
+        </a>
+        <a href="index.html" class="nav-quick-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Главная
+        </a>
+      </div>
+
+      <div class="meta-tag">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+        Mercedes-Benz Sprinter Extra Long &bull; 19 мест (2+1)
+      </div>
+    </div>
+
+    <!-- 3D Card -->
+    <div class="viewport-card">
+      <div id="three-canvas-container"></div>
+
+      <!-- Floating Tooltip -->
+      <div id="tooltip-3d" class="floating-tooltip">
+        <div class="tt-head">
+          <span class="tt-num" id="tt-num">Место 1</span>
+          <span class="tt-price" id="tt-price">650 ₽</span>
+        </div>
+        <div class="tt-type" id="tt-type">VIP Одиночное</div>
+        <ul class="tt-features" id="tt-features">
+          <li>Панорамный обзор</li>
+        </ul>
+      </div>
+
+      <!-- HUD Overlay -->
+      <div class="hud-overlay">
+        <header class="hud-header">
+          <div class="vehicle-badge-card">
+            <div class="veh-carrier">BusLiner Express Premium</div>
+            <div class="veh-model">Mercedes-Benz Sprinter 170" Extra Long (L4 7.36m)</div>
+            <div class="veh-specs">Удлиненный кузов Sprinter Extra Long &bull; Салон 2+1 &bull; 19 мест &bull; Багажное отделение</div>
+          </div>
+
+          <div class="hud-right-controls">
+            <!-- Camera Presets -->
+            <div class="control-pill">
+              <button type="button" class="pill-btn active" id="btn-cam-all" onclick="resetToOverview()">Весь салон</button>
+              <button type="button" class="pill-btn" id="btn-cam-front" onclick="setPreset('front')">Носовая зона</button>
+              <button type="button" class="pill-btn" id="btn-cam-rear" onclick="setPreset('rear')">Корма</button>
+            </div>
+            <!-- Roof / Cutaway Toggle -->
+            <div class="control-pill">
+              <button type="button" class="pill-btn active" id="btn-roof-cutaway" onclick="toggleRoof(false)">Разрез салона</button>
+              <button type="button" class="pill-btn" id="btn-roof-full" onclick="toggleRoof(true)">Полный кузов</button>
+            </div>
+          </div>
+        </header>
+
+        <!-- Legend -->
+        <aside class="compact-legend">
+          <div class="leg-item"><span class="leg-dot dot-avail"></span><span>Свободно</span></div>
+          <div class="leg-item"><span class="leg-dot dot-sel"></span><span>Выбрано</span></div>
+          <div class="leg-item"><span class="leg-dot dot-occ"></span><span>Занято</span></div>
+          <div class="leg-item"><span class="leg-dot dot-vip"></span><span>Одиночное VIP</span></div>
+          <div class="leg-item"><span class="leg-dot dot-dis"></span><span>Для ОВЗ</span></div>
+          <div class="leg-item"><span class="leg-dot dot-blocked"></span><span>Служебное</span></div>
+        </aside>
+
+        <!-- Sticky Summary -->
+        <footer class="sticky-bar">
+          <div class="bar-content">
+            <div class="summary-left">
+              <div id="empty-prompt">
+                <span class="prompt-main">Выберите место в салоне Mercedes Sprinter</span>
+                <span class="prompt-sub">Максимум 3 места на заказ &bull; Нажмите на кресло для выбора</span>
+              </div>
+              <div id="selection-stats" style="display:none;">
+                <div style="display:flex; align-items:baseline; gap:10px;">
+                  <span style="font-size:13px; font-weight:600; color:#475569;" id="seats-count-label">Выбрано:</span>
+                  <span style="font-size:18px; font-weight:800; color:#1E3A8A;" id="total-price-label">0 ₽</span>
+                </div>
+                <div style="display:flex; gap:6px; margin-top:4px;" id="chips-container"></div>
+              </div>
+            </div>
+
+            <div>
+              <button type="button" class="proceed-btn" id="btn-proceed" disabled onclick="onProceedClick()">
+                <span>Продолжить бронирование</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ══════════════════════════════════════════════════════════════════════════════
+    // ТОЧНАЯ МАТЕМАТИЧЕСКАЯ МОДЕЛЬ КУЗОВА MERCEDES-BENZ SPRINTER 170" HIGH ROOF
+    // ══════════════════════════════════════════════════════════════════════════════
+    const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra Long L4 (7.36 м)
+    const XF = 5.24;  // передняя кромка носа Sprinter
+    const YB = 0.55;  // порог кузова
+    const RN = 0.45;  // скругление носа в плане
+    const RR = 0.06;  // скругление задних углов
+    const BELT = 1.3; // характерная штампованная линия борта (beltline)
+    const TOP0 = 2.5; // верх борта до скругления крыши
+
+    const smooth = (a, b, x) => {
+      const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+      return t * t * (3 - 2 * t);
+    };
+
+    function pchip(pts) {
+      const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]), n = pts.length;
+      const h = [], d = [], m = new Array(n);
+      for (let i = 0; i < n - 1; i++) {
+        h[i] = xs[i + 1] - xs[i];
+        d[i] = (ys[i + 1] - ys[i]) / h[i];
+      }
+      m[0] = d[0];
+      m[n - 1] = d[n - 2];
+      for (let i = 1; i < n - 1; i++) {
+        if (d[i - 1] * d[i] <= 0) m[i] = 0;
+        else {
+          const w1 = 2 * h[i] + h[i - 1], w2 = h[i] + 2 * h[i - 1];
+          m[i] = (w1 + w2) / (w1 / d[i - 1] + w2 / d[i]);
+        }
+      }
+      return (x) => {
+        if (x <= xs[0]) return ys[0];
+        if (x >= xs[n - 1]) return ys[n - 1];
+        let i = 0;
+        while (x > xs[i + 1]) i++;
+        const t = (x - xs[i]) / h[i], t2 = t * t, t3 = t2 * t;
+        return (2 * t3 - 3 * t2 + 1) * ys[i] + (t3 - 2 * t2 + t) * h[i] * m[i] + (-2 * t3 + 3 * t2) * ys[i + 1] + (t3 - t2) * h[i] * m[i + 1];
+      };
+    }
+
+    // Профиль высоты крыши и капота Sprinter
+    const topY = pchip([
+      [XR, 2.6], [XR + 0.035, 2.67], [XR + 0.075, 2.705], [XR + 0.12, 2.72], [3.2, 2.72], [3.42, 2.7], [3.58, 2.63], [3.7, 2.52], [3.79, 2.4],
+      [3.86, 2.3], [3.905, 2.255], [4.445, 1.27], [4.52, 1.225], [4.75, 1.15], [4.95, 1.1], [5.1, 1.06], [5.19, 1.03], [XF, 1.0]
+    ]);
+    const cornerR = pchip([[XR, 0.12], [XR + 0.12, 0.22], [3.2, 0.22], [3.7, 0.17], [3.9, 0.1], [4.44, 0.1], [4.6, 0.15], [XF, 0.13]]);
+    const crown = pchip([[XR, 0.01], [XR + 0.12, 0.012], [3.2, 0.012], [3.9, 0.075], [4.44, 0.075], [4.6, 0.05], [XF, 0.035]]);
+
+    function halfW(x) {
+      let w = 1.01 - 0.03 * smooth(3.7, 5.0, x);
+      const xs = XF - RN;
+      if (x > xs) {
+        const d = Math.min(x - xs, RN);
+        w -= RN - Math.sqrt(RN * RN - d * d);
+      }
+      const xr = XR + RR;
+      if (x < xr) {
+        const d = Math.min(xr - x, RR);
+        w -= RR - Math.sqrt(RR * RR - d * d);
+      }
+      return w;
+    }
+
+    function sideW(x, y) {
+      let w = halfW(x);
+      if (y < 0.8) w -= 0.03 * Math.pow((0.8 - y) / 0.25, 2);
+      w += 0.006 * Math.exp(-Math.pow((y - BELT) / 0.022, 2));
+      if (y > BELT) w -= 0.045 * Math.pow((y - BELT) / 1.2, 1.6);
+      return w;
+    }
+
+    const ROWS = [0.55, 0.6, 0.68, 0.77, 0.86, 0.95, 1.06, 1.18, 1.28, 1.38, 1.5, 1.66, 1.82, 1.98, 2.15, 2.3, 2.44, 2.5];
+    const NR = ROWS.length;
+    const NC = 8;
+    const NT = 10;
+    const NH = NR + NC + NT;
+    const NJ = 2 * NH - 1;
+
+    function rowY(r, sideTop) {
+      const lin = YB + ((r - YB) * (sideTop - YB)) / (TOP0 - YB);
+      const pw = r <= BELT ? r : BELT + ((r - BELT) * (sideTop - BELT)) / (TOP0 - BELT);
+      const t = smooth(BELT + 0.05, BELT + 0.45, sideTop);
+      return lin + (pw - lin) * t;
+    }
+
+    function halfSection(x) {
+      const yT = topY(x), R = Math.min(cornerR(x), (yT - YB) * 0.45), cr = crown(x);
+      const sideTop = yT - R;
+      const H = [];
+      for (const r of ROWS) {
+        const y = rowY(r, sideTop);
+        H.push({ z: sideW(x, y), y });
+      }
+      const zA = H[H.length - 1].z, yA = sideTop;
+      const zB = zA - R;
+      for (let k = 1; k <= NC; k++) {
+        const t = k / NC, u = 1 - t;
+        H.push({ z: u * u * zA + 2 * u * t * zA + t * t * zB, y: u * u * yA + 2 * u * t * yT + t * t * yT });
+      }
+      for (let k = 1; k <= NT; k++) {
+        const z = zB * (1 - k / NT);
+        H.push({ z, y: yT + cr * (1 - Math.pow(z / zB, 2)) });
+      }
+      return H;
+    }
+
+    function stations() {
+      const xs = new Set();
+      const add = (a, b, step) => {
+        const n = Math.max(1, Math.ceil((b - a) / step - 1e-9));
+        for (let i = 0; i <= n; i++) xs.add(+(a + ((b - a) * i) / n).toFixed(4));
+      };
+      for (let k = 0; k <= 10; k++) xs.add(+(XR + RR - RR * Math.cos((k / 10) * (Math.PI / 2))).toFixed(4));
+      add(XR + RR, -0.6, 0.06);
+      add(-0.6, 0.6, 0.03); // задняя колесная арка
+      add(0.6, 3.2, 0.06);
+      add(3.2, 3.82, 0.03); // рамка ветрового стекла
+      add(3.82, 4.6, 0.03); // капот и передняя колесная арка
+      for (let k = 0; k <= 20; k++) xs.add(+(XF - RN + RN * Math.sin((k / 20) * (Math.PI / 2))).toFixed(4));
+      return [...xs].filter(x => x >= XR - 1e-6 && x <= XF + 1e-6).sort((a, b) => a - b);
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════════
+    // ДАННЫЕ 19 МЕСТ В САЛОНЕ SPRINTER 170" (КОМПОНОВКА 2+1, ВСЕ ЛИЦОМ ВПЕРЕД)
+    // ══════════════════════════════════════════════════════════════════════════════
+    const SPRINTER_SEATS = [
+      // Ряд 1: Напротив сдвижной двери
+      { id: '1', num: '1', row: 1, col: 3, cat: 'vip', price: 650, status: 'available', pos: [2.5, 0.62, 0.58], feats: ['Панорамный обзор', 'Быстрая посадка', 'USB-C быстрая зарядка'] },
+
+      // Ряд 2: За перегородкой (ОВЗ)
+      { id: '2', num: '2', row: 2, col: 1, cat: 'disabled', price: 600, status: 'disabled', pos: [1.8, 0.62, -0.68], feats: ['Приоритетное место для пассажиров с ОВЗ', 'Больше места для ног (+15 см)', 'Розетка 220В'] },
+      { id: '3', num: '3', row: 2, col: 2, cat: 'aisle', price: 550, status: 'available', pos: [1.8, 0.62, -0.24], feats: ['Место у прохода', 'Откидной подлокотник'] },
+
+      // Ряд 3:
+      { id: '4', num: '4', row: 3, col: 1, cat: 'window', price: 520, status: 'occupied', pos: [1.1, 0.62, -0.68], feats: ['Место у окна', 'Индивидуальный обдув'] },
+      { id: '5', num: '5', row: 3, col: 2, cat: 'aisle', price: 480, status: 'occupied', pos: [1.1, 0.62, -0.24], feats: ['Место у прохода'] },
+      { id: '6', num: '6', row: 3, col: 3, cat: 'vip', price: 620, status: 'available', pos: [1.1, 0.62, 0.58], feats: ['Одиночное VIP-кресло', 'Без соседей', 'Панорамный вид'] },
+
+      // Ряд 4: Аварийный выход
+      { id: '7', num: '7', row: 4, col: 1, cat: 'emergency', price: 580, status: 'available', pos: [0.38, 0.62, -0.68], feats: ['У аварийного выхода', 'Шаг кресел увеличен (+12 см)', 'Розетка 220В'] },
+      { id: '8', num: '8', row: 4, col: 2, cat: 'emergency', price: 580, status: 'available', pos: [0.38, 0.62, -0.24], feats: ['У аварийного выхода', 'Шаг кресел увеличен (+12 см)'] },
+      { id: '9', num: '9', row: 4, col: 3, cat: 'vip', price: 620, status: 'blocked', pos: [0.38, 0.62, 0.58], feats: ['Служебная бронь перевозчика'] },
+
+      // Ряд 5:
+      { id: '10', num: '10', row: 5, col: 1, cat: 'window', price: 500, status: 'available', pos: [-0.34, 0.62, -0.68], feats: ['Место у окна', 'Крепление ISOFIX для кресел'] },
+      { id: '11', num: '11', row: 5, col: 2, cat: 'aisle', price: 480, status: 'available', pos: [-0.34, 0.62, -0.24], feats: ['Стандартное место у прохода'] },
+      { id: '12', num: '12', row: 5, col: 3, cat: 'vip', price: 620, status: 'occupied', pos: [-0.34, 0.62, 0.58], feats: ['Одиночное VIP-кресло'] },
+
+      // Ряд 6:
+      { id: '13', num: '13', row: 6, col: 1, cat: 'window', price: 480, status: 'available', pos: [-1.04, 0.62, -0.68], feats: ['Место у окна', 'Индивидуальный светильник'] },
+      { id: '14', num: '14', row: 6, col: 2, cat: 'aisle', price: 450, status: 'occupied', pos: [-1.04, 0.62, -0.24], feats: ['Место у прохода'] },
+      { id: '15', num: '15', row: 6, col: 3, cat: 'vip', price: 600, status: 'available', pos: [-1.04, 0.62, 0.58], feats: ['Одиночное кресло', 'USB зарядка'] },
+
+      // Ряд 7: Задний ряд 4 места (сдвинут назад в удлиненную кормовую часть)
+      { id: '16', num: '16', row: 7, col: 1, cat: 'limited', price: 420, status: 'available', pos: [-1.80, 0.62, -0.72], feats: ['Спинка не откидывается (задняя стенка)', 'Эконом-тариф'] },
+      { id: '17', num: '17', row: 7, col: 2, cat: 'limited', price: 400, status: 'available', pos: [-1.80, 0.62, -0.24], feats: ['Спинка не откидывается', 'Эконом-тариф'] },
+      { id: '18', num: '18', row: 7, col: 3, cat: 'limited', price: 400, status: 'available', pos: [-1.80, 0.62, 0.24], feats: ['Спинка не откидывается', 'Центральное место'] },
+      { id: '19', num: '19', row: 7, col: 4, cat: 'limited', price: 420, status: 'available', pos: [-1.80, 0.62, 0.72], feats: ['Спинка не откидывается', 'Место у правого окна'] },
+    ];
+
+    // --- THREE.JS СЦЕНА ---
+    let scene, camera, renderer, controls;
+    let sprinterGroup, roofMeshGroup, saloonBodyMesh;
+    let solidArcticWhitePaint, semiTransparentCabinPaint;
+    let seatMeshMap = new Map();
+    let selectedSeatIds = [];
+    let selectedRow = null;
+    let hoveredSeat = null;
+    let showFullRoof = false;
+    var seatGeometries = null;
+
+    const container = document.getElementById('three-canvas-container');
+    const tooltipEl = document.getElementById('tooltip-3d');
+
+    const CAM_OVERVIEW = { pos: [1.5, 9.2, 0.0], target: [1.5, 0.6, 0.0] };
+
+    const CAM_PRESETS = {
+      all: { pos: [1.5, 9.2, 0.0], target: [1.5, 0.6, 0.0] },
+      front: { pos: [3.4, 4.0, 0.0], target: [3.4, 0.6, 0.0] },
+      rear: { pos: [-0.6, 4.0, 0.0], target: [-0.6, 0.6, 0.0] }
+    };
+
+    let targetCamPos = [...CAM_OVERVIEW.pos];
+    let targetCamLook = [...CAM_OVERVIEW.target];
+    let isAnimatingCam = false;
+
+    function initThree() {
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xF1F5F9);
+
+      camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 50);
+      camera.up.set(0, 0, -1); // Маршрутка расположена ГОРИЗОНТАЛЬНО (нос справа, корма слева)
+      camera.position.set(...CAM_OVERVIEW.pos);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.target.set(...CAM_OVERVIEW.target);
+      controls.enableRotate = false; // ВРАЩЕНИЕ ЗАПРЕЩЕНО - модель ВСЕГДА направлена носом строго вверх
+      controls.enablePan = true;
+      controls.enableZoom = true;
+      controls.minDistance = 2.0;
+      controls.maxDistance = 14.0;
+
+      // Когда пользователь панорамирует вручную — отключаем авто-полет
+      controls.addEventListener('start', () => {
+        isAnimatingCam = false;
+      });
+
+      // ── СТУДИЙНЫЙ ENVIRONMENT MAP ДЛЯ РЕАЛИСТИЧНЫХ БЛИКОВ PBR КУЗОВА ──
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      pmremGenerator.compileEquirectangularShader();
+
+      const envCanvas = document.createElement('canvas');
+      envCanvas.width = 1024; envCanvas.height = 512;
+      const eCtx = envCanvas.getContext('2d');
+      const grad = eCtx.createLinearGradient(0, 0, 0, 512);
+      grad.addColorStop(0.0, '#FFFFFF');
+      grad.addColorStop(0.35, '#E2E8F0');
+      grad.addColorStop(0.5, '#F8FAFC');
+      grad.addColorStop(0.52, '#94A3B8');
+      grad.addColorStop(1.0, '#334155');
+      eCtx.fillStyle = grad;
+      eCtx.fillRect(0, 0, 1024, 512);
+
+      // Студийные софтбоксы для четких бликов на кузове
+      eCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      eCtx.beginPath();
+      eCtx.ellipse(320, 140, 160, 70, -0.2, 0, Math.PI * 2);
+      eCtx.fill();
+      eCtx.beginPath();
+      eCtx.ellipse(780, 160, 140, 60, 0.2, 0, Math.PI * 2);
+      eCtx.fill();
+
+      const envTexture = new THREE.CanvasTexture(envCanvas);
+      envTexture.mapping = THREE.EquirectangularReflectionMapping;
+      scene.environment = pmremGenerator.fromEquirectangular(envTexture).texture;
+
+      // Освещение
+      const ambient = new THREE.AmbientLight(0xFFFFFF, 0.65);
+      scene.add(ambient);
+
+      const hemi = new THREE.HemisphereLight(0xF8FAFC, 0x94A3B8, 0.5);
+      scene.add(hemi);
+
+      const sun = new THREE.DirectionalLight(0xFFFFFF, 1.4);
+      sun.position.set(8, 12, 6);
+      sun.castShadow = true;
+      sun.shadow.mapSize.width = 2048;
+      sun.shadow.mapSize.height = 2048;
+      sun.shadow.bias = -0.00005;
+      scene.add(sun);
+
+      // Контактная тень под Sprinter
+      const groundGeo = new THREE.PlaneGeometry(22, 22);
+      const groundMat = new THREE.ShadowMaterial({ opacity: 0.3 });
+      const ground = new THREE.Mesh(groundGeo, groundMat);
+      ground.rotation.x = -Math.PI / 2;
+      ground.position.y = 0.0;
+      ground.receiveShadow = true;
+      scene.add(ground);
+
+      // Построение реального кузова Sprinter
+      buildRealSprinter();
+
+      setupRaycaster();
+      window.addEventListener('resize', onResize);
+      animate();
+    }
+
+    // --- ПОСТРОЕНИЕ ОРИГИНАЛЬНОГО КУЗОВА И САЛОНА SPRINTER 170" ---
+    function buildRealSprinter() {
+      sprinterGroup = new THREE.Group();
+      roofMeshGroup = new THREE.Group();
+
+      // 1. Автомобильная эмаль Mercedes-Benz Arctic White (100% непрозрачная для передней кабины, капота и моторного отсека)
+      solidArcticWhitePaint = new THREE.MeshPhysicalMaterial({
+        color: 0xF8FAFC,
+        metalness: 0.08,
+        roughness: 0.18,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.05,
+        reflectivity: 0.9,
+        side: THREE.DoubleSide
+      });
+
+      // Полупрозрачный кузов пассажирского салона (Ghost / Studio X-Ray для легкого обзора мест)
+      semiTransparentCabinPaint = new THREE.MeshPhysicalMaterial({
+        color: 0xF8FAFC,
+        metalness: 0.04,
+        roughness: 0.16,
+        clearcoat: 0.8,
+        clearcoatRoughness: 0.06,
+        reflectivity: 0.88,
+        transparent: true,
+        opacity: 0.36,
+        transmission: 0.64,
+        ior: 1.35,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+
+      // Кристально прозрачные панорамные стеклопакеты
+      const privacyGlassMat = new THREE.MeshPhysicalMaterial({
+        color: 0xBAE6FD,
+        transmission: 0.96,
+        opacity: 0.15, // кристально прозрачные окна с легким небесным отблеском
+        transparent: true,
+        roughness: 0.02,
+        ior: 1.50,
+        reflectivity: 0.90,
+        depthWrite: false
+      });
+
+      // Кристальные колпаки фар и противотуманок
+      const clearGlassMat = new THREE.MeshPhysicalMaterial({
+        color: 0xE0F2FE,
+        transmission: 0.96,
+        opacity: 0.20,
+        transparent: true,
+        roughness: 0.02,
+        ior: 1.50,
+        depthWrite: false
+      });
+
+      // Премиальное автомобильное триплекс лобовое стекло Mercedes-Benz
+      const automotiveWindshieldMat = new THREE.MeshPhysicalMaterial({
+        color: 0x93C5FD,
+        transmission: 0.78,
+        opacity: 0.35,
+        transparent: true,
+        roughness: 0.04,
+        metalness: 0.12,
+        ior: 1.52,
+        reflectivity: 0.98,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.03,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+
+      // Черная керамическая шелкография (Frit) по контуру ветрового стекла
+      const windshieldFritMat = new THREE.MeshStandardMaterial({
+        color: 0x090D16,
+        roughness: 0.75,
+        metalness: 0.15,
+        side: THREE.DoubleSide
+      });
+
+      const trimMat = new THREE.MeshStandardMaterial({ color: 0x1E293B, roughness: 0.7, metalness: 0.2 });
+      const chromeMat = new THREE.MeshStandardMaterial({ color: 0xF8FAFC, metalness: 0.98, roughness: 0.08 });
+      const rubberMat = new THREE.MeshStandardMaterial({ color: 0x0F172A, roughness: 0.92 });
+      const brakeSteelMat = new THREE.MeshStandardMaterial({ color: 0x94A3B8, metalness: 0.92, roughness: 0.22 });
+      const brakeHubMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.7, roughness: 0.45 });
+      const brakeCaliperMat = new THREE.MeshStandardMaterial({ color: 0xDC2626, metalness: 0.4, roughness: 0.35 });
+      const rimAlloyMat = new THREE.MeshStandardMaterial({ color: 0xF1F5F9, metalness: 0.95, roughness: 0.14 });
+      const rimPocketMat = new THREE.MeshStandardMaterial({ color: 0x1E293B, metalness: 0.5, roughness: 0.5 });
+      const centerCapMat = new THREE.MeshStandardMaterial({ color: 0x020617, roughness: 0.2, metalness: 0.4 });
+      const lugNutMat = new THREE.MeshStandardMaterial({ color: 0xE2E8F0, metalness: 0.96, roughness: 0.12 });
+      const valveMat = new THREE.MeshStandardMaterial({ color: 0x0F172A, roughness: 0.8 });
+
+      // 1. Построение гладкого кузова Sprinter по сечениям (Lofted Shell)
+      const xs = stations();
+      const NS = xs.length;
+      const pos = new Float32Array(NS * NJ * 3);
+
+      for (let i = 0; i < NS; i++) {
+        const H = halfSection(xs[i]);
+        for (let j = 0; j < NJ; j++) {
+          const left = j < NH;
+          const p = left ? H[j] : H[2 * NH - 2 - j];
+          const o = (i * NJ + j) * 3;
+          pos[o] = xs[i];
+          pos[o + 1] = p.y;
+          pos[o + 2] = left ? -p.z : p.z;
+        }
+      }
+
+      const id = (i, j) => i * NJ + j;
+      const frontBodyIndices = [];
+      const frontBumperIndices = [];
+      const frontFasciaIndices = [];
+      const windshieldIndices = [];
+      const windshieldFritIndices = [];
+      const lowerBodyIndices = [];
+      const saloonWindowIndices = [];
+      const cabWindowIndices = [];
+      const saloonRoofIndices = [];
+
+      for (let i = 0; i < NS - 1; i++) {
+        const midX = (xs[i] + xs[i + 1]) * 0.5;
+        for (let j = 0; j < NJ - 1; j++) {
+          const a = id(i, j), b = id(i + 1, j), c = id(i + 1, j + 1), d = id(i, j + 1);
+          const k1 = j < NH - 1 ? j + 1 : 2 * NH - 2 - j;
+          const isRoof = k1 >= 15; // y >= 2.15m (верх борта и крыша)
+          const isWindow = k1 >= 10 && k1 <= 14; // y от 1.38м до 2.15м (зона остекления)
+
+          if (midX > 3.82) {
+            // Носовая часть кузова Sprinter
+            if (midX <= 4.42 && k1 >= 26) {
+              const isFrit = (midX <= 3.92 || midX >= 4.36 || k1 === 26 || k1 === 27);
+              if (isFrit) {
+                // Черная керамическая шелкография (Frit) по контуру ветрового стекла
+                windshieldFritIndices.push(a, d, b, b, d, c);
+              } else {
+                // Кристально чистое премиальное триплекс-стекло
+                windshieldIndices.push(a, d, b, b, d, c);
+              }
+            } else if (midX >= 4.60 && k1 <= 7) {
+              // Нижний передний бампер из матового защитного пластика
+              frontBumperIndices.push(a, d, b, b, d, c);
+            } else if (midX > 4.75 && k1 >= 8 && k1 <= 14) {
+              // Фасадная монтажная ниша фар и решетки радиатора (темная подложка без белого металла)
+              frontFasciaIndices.push(a, d, b, b, d, c);
+            } else {
+              // Капот, передние крылья, металл прочных передних стоек A-pillars
+              frontBodyIndices.push(a, d, b, b, d, c);
+            }
+          } else if (midX > 3.25) {
+            // Кабина водителя (боковые окна дверей кабины и неподвижная крыша)
+            if (isWindow) {
+              cabWindowIndices.push(a, d, b, b, d, c);
+            } else {
+              frontBodyIndices.push(a, d, b, b, d, c);
+            }
+          } else {
+            // Пассажирский салон Sprinter
+            if (isRoof) {
+              saloonRoofIndices.push(a, d, b, b, d, c);
+            } else if (isWindow) {
+              saloonWindowIndices.push(a, d, b, b, d, c);
+            } else {
+              lowerBodyIndices.push(a, d, b, b, d, c);
+            }
+          }
+        }
+      }
+
+      // 1. Передняя часть кузова и кабина (100% непрозрачная эмаль Arctic White с прочными стойками A-pillars)
+      const frontBodyGeo = new THREE.BufferGeometry();
+      frontBodyGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      frontBodyGeo.setIndex(frontBodyIndices);
+      frontBodyGeo.computeVertexNormals();
+
+      const frontBodyMesh = new THREE.Mesh(frontBodyGeo, solidArcticWhitePaint);
+      frontBodyMesh.castShadow = true;
+      frontBodyMesh.receiveShadow = true;
+      sprinterGroup.add(frontBodyMesh);
+
+      // 1b. Нижний передний бампер кузова (матовый коммерческий пластик без пересечений)
+      const frontBumperGeo = new THREE.BufferGeometry();
+      frontBumperGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      frontBumperGeo.setIndex(frontBumperIndices);
+      frontBumperGeo.computeVertexNormals();
+
+      const frontBumperMesh = new THREE.Mesh(frontBumperGeo, trimMat);
+      frontBumperMesh.castShadow = true;
+      frontBumperMesh.receiveShadow = true;
+      sprinterGroup.add(frontBumperMesh);
+
+      // 1c. Ниша фар и фасадная подложка радиатора
+      const frontFasciaGeo = new THREE.BufferGeometry();
+      frontFasciaGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      frontFasciaGeo.setIndex(frontFasciaIndices);
+      frontFasciaGeo.computeVertexNormals();
+
+      const frontFasciaMesh = new THREE.Mesh(frontFasciaGeo, trimMat);
+      frontFasciaMesh.receiveShadow = true;
+      sprinterGroup.add(frontFasciaMesh);
+
+      // 1d. Реальное аэродинамическое триплекс лобовое стекло Sprinter с PBR-бликами
+      const windshieldGeo = new THREE.BufferGeometry();
+      windshieldGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      windshieldGeo.setIndex(windshieldIndices);
+      windshieldGeo.computeVertexNormals();
+
+      const windshieldMesh = new THREE.Mesh(windshieldGeo, automotiveWindshieldMat);
+      sprinterGroup.add(windshieldMesh);
+
+      // 1e. Черная керамическая шелкография (керамическая кайма фриттов по периметру ветрового стекла)
+      const windshieldFritGeo = new THREE.BufferGeometry();
+      windshieldFritGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      windshieldFritGeo.setIndex(windshieldFritIndices);
+      windshieldFritGeo.computeVertexNormals();
+
+      const windshieldFritMesh = new THREE.Mesh(windshieldFritGeo, windshieldFritMat);
+      sprinterGroup.add(windshieldFritMesh);
+
+      // 2. Нижняя стальная часть пассажирского салона (борт до подоконника y <= 1.38м)
+      const saloonBodyGeo = new THREE.BufferGeometry();
+      saloonBodyGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      saloonBodyGeo.setIndex(lowerBodyIndices);
+      saloonBodyGeo.computeVertexNormals();
+
+      saloonBodyMesh = new THREE.Mesh(saloonBodyGeo, showFullRoof ? solidArcticWhitePaint : semiTransparentCabinPaint);
+      saloonBodyMesh.castShadow = true;
+      saloonBodyMesh.receiveShadow = true;
+      sprinterGroup.add(saloonBodyMesh);
+
+      // 3. Настоящие объемные панорамные тонированные стекла пассажирского салона (Privacy Glass)
+      const saloonWindowMat = new THREE.MeshPhysicalMaterial({
+        color: 0x1E293B,
+        roughness: 0.04,
+        metalness: 0.20,
+        transmission: 0.88,
+        opacity: 0.40,
+        transparent: true,
+        ior: 1.52,
+        reflectivity: 0.95,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+
+      const saloonWindowGeo = new THREE.BufferGeometry();
+      saloonWindowGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      saloonWindowGeo.setIndex(saloonWindowIndices);
+      saloonWindowGeo.computeVertexNormals();
+
+      const saloonWindowsMesh = new THREE.Mesh(saloonWindowGeo, saloonWindowMat);
+      saloonWindowsMesh.castShadow = true;
+      sprinterGroup.add(saloonWindowsMesh);
+
+      // 4. Прозрачные боковые стекла кабины водителя и переднего пассажира
+      const cabWindowMat = new THREE.MeshPhysicalMaterial({
+        color: 0xBAE6FD,
+        roughness: 0.02,
+        metalness: 0.08,
+        transmission: 0.94,
+        opacity: 0.22,
+        transparent: true,
+        ior: 1.50,
+        reflectivity: 0.90,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+
+      const cabWindowGeo = new THREE.BufferGeometry();
+      cabWindowGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      cabWindowGeo.setIndex(cabWindowIndices);
+      cabWindowGeo.computeVertexNormals();
+
+      const cabWindowsMesh = new THREE.Mesh(cabWindowGeo, cabWindowMat);
+      sprinterGroup.add(cabWindowsMesh);
+
+      // 5. Металлическая крыша пассажирского салона (съемная для режима "Разрез")
+      const saloonRoofGeo = new THREE.BufferGeometry();
+      saloonRoofGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      saloonRoofGeo.setIndex(saloonRoofIndices);
+      saloonRoofGeo.computeVertexNormals();
+
+      const saloonRoofMesh = new THREE.Mesh(saloonRoofGeo, solidArcticWhitePaint);
+      saloonRoofMesh.castShadow = true;
+      roofMeshGroup.add(saloonRoofMesh);
+
+      roofMeshGroup.visible = showFullRoof;
+      sprinterGroup.add(roofMeshGroup);
+
+      // 2. Высокодетализированная решетка радиатора Mercedes-Benz Sprinter с сотовой текстурой
+      const grilleCanvas = document.createElement('canvas');
+      grilleCanvas.width = 512; grilleCanvas.height = 256;
+      const gCtx = grilleCanvas.getContext('2d');
+      gCtx.fillStyle = '#0B0F19';
+      gCtx.fillRect(0, 0, 512, 256);
+
+      // Сотовый/ромбовидный рисунок сетки радиатора Mercedes
+      gCtx.strokeStyle = '#334155';
+      gCtx.lineWidth = 1.6;
+      const cellW = 16, cellH = 10;
+      for (let y = 4; y < 252; y += cellH) {
+        for (let x = 4; x < 508; x += cellW) {
+          const ox = (Math.floor(y / cellH) % 2) * (cellW / 2);
+          gCtx.strokeRect(x + ox, y, cellW * 0.8, cellH * 0.7);
+        }
+      }
+
+      // Теневой градиент глубины решетки
+      const gGrad = gCtx.createLinearGradient(0, 0, 0, 256);
+      gGrad.addColorStop(0, 'rgba(11, 15, 25, 0.9)');
+      gGrad.addColorStop(0.5, 'rgba(2, 6, 23, 0.25)');
+      gGrad.addColorStop(1, 'rgba(11, 15, 25, 0.9)');
+      gCtx.fillStyle = gGrad;
+      gCtx.fillRect(0, 0, 512, 256);
+
+      const grilleTex = new THREE.CanvasTexture(grilleCanvas);
+      const grilleMat = new THREE.MeshStandardMaterial({ map: grilleTex, roughness: 0.6, metalness: 0.3 });
+
+      const grilleBacking = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.34, 1.02), grilleMat);
+      grilleBacking.position.set(XF + 0.02, 0.82, 0);
+      sprinterGroup.add(grilleBacking);
+
+      // Две фирменные двойные хромированные ламели решетки радиатора Sprinter
+      [0.76, 0.88].forEach(gy => {
+        const bar = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.022, 0.98), chromeMat);
+        bar.position.set(XF + 0.04, gy, 0);
+        sprinterGroup.add(bar);
+      });
+
+      // Хромированное кольцо эмблемы Mercedes-Benz
+      const starRing = new THREE.Mesh(new THREE.TorusGeometry(0.092, 0.010, 16, 44), chromeMat);
+      starRing.position.set(XF + 0.055, 0.82, 0);
+      starRing.rotation.y = Math.PI / 2;
+      sprinterGroup.add(starRing);
+
+      // Черная глянцевая подложка звезды
+      const starPlate = new THREE.Mesh(new THREE.CylinderGeometry(0.088, 0.088, 0.01, 32), new THREE.MeshStandardMaterial({
+        color: 0x020617, roughness: 0.2, metalness: 0.5
+      }));
+      starPlate.rotation.z = Math.PI / 2;
+      starPlate.position.set(XF + 0.052, 0.82, 0);
+      sprinterGroup.add(starPlate);
+
+      // Трехлучевая звезда Mercedes в центре
+      for (let k = 0; k < 3; k++) {
+        const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.009, 0.085, 0.015), chromeMat);
+        const a = (k * 2 * Math.PI) / 3;
+        spoke.position.set(XF + 0.058, 0.82 + Math.cos(a) * 0.042, Math.sin(a) * 0.042);
+        spoke.rotation.x = -a;
+        sprinterGroup.add(spoke);
+      }
+
+      // 3. Передний бампер со встроенным радаром Distronic и противотуманными фарами
+      const bumperShape = new THREE.Shape();
+      const pts = [];
+      for (let k = 0; k <= 24; k++) {
+        const x = 4.8 + (XF + 0.1 - 4.8) * (k / 24);
+        pts.push([x, Math.min(halfW(Math.min(x, XF)) + 0.03, 1.0)]);
+      }
+      bumperShape.moveTo(4.8, -pts[0][1]);
+      for (const [x, z] of pts) bumperShape.lineTo(x, -z);
+      bumperShape.quadraticCurveTo(XF + 0.13, 0, XF + 0.1, pts[24][1]);
+      for (const [x, z] of [...pts].reverse()) bumperShape.lineTo(x, z);
+      bumperShape.closePath();
+
+      const bumperGeo = new THREE.ExtrudeGeometry(bumperShape, { depth: 0.28, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.025, bevelSegments: 4 });
+      bumperGeo.rotateX(Math.PI / 2);
+      const bumperMesh = new THREE.Mesh(bumperGeo, trimMat);
+      bumperMesh.position.y = 0.66;
+      bumperMesh.castShadow = true;
+      sprinterGroup.add(bumperMesh);
+
+      // Нижний воздухозаборник бампера
+      const lowerIntake = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.12, 0.84), grilleMat);
+      lowerIntake.position.set(XF + 0.08, 0.44, 0);
+      sprinterGroup.add(lowerIntake);
+
+      // Радарный датчик системы активного торможения (Mercedes Distronic radar plate)
+      const radarPod = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.07, 0.14), new THREE.MeshStandardMaterial({
+        color: 0x090D16, roughness: 0.15, metalness: 0.6
+      }));
+      radarPod.position.set(XF + 0.096, 0.44, 0);
+      sprinterGroup.add(radarPod);
+
+      // Противотуманные фары в бампере с хромированным отражателем и прозрачным стеклом
+      [-0.72, 0.72].forEach(sz => {
+        const fogGroup = new THREE.Group();
+        fogGroup.position.set(5.18, 0.50, sz);
+        fogGroup.rotation.y = (sz > 0 ? -0.45 : 0.45);
+
+        const fogCup = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.032, 0.025, 20), chromeMat);
+        fogCup.rotation.z = Math.PI / 2;
+        fogGroup.add(fogCup);
+
+        const fogBulb = new THREE.Mesh(new THREE.SphereGeometry(0.015, 12, 8), new THREE.MeshStandardMaterial({
+          color: 0xFFFFFF,
+          emissive: 0xFEF08A,
+          emissiveIntensity: 1.0
+        }));
+        fogBulb.position.x = 0.008;
+        fogGroup.add(fogBulb);
+
+        const fogLens = new THREE.Mesh(new THREE.CylinderGeometry(0.040, 0.040, 0.012, 20), clearGlassMat);
+        fogLens.position.x = 0.014;
+        fogLens.rotation.z = Math.PI / 2;
+        fogGroup.add(fogLens);
+
+        sprinterGroup.add(fogGroup);
+      });
+
+      // Текстура внутреннего блока светодиодных фар Mercedes High Performance LED
+      const hlCanvas = document.createElement('canvas');
+      hlCanvas.width = 256; hlCanvas.height = 128;
+      const hlCtx = hlCanvas.getContext('2d');
+      hlCtx.fillStyle = '#090D16';
+      hlCtx.fillRect(0, 0, 256, 128);
+
+      // Отражатели линз ближнего и дальнего света
+      [70, 165].forEach(cx => {
+        const radGrad = hlCtx.createRadialGradient(cx, 64, 4, cx, 64, 42);
+        radGrad.addColorStop(0, '#FFFFFF');
+        radGrad.addColorStop(0.3, '#94A3B8');
+        radGrad.addColorStop(0.7, '#1E293B');
+        radGrad.addColorStop(1, '#090D16');
+        hlCtx.fillStyle = radGrad;
+        hlCtx.beginPath();
+        hlCtx.arc(cx, 64, 42, 0, Math.PI * 2);
+        hlCtx.fill();
+      });
+
+      // Светодиодная дуга DRL (дневные ходовые огни)
+      hlCtx.strokeStyle = '#FFFFFF';
+      hlCtx.lineWidth = 7;
+      hlCtx.lineCap = 'round';
+      hlCtx.beginPath();
+      hlCtx.moveTo(18, 22);
+      hlCtx.lineTo(238, 22);
+      hlCtx.lineTo(246, 88);
+      hlCtx.stroke();
+
+      hlCtx.strokeStyle = 'rgba(186, 230, 253, 0.65)';
+      hlCtx.lineWidth = 14;
+      hlCtx.stroke();
+
+      // Янтарная полоса указателя поворота
+      hlCtx.fillStyle = '#D97706';
+      for (let i = 0; i < 5; i++) {
+        hlCtx.fillRect(28 + i * 14, 102, 8, 16);
+      }
+
+      const headlightTex = new THREE.CanvasTexture(hlCanvas);
+      const hlInteriorMat = new THREE.MeshStandardMaterial({ map: headlightTex, roughness: 0.3, metalness: 0.6 });
+
+      // Высокодетализированные блок-фары Mercedes LED High Performance с кристальными линзами и контурным DRL
+      [-1, 1].forEach(side => {
+        const sz = side * 0.76;
+        const hGroup = new THREE.Group();
+        hGroup.position.set(5.09, 0.86, sz);
+        hGroup.rotation.y = side * -0.58;
+
+        // Внутренний корпус фары (черный матовый термопластик)
+        const hHousing = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.17, 0.36), trimMat);
+        hHousing.position.set(-0.04, 0, 0);
+        hGroup.add(hHousing);
+
+        // Хромированная внутренняя рамка и отражатели
+        const hPlate = new THREE.Mesh(new THREE.PlaneGeometry(0.35, 0.16), hlInteriorMat);
+        hPlate.position.set(0.02, 0, 0);
+        hPlate.rotation.y = Math.PI / 2;
+        hGroup.add(hPlate);
+
+        // Двойные кристальные LED-линзы ближнего и дальнего света с хромированными кольцами
+        [-0.06, 0.06].forEach(lzOffset => {
+          const lz = side * lzOffset;
+          const bezel = new THREE.Mesh(new THREE.TorusGeometry(0.038, 0.005, 12, 24), chromeMat);
+          bezel.position.set(0.045, 0.005, lz);
+          bezel.rotation.y = Math.PI / 2;
+          hGroup.add(bezel);
+
+          const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.032, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.5), new THREE.MeshPhysicalMaterial({
+            color: 0xE0F2FE,
+            transmission: 0.94,
+            roughness: 0.04,
+            ior: 1.52,
+            emissive: 0xBAE6FD,
+            emissiveIntensity: 0.6
+          }));
+          bulb.position.set(0.048, 0.005, lz);
+          bulb.rotation.z = -Math.PI / 2;
+          hGroup.add(bulb);
+
+          // Точечный светодиодный эмиттер в центре линзы
+          const emitter = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.01, 10), new THREE.MeshStandardMaterial({
+            color: 0xFFFFFF,
+            emissive: 0xFFFFFF,
+            emissiveIntensity: 2.5
+          }));
+          emitter.position.set(0.042, 0.005, lz);
+          emitter.rotation.z = Math.PI / 2;
+          hGroup.add(emitter);
+        });
+
+        // Фирменная L-образная светодиодная дуга DRL (Mercedes "Torch" Daytime Running Light)
+        const drlTop = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.015, 0.32), new THREE.MeshStandardMaterial({
+          color: 0xFFFFFF,
+          emissive: 0xBAE6FD,
+          emissiveIntensity: 2.2
+        }));
+        drlTop.position.set(0.052, 0.065, 0);
+        hGroup.add(drlTop);
+
+        // Боковой вертикальный световод ходового огня
+        const drlSide = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.08, 0.014), new THREE.MeshStandardMaterial({
+          color: 0xFFFFFF,
+          emissive: 0xBAE6FD,
+          emissiveIntensity: 2.0
+        }));
+        drlSide.position.set(0.048, 0.028, side * 0.155);
+        hGroup.add(drlSide);
+
+        // Янтарный светодиодный указатель поворота (Amber Indicator)
+        const turnSig = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.03, 0.03), new THREE.MeshStandardMaterial({
+          color: 0xF59E0B,
+          emissive: 0xD97706,
+          emissiveIntensity: 1.2
+        }));
+        turnSig.position.set(0.046, -0.045, side * 0.15);
+        hGroup.add(turnSig);
+
+        // Кристально прозрачный внешний колпак фары из ударопрочного поликарбоната
+        const lensMesh = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.175, 0.35), clearGlassMat);
+        lensMesh.position.set(0.055, 0, 0);
+        hGroup.add(lensMesh);
+
+        sprinterGroup.add(hGroup);
+      });
+
+      // 4. Оснащение лобового стекла и салонное зеркало заднего вида
+      // Керамическая шелкография зоны датчиков дождя / ADAS камеры
+      const sensorFrit = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.008, 0.28), windshieldFritMat);
+      sensorFrit.position.set(3.93, 2.16, 0);
+      sensorFrit.rotation.z = 0.52;
+      sprinterGroup.add(sensorFrit);
+
+      // Блок камеры ADAS и датчика дождя на лобовом стекле
+      const sensorModule = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.024, 0.20), trimMat);
+      sensorModule.position.set(3.91, 2.16, 0);
+      sensorModule.rotation.z = 0.52;
+      sprinterGroup.add(sensorModule);
+
+      // Салонное зеркало заднего вида с поворотным шарниром и рычажком антиблика
+      const rearMirrorGroup = new THREE.Group();
+      rearMirrorGroup.position.set(3.88, 2.08, 0);
+
+      // Кронштейн крепления к лобовому стеклу
+      const mirrorStem = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.007, 0.06, 12), trimMat);
+      mirrorStem.rotation.z = 0.52;
+      mirrorStem.position.set(0.02, 0.02, 0);
+      rearMirrorGroup.add(mirrorStem);
+
+      // Корпус салонного зеркала
+      const mirrorHousing = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.075, 0.22), trimMat);
+      rearMirrorGroup.add(mirrorHousing);
+
+      // Отражающее зеркальное полотно
+      const mirrorFace = new THREE.Mesh(new THREE.PlaneGeometry(0.20, 0.062), chromeMat);
+      mirrorFace.position.set(-0.017, 0, 0);
+      mirrorFace.rotation.y = -Math.PI / 2;
+      rearMirrorGroup.add(mirrorFace);
+
+      // Рычажок переключения "день/ночь" (anti-glare flip tab)
+      const flipTab = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.014, 0.02), trimMat);
+      flipTab.position.set(-0.01, -0.042, 0);
+      rearMirrorGroup.add(flipTab);
+
+      sprinterGroup.add(rearMirrorGroup);
+
+      // Капот: штампованные ребра жесткости (signature Mercedes-Benz hood creases)
+      [-0.42, 0.42].forEach(kz => {
+        const crease = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.012, 0.02), solidArcticWhitePaint);
+        crease.position.set(4.78, 1.14, kz);
+        crease.rotation.z = -0.26;
+        sprinterGroup.add(crease);
+      });
+
+      // Решетка воздухозаборника под лобовым стеклом (cowl vent / жабо)
+      const cowlVent = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.015, 1.56), trimMat);
+      cowlVent.position.set(4.46, 1.25, 0);
+      cowlVent.rotation.z = -0.18;
+      sprinterGroup.add(cowlVent);
+
+      // Стеклоочистители (дворники ветрового стекла)
+      [-0.45, 0.15].forEach((wz, wi) => {
+        const wiperPivot = new THREE.Group();
+        wiperPivot.position.set(4.43, 1.27, wz);
+        wiperPivot.rotation.z = 0.52;
+        wiperPivot.rotation.y = (wi === 0 ? 0.12 : -0.08);
+
+        // Поворотный шарнир поводка дворника
+        const base = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.02, 12), trimMat);
+        base.rotation.x = Math.PI / 2;
+        wiperPivot.add(base);
+
+        // Металлический поводок
+        const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.40, 10), trimMat);
+        arm.position.y = 0.20;
+        wiperPivot.add(arm);
+
+        // Бескаркасная щетка стеклоочистителя
+        const blade = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.56, 0.018), rubberMat);
+        blade.position.set(0, 0.40, 0.015);
+        wiperPivot.add(blade);
+
+        // Аэродинамический спойлер щетки
+        const bladeSpoiler = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.52, 0.008), trimMat);
+        bladeSpoiler.position.set(-0.008, 0.40, 0.015);
+        wiperPivot.add(bladeSpoiler);
+
+        sprinterGroup.add(wiperPivot);
+      });
+
+      // Передний номерной знак (Госномер BusLiner / Mercedes)
+      const plateCanvas = document.createElement('canvas');
+      plateCanvas.width = 256; plateCanvas.height = 64;
+      const pCtx = plateCanvas.getContext('2d');
+      pCtx.fillStyle = '#FFFFFF';
+      pCtx.fillRect(0, 0, 256, 64);
+      pCtx.strokeStyle = '#0F172A';
+      pCtx.lineWidth = 4;
+      pCtx.strokeRect(3, 3, 250, 58);
+      pCtx.fillStyle = '#1E3A8A';
+      pCtx.fillRect(4, 4, 32, 56);
+      pCtx.fillStyle = '#FFFFFF';
+      pCtx.font = 'bold 16px sans-serif';
+      pCtx.fillText('RUS', 6, 46);
+      pCtx.fillStyle = '#0F172A';
+      pCtx.font = 'bold 36px monospace';
+      pCtx.fillText('М 777 АА', 44, 44);
+      pCtx.font = 'bold 24px monospace';
+      pCtx.fillText('77', 214, 42);
+
+      const plateTex = new THREE.CanvasTexture(plateCanvas);
+      const frontPlate = new THREE.Mesh(new THREE.PlaneGeometry(0.48, 0.12), new THREE.MeshStandardMaterial({ map: plateTex, roughness: 0.3 }));
+      frontPlate.position.set(XF + 0.11, 0.54, 0);
+      frontPlate.rotation.y = Math.PI / 2;
+      sprinterGroup.add(frontPlate);
+
+      // Черные стойки кузова между панорамными стеклопакетами (Pillars B, C, D, E, F)
+      [3.3, 2.1, 0.9, -0.3, -1.5].forEach(px => {
+        [-1.025, 1.025].forEach(pz => {
+          const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.92, 0.035), trimMat);
+          pillar.position.set(px, 1.85, pz);
+          sprinterGroup.add(pillar);
+        });
+      });
+
+      // Черная шелкография (керамическая кайма фриттов) по периметру остекления
+      [-1.022, 1.022].forEach(wz => {
+        const fritTop = new THREE.Mesh(new THREE.BoxGeometry(5.02, 0.05, 0.01), trimMat);
+        fritTop.position.set(0.36, 2.28, wz);
+        sprinterGroup.add(fritTop);
+
+        const fritBottom = new THREE.Mesh(new THREE.BoxGeometry(5.02, 0.05, 0.01), trimMat);
+        fritBottom.position.set(0.36, 1.42, wz);
+        sprinterGroup.add(fritBottom);
+      });
+
+      // Широкие защитные боковые молдинги по всему периметру нижней части кузова (protective side cladding)
+      [-1.025, 1.025].forEach(sideZ => {
+        const sideCladding = new THREE.Mesh(new THREE.BoxGeometry(6.78, 0.14, 0.02), trimMat);
+        sideCladding.position.set(1.26, 0.72, sideZ);
+        sprinterGroup.add(sideCladding);
+
+        // Янтарные габаритные светодиодные маркеры (amber side markers)
+        [-1.5, -0.8, 0.8, 2.4, 3.8].forEach(mx => {
+          const marker = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.028, 0.01), new THREE.MeshStandardMaterial({
+            color: 0xF59E0B, emissive: 0xD97706, emissiveIntensity: 0.85
+          }));
+          marker.position.set(mx, 0.72, sideZ + (sideZ > 0 ? 0.015 : -0.015));
+          sprinterGroup.add(marker);
+        });
+
+        // Дверные ручки кабины
+        const frontDoorHandle = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.035, 0.03), trimMat);
+        frontDoorHandle.position.set(3.4, 1.36, sideZ + (sideZ > 0 ? 0.02 : -0.02));
+        sprinterGroup.add(frontDoorHandle);
+      });
+
+      // Правая пассажирская сдвижная дверь Mercedes Sprinter (объемная 3D конструкция)
+      // Направляющий рельс сдвижного механизма (sliding door guide rail)
+      const slideRail = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.026, 0.022), trimMat);
+      slideRail.position.set(1.25, 1.30, 1.032);
+      sprinterGroup.add(slideRail);
+
+      // Защитный обтекатель направляющего рельса
+      const railCover = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.038, 0.025), solidArcticWhitePaint);
+      railCover.position.set(2.40, 1.30, 1.036);
+      sprinterGroup.add(railCover);
+
+      // Роликовая каретка привода сдвижной двери (roller runner arm)
+      const rollerArm = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.024, 0.032), chromeMat);
+      rollerArm.position.set(2.05, 1.30, 1.038);
+      sprinterGroup.add(rollerArm);
+
+      // Углубление под ручку сдвижной двери
+      const slidePocket = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.065, 0.015), trimMat);
+      slidePocket.position.set(2.4, 1.38, 1.032);
+      sprinterGroup.add(slidePocket);
+
+      // Эргономичная ручка пассажирской сдвижной двери
+      const slideHandle = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.038, 0.028), trimMat);
+      slideHandle.position.set(2.4, 1.38, 1.045);
+      slideHandle.castShadow = true;
+      sprinterGroup.add(slideHandle);
+
+      // Защитный нижний молдинг на полотне сдвижной двери
+      const slideCladding = new THREE.Mesh(new THREE.BoxGeometry(1.28, 0.14, 0.015), trimMat);
+      slideCladding.position.set(2.67, 0.72, 1.035);
+      sprinterGroup.add(slideCladding);
+
+      // Вертикальные швы проема сдвижной двери (front & rear sliding door shutlines)
+      [2.02, 3.32].forEach(sx => {
+        const seam = new THREE.Mesh(new THREE.BoxGeometry(0.01, 1.76, 0.012), trimMat);
+        seam.position.set(sx, 1.43, 1.026);
+        sprinterGroup.add(seam);
+      });
+
+      // Электрическая выдвижная ступенька для посадки пассажиров (retractable entry step)
+      const entryStep = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.035, 0.22), trimMat);
+      entryStep.position.set(2.8, 0.40, 1.08);
+      sprinterGroup.add(entryStep);
+
+      const stepTread = new THREE.Mesh(new THREE.PlaneGeometry(0.88, 0.18), new THREE.MeshStandardMaterial({
+        color: 0xE2E8F0, metalness: 0.85, roughness: 0.3
+      }));
+      stepTread.rotation.x = -Math.PI / 2;
+      stepTread.position.set(2.8, 0.42, 1.08);
+      sprinterGroup.add(stepTread);
+
+      // Желтый травмобезопасный поручень в проёме входа
+      const entryRail = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 1.4, 16), new THREE.MeshStandardMaterial({
+        color: 0xEAB308, roughness: 0.3
+      }));
+      entryRail.position.set(3.38, 1.35, 0.95);
+      sprinterGroup.add(entryRail);
+
+      // 6. НАСТОЯЩИЕ ПОЛИГОНАЛЬНЫЕ РАСПАШНЫЕ ДВЕРИ MERCEDES-BENZ SPRINTER (ЛЕВАЯ И ПРАВАЯ СТВОРКИ)
+      // ══════════════════════════════════════════════════════════════════════════════
+      const rearDoorsGroup = new THREE.Group();
+
+      // Массивный резиновый контур уплотнителя дверного портала кузова (проем кузова)
+      const portalSealMat = new THREE.MeshStandardMaterial({ color: 0x0A0F1D, roughness: 0.95 });
+
+      // Центральная вертикальная уплотнительная притворная планка
+      const centerGasket = new THREE.Mesh(new THREE.BoxGeometry(0.036, 2.03, 0.018), portalSealMat);
+      centerGasket.position.set(XR - 0.025, 1.595, 0);
+      rearDoorsGroup.add(centerGasket);
+
+      // Высокоглянцевое Blackout остекление дверей (физическое 3D-стекло)
+      const rearBlackoutGlassMat = new THREE.MeshStandardMaterial({
+        color: 0x020617,
+        roughness: 0.06,
+        metalness: 0.92
+      });
+
+      // Резиновый уплотнитель оконных рам дверей
+      const windowSealMat = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.92 });
+      const plateNicheMat = new THREE.MeshStandardMaterial({ color: 0xE2E8F0, roughness: 0.4, metalness: 0.2 });
+
+      // Генерация цельной трехмерной полигональной створки двери (левая: side = -1, правая: side = +1)
+      function buildRearDoorLeaf(side) {
+        const leafGroup = new THREE.Group();
+
+        // 1. Полигональный контур и штамповка полотна створки двери с вырезом под окно
+        const doorShape = new THREE.Shape();
+        if (side > 0) {
+          // Правая створка двери (z > 0, CCW обход в плоскости (z, y))
+          doorShape.moveTo(0.006, 0.58);
+          doorShape.lineTo(0.905, 0.58);
+          doorShape.lineTo(0.935, 0.68);
+          doorShape.lineTo(0.950, 1.00);
+          doorShape.lineTo(0.950, 1.50);
+          doorShape.lineTo(0.940, 2.00);
+          doorShape.lineTo(0.915, 2.45);
+          doorShape.quadraticCurveTo(0.890, 2.57, 0.750, 2.59);
+          doorShape.lineTo(0.006, 2.61);
+          doorShape.closePath();
+
+          // Оконный проем правой двери (CW обход для вырезания отверстия в полигонах)
+          const winHole = new THREE.Path();
+          winHole.moveTo(0.12, 1.52);
+          winHole.lineTo(0.12, 2.24);
+          winHole.lineTo(0.80, 2.24);
+          winHole.lineTo(0.80, 1.52);
+          winHole.closePath();
+          doorShape.holes.push(winHole);
+        } else {
+          // Левая створка двери (z < 0, CCW обход в плоскости (z, y))
+          doorShape.moveTo(-0.006, 2.61);
+          doorShape.lineTo(-0.750, 2.59);
+          doorShape.quadraticCurveTo(-0.890, 2.57, -0.915, 2.45);
+          doorShape.lineTo(-0.940, 2.00);
+          doorShape.lineTo(-0.950, 1.50);
+          doorShape.lineTo(-0.950, 1.00);
+          doorShape.lineTo(-0.935, 0.68);
+          doorShape.lineTo(-0.905, 0.58);
+          doorShape.lineTo(-0.006, 0.58);
+          doorShape.closePath();
+
+          // Оконный проем левой двери (CW обход для вырезания отверстия в полигонах)
+          const winHole = new THREE.Path();
+          winHole.moveTo(-0.12, 1.52);
+          winHole.lineTo(-0.80, 1.52);
+          winHole.lineTo(-0.80, 2.24);
+          winHole.lineTo(-0.12, 2.24);
+          winHole.closePath();
+          doorShape.holes.push(winHole);
+        }
+
+        // Объемная 3D-экструзия с фасками (Bevel) для реалистичных металлических бликов
+        const doorGeo = new THREE.ExtrudeGeometry(doorShape, {
+          depth: 0.040,
+          bevelEnabled: true,
+          bevelThickness: 0.008,
+          bevelSize: 0.008,
+          bevelSegments: 3
+        });
+        doorGeo.rotateY(-Math.PI / 2);
+
+        const doorShellMesh = new THREE.Mesh(doorGeo, solidArcticWhitePaint);
+        doorShellMesh.position.set(XR - 0.012, 0, 0);
+        doorShellMesh.castShadow = true;
+        doorShellMesh.receiveShadow = true;
+        leafGroup.add(doorShellMesh);
+
+        // 2. Полигональное окно с объемным уплотнителем
+        const winCenterZ = side * 0.46;
+        const winFrame = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.74, 0.70), windowSealMat);
+        winFrame.position.set(XR - 0.030, 1.88, winCenterZ);
+        leafGroup.add(winFrame);
+
+        const winGlass = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.70, 0.66), rearBlackoutGlassMat);
+        winGlass.position.set(XR - 0.038, 1.88, winCenterZ);
+        winGlass.castShadow = true;
+        leafGroup.add(winGlass);
+
+        // Объемные металлизированные нити электрообогрева стекла
+        for (let gy = 1.60; gy <= 2.16; gy += 0.07) {
+          const gridLine = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.003, 0.62), new THREE.MeshStandardMaterial({
+            color: 0x94A3B8, metalness: 0.95, roughness: 0.15
+          }));
+          gridLine.position.set(XR - 0.046, gy, winCenterZ);
+          leafGroup.add(gridLine);
+        }
+
+        // 3. Нижняя штампованная филенка двери (рельефный выступ в металле)
+        const stampedPanel = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.64, 0.72), solidArcticWhitePaint);
+        stampedPanel.position.set(XR - 0.044, 1.11, side * 0.46);
+        stampedPanel.castShadow = true;
+        stampedPanel.receiveShadow = true;
+        leafGroup.add(stampedPanel);
+
+        // Штампованный желоб ребра жесткости (поясная линия)
+        const swageCrease = new THREE.Mesh(new THREE.BoxGeometry(0.010, 0.020, 0.76), trimMat);
+        swageCrease.position.set(XR - 0.052, 1.28, side * 0.46);
+        leafGroup.add(swageCrease);
+
+        // 4. Нижний защитный коммерческий молдинг створки
+        const lowerMolding = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.17, 0.86), trimMat);
+        lowerMolding.position.set(XR - 0.048, 0.665, side * 0.46);
+        lowerMolding.castShadow = true;
+        leafGroup.add(lowerMolding);
+
+        // Продольные ребра жесткости на защитном пластике
+        [-0.035, 0.035].forEach(ry => {
+          const rib = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.012, 0.84), trimMat);
+          rib.position.set(XR - 0.060, 0.665 + ry, side * 0.46);
+          leafGroup.add(rib);
+        });
+
+        return leafGroup;
+      }
+
+      rearDoorsGroup.add(buildRearDoorLeaf(-1)); // Левая створка двери
+      rearDoorsGroup.add(buildRearDoorLeaf(1));  // Правая створка двери
+
+      // ── ЛЕВАЯ СТВОРКА: ВЫШТАМПОВКА НОМЕРА, ЗВЕЗДА MERCEDES, ШИЛЬДИК ──
+      // Углубленная полигональная ниша номерного знака
+      const plateNichePocket = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.18, 0.54), plateNicheMat);
+      plateNichePocket.position.set(XR - 0.040, 1.08, -0.32);
+      rearDoorsGroup.add(plateNichePocket);
+
+      // Рамка и номерной знак
+      const platePlate = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.12, 0.48), new THREE.MeshStandardMaterial({ map: plateTex, roughness: 0.3 }));
+      platePlate.position.set(XR - 0.056, 1.08, -0.32);
+      rearDoorsGroup.add(platePlate);
+
+      // Светодиодная подсветка номера
+      [-0.42, -0.22].forEach(lz => {
+        const lightPod = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.018, 0.045), trimMat);
+        lightPod.position.set(XR - 0.048, 1.18, lz);
+        rearDoorsGroup.add(lightPod);
+      });
+
+      // Хромированная трехлучевая звезда Mercedes-Benz на левой двери
+      const rearStar = new THREE.Mesh(new THREE.TorusGeometry(0.045, 0.006, 12, 32), chromeMat);
+      rearStar.position.set(XR - 0.054, 1.62, -0.32);
+      rearStar.rotation.y = -Math.PI / 2;
+      rearDoorsGroup.add(rearStar);
+
+      for (let k = 0; k < 3; k++) {
+        const starBlade = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.042, 0.008), chromeMat);
+        const a = (k * 2 * Math.PI) / 3;
+        starBlade.position.set(XR - 0.056, 1.62 + Math.cos(a) * 0.02, -0.32 + Math.sin(a) * 0.02);
+        starBlade.rotation.x = -a;
+        rearDoorsGroup.add(starBlade);
+      }
+
+      // Хромированный объемный шильдик SPRINTER 519 CDI
+      const rearBadge = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.024, 0.20), chromeMat);
+      rearBadge.position.set(XR - 0.054, 1.50, -0.32);
+      rearDoorsGroup.add(rearBadge);
+
+      // ── ПРАВАЯ СТВОРКА: РУЧКА ДВЕРИ, ЗАМОК И ПРИТВОРНАЯ ПЛАНКА ──
+      // Ниша под дверную ручку
+      const handlePocket = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.20, 0.07), trimMat);
+      handlePocket.position.set(XR - 0.042, 1.34, 0.075);
+      rearDoorsGroup.add(handlePocket);
+
+      // Объемная эргономичная ручка открывания задней двери
+      const rearHandle = new THREE.Mesh(new THREE.BoxGeometry(0.030, 0.16, 0.034), trimMat);
+      rearHandle.position.set(XR - 0.062, 1.34, 0.075);
+      rearHandle.castShadow = true;
+      rearDoorsGroup.add(rearHandle);
+
+      // Хромированная личинка замка с замочной скважиной
+      const keyCylinder = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.010, 16), chromeMat);
+      keyCylinder.rotation.z = Math.PI / 2;
+      keyCylinder.position.set(XR - 0.054, 1.23, 0.075);
+      rearDoorsGroup.add(keyCylinder);
+
+      // Вертикальная притворная стальная планка (стык створок)
+      const overlapLip = new THREE.Mesh(new THREE.BoxGeometry(0.012, 2.02, 0.025), solidArcticWhitePaint);
+      overlapLip.position.set(XR - 0.048, 1.595, 0.008);
+      rearDoorsGroup.add(overlapLip);
+
+      // Задний бампер со встроенной подножкой (rear step bumper)
+      const rearBumperStep = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.14, 1.76), trimMat);
+      rearBumperStep.position.set(XR - 0.10, 0.62, 0);
+      rearBumperStep.castShadow = true;
+      rearDoorsGroup.add(rearBumperStep);
+
+      const rearStepTread = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.012, 1.70), new THREE.MeshStandardMaterial({
+        color: 0x64748B, metalness: 0.8, roughness: 0.35
+      }));
+      rearStepTread.position.set(XR - 0.10, 0.696, 0);
+      rearDoorsGroup.add(rearStepTread);
+
+      // Угловые светоотражающие катафоты на бампере
+      [-0.80, 0.80].forEach(rz => {
+        const reflector = new THREE.Mesh(new THREE.BoxGeometry(0.010, 0.040, 0.14), new THREE.MeshStandardMaterial({
+          color: 0xDC2626, emissive: 0x991B1B, emissiveIntensity: 0.8
+        }));
+        reflector.position.set(XR - 0.23, 0.62, rz);
+        rearDoorsGroup.add(reflector);
+      });
+
+      sprinterGroup.add(rearDoorsGroup);
+
+      // Фирменные вертикальные задние фонари Mercedes Sprinter (tall vertical taillights on D-pillars)
+      [-0.92, 0.92].forEach(tz => {
+        const tGroup = new THREE.Group();
+        tGroup.position.set(XR + 0.02, 1.48, tz);
+        tGroup.rotation.y = (tz > 0 ? 0.15 : -0.15);
+
+        // Черный корпус фонаря
+        const tHousing = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.88, 0.08), trimMat);
+        tGroup.add(tHousing);
+
+        // Верхний стоп/габарит (LED Red)
+        const redTop = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.38, 0.07), new THREE.MeshStandardMaterial({
+          color: 0xDC2626, emissive: 0x991B1B, emissiveIntensity: 0.85, roughness: 0.2
+        }));
+        redTop.position.set(-0.045, 0.22, 0);
+        tGroup.add(redTop);
+
+        // Средний указатель поворота (Amber Turn)
+        const amberMid = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.16, 0.07), new THREE.MeshStandardMaterial({
+          color: 0xF59E0B, emissive: 0xB45309, emissiveIntensity: 0.75, roughness: 0.2
+        }));
+        amberMid.position.set(-0.045, -0.06, 0);
+        tGroup.add(amberMid);
+
+        // Нижний фонарь заднего хода (Clear White Reverse)
+        const whiteBot = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.18, 0.07), new THREE.MeshStandardMaterial({
+          color: 0xF8FAFC, emissive: 0xE2E8F0, emissiveIntensity: 0.5, roughness: 0.1
+        }));
+        whiteBot.position.set(-0.045, -0.24, 0);
+        tGroup.add(whiteBot);
+
+        sprinterGroup.add(tGroup);
+      });
+
+      // Верхний третий дополнительный стоп-сигнал (High-mounted 3rd brake light)
+      const highBrake = new THREE.Mesh(new THREE.BoxGeometry(0.025, 0.035, 0.32), new THREE.MeshStandardMaterial({
+        color: 0xDC2626, emissive: 0xDC2626, emissiveIntensity: 1.0
+      }));
+      highBrake.position.set(XR + 0.02, 2.58, 0);
+      sprinterGroup.add(highBrake);
+
+      // Аэродинамический накрышный блок кондиционера Webasto / Spheros (в крыше)
+      const acFairing = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.18, 1.18), solidArcticWhitePaint);
+      acFairing.position.set(1.2, 2.80, 0);
+      acFairing.castShadow = true;
+      roofMeshGroup.add(acFairing);
+
+      [0.6, -0.4, -1.4].forEach(fx => {
+        const fanRing = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.02, 10, 32), trimMat);
+        fanRing.rotation.x = Math.PI / 2;
+        fanRing.position.set(fx, 2.89, 0);
+        roofMeshGroup.add(fanRing);
+
+        const fanCenter = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.03, 16), chromeMat);
+        fanCenter.position.set(fx, 2.89, 0);
+        roofMeshGroup.add(fanCenter);
+      });
+
+      // Антенна-плавник (Shark fin antenna)
+      const sharkFin = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.12, 4), trimMat);
+      sharkFin.rotation.y = Math.PI / 4;
+      sharkFin.position.set(3.2, 2.78, 0);
+      roofMeshGroup.add(sharkFin);
+
+      // ══════════════════════════════════════════════════════════════════════════
+      // ВЫСОКОДЕТАЛИЗИРОВАННЫЕ БОКОВЫЕ ЗЕРКАЛА MERCEDES-BENZ SPRINTER (W907/W910)
+      // ══════════════════════════════════════════════════════════════════════════
+      const mirrorGlassMat = new THREE.MeshStandardMaterial({
+        color: 0xE2E8F0,
+        metalness: 0.98,
+        roughness: 0.03
+      });
+
+      [-1, 1].forEach(side => {
+        const sideZ = side * 1.01;
+        const mGroup = new THREE.Group();
+
+        // 1. Треугольный кронштейн крепления к двери ("парус" у передней стойки A)
+        const sailMount = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.22, 0.035), trimMat);
+        sailMount.position.set(3.78, 1.50, sideZ + side * 0.015);
+        sailMount.rotation.y = side * 0.12;
+        mGroup.add(sailMount);
+
+        // 2. Двойная жесткая аэродинамическая несущая стойка (выносной кронштейн)
+        // Верхний силовой пилон
+        const armTop = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.032, 0.16), trimMat);
+        armTop.position.set(3.75, 1.56, sideZ + side * 0.09);
+        armTop.rotation.y = side * 0.18;
+        mGroup.add(armTop);
+
+        // Нижний силовой пилон
+        const armBottom = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.028, 0.15), trimMat);
+        armBottom.position.set(3.74, 1.44, sideZ + side * 0.085);
+        armBottom.rotation.y = side * 0.18;
+        mGroup.add(armBottom);
+
+        // 3. Центральное тело зеркала вынесено наружу (габарит по ширине: Z = 1.23)
+        const headGroup = new THREE.Group();
+        headGroup.position.set(3.71, 1.52, sideZ + side * 0.22);
+        headGroup.rotation.y = side * -0.10; // эргономичный разворот в сторону водителя
+
+        // Аэродинамический скульптурный корпус зеркала
+        const mHousing = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.36, 0.19), trimMat);
+        mHousing.castShadow = true;
+        headGroup.add(mHousing);
+
+        // Верхний обтекаемый козырек корпуса (дефлектор в цвете Arctic White)
+        const mCap = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.04, 0.185), solidArcticWhitePaint);
+        mCap.position.set(-0.005, 0.17, 0);
+        headGroup.add(mCap);
+
+        // 4. Интегрированный светодиодный повторитель поворота (LED Turn Signal Repeater)
+        const ledTurnCore = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.022, 0.016), new THREE.MeshStandardMaterial({
+          color: 0xF59E0B, emissive: 0xD97706, emissiveIntensity: 1.2
+        }));
+        ledTurnCore.position.set(0.045, 0.02, side * 0.095);
+        headGroup.add(ledTurnCore);
+
+        // Внешнее прозрачное защитное стекло повторителя
+        const ledTurnLens = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.028, 0.02), clearGlassMat);
+        ledTurnLens.position.set(0.046, 0.02, side * 0.098);
+        headGroup.add(ledTurnLens);
+
+        // 5. Двухсекционное зеркальное полотно (Aspherical Double Mirror):
+        // Черная внутренняя окантовка / рамка зеркала с глубоким скосом
+        const innerBezel = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.33, 0.165), new THREE.MeshStandardMaterial({
+          color: 0x0F172A, roughness: 0.9
+        }));
+        innerBezel.position.set(-0.062, 0, 0);
+        headGroup.add(innerBezel);
+
+        // А. Верхняя основная секция зеркала (высота 21 см)
+        const mainMirror = new THREE.Mesh(new THREE.PlaneGeometry(0.155, 0.21), mirrorGlassMat);
+        mainMirror.position.set(-0.068, 0.05, 0);
+        mainMirror.rotation.y = -Math.PI / 2;
+        headGroup.add(mainMirror);
+
+        // Б. Разделительная пластиковая планка между секциями
+        const dividerRib = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.012, 0.16), trimMat);
+        dividerRib.position.set(-0.065, -0.062, 0);
+        headGroup.add(dividerRib);
+
+        // В. Нижняя панорамная сферическая секция мертвой зоны (Wide-Angle Convex Mirror)
+        const wideMirror = new THREE.Mesh(new THREE.PlaneGeometry(0.155, 0.08), mirrorGlassMat);
+        wideMirror.position.set(-0.067, -0.115, 0);
+        wideMirror.rotation.y = -Math.PI / 2;
+        wideMirror.rotation.z = side * 0.08; // наклон для обзора слепой зоны у колеса
+        headGroup.add(wideMirror);
+
+        // Г. Индикатор системы контроля слепых зон (Blind Spot Assist - красный треугольник)
+        const bsaGeo = new THREE.BufferGeometry();
+        const bsaVerts = new Float32Array([
+          0, 0, 0,
+          0, 0.016, 0.009,
+          0, -0.016, 0.009
+        ]);
+        bsaGeo.setAttribute('position', new THREE.BufferAttribute(bsaVerts, 3));
+        const bsaMesh = new THREE.Mesh(bsaGeo, new THREE.MeshStandardMaterial({
+          color: 0xEF4444, emissive: 0xDC2626, emissiveIntensity: 0.95, side: THREE.DoubleSide
+        }));
+        bsaMesh.position.set(-0.069, 0.12, side * -0.05);
+        headGroup.add(bsaMesh);
+
+        // 6. Датчик температуры наружного воздуха (на водительском зеркале снизу)
+        if (side < 0) {
+          const tempSensor = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.003, 0.02, 12), trimMat);
+          tempSensor.position.set(0, -0.19, 0);
+          headGroup.add(tempSensor);
+        }
+
+        mGroup.add(headGroup);
+        sprinterGroup.add(mGroup);
+      });
+
+      // 5. Высокодетализированные легкосплавные колеса Mercedes-Benz Sprinter
+      function createRealWheel(x, z, isInner = false) {
+        const wGroup = new THREE.Group();
+        wGroup.position.set(x, 0.395, z);
+        const outSign = z > 0 ? 1 : -1;
+        const faceZ = outSign * 0.115;
+
+        // 1. Коммерческая шина Michelin / Continental VanContact (205/75 R16C)
+        const tyre = new THREE.Mesh(new THREE.CylinderGeometry(0.395, 0.395, 0.23, 36), rubberMat);
+        tyre.rotation.x = Math.PI / 2;
+        tyre.castShadow = true;
+        wGroup.add(tyre);
+
+        // Боковина шины с защитным кантом диска
+        const bead = new THREE.Mesh(new THREE.TorusGeometry(0.315, 0.05, 12, 36), rubberMat);
+        bead.position.z = faceZ;
+        wGroup.add(bead);
+
+        // 2. Вентилируемая дисковая тормозная система Sprinter
+        const rotor = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.018, 32), brakeSteelMat);
+        rotor.rotation.x = Math.PI / 2;
+        rotor.position.z = outSign * 0.02;
+        wGroup.add(rotor);
+
+        const rotorHat = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.03, 24), brakeHubMat);
+        rotorHat.rotation.x = Math.PI / 2;
+        rotorHat.position.z = outSign * 0.025;
+        wGroup.add(rotorHat);
+
+        // Тормозной суппорт с гидравлическими поршнями
+        const caliper = new THREE.Group();
+        caliper.position.set(0.04, 0.13, outSign * 0.025);
+        const caliperBody = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.11, 0.042), brakeCaliperMat);
+        caliper.add(caliperBody);
+        const piston1 = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.044, 16), brakeSteelMat);
+        piston1.rotation.x = Math.PI / 2;
+        piston1.position.set(0, 0.028, 0);
+        caliper.add(piston1);
+        const piston2 = piston1.clone();
+        piston2.position.set(0, -0.028, 0);
+        caliper.add(piston2);
+        wGroup.add(caliper);
+
+        // 3. Диск (Легкосплавный колесный диск Mercedes-Benz Diamond-Cut)
+        const rimBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.235, 0.235, 0.23, 32, 1, true), rimAlloyMat);
+        rimBarrel.rotation.x = Math.PI / 2;
+        wGroup.add(rimBarrel);
+
+        if (!isInner) {
+          // Внешняя полированная закраина диска (Machined rim lip)
+          const rimFlange = new THREE.Mesh(new THREE.TorusGeometry(0.236, 0.008, 12, 36), rimAlloyMat);
+          rimFlange.position.z = faceZ + outSign * 0.004;
+          wGroup.add(rimFlange);
+
+          // Конический переход к ступице (Drop center / recessed dish)
+          const coneDish = new THREE.Mesh(new THREE.CylinderGeometry(0.235, 0.165, 0.038, 32, 1, true), rimPocketMat);
+          coneDish.rotation.x = outSign > 0 ? -Math.PI / 2 : Math.PI / 2;
+          coneDish.position.z = faceZ - outSign * 0.018;
+          wGroup.add(coneDish);
+
+          // Темная подложка колодцев для высокого контраста спиц
+          const darkBacking = new THREE.Mesh(new THREE.CircleGeometry(0.21, 24), rimPocketMat);
+          darkBacking.position.z = faceZ - outSign * 0.028;
+          if (outSign < 0) darkBacking.rotation.y = Math.PI;
+          wGroup.add(darkBacking);
+
+          // 6 двухцветных спиц Mercedes Diamond-Cut
+          for (let k = 0; k < 6; k++) {
+            const a = (k * 2 * Math.PI) / 6;
+            const spokeGroup = new THREE.Group();
+            spokeGroup.position.set(0, 0, faceZ - outSign * 0.004);
+            spokeGroup.rotation.z = a;
+
+            // Центральное тело спицы
+            const mainSpoke = new THREE.Mesh(new THREE.BoxGeometry(0.036, 0.155, 0.022), rimAlloyMat);
+            mainSpoke.position.set(0, 0.14, 0);
+            spokeGroup.add(mainSpoke);
+
+            // Полированная алмазная грань спицы (Diamond-cut face)
+            const spokeEdge = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.145, 0.026), chromeMat);
+            spokeEdge.position.set(0, 0.14, outSign * 0.003);
+            spokeGroup.add(spokeEdge);
+
+            wGroup.add(spokeGroup);
+          }
+
+          // Ступица (Hub dish)
+          const hubBase = new THREE.Mesh(new THREE.CylinderGeometry(0.078, 0.078, 0.025, 24), rimAlloyMat);
+          hubBase.rotation.x = Math.PI / 2;
+          hubBase.position.z = faceZ - outSign * 0.005;
+          wGroup.add(hubBase);
+
+          // 6 усиленных колесных болтов (PCD 130мм Mercedes Sprinter)
+          for (let k = 0; k < 6; k++) {
+            const a = ((k + 0.5) * 2 * Math.PI) / 6;
+            const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.0075, 0.0075, 0.015, 6), lugNutMat);
+            bolt.rotation.x = Math.PI / 2;
+            bolt.position.set(Math.cos(a) * 0.052, Math.sin(a) * 0.052, faceZ + outSign * 0.003);
+            wGroup.add(bolt);
+          }
+
+          // Фирменный колпачок Mercedes-Benz со звездой
+          const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.012, 24), centerCapMat);
+          cap.rotation.x = Math.PI / 2;
+          cap.position.z = faceZ + outSign * 0.007;
+          wGroup.add(cap);
+
+          const capRing = new THREE.Mesh(new THREE.TorusGeometry(0.032, 0.0028, 8, 24), chromeMat);
+          capRing.position.z = faceZ + outSign * 0.013;
+          wGroup.add(capRing);
+
+          // 3-лучевая звезда Mercedes в центре колпачка
+          for (let k = 0; k < 3; k++) {
+            const a = (k * 2 * Math.PI) / 3;
+            const starSpoke = new THREE.Mesh(new THREE.BoxGeometry(0.003, 0.022, 0.003), chromeMat);
+            starSpoke.position.set(Math.sin(a) * 0.01, Math.cos(a) * 0.01, faceZ + outSign * 0.014);
+            starSpoke.rotation.z = -a;
+            wGroup.add(starSpoke);
+          }
+
+          // Ниппель подкачки шины
+          const valve = new THREE.Mesh(new THREE.CylinderGeometry(0.0035, 0.0035, 0.018, 12), valveMat);
+          valve.position.set(0.18, 0.05, faceZ - outSign * 0.002);
+          valve.rotation.z = -0.4;
+          valve.rotation.x = outSign > 0 ? 0.3 : -0.3;
+          wGroup.add(valve);
+        }
+
+        return wGroup;
+      }
+
+      // Задняя ось Sprinter 519 CDI: фирменная двускатная ошиновка (спарка)
+      sprinterGroup.add(createRealWheel(0.0, -1.06, false));
+      sprinterGroup.add(createRealWheel(0.0, -0.82, true)); // внутреннее колесо левой спарки
+      sprinterGroup.add(createRealWheel(0.0, 1.06, false));
+      sprinterGroup.add(createRealWheel(0.0, 0.82, true));  // внутреннее колесо правой спарки
+
+      // Передняя ось: одинарные управляемые колеса с дисковыми тормозами
+      sprinterGroup.add(createRealWheel(4.325, -1.04, false));
+      sprinterGroup.add(createRealWheel(4.325, 1.04, false));
+
+      // Задние резиновые брызговики Mercedes-Benz за задними колесами
+      [-1.02, 1.02].forEach(mz => {
+        const mudFlap = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.28, 0.26), rubberMat);
+        mudFlap.position.set(-0.48, 0.26, mz);
+        sprinterGroup.add(mudFlap);
+      });
+
+      // Лючок горловины дизельного топлива / AdBlue на левом борту под стойкой водителя
+      const fuelFlap = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, 0.01), trimMat);
+      fuelFlap.position.set(3.24, 0.98, -1.025);
+      sprinterGroup.add(fuelFlap);
+
+      // Внешние 270-градусные стальные петли задних распашных дверей Mercedes Sprinter
+      [-0.935, 0.935].forEach(hz => {
+        [1.02, 2.15].forEach(hy => {
+          const hingeGroup = new THREE.Group();
+          // Базовый кронштейн крепления к кузовной стойке D
+          const hBase = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.085, 0.03), trimMat);
+          hBase.position.set(XR - 0.015, hy, hz);
+          hingeGroup.add(hBase);
+
+          // Вертикальный цилиндрический палец петли (поворотный шарнир)
+          const hPin = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.09, 14), chromeMat);
+          hPin.position.set(XR - 0.038, hy, hz);
+          hingeGroup.add(hPin);
+
+          // Дверное плечо петли, заходящее на створку
+          const hArm = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.042, 0.024), trimMat);
+          hArm.position.set(XR - 0.035, hy, hz + (hz > 0 ? -0.02 : 0.02));
+          hingeGroup.add(hArm);
+
+          sprinterGroup.add(hingeGroup);
+        });
+      });
+
+      // Продольные ребра жесткости металлической крыши Sprinter (5 каналов)
+      [-0.60, -0.30, 0.0, 0.30, 0.60].forEach(rz => {
+        const roofRib = new THREE.Mesh(new THREE.BoxGeometry(5.28, 0.016, 0.04), solidArcticWhitePaint);
+        roofRib.position.set(0.51, 2.726, rz);
+        roofMeshGroup.add(roofRib);
+      });
+
+      [0.0, 4.325].forEach(ax => {
+        [-1, 1].forEach(side => {
+          const arch = new THREE.Mesh(new THREE.TorusGeometry(0.48, 0.035, 10, 28, Math.PI), trimMat);
+          arch.position.set(ax, 0.395, side * 1.02);
+          arch.rotation.y = (side > 0 ? 0 : Math.PI);
+          sprinterGroup.add(arch);
+        });
+      });
+
+      // 6. АНАТОМИЧЕСКАЯ МНОГОУРОВНЕВАЯ ТОРПЕДО И КОКПИТ MERCEDES-BENZ SPRINTER
+      const dashGroup = new THREE.Group();
+
+      // А. Основное многоуровневое тело торпедо (верхняя и нижняя консоли)
+      // Верхняя полка торпедо с углублениями под лобовым стеклом
+      const dashTop = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.14, 1.84), trimMat);
+      dashTop.position.set(4.06, 1.38, 0);
+      dashTop.rotation.z = -0.14;
+      dashTop.castShadow = true;
+      dashGroup.add(dashTop);
+
+      // Основной средний блок панели приборов
+      const dashMid = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.42, 1.82), trimMat);
+      dashMid.position.set(3.92, 1.18, 0);
+      dashMid.castShadow = true;
+      dashGroup.add(dashMid);
+
+      // Нижняя консоль и подколенные защитные щитки
+      const dashLower = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.38, 1.76), trimMat);
+      dashLower.position.set(4.02, 0.86, 0);
+      dashGroup.add(dashLower);
+
+      // Б. Козырек щитка приборов со стороны водителя (Instrument cluster binnacle hood)
+      const hoodShape = new THREE.Shape();
+      hoodShape.moveTo(-0.16, 0);
+      hoodShape.quadraticCurveTo(0, 0.14, 0.16, 0);
+      hoodShape.lineTo(0.16, -0.04);
+      hoodShape.lineTo(-0.16, -0.04);
+      hoodShape.closePath();
+      const binnacleHoodGeo = new THREE.ExtrudeGeometry(hoodShape, { depth: 0.34, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02, bevelSegments: 3 });
+      binnacleHoodGeo.rotateY(Math.PI / 2);
+      binnacleHoodGeo.translate(-0.17, 0, 0);
+      const binnacleHood = new THREE.Mesh(binnacleHoodGeo, trimMat);
+      binnacleHood.position.set(3.82, 1.48, -0.42);
+      binnacleHood.rotation.z = -0.22;
+      dashGroup.add(binnacleHood);
+
+      // Цифровая приборная панель водителя с аналоговыми шкалами и цветным дисплеем
+      const clusterCanvas = document.createElement('canvas');
+      clusterCanvas.width = 512; clusterCanvas.height = 256;
+      const cCtx = clusterCanvas.getContext('2d');
+      cCtx.fillStyle = '#090D16';
+      cCtx.fillRect(0, 0, 512, 256);
+      cCtx.strokeStyle = '#334155';
+      cCtx.lineWidth = 4;
+      cCtx.strokeRect(4, 4, 504, 248);
+
+      // Спидометр слева (круглая шкала)
+      cCtx.strokeStyle = '#94A3B8';
+      cCtx.lineWidth = 5;
+      cCtx.beginPath();
+      cCtx.arc(120, 130, 80, Math.PI * 0.75, Math.PI * 2.25);
+      cCtx.stroke();
+      cCtx.fillStyle = '#FFFFFF';
+      cCtx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
+      cCtx.textAlign = 'center';
+      cCtx.fillText('90', 120, 125);
+      cCtx.font = '14px sans-serif';
+      cCtx.fillStyle = '#94A3B8';
+      cCtx.fillText('км/ч', 120, 150);
+
+      // Тахометр справа
+      cCtx.strokeStyle = '#94A3B8';
+      cCtx.lineWidth = 5;
+      cCtx.beginPath();
+      cCtx.arc(392, 130, 80, Math.PI * 0.75, Math.PI * 2.25);
+      cCtx.stroke();
+      cCtx.fillStyle = '#FFFFFF';
+      cCtx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
+      cCtx.fillText('2.2', 392, 125);
+      cCtx.font = '14px sans-serif';
+      cCtx.fillStyle = '#94A3B8';
+      cCtx.fillText('x1000', 392, 150);
+
+      // Центральный бортовой компьютер
+      cCtx.fillStyle = '#0284C7';
+      cCtx.fillRect(206, 60, 100, 130);
+      cCtx.fillStyle = '#FFFFFF';
+      cCtx.font = 'bold 16px sans-serif';
+      cCtx.fillText('D 7', 256, 95);
+      cCtx.font = '13px sans-serif';
+      cCtx.fillText('680 км', 256, 125);
+      cCtx.fillStyle = '#4ADE80';
+      cCtx.fillText('OK &bull; READY', 256, 155);
+
+      const clusterTex = new THREE.CanvasTexture(clusterCanvas);
+      const clusterMesh = new THREE.Mesh(new THREE.PlaneGeometry(0.36, 0.18), new THREE.MeshBasicMaterial({ map: clusterTex }));
+      clusterMesh.position.set(3.78, 1.42, -0.42);
+      clusterMesh.rotation.y = Math.PI / 2;
+      clusterMesh.rotation.x = -0.25;
+      dashGroup.add(clusterMesh);
+
+      // В. Сенсорный мультимедиа-дисплей MBUX 10.25" с навигацией BusLiner
+      const mbuxCanvas = document.createElement('canvas');
+      mbuxCanvas.width = 512; mbuxCanvas.height = 256;
+      const mCtx = mbuxCanvas.getContext('2d');
+      mCtx.fillStyle = '#090D16';
+      mCtx.fillRect(0, 0, 512, 256);
+      mCtx.fillStyle = '#1E293B';
+      mCtx.fillRect(16, 16, 480, 224);
+      mCtx.strokeStyle = '#334155';
+      mCtx.lineWidth = 14;
+      mCtx.beginPath();
+      mCtx.moveTo(40, 180);
+      mCtx.bezierCurveTo(160, 170, 240, 70, 460, 60);
+      mCtx.stroke();
+      mCtx.strokeStyle = '#0284C7';
+      mCtx.lineWidth = 8;
+      mCtx.beginPath();
+      mCtx.moveTo(40, 180);
+      mCtx.bezierCurveTo(160, 170, 240, 70, 460, 60);
+      mCtx.stroke();
+      mCtx.fillStyle = '#38BDF8';
+      mCtx.beginPath();
+      mCtx.arc(230, 105, 12, 0, Math.PI * 2);
+      mCtx.fill();
+      mCtx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+      mCtx.fillRect(26, 26, 210, 56);
+      mCtx.fillStyle = '#F8FAFC';
+      mCtx.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
+      mCtx.fillText('М-11 &bull; 14:25', 38, 52);
+      mCtx.font = '12px sans-serif';
+      mCtx.fillStyle = '#94A3B8';
+      mCtx.fillText('BusLiner Express', 38, 70);
+
+      const mbuxTex = new THREE.CanvasTexture(mbuxCanvas);
+      const mbuxScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.21), new THREE.MeshBasicMaterial({ map: mbuxTex }));
+      mbuxScreen.position.set(3.72, 1.34, 0);
+      mbuxScreen.rotation.y = Math.PI / 2;
+      mbuxScreen.rotation.x = -0.16;
+      dashGroup.add(mbuxScreen);
+
+      // Глянцевая черная рамка MBUX
+      const mbuxFrame = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.24, 0.46), new THREE.MeshStandardMaterial({
+        color: 0x090D16, roughness: 0.1, metalness: 0.9
+      }));
+      mbuxFrame.position.set(3.725, 1.34, 0);
+      mbuxFrame.rotation.z = -0.16;
+      dashGroup.add(mbuxFrame);
+
+      // Г. Фирменные круглые турбинные дефлекторы вентиляции Mercedes (4 шт)
+      [-0.82, -0.12, 0.12, 0.82].forEach((vy, vi) => {
+        const ventGroup = new THREE.Group();
+        const vx = (vi === 0 || vi === 3) ? 3.78 : 3.71;
+        const vHeight = (vi === 0 || vi === 3) ? 1.35 : 1.18;
+        ventGroup.position.set(vx, vHeight, vy);
+        ventGroup.rotation.y = Math.PI / 2;
+        ventGroup.rotation.x = -0.15;
+
+        // Хромированное внешнее кольцо турбины
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.045, 0.007, 10, 28), chromeMat);
+        ventGroup.add(ring);
+
+        // Черная внутренняя чаша
+        const inner = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.038, 0.02, 20), trimMat);
+        inner.rotation.x = Math.PI / 2;
+        ventGroup.add(inner);
+
+        // Крестообразные поворотные ламели турбины
+        [-0.03, 0.03].forEach(off => {
+          const fin = new THREE.Mesh(new THREE.BoxGeometry(0.075, 0.008, 0.015), chromeMat);
+          ventGroup.add(fin);
+          const finV = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.075, 0.015), chromeMat);
+          ventGroup.add(finV);
+        });
+
+        dashGroup.add(ventGroup);
+      });
+
+      // Д. Блок клавиш климат-контроля и кнопка аварийки
+      const climatePanel = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.08, 0.28), new THREE.MeshStandardMaterial({
+        color: 0x0F172A, roughness: 0.6
+      }));
+      climatePanel.position.set(3.71, 1.08, 0);
+      climatePanel.rotation.z = -0.15;
+      dashGroup.add(climatePanel);
+
+      for (let k = 0; k < 6; k++) {
+        const key = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.022, 0.03), chromeMat);
+        key.position.set(3.715, 1.08, -0.10 + k * 0.04);
+        key.rotation.z = -0.15;
+        dashGroup.add(key);
+      }
+
+      // Е. Селектор автоматической коробки передач (джойстик на приливе консоли)
+      const shifterPod = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.10, 0.14), trimMat);
+      shifterPod.position.set(3.68, 1.02, -0.22);
+      dashGroup.add(shifterPod);
+
+      const shifterStalk = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 0.12, 14), chromeMat);
+      shifterStalk.position.set(3.66, 1.08, -0.22);
+      shifterStalk.rotation.z = -0.25;
+      dashGroup.add(shifterStalk);
+
+      const shifterKnob = new THREE.Mesh(new THREE.SphereGeometry(0.026, 16, 16), new THREE.MeshStandardMaterial({
+        color: 0x090D16, roughness: 0.3, metalness: 0.6
+      }));
+      shifterKnob.position.set(3.63, 1.14, -0.22);
+      dashGroup.add(shifterKnob);
+
+      // Ж. Подрулевая колонка и 3-спицевый эргономичный мультируль Mercedes-Benz
+      const colGroup = new THREE.Group();
+      colGroup.position.set(3.76, 1.30, -0.42);
+      colGroup.rotation.z = -0.46; // наклон руля 46 градусов к водителю
+
+      const colShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.042, 0.28, 16), trimMat);
+      colShaft.rotation.x = Math.PI / 2;
+      colGroup.add(colShaft);
+
+      const stalkL = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.007, 0.16, 12), trimMat);
+      stalkL.rotation.z = Math.PI / 2;
+      stalkL.position.set(-0.06, 0.08, 0);
+      colGroup.add(stalkL);
+
+      const rimMesh = new THREE.Mesh(new THREE.TorusGeometry(0.20, 0.022, 14, 36), new THREE.MeshPhysicalMaterial({
+        color: 0x0F172A, roughness: 0.55, metalness: 0.15, clearcoat: 0.2
+      }));
+      rimMesh.rotation.y = Math.PI / 2;
+      colGroup.add(rimMesh);
+
+      const airbag = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.085, 0.04, 24), trimMat);
+      airbag.rotation.z = Math.PI / 2;
+      colGroup.add(airbag);
+
+      const steerStarRing = new THREE.Mesh(new THREE.TorusGeometry(0.032, 0.004, 10, 28), chromeMat);
+      steerStarRing.position.x = -0.022;
+      steerStarRing.rotation.y = Math.PI / 2;
+      colGroup.add(steerStarRing);
+
+      for (let k = 0; k < 3; k++) {
+        const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.03, 0.006), chromeMat);
+        const a = (k * 2 * Math.PI) / 3;
+        spoke.position.set(-0.022, Math.cos(a) * 0.015, Math.sin(a) * 0.015);
+        spoke.rotation.x = -a;
+        colGroup.add(spoke);
+      }
+
+      [-0.11, 0.11].forEach(spZ => {
+        const hSpoke = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.036, 0.09), chromeMat);
+        hSpoke.position.set(-0.01, 0.01, spZ);
+        colGroup.add(hSpoke);
+
+        const touchPad = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.022, 0.05), new THREE.MeshStandardMaterial({
+          color: 0x090D16, roughness: 0.3
+        }));
+        touchPad.position.set(-0.015, 0.01, spZ);
+        colGroup.add(touchPad);
+      });
+
+      const bSpoke = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.09, 0.035), chromeMat);
+      bSpoke.position.set(-0.01, -0.11, 0);
+      colGroup.add(bSpoke);
+
+      dashGroup.add(colGroup);
+
+      // З. Анатомическое кресло водителя (Driver suspension seat)
+      const driverSeatGroup = new THREE.Group();
+      driverSeatGroup.position.set(3.28, 0.565, -0.42);
+
+      const dBase = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.32, 0.44), trimMat);
+      dBase.position.y = 0.16;
+      dBase.castShadow = true;
+      driverSeatGroup.add(dBase);
+
+      const dCushion = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.12, 0.46), new THREE.MeshPhysicalMaterial({
+        color: 0x0F172A, roughness: 0.45, metalness: 0.1
+      }));
+      dCushion.position.set(0, 0.36, 0);
+      driverSeatGroup.add(dCushion);
+
+      const dBack = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.62, 0.44), new THREE.MeshPhysicalMaterial({
+        color: 0x0F172A, roughness: 0.45, metalness: 0.1
+      }));
+      dBack.position.set(-0.16, 0.68, 0);
+      dBack.rotation.z = -0.12;
+      driverSeatGroup.add(dBack);
+
+      const dHead = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.18, 0.26), new THREE.MeshPhysicalMaterial({
+        color: 0x0F172A, roughness: 0.45, metalness: 0.1
+      }));
+      dHead.position.set(-0.19, 1.05, 0);
+      driverSeatGroup.add(dHead);
+
+      const dArm = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.045, 0.05), trimMat);
+      dArm.position.set(0.02, 0.66, 0.24);
+      driverSeatGroup.add(dArm);
+
+      dashGroup.add(driverSeatGroup);
+
+      // И. Педальный узел водителя
+      [-0.48, -0.38].forEach((pz, pi) => {
+        const ped = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.08, 0.05), chromeMat);
+        ped.position.set(3.88, 0.66, pz);
+        ped.rotation.z = -0.35;
+        dashGroup.add(ped);
+      });
+
+      sprinterGroup.add(dashGroup);
+
+      // Пол салона с фактурной темной дорожкой (строго внутри габаритов кузова)
+      const floor = new THREE.Mesh(new THREE.BoxGeometry(5.44, 0.08, 1.84), new THREE.MeshStandardMaterial({ color: 0xCBD5E1, roughness: 0.85 }));
+      floor.position.set(0.58, 0.52, 0);
+      floor.receiveShadow = true;
+      sprinterGroup.add(floor);
+
+      const runner = new THREE.Mesh(new THREE.PlaneGeometry(5.28, 0.48), new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.95 }));
+      runner.rotation.x = -Math.PI / 2;
+      runner.position.set(0.56, 0.565, 0.16);
+      sprinterGroup.add(runner);
+
+      // Алюминиевые рельсы крепления кресел в полу
+      [-0.47, 0.58].forEach(rx => {
+        const track = new THREE.Mesh(new THREE.BoxGeometry(5.28, 0.006, 0.035), chromeMat);
+        track.position.set(0.56, 0.566, rx);
+        sprinterGroup.add(track);
+      });
+
+      // 7. Построение 19 комфортных пассажирских кресел (ЛИЦОМ ВПЕРЕД)
+      SPRINTER_SEATS.forEach(seatData => {
+        const seatMesh = createSprinterSeat(seatData);
+        sprinterGroup.add(seatMesh);
+        seatMeshMap.set(seatData.id, seatMesh);
+      });
+
+      // Поперечные стальные несущие балки для парных блоков кресел (ряды 2-6 слева)
+      [1.8, 1.1, 0.38, -0.34, -1.04].forEach(rx => {
+        const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.48, 16), chromeMat);
+        beam.rotation.x = Math.PI / 2;
+        beam.position.set(rx, 0.565 + 0.22, -0.46);
+        beam.castShadow = true;
+        sprinterGroup.add(beam);
+      });
+
+      // Поперечная несущая опора 4-местного дивана заднего ряда 7
+      const rearBenchBeam = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 1.48, 16), chromeMat);
+      rearBenchBeam.rotation.x = Math.PI / 2;
+      rearBenchBeam.position.set(-1.80, 0.565 + 0.22, 0);
+      rearBenchBeam.castShadow = true;
+      sprinterGroup.add(rearBenchBeam);
+
+      // ══════════════════════════════════════════════════════════════════════════════
+      // ПРЕМИАЛЬНАЯ ДЕТАЛИЗАЦИЯ ИНТЕРЬЕРА ЛЮКСОВОГО САЛОНА SPRINTER VIP TOURING
+      // ══════════════════════════════════════════════════════════════════════════════
+
+      // Специальные материалы отделки интерьера
+      const ambCyanMat = new THREE.MeshStandardMaterial({
+        color: 0x38BDF8,
+        emissive: 0x0284C7,
+        emissiveIntensity: 2.2,
+        roughness: 0.1
+      });
+      const stepLedMat = new THREE.MeshStandardMaterial({
+        color: 0xFEF08A,
+        emissive: 0xEAB308,
+        emissiveIntensity: 1.6
+      });
+      const woodTrimMat = new THREE.MeshStandardMaterial({
+        color: 0x1E1B18,
+        roughness: 0.28,
+        metalness: 0.1
+      });
+      const softLeatherWallMat = new THREE.MeshStandardMaterial({
+        color: 0x1E293B,
+        roughness: 0.45,
+        metalness: 0.05
+      });
+      const servicePodMat = new THREE.MeshStandardMaterial({
+        color: 0x0F172A,
+        roughness: 0.6
+      });
+      const readingLampMat = new THREE.MeshStandardMaterial({
+        color: 0xFFFBEB,
+        emissive: 0xFEF08A,
+        emissiveIntensity: 1.8
+      });
+      const usbPortMat = new THREE.MeshStandardMaterial({
+        color: 0x0284C7,
+        emissive: 0x38BDF8,
+        emissiveIntensity: 2.5
+      });
+
+      // ── 1. VIP ПЕРЕГОРОДКА КАБИНЫ ВОДИТЕЛЯ (DRIVER PARTITION) ──
+      const partitionGroup = new THREE.Group();
+      partitionGroup.position.set(2.44, 0, 0);
+
+      // Нижняя глухая стенка перегородки (мягкая кожа soft-touch)
+      const partBase = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.68, 0.88), softLeatherWallMat);
+      partBase.position.set(0, 0.565 + 0.34, -0.49);
+      partBase.castShadow = true;
+      partitionGroup.add(partBase);
+
+      // Декоративная планка темного дерева по верхнему канту нижней стенки
+      const partWood = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.024, 0.89), woodTrimMat);
+      partWood.position.set(0, 0.565 + 0.68 + 0.012, -0.49);
+      partitionGroup.add(partWood);
+
+      // Верхняя защитная стеклянная панель перегородки (тонированный триплекс)
+      const partGlass = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.52, 0.86), privacyGlassMat);
+      partGlass.position.set(0, 0.565 + 0.68 + 0.024 + 0.26, -0.49);
+      partitionGroup.add(partGlass);
+
+      // Хромированный верхний поручень на стеклянной перегородке
+      const partTopRail = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.88, 16), chromeMat);
+      partTopRail.rotation.x = Math.PI / 2;
+      partTopRail.position.set(0, 0.565 + 0.68 + 0.024 + 0.52, -0.49);
+      partitionGroup.add(partTopRail);
+
+      // Огнетушитель ОП-4 у основания перегородки
+      const extGroup = new THREE.Group();
+      extGroup.position.set(-0.06, 0.565 + 0.16, -0.10);
+      const extCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.042, 0.24, 16), new THREE.MeshStandardMaterial({
+        color: 0xDC2626, roughness: 0.35, metalness: 0.3
+      }));
+      extGroup.add(extCyl);
+      const extCap = new THREE.Mesh(new THREE.SphereGeometry(0.042, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({
+        color: 0xDC2626, roughness: 0.35, metalness: 0.3
+      }));
+      extCap.position.y = 0.12;
+      extGroup.add(extCap);
+      const extValve = new THREE.Mesh(new THREE.BoxGeometry(0.025, 0.04, 0.04), chromeMat);
+      extValve.position.set(0, 0.16, 0);
+      extGroup.add(extValve);
+      const extGauge = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 0.015, 12), chromeMat);
+      extGauge.rotation.z = Math.PI / 2;
+      extGauge.position.set(0.02, 0.16, 0.02);
+      extGroup.add(extGauge);
+      partitionGroup.add(extGroup);
+
+      // Автомобильная аптечка первой помощи (First Aid Kit)
+      const firstAid = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.14, 0.18), new THREE.MeshStandardMaterial({
+        color: 0xF8FAFC, roughness: 0.4
+      }));
+      firstAid.position.set(-0.04, 0.565 + 0.42, -0.10);
+      partitionGroup.add(firstAid);
+      const aidCrossH = new THREE.Mesh(new THREE.BoxGeometry(0.002, 0.02, 0.07), new THREE.MeshBasicMaterial({ color: 0x16A34A }));
+      aidCrossH.position.set(-0.071, 0.565 + 0.42, -0.10);
+      partitionGroup.add(aidCrossH);
+      const aidCrossV = new THREE.Mesh(new THREE.BoxGeometry(0.002, 0.07, 0.02), new THREE.MeshBasicMaterial({ color: 0x16A34A }));
+      aidCrossV.position.set(-0.071, 0.565 + 0.42, -0.10);
+      partitionGroup.add(aidCrossV);
+
+      sprinterGroup.add(partitionGroup);
+
+      // ── 2. ВХОДНАЯ ГРУППА И СТАЛЬНОЙ СТОЙКА-ПОРУЧЕНЬ (ENTRY STANCHION & STEP) ──
+      const stanchion = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 1.65, 16), chromeMat);
+      stanchion.position.set(2.40, 0.565 + 0.825, 0.86);
+      sprinterGroup.add(stanchion);
+
+      [0.565 + 0.01, 0.565 + 1.64].forEach(fy => {
+        const flange = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.015, 16), chromeMat);
+        flange.position.set(2.40, fy, 0.86);
+        sprinterGroup.add(flange);
+      });
+
+      const entryHandle = new THREE.Mesh(new THREE.TorusGeometry(0.07, 0.012, 12, 24, Math.PI), chromeMat);
+      entryHandle.rotation.y = Math.PI / 2;
+      entryHandle.rotation.x = Math.PI / 2;
+      entryHandle.position.set(2.40, 0.565 + 0.80, 0.86);
+      sprinterGroup.add(entryHandle);
+
+      const stepMesh = new THREE.Mesh(new THREE.BoxGeometry(0.82, 0.035, 0.22), new THREE.MeshStandardMaterial({
+        color: 0x334155, roughness: 0.8
+      }));
+      stepMesh.position.set(2.18, 0.43, 0.96);
+      sprinterGroup.add(stepMesh);
+
+      const stepEdgeAlloy = new THREE.Mesh(new THREE.BoxGeometry(0.82, 0.012, 0.025), chromeMat);
+      stepEdgeAlloy.position.set(2.18, 0.448, 0.85);
+      sprinterGroup.add(stepEdgeAlloy);
+
+      const stepLedStrip = new THREE.Mesh(new THREE.BoxGeometry(0.80, 0.008, 0.012), stepLedMat);
+      stepLedStrip.position.set(2.18, 0.442, 0.86);
+      sprinterGroup.add(stepLedStrip);
+
+      // ── 3. БОКОВЫЕ ЛЮКС-КОНСОЛИ ПОДОКОННИКОВ И АМБИЕНТНАЯ ПОДСВЕТКА (AMBIENT CYAN LED) ──
+      const leftSillGroup = new THREE.Group();
+      leftSillGroup.position.set(0.23, 1.08, -0.92);
+
+      const leftSill = new THREE.Mesh(new THREE.BoxGeometry(4.18, 0.032, 0.075), softLeatherWallMat);
+      leftSillGroup.add(leftSill);
+
+      const leftWood = new THREE.Mesh(new THREE.BoxGeometry(4.18, 0.018, 0.012), woodTrimMat);
+      leftWood.position.set(0, -0.018, 0.032);
+      leftSillGroup.add(leftWood);
+
+      const leftNeon = new THREE.Mesh(new THREE.BoxGeometry(4.18, 0.007, 0.007), ambCyanMat);
+      leftNeon.position.set(0, -0.028, 0.032);
+      leftSillGroup.add(leftNeon);
+
+      sprinterGroup.add(leftSillGroup);
+
+      const rightSillGroup = new THREE.Group();
+      rightSillGroup.position.set(-0.12, 1.08, 0.92);
+
+      const rightSill = new THREE.Mesh(new THREE.BoxGeometry(3.48, 0.032, 0.075), softLeatherWallMat);
+      rightSillGroup.add(rightSill);
+
+      const rightWood = new THREE.Mesh(new THREE.BoxGeometry(3.48, 0.018, 0.012), woodTrimMat);
+      rightWood.position.set(0, -0.018, -0.032);
+      rightSillGroup.add(rightWood);
+
+      const rightNeon = new THREE.Mesh(new THREE.BoxGeometry(3.48, 0.007, 0.007), ambCyanMat);
+      rightNeon.position.set(0, -0.028, -0.032);
+      rightSillGroup.add(rightNeon);
+
+      sprinterGroup.add(rightSillGroup);
+
+      // ── 4. ИНДИВИДУАЛЬНЫЕ БЛОКИ КОМФОРТА НА БОКОВЫХ СТЕНКАХ (DUAL USB-C & ПОДСТАКАННИКИ) ──
+      [1.80, 1.10, 0.38, -0.34, -1.04].forEach(px => {
+        const pod = new THREE.Group();
+        pod.position.set(px, 1.075, -0.90);
+
+        const chCup = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.030, 0.035, 20), chromeMat);
+        chCup.position.set(0.08, 0.01, 0);
+        pod.add(chCup);
+
+        const usbPlate = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.025, 0.012), servicePodMat);
+        usbPlate.position.set(-0.06, -0.03, 0.01);
+        pod.add(usbPlate);
+
+        const usbRing = new THREE.Mesh(new THREE.BoxGeometry(0.026, 0.012, 0.004), usbPortMat);
+        usbRing.position.set(-0.06, -0.03, 0.016);
+        pod.add(usbRing);
+
+        sprinterGroup.add(pod);
+      });
+
+      [2.15, 1.10, 0.38, -0.34, -1.04].forEach(px => {
+        const pod = new THREE.Group();
+        pod.position.set(px, 1.075, 0.90);
+
+        const chCup = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.030, 0.035, 20), chromeMat);
+        chCup.position.set(0.08, 0.01, 0);
+        pod.add(chCup);
+
+        const usbPlate = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.025, 0.012), servicePodMat);
+        usbPlate.position.set(-0.06, -0.03, -0.01);
+        pod.add(usbPlate);
+
+        const usbRing = new THREE.Mesh(new THREE.BoxGeometry(0.026, 0.012, 0.004), usbPortMat);
+        usbRing.position.set(-0.06, -0.03, -0.016);
+        pod.add(usbRing);
+
+        sprinterGroup.add(pod);
+      });
+
+      // ── 6. ЦЕНТРАЛЬНЫЙ ПОТОЛОЧНЫЙ ПОРУЧЕНЬ САЛОНА (AISLE CEILING STANCHION) ──
+      const aisleStanchion = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 4.05, 16), chromeMat);
+      aisleStanchion.rotation.z = Math.PI / 2;
+      aisleStanchion.position.set(0.30, 2.24, 0.16);
+      sprinterGroup.add(aisleStanchion);
+
+      [-1.6, -0.8, 0.0, 0.8, 1.6, 2.3].forEach(px => {
+        const dropPost = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.16, 12), chromeMat);
+        dropPost.position.set(px, 2.32, 0.16);
+        sprinterGroup.add(dropPost);
+      });
+
+      // ── 7. НАПОЛЬНАЯ СВЕТОДИОДНАЯ ПОДСВЕТКА ПРОХОДА (AISLE COURTESY LIGHTS) ──
+      const aisleGuideMat = new THREE.MeshStandardMaterial({
+        color: 0xE2E8F0,
+        emissive: 0x93C5FD,
+        emissiveIntensity: 1.2
+      });
+      [2.0, 1.4, 0.8, 0.2, -0.4, -1.0, -1.6].forEach(gx => {
+        [-0.08, 0.40].forEach(gz => {
+          const marker = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.006, 12), aisleGuideMat);
+          marker.position.set(gx, 0.568, gz);
+          sprinterGroup.add(marker);
+        });
+      });
+
+      scene.add(sprinterGroup);
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════════
+    // АНАТОМИЧЕСКИЕ ЛЮКСОВЫЕ КРЕСЛА SPRINTER TOURING COACH (БЕЗ КУБИКОВ)
+    // ══════════════════════════════════════════════════════════════════════════════
+
+    // 1. Предварительно кэшированные сглаженные геометрии кресла
+    function initSeatGeometries() {
+      if (seatGeometries) return seatGeometries;
+
+      // ── А. АНАТОМИЧЕСКАЯ 3D ПОДУШКА СИДЕНЬЯ (С БОКОВЫМИ ВАЛИКАМИ И ВОДОПАДНЫМ КРАЕМ) ──
+      const NX = 18, NZ = 18;
+      const cVerts = [];
+      const cIndices = [];
+
+      for (let i = 0; i <= NX; i++) {
+        const v = (i / NX) * 2 - 1; // -1 (зад) .. +1 (перед)
+        const x = v * 0.22;
+        for (let j = 0; j <= NZ; j++) {
+          const u = (j / NZ) * 2 - 1; // -1 (лево) .. +1 (право)
+          const z = u * 0.21;
+
+          let y = 0.095;
+          // Боковые валики поддержки бёдер (+4.5 см)
+          y += 0.042 * Math.pow(Math.abs(u), 2.2);
+          // Центральное анатомическое углубление
+          y += -0.015 * Math.cos(u * Math.PI * 0.5) * Math.cos(v * Math.PI * 0.5);
+          // Водопадный завал спереди для комфорта подколенных сухожилий
+          if (v > 0.35) {
+            const t = (v - 0.35) / 0.65;
+            y -= 0.075 * t * t * (3 - 2 * t);
+          }
+          // Скругление сзади под спинку
+          if (v < -0.6) {
+            const t = (-v - 0.6) / 0.4;
+            y -= 0.025 * t * t;
+          }
+          cVerts.push(x, y, z);
+        }
+      }
+
+      const cStride = NZ + 1;
+      for (let i = 0; i < NX; i++) {
+        for (let j = 0; j < NZ; j++) {
+          const a = i * cStride + j;
+          const b = (i + 1) * cStride + j;
+          const c = (i + 1) * cStride + (j + 1);
+          const d = i * cStride + (j + 1);
+          cIndices.push(a, b, d);
+          cIndices.push(b, c, d);
+        }
+      }
+
+      // Юбка подушки, опускающаяся до нижнего пластикового основания y = 0.0
+      const cTopCount = cVerts.length / 3;
+      const cPerim = [];
+      for (let j = 0; j <= NZ; j++) cPerim.push(NX * cStride + j);
+      for (let i = NX - 1; i >= 0; i--) cPerim.push(i * cStride + NZ);
+      for (let j = NZ - 1; j >= 0; j--) cPerim.push(0 * cStride + j);
+      for (let i = 1; i < NX; i++) cPerim.push(i * cStride + 0);
+
+      const cP = cPerim.length;
+      for (let k = 0; k < cP; k++) {
+        const topIdx = cPerim[k];
+        cVerts.push(cVerts[topIdx * 3], 0.0, cVerts[topIdx * 3 + 2]);
+      }
+      for (let k = 0; k < cP; k++) {
+        const nextK = (k + 1) % cP;
+        const t0 = cPerim[k], t1 = cPerim[nextK];
+        const b0 = cTopCount + k, b1 = cTopCount + nextK;
+        cIndices.push(t0, b0, t1);
+        cIndices.push(t1, b0, b1);
+      }
+
+      const cushionGeo = new THREE.BufferGeometry();
+      cushionGeo.setAttribute('position', new THREE.Float32BufferAttribute(cVerts, 3));
+      cushionGeo.setIndex(cIndices);
+      cushionGeo.computeVertexNormals();
+
+      // Центральная перфорированная вставка сиденья с продольной прострочкой
+      const ciVerts = [];
+      const ciIndices = [];
+      const ciNX = 14, ciNZ = 10;
+      for (let i = 0; i <= ciNX; i++) {
+        const v = (i / ciNX) * 2 - 1;
+        const x = v * 0.19;
+        for (let j = 0; j <= ciNZ; j++) {
+          const u = (j / ciNZ) * 2 - 1;
+          const z = u * 0.12;
+          let y = 0.098;
+          // Рельефные продольные ребра прострочки
+          const ribs = 0.003 * Math.cos(u * Math.PI * 4);
+          y += ribs - 0.012 * Math.cos(u * Math.PI * 0.5) * Math.cos(v * Math.PI * 0.5);
+          if (v > 0.35) {
+            const t = (v - 0.35) / 0.65;
+            y -= 0.075 * t * t * (3 - 2 * t);
+          }
+          if (v < -0.6) {
+            y -= 0.025 * Math.pow((-v - 0.6) / 0.4, 2);
+          }
+          ciVerts.push(x, y + 0.003, z);
+        }
+      }
+      const ciStride = ciNZ + 1;
+      for (let i = 0; i < ciNX; i++) {
+        for (let j = 0; j < ciNZ; j++) {
+          const a = i * ciStride + j;
+          const b = (i + 1) * ciStride + j;
+          const c = (i + 1) * ciStride + (j + 1);
+          const d = i * ciStride + (j + 1);
+          ciIndices.push(a, b, d);
+          ciIndices.push(b, c, d);
+        }
+      }
+      const cushionInsertGeo = new THREE.BufferGeometry();
+      cushionInsertGeo.setAttribute('position', new THREE.Float32BufferAttribute(ciVerts, 3));
+      cushionInsertGeo.setIndex(ciIndices);
+      cushionInsertGeo.computeVertexNormals();
+
+      // ── Б. АНАТОМИЧЕСКАЯ 3D СПИНКА С БОКОВЫМИ КРЫЛЬЯМИ И ПОЯСНИЧНЫМ ВАЛИКОМ ──
+      const bNY = 22, bNZ = 18;
+      const bVerts = [];
+      const bIndices = [];
+
+      function bHalfW(v) {
+        if (v < 0.28) return 0.195 + (0.175 - 0.195) * (v / 0.28); // сужение в талии
+        if (v < 0.75) return 0.175 + (0.225 - 0.175) * ((v - 0.28) / 0.47); // расширение в плечах
+        return 0.225 + (0.185 - 0.225) * ((v - 0.75) / 0.25); // конус к подголовнику
+      }
+
+      function bXCenter(v) {
+        return 0.048 * Math.sin(v * Math.PI) - 0.02 * Math.pow(v, 2);
+      }
+
+      // 1. Передняя лицевая поверхность спинки
+      for (let i = 0; i <= bNY; i++) {
+        const v = i / bNY; // 0..1
+        const y = v * 0.64;
+        const w = bHalfW(v);
+        const xc = bXCenter(v);
+
+        for (let j = 0; j <= bNZ; j++) {
+          const u = (j / bNZ) * 2 - 1; // -1..1
+          const z = u * w;
+          // Выраженные анатомические боковые валики торса (+5.5 см вперед)
+          const bolster = 0.055 * Math.pow(Math.abs(u), 2.2) * Math.sin(Math.min(1, v / 0.8) * Math.PI);
+          const x = xc + bolster;
+          bVerts.push(x, y, z);
+        }
+      }
+
+      const bStride = bNZ + 1;
+      for (let i = 0; i < bNY; i++) {
+        for (let j = 0; j < bNZ; j++) {
+          const a = i * bStride + j;
+          const b = (i + 1) * bStride + j;
+          const c = (i + 1) * bStride + (j + 1);
+          const d = i * bStride + (j + 1);
+          bIndices.push(a, b, d);
+          bIndices.push(b, c, d);
+        }
+      }
+
+      // 2. Задняя сторона спинки
+      const bFrontCount = bVerts.length / 3;
+      for (let i = 0; i <= bNY; i++) {
+        const v = i / bNY;
+        const y = v * 0.64;
+        const w = bHalfW(v) * 0.95;
+        const xc = bXCenter(v) - 0.065; // толщина спинки 6.5 см
+
+        for (let j = 0; j <= bNZ; j++) {
+          const u = (j / bNZ) * 2 - 1;
+          const z = u * w;
+          bVerts.push(xc, y, z);
+        }
+      }
+
+      for (let i = 0; i < bNY; i++) {
+        for (let j = 0; j < bNZ; j++) {
+          const a = bFrontCount + i * bStride + j;
+          const b = bFrontCount + (i + 1) * bStride + j;
+          const c = bFrontCount + (i + 1) * bStride + (j + 1);
+          const d = bFrontCount + i * bStride + (j + 1);
+          bIndices.push(a, d, b);
+          bIndices.push(b, d, c);
+        }
+      }
+
+      // 3. Боковые стенки по периметру
+      const bPerimF = [];
+      const bPerimB = [];
+      for (let j = 0; j <= bNZ; j++) {
+        bPerimF.push(bNY * bStride + j);
+        bPerimB.push(bFrontCount + bNY * bStride + j);
+      }
+      for (let i = bNY - 1; i >= 0; i--) {
+        bPerimF.push(i * bStride + bNZ);
+        bPerimB.push(bFrontCount + i * bStride + bNZ);
+      }
+      for (let j = bNZ - 1; j >= 0; j--) {
+        bPerimF.push(0 * bStride + j);
+        bPerimB.push(bFrontCount + 0 * bStride + j);
+      }
+      for (let i = 1; i < bNY; i++) {
+        bPerimF.push(i * bStride + 0);
+        bPerimB.push(bFrontCount + i * bStride + 0);
+      }
+
+      const bP = bPerimF.length;
+      for (let k = 0; k < bP; k++) {
+        const nextK = (k + 1) % bP;
+        const f0 = bPerimF[k], f1 = bPerimF[nextK];
+        const b0 = bPerimB[k], b1 = bPerimB[nextK];
+        bIndices.push(f0, b0, f1);
+        bIndices.push(f1, b0, b1);
+      }
+
+      const backrestGeo = new THREE.BufferGeometry();
+      backrestGeo.setAttribute('position', new THREE.Float32BufferAttribute(bVerts, 3));
+      backrestGeo.setIndex(bIndices);
+      backrestGeo.computeVertexNormals();
+
+      // Центральная ребристая перфорированная вставка спинки
+      const biVerts = [];
+      const biIndices = [];
+      const biNY = 18, biNZ = 10;
+      for (let i = 0; i <= biNY; i++) {
+        const v = i / biNY;
+        const y = 0.04 + v * 0.56;
+        const xc = bXCenter(v);
+        for (let j = 0; j <= biNZ; j++) {
+          const u = (j / biNZ) * 2 - 1;
+          const z = u * 0.11;
+          const ribs = 0.0035 * Math.cos(u * Math.PI * 4);
+          const x = xc + 0.004 + ribs;
+          biVerts.push(x, y, z);
+        }
+      }
+      const biStride = biNZ + 1;
+      for (let i = 0; i < biNY; i++) {
+        for (let j = 0; j < biNZ; j++) {
+          const a = i * biStride + j;
+          const b = (i + 1) * biStride + j;
+          const c = (i + 1) * biStride + (j + 1);
+          const d = i * biStride + (j + 1);
+          biIndices.push(a, b, d);
+          biIndices.push(b, c, d);
+        }
+      }
+      const backInsertGeo = new THREE.BufferGeometry();
+      backInsertGeo.setAttribute('position', new THREE.Float32BufferAttribute(biVerts, 3));
+      backInsertGeo.setIndex(biIndices);
+      backInsertGeo.computeVertexNormals();
+
+      // ── В. АНАТОМИЧЕСКИЙ КОМФОРТ-ПОДГОЛОВНИК С БОКОВЫМИ "УШКАМИ" ──
+      const hNY = 12, hNZ = 16;
+      const hVerts = [];
+      const hIndices = [];
+
+      for (let i = 0; i <= hNY; i++) {
+        const v = (i / hNY) * 2 - 1; // -1..1 по Y (-0.09 .. +0.09)
+        const y = v * 0.09;
+        for (let j = 0; j <= hNZ; j++) {
+          const u = (j / hNZ) * 2 - 1; // -1..1 по Z (-0.14 .. +0.14)
+          const z = u * 0.14;
+          // Подушечный валик вперед + боковые удерживающие ушки
+          const earWings = 0.032 * Math.pow(Math.abs(u), 1.8);
+          const pillow = 0.02 * Math.cos(u * Math.PI * 0.5) * Math.cos(v * Math.PI * 0.5);
+          const x = pillow + earWings;
+          hVerts.push(x, y, z);
+        }
+      }
+
+      const hStride = hNZ + 1;
+      for (let i = 0; i < hNY; i++) {
+        for (let j = 0; j < hNZ; j++) {
+          const a = i * hStride + j;
+          const b = (i + 1) * hStride + j;
+          const c = (i + 1) * hStride + (j + 1);
+          const d = i * hStride + (j + 1);
+          hIndices.push(a, b, d);
+          hIndices.push(b, c, d);
+        }
+      }
+
+      const hFrontCount = hVerts.length / 3;
+      for (let i = 0; i <= hNY; i++) {
+        const v = (i / hNY) * 2 - 1;
+        const y = v * 0.09;
+        for (let j = 0; j <= hNZ; j++) {
+          const u = (j / hNZ) * 2 - 1;
+          const z = u * 0.135;
+          hVerts.push(-0.065, y, z);
+        }
+      }
+      for (let i = 0; i < hNY; i++) {
+        for (let j = 0; j < hNZ; j++) {
+          const a = hFrontCount + i * hStride + j;
+          const b = hFrontCount + (i + 1) * hStride + j;
+          const c = hFrontCount + (i + 1) * hStride + (j + 1);
+          const d = hFrontCount + i * hStride + (j + 1);
+          hIndices.push(a, d, b);
+          hIndices.push(b, d, c);
+        }
+      }
+
+      // Соединение периметра подголовника
+      const hPerimF = [];
+      const hPerimB = [];
+      for (let j = 0; j <= hNZ; j++) {
+        hPerimF.push(hNY * hStride + j);
+        hPerimB.push(hFrontCount + hNY * hStride + j);
+      }
+      for (let i = hNY - 1; i >= 0; i--) {
+        hPerimF.push(i * hStride + hNZ);
+        hPerimB.push(hFrontCount + i * hStride + hNZ);
+      }
+      for (let j = hNZ - 1; j >= 0; j--) {
+        hPerimF.push(0 * hStride + j);
+        hPerimB.push(hFrontCount + 0 * hStride + j);
+      }
+      for (let i = 1; i < hNY; i++) {
+        hPerimF.push(i * hStride + 0);
+        hPerimB.push(hFrontCount + i * hStride + 0);
+      }
+      const hP = hPerimF.length;
+      for (let k = 0; k < hP; k++) {
+        const nextK = (k + 1) % hP;
+        hIndices.push(hPerimF[k], hPerimB[k], hPerimF[nextK]);
+        hIndices.push(hPerimF[nextK], hPerimB[k], hPerimB[nextK]);
+      }
+
+      const headrestGeo = new THREE.BufferGeometry();
+      headrestGeo.setAttribute('position', new THREE.Float32BufferAttribute(hVerts, 3));
+      headrestGeo.setIndex(hIndices);
+      headrestGeo.computeVertexNormals();
+
+      // ── Г. СКРУГЛЕННЫЙ ЭРГОНОМИЧНЫЙ ПОДЛОКОТНИК С МЯГКОЙ НАКЛАДКОЙ ──
+      const aShape = new THREE.Shape();
+      aShape.moveTo(-0.15, 0.028);
+      aShape.lineTo(0.12, 0.028);
+      aShape.quadraticCurveTo(0.17, 0.024, 0.16, -0.022);
+      aShape.quadraticCurveTo(0.14, -0.034, 0.11, -0.034);
+      aShape.lineTo(-0.14, -0.034);
+      aShape.quadraticCurveTo(-0.165, -0.012, -0.15, 0.028);
+
+      const armrestGeo = new THREE.ExtrudeGeometry(aShape, {
+        depth: 0.046,
+        bevelEnabled: true,
+        bevelThickness: 0.012,
+        bevelSize: 0.012,
+        bevelSegments: 4,
+        curveSegments: 14
+      });
+      armrestGeo.translate(0, 0, -0.023);
+
+      // Складной столик на задней стенке
+      const trayShape = new THREE.Shape();
+      trayShape.moveTo(-0.012, -0.13);
+      trayShape.lineTo(0.012, -0.13);
+      trayShape.quadraticCurveTo(0.018, -0.13, 0.018, -0.12);
+      trayShape.lineTo(0.018, 0.12);
+      trayShape.quadraticCurveTo(0.018, 0.13, 0.012, 0.13);
+      trayShape.lineTo(-0.012, 0.13);
+      trayShape.quadraticCurveTo(-0.018, 0.13, -0.018, 0.12);
+      trayShape.lineTo(-0.018, -0.12);
+      trayShape.quadraticCurveTo(-0.018, -0.13, -0.012, -0.13);
+
+      const trayGeo = new THREE.ExtrudeGeometry(trayShape, {
+        depth: 0.28,
+        bevelEnabled: true,
+        bevelThickness: 0.008,
+        bevelSize: 0.008,
+        bevelSegments: 3,
+        curveSegments: 10
+      });
+      trayGeo.translate(0, 0, -0.14);
+
+      seatGeometries = {
+        cushionGeo,
+        cushionInsertGeo,
+        backrestGeo,
+        backInsertGeo,
+        headrestGeo,
+        armrestGeo,
+        trayGeo
+      };
+      return seatGeometries;
+    }
+
+    function createSprinterSeat(seatData) {
+      const geos = initSeatGeometries();
+      const group = new THREE.Group();
+      // Выравниваем базовую точку ровно по уровню пола салона (0.565)
+      group.position.set(seatData.pos[0], 0.565, seatData.pos[2]);
+      group.userData = { seat: seatData };
+
+      const isSelected = selectedSeatIds.includes(seatData.id);
+      const isOccupied = seatData.status === 'occupied';
+      const isBlocked = seatData.status === 'blocked';
+      const isDisabled = seatData.status === 'disabled';
+
+      let primaryColor = 0x1E293B; // Темный графит
+      let insertColor = 0x334155;  // Тканевая текстурированная вставка
+
+      if (isSelected) {
+        primaryColor = 0x1E3A8A; // Фирменный deep navy
+        insertColor = 0x2563EB;
+      } else if (isBlocked) {
+        primaryColor = 0x94A3B8;
+        insertColor = 0xCBD5E1;
+      } else if (isOccupied) {
+        primaryColor = 0x64748B;
+        insertColor = 0x94A3B8;
+      } else if (isDisabled) {
+        primaryColor = 0x1D4ED8;
+        insertColor = 0x3B82F6;
+      } else if (seatData.cat === 'vip') {
+        primaryColor = 0x0F172A;
+        insertColor = 0x1E3A8A;
+      } else if (seatData.cat === 'emergency') {
+        primaryColor = 0x0369A1;
+        insertColor = 0x0284C7;
+      } else if (seatData.cat === 'limited') {
+        primaryColor = 0x475569;
+        insertColor = 0x64748B;
+      }
+
+      // Дорогая кожаная обивка Nappa с шелковистым отблеском
+      const leatherMat = new THREE.MeshPhysicalMaterial({
+        color: primaryColor,
+        roughness: 0.38,
+        metalness: 0.05,
+        clearcoat: isSelected ? 0.35 : 0.15,
+        clearcoatRoughness: 0.25,
+      });
+
+      // Перфорированная центральная секция
+      const insertMat = new THREE.MeshPhysicalMaterial({
+        color: insertColor,
+        roughness: 0.65,
+        metalness: 0.02,
+        clearcoat: 0.08,
+      });
+
+      const chromeMat = new THREE.MeshStandardMaterial({ color: 0xF1F5F9, metalness: 0.98, roughness: 0.12 });
+      const shellMat = new THREE.MeshStandardMaterial({ color: 0x0F172A, roughness: 0.72, metalness: 0.15 });
+      const redButtonMat = new THREE.MeshStandardMaterial({ color: 0xDC2626, roughness: 0.4 });
+
+      // ── 1. СТАЛЬНЫЕ ОПОРЫ И КРЕПЛЕНИЕ К НАПОЛЬНЫМ РЕЛЬСАМ SPRINTER ──
+      // Арочные трубчатые стальные ножки
+      [-0.14, 0.14].forEach(lz => {
+        const legFront = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.28, 16), chromeMat);
+        legFront.position.set(0.09, 0.14, lz);
+        legFront.castShadow = true;
+        group.add(legFront);
+
+        const legRear = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.28, 16), chromeMat);
+        legRear.position.set(-0.13, 0.14, lz);
+        legRear.castShadow = true;
+        group.add(legRear);
+
+        // Литые алюминиевые замки фиксации в напольных рельсах
+        const clamp = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.026, 0.046), chromeMat);
+        clamp.position.set(-0.02, 0.013, lz);
+        group.add(clamp);
+
+        // Болты фиксации с шестигранной головкой
+        [-0.09, 0.06].forEach(bx => {
+          const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.007, 0.012, 6), chromeMat);
+          bolt.position.set(bx, 0.03, lz);
+          group.add(bolt);
+        });
+      });
+
+      // Поперечная опора-подножка для пассажира сзади
+      const footrestBar = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 0.36, 16), chromeMat);
+      footrestBar.rotation.x = Math.PI / 2;
+      footrestBar.position.set(-0.16, 0.10, 0);
+      group.add(footrestBar);
+
+      // Защитный нижний пластиковый кожух (валенс механизма кресла)
+      const valence = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.06, 0.40), shellMat);
+      valence.position.set(0, 0.26, 0);
+      valence.castShadow = true;
+      group.add(valence);
+
+      // Рычажок регулировки наклона спинки (на стороне прохода)
+      const aisleZ = (seatData.col === 3 ? -0.21 : 0.21);
+      const reclineLever = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.016, 0.025), chromeMat);
+      reclineLever.position.set(0.05, 0.26, aisleZ);
+      reclineLever.rotation.y = (seatData.col === 3 ? 0.2 : -0.2);
+      group.add(reclineLever);
+
+      // Замок ремня безопасности с ярко-красной кнопкой
+      const buckleGroup = new THREE.Group();
+      buckleGroup.position.set(0.02, 0.32, -aisleZ * 0.95);
+      const buckleStalk = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.10, 0.012), shellMat);
+      buckleGroup.add(buckleStalk);
+      const buckleBody = new THREE.Mesh(new THREE.BoxGeometry(0.026, 0.045, 0.035), shellMat);
+      buckleBody.position.y = 0.05;
+      buckleGroup.add(buckleBody);
+      const buckleBtn = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.014, 0.026), redButtonMat);
+      buckleBtn.position.set(0, 0.075, 0);
+      buckleGroup.add(buckleBtn);
+      group.add(buckleGroup);
+
+      // ── 2. АНАТОМИЧЕСКАЯ ПОДУШКА СИДЕНЬЯ ──
+      const cushionGroup = new THREE.Group();
+      cushionGroup.position.set(0, 0.28, 0);
+
+      const cushion = new THREE.Mesh(geos.cushionGeo, leatherMat);
+      cushion.castShadow = true;
+      cushion.receiveShadow = true;
+      cushionGroup.add(cushion);
+
+      const cushionInsert = new THREE.Mesh(geos.cushionInsertGeo, insertMat);
+      cushionGroup.add(cushionInsert);
+      group.add(cushionGroup);
+
+      // ── 3. АНАТОМИЧЕСКАЯ СПИНКА С ЭРГОНОМИЧНЫМ ИЗГИБОМ ──
+      const backGroup = new THREE.Group();
+      backGroup.position.set(-0.16, 0.36, 0);
+      backGroup.rotation.z = -0.14; // наклон спинки назад ~8 градусов
+
+      const backrest = new THREE.Mesh(geos.backrestGeo, leatherMat);
+      backrest.castShadow = true;
+      backrest.receiveShadow = true;
+      backGroup.add(backrest);
+
+      const backInsert = new THREE.Mesh(geos.backInsertGeo, insertMat);
+      backGroup.add(backInsert);
+
+      // ── 4. ЗАДНИЕ УДОБСТВА ДЛЯ ПАССАЖИРА СЗАДИ ──
+      // Складной столик
+      const tray = new THREE.Mesh(geos.trayGeo, shellMat);
+      tray.position.set(-0.078, 0.34, 0);
+      backGroup.add(tray);
+
+      // Двойные хромированные подстаканники на столике
+      [-0.065, 0.065].forEach(cz => {
+        const cup = new THREE.Mesh(new THREE.TorusGeometry(0.032, 0.0035, 8, 24), chromeMat);
+        cup.position.set(-0.088, 0.34, cz);
+        cup.rotation.y = Math.PI / 2;
+        backGroup.add(cup);
+      });
+
+      // Поворотный замок-фиксатор столика вверху
+      const trayLatch = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.02, 12), chromeMat);
+      trayLatch.rotation.z = Math.PI / 2;
+      trayLatch.position.set(-0.082, 0.47, 0);
+      backGroup.add(trayLatch);
+
+      // Нижняя сетка для журналов / прессы
+      const netFrame = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.16, 0.30), shellMat);
+      netFrame.position.set(-0.076, 0.15, 0);
+      backGroup.add(netFrame);
+
+      const netMesh = new THREE.Mesh(new THREE.PlaneGeometry(0.14, 0.28), new THREE.MeshStandardMaterial({
+        color: 0x334155, roughness: 0.9, wireframe: true
+      }));
+      netMesh.rotation.y = -Math.PI / 2;
+      netMesh.position.set(-0.083, 0.15, 0);
+      backGroup.add(netMesh);
+
+      // Журнал BusLiner, выглядывающий из сетки
+      const mag = new THREE.Mesh(new THREE.PlaneGeometry(0.09, 0.18), new THREE.MeshBasicMaterial({ color: 0x93C5FD }));
+      mag.rotation.y = -Math.PI / 2;
+      mag.rotation.x = 0.08;
+      mag.position.set(-0.085, 0.16, 0.04);
+      backGroup.add(mag);
+
+      // Верхний хромированный поручень для прохода по салону
+      const topHandle = new THREE.Mesh(new THREE.TorusGeometry(0.065, 0.009, 12, 28, Math.PI), chromeMat);
+      topHandle.position.set(-0.04, 0.64, 0);
+      topHandle.rotation.y = Math.PI / 2;
+      backGroup.add(topHandle);
+
+      // Крючок для верхней одежды/сумки
+      const coatHook = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.02, 8), chromeMat);
+      coatHook.position.set(-0.08, 0.52, -0.11);
+      coatHook.rotation.z = 0.4;
+      backGroup.add(coatHook);
+
+      // ── 5. КОМФОРТ-ПОДГОЛОВНИК НА ХРОМИРОВАННЫХ НАПРАВЛЯЮЩИХ ──
+      // Две телескопические хромированные стойки подголовника
+      [-0.055, 0.055].forEach(hz => {
+        const post = new THREE.Mesh(new THREE.CylinderGeometry(0.0065, 0.0065, 0.12, 16), chromeMat);
+        post.position.set(-0.015, 0.66, hz);
+        backGroup.add(post);
+
+        // Хромированные кольца-розетки на вершине спинки
+        const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.01, 16), chromeMat);
+        collar.position.set(-0.015, 0.63, hz);
+        backGroup.add(collar);
+      });
+
+      // Сам анатомический подушечный подголовник
+      const headrest = new THREE.Mesh(geos.headrestGeo, leatherMat);
+      headrest.position.set(-0.005, 0.73, 0);
+      headrest.castShadow = true;
+      backGroup.add(headrest);
+
+      // Премиальная табличка с номером места на передней стороне подголовника
+      const numCanvas = document.createElement('canvas');
+      numCanvas.width = 128; numCanvas.height = 128;
+      const ctx = numCanvas.getContext('2d');
+      ctx.fillStyle = isSelected ? '#1E3A8A' : '#0F172A';
+      ctx.fillRect(0, 0, 128, 128);
+      ctx.strokeStyle = isSelected ? '#93C5FD' : '#FFFFFF';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(6, 6, 116, 116);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '800 68px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(seatData.num, 64, 64);
+
+      const numTex = new THREE.CanvasTexture(numCanvas);
+      const numPlate = new THREE.Mesh(new THREE.PlaneGeometry(0.13, 0.10), new THREE.MeshBasicMaterial({ map: numTex }));
+      numPlate.position.set(0.038, 0.73, 0);
+      numPlate.rotation.y = Math.PI / 2; // смотрит строго вперед по ходу движения
+      backGroup.add(numPlate);
+
+      group.add(backGroup);
+
+      // ── 6. СКРУГЛЕННЫЙ ПОДЛОКОТНИК СО СТОРОНЫ ПРОХОДА ──
+      const armGroup = new THREE.Group();
+      armGroup.position.set(0.04, 0.52, aisleZ);
+
+      const armrest = new THREE.Mesh(geos.armrestGeo, shellMat);
+      armrest.castShadow = true;
+      armGroup.add(armrest);
+
+      // Мягкая кожаная верхняя подушечка на подлокотнике
+      const armPad = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.012, 0.044), leatherMat);
+      armPad.position.set(0.01, 0.034, 0);
+      armGroup.add(armPad);
+
+      // Хромированный круглый шарнир крепления
+      const armHinge = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.048, 20), chromeMat);
+      armHinge.rotation.x = Math.PI / 2;
+      armHinge.position.set(-0.14, -0.005, 0);
+      armGroup.add(armHinge);
+
+      // Кнопка регулировки наклона подлокотника
+      const armBtn = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.05, 14), chromeMat);
+      armBtn.rotation.x = Math.PI / 2;
+      armBtn.position.set(0.14, -0.012, 0);
+      armGroup.add(armBtn);
+
+      group.add(armGroup);
+
+      return group;
+    }
+
+    // --- ИНТЕРАКТИВ И RAYCASTING ---
+    function setupRaycaster() {
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+
+      function getIntersectedSeat(event) {
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const seatMeshes = Array.from(seatMeshMap.values());
+        const intersects = raycaster.intersectObjects(seatMeshes, true);
+
+        if (intersects.length > 0) {
+          let curr = intersects[0].object;
+          while (curr && curr.parent && !curr.userData.seat) {
+            curr = curr.parent;
+          }
+          if (curr && curr.userData.seat) {
+            return { seat: curr.userData.seat, point: intersects[0].point };
+          }
+        }
+        return null;
+      }
+
+      renderer.domElement.addEventListener('mousemove', (e) => {
+        const hit = getIntersectedSeat(e);
+        if (hit) {
+          const seat = hit.seat;
+          hoveredSeat = seat;
+          container.style.cursor = (seat.status === 'available') ? 'pointer' : 'not-allowed';
+
+          const rect = renderer.domElement.getBoundingClientRect();
+          tooltipEl.style.display = 'block';
+          tooltipEl.style.left = `${e.clientX - rect.left}px`;
+          tooltipEl.style.top = `${e.clientY - rect.top}px`;
+
+          document.getElementById('tt-num').innerText = `Место ${seat.num}`;
+          document.getElementById('tt-price').innerText = `${seat.price} ₽`;
+
+          let catName = 'Стандартное место';
+          if (seat.cat === 'vip') catName = 'VIP Одиночное';
+          if (seat.cat === 'emergency') catName = 'Аварийный выход (+12 см)';
+          if (seat.cat === 'disabled') catName = 'Для пассажиров с ОВЗ';
+          if (seat.cat === 'limited') catName = 'Неоткидная спинка (Эконом)';
+          if (seat.cat === 'window') catName = 'Место у окна';
+          if (seat.cat === 'aisle') catName = 'Место у прохода';
+          document.getElementById('tt-type').innerText = catName;
+
+          const featsUl = document.getElementById('tt-features');
+          featsUl.innerHTML = seat.feats.map(f => `<li>${f}</li>`).join('');
+        } else {
+          hoveredSeat = null;
+          container.style.cursor = 'grab';
+          tooltipEl.style.display = 'none';
+        }
+      });
+
+      renderer.domElement.addEventListener('click', (e) => {
+        const hit = getIntersectedSeat(e);
+        if (hit && hit.seat.status === 'available') {
+          onSeatClick(hit.seat);
+        } else if (!hit) {
+          // Клик в пустое / рандомное место на фоне или полу — сброс выбора и плавное отдаление камеры к общему виду
+          resetToOverview();
+        }
+      });
+    }
+
+    function onSeatClick(seat) {
+      const idx = selectedSeatIds.indexOf(seat.id);
+      if (idx > -1) {
+        selectedSeatIds.splice(idx, 1);
+        if (selectedSeatIds.length === 0) {
+          selectedRow = null;
+          // Все места отменены — отдаляем камеру назад к общему плану
+          targetCamPos = [...CAM_OVERVIEW.pos];
+          targetCamLook = [...CAM_OVERVIEW.target];
+          isAnimatingCam = true;
+          highlightPresetBtn('all');
+        } else {
+          // Приближаем к последнему оставшемуся выбранному месту
+          const lastSeat = SPRINTER_SEATS.find(s => s.id === selectedSeatIds[selectedSeatIds.length - 1]);
+          if (lastSeat) {
+            targetCamPos = [lastSeat.pos[0], 3.2, lastSeat.pos[2]];
+            targetCamLook = [lastSeat.pos[0], 0.65, lastSeat.pos[2]];
+            isAnimatingCam = true;
+          }
+        }
+      } else {
+        if (selectedSeatIds.length >= 3) {
+          alert('Максимум 3 места на заказ');
+          return;
+        }
+        selectedSeatIds.push(seat.id);
+        selectedRow = seat.row;
+
+        // Плавное приближение камеры строго к выбранному креслу
+        targetCamPos = [seat.pos[0], 3.2, seat.pos[2]];
+        targetCamLook = [seat.pos[0], 0.65, seat.pos[2]];
+        isAnimatingCam = true;
+        clearPresetButtons();
+      }
+
+      updateUI();
+      rebuildSeatsAppearance();
+    }
+
+    // Удаление выбранного места по клику на бейдж в нижней строке
+    window.removeSeat = function(seatId) {
+      const idx = selectedSeatIds.indexOf(seatId);
+      if (idx > -1) {
+        selectedSeatIds.splice(idx, 1);
+        if (selectedSeatIds.length === 0) {
+          selectedRow = null;
+          targetCamPos = [...CAM_OVERVIEW.pos];
+          targetCamLook = [...CAM_OVERVIEW.target];
+          isAnimatingCam = true;
+          highlightPresetBtn('all');
+        } else {
+          const lastSeat = SPRINTER_SEATS.find(s => s.id === selectedSeatIds[selectedSeatIds.length - 1]);
+          if (lastSeat) {
+            targetCamPos = [lastSeat.pos[0], 3.2, lastSeat.pos[2]];
+            targetCamLook = [lastSeat.pos[0], 0.65, lastSeat.pos[2]];
+            isAnimatingCam = true;
+          }
+        }
+        updateUI();
+        rebuildSeatsAppearance();
+      }
+    };
+
+    window.resetToOverview = function() {
+      selectedSeatIds = [];
+      selectedRow = null;
+      targetCamPos = [...CAM_OVERVIEW.pos];
+      targetCamLook = [...CAM_OVERVIEW.target];
+      isAnimatingCam = true;
+      highlightPresetBtn('all');
+      updateUI();
+      rebuildSeatsAppearance();
+    };
+
+    function highlightPresetBtn(name) {
+      document.querySelectorAll('.hud-right-controls .pill-btn').forEach(b => {
+        if (b.id.startsWith('btn-cam-')) b.classList.remove('active');
+      });
+      const activeBtn = document.getElementById(`btn-cam-${name}`);
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function clearPresetButtons() {
+      document.querySelectorAll('.hud-right-controls .pill-btn').forEach(b => {
+        if (b.id.startsWith('btn-cam-')) b.classList.remove('active');
+      });
+    }
+
+    function rebuildSeatsAppearance() {
+      SPRINTER_SEATS.forEach(seat => {
+        const meshGroup = seatMeshMap.get(seat.id);
+        if (!meshGroup) return;
+
+        const isSelected = selectedSeatIds.includes(seat.id);
+        const isDimmed = selectedRow !== null && seat.row !== selectedRow && !isSelected;
+
+        meshGroup.traverse(child => {
+          if (child.isMesh && child.material) {
+            if (isSelected && child.material.isMeshPhysicalMaterial) {
+              child.material.color.setHex(0x1E3A8A);
+            }
+            child.material.transparent = true;
+            child.material.opacity = isDimmed ? 0.35 : 1.0;
+          }
+        });
+      });
+    }
+
+    function updateUI() {
+      const emptyPrompt = document.getElementById('empty-prompt');
+      const selectionStats = document.getElementById('selection-stats');
+      const proceedBtn = document.getElementById('btn-proceed');
+      const chipsContainer = document.getElementById('chips-container');
+      const totalPriceLabel = document.getElementById('total-price-label');
+
+      if (selectedSeatIds.length === 0) {
+        emptyPrompt.style.display = 'block';
+        selectionStats.style.display = 'none';
+        proceedBtn.disabled = true;
+      } else {
+        emptyPrompt.style.display = 'none';
+        selectionStats.style.display = 'block';
+        proceedBtn.disabled = false;
+
+        const selectedSeats = SPRINTER_SEATS.filter(s => selectedSeatIds.includes(s.id));
+        const total = selectedSeats.reduce((acc, s) => acc + s.price, 0);
+
+        totalPriceLabel.innerText = `${total.toLocaleString('ru-RU')} ₽`;
+        chipsContainer.innerHTML = selectedSeats.map(s => `
+          <span class="chip-tag" onclick="removeSeat('${s.id}')" title="Нажмите, чтобы удалить место ${s.num}">
+            Место ${s.num} &bull; ${s.price} ₽
+            <span class="chip-close-icon">&times;</span>
+          </span>
+        `).join('');
+      }
+    }
+
+    function setPreset(name) {
+      highlightPresetBtn(name);
+      const preset = CAM_PRESETS[name];
+      if (preset) {
+        targetCamPos = [...preset.pos];
+        targetCamLook = [...preset.target];
+        isAnimatingCam = true;
+      }
+    }
+
+    function toggleRoof(full) {
+      showFullRoof = full;
+      if (roofMeshGroup) roofMeshGroup.visible = showFullRoof;
+      if (saloonBodyMesh) {
+        saloonBodyMesh.material = showFullRoof ? solidArcticWhitePaint : semiTransparentCabinPaint;
+      }
+      document.getElementById('btn-roof-cutaway').classList.toggle('active', !full);
+      document.getElementById('btn-roof-full').classList.toggle('active', full);
+    }
+
+    function onProceedClick() {
+      const selectedNums = SPRINTER_SEATS.filter(s => selectedSeatIds.includes(s.id)).map(s => s.num).join(', ');
+      alert(`Успешно! Выбраны места в Sprinter: [${selectedNums}]. Переход к оплате.`);
+    }
+
+    function onResize() {
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Плавная анимация пресетов и облета только когда активен переход; при ручном вращении controls свободен на 100%
+      if (isAnimatingCam) {
+        camera.position.lerp(new THREE.Vector3(...targetCamPos), 0.08);
+        controls.target.lerp(new THREE.Vector3(...targetCamLook), 0.08);
+        if (camera.position.distanceTo(new THREE.Vector3(...targetCamPos)) < 0.03) {
+          isAnimatingCam = false;
+        }
+      }
+      controls.update();
+
+      SPRINTER_SEATS.forEach(seat => {
+        const meshGroup = seatMeshMap.get(seat.id);
+        if (!meshGroup) return;
+        const isSelected = selectedSeatIds.includes(seat.id);
+        const targetY = isSelected ? 0.565 + 0.035 : 0.565;
+        meshGroup.position.y = THREE.MathUtils.lerp(meshGroup.position.y, targetY, 0.1);
+      });
+
+      renderer.render(scene, camera);
+    }
+
+    // Запуск инициализации сцены после полной загрузки всех функций и геометрий
+    initThree();
+  </script>
+</body>
+</html>
