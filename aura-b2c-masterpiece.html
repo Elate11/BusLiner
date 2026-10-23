@@ -3,73 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>BusLiner // Kinetic Intercity Mobility (Official)</title>
+  <title>BusLiner &mdash; Межгородские поездки без звонков и суеты</title>
   
-  <meta name="description" content="BusLiner — Сверхскоростные межгородские рейсы нового поколения. Выбор кресла в 3D, сверхзвуковой робот-снайпер отказных билетов, премиальный комфорт.">
-  <meta name="theme-color" content="#08090C">
+  <meta name="description" content="BusLiner — Межгородские поездки бизнес-класса. Интерактивный 3D-выбор анатомического кресла, моментальный выкуп билетов роботом-снайпером за 0.38 секунды, Mercedes-Benz Sprinter 519 CDI.">
+  <meta name="theme-color" content="#F7F6F2">
 
-  <!-- FONTS: Syne (Display), Plus Jakarta Sans (Body/UI), JetBrains Mono (Telemetry) -->
+  <!-- FONTS: Newsreader (Editorial Serif), Plus Jakarta Sans (UI Grotesk), JetBrains Mono (Telemetry) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Three.js for Interactive 3D Helmet/Cockpit Viewer -->
+  <!-- Three.js for 3D Executive Cabin & Seat Twin Viewer -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <style>
     /* ==========================================================================
-       BUSLINER // OFF+BRAND & LANDO NORRIS AESTHETIC DESIGN SYSTEM
-       Anti-AI-Slop Architecture: Asphalt (#08090C) + Electric Acid (#DFFF00)
-       Custom Sculptural Typography (Syne + Plus Jakarta Sans + JetBrains Mono)
-       3D Tilt Microphysics, Kinetic Cursor Spotlight, Zero Clutter
+       BUSLINER // QUIET LUXURY & PASSENGER COMFORT DESIGN SYSTEM
+       Art Direction: Swiss Porcelain (#F7F6F2) + Royal Institutional Navy (#1E3A8A)
+       Editorial Elegance: Newsreader Display Serif + Plus Jakarta Sans + JetBrains Mono
+       Tactile 3D Microphysics, Supersonic Ballistic Sniper, Zero Slop
        ========================================================================== */
 
     :root {
-      /* Palette */
-      --bg-asphalt: #08090C;
-      --bg-surface: #0E1017;
-      --bg-card: #131620;
-      --bg-card-hover: #181C28;
-      --bg-elevated: #1F2433;
+      /* Palette: Quiet Luxury & Original Brand Heritage */
+      --canvas: #F7F6F2;
+      --canvas-warm: #F2F0E9;
+      --surface-card: #FFFFFF;
+      --surface-subtle: #F0EFEA;
+      --surface-hover: #FAF9F6;
+      --surface-dark: #0B0E14;
+      --surface-dark-card: #131722;
       
-      --accent-acid: #DFFF00;              /* Lando Norris Signature Fluorescent Acid Yellow */
-      --accent-acid-glow: rgba(223, 255, 0, 0.22);
-      --accent-acid-hover: #EDFF40;
-      --accent-mach: #00F0FF;              /* Supersonic Tracer Cyan */
-      --accent-mach-glow: rgba(0, 240, 255, 0.28);
-      
-      --border-hairline: rgba(255, 255, 255, 0.08);
-      --border-subtle: rgba(255, 255, 255, 0.14);
-      --border-active: #DFFF00;
-      
-      --text-primary: #FFFFFF;
-      --text-secondary: #94A3B8;
-      --text-dim: #64748B;
-      --text-acid: #DFFF00;
+      /* Royal Institutional Navy (Sole Signature Accent) */
+      --accent-navy: #1E3A8A;
+      --accent-navy-hover: #172554;
+      --accent-navy-soft: #EEF4FF;
+      --accent-navy-border: #BCD0FA;
+      --accent-navy-glow: rgba(30, 58, 138, 0.18);
+
+      /* Champagne Gold (VIP / Quiet Luxury micro-accents) */
+      --accent-gold: #93704C;
+      --accent-gold-soft: #FBF8F3;
+      --accent-gold-border: #E8DCCB;
+
+      /* Status & Trust Indicators */
+      --status-available: #0E7048;
+      --status-available-bg: #EAF7EE;
+      --status-available-border: #A3E0BA;
+
+      --status-radar: #B45309;
+      --status-radar-bg: #FFFBEB;
+      --status-radar-border: #FCD34D;
+
+      --status-soldout: #991B1B;
+      --status-soldout-bg: #FEF2F2;
+      --status-soldout-border: #FCA5A5;
+
+      /* Hairline Borders & Shadows */
+      --border-hairline: #E2E2DC;
+      --border-subtle: rgba(20, 21, 24, 0.08);
+      --border-dark: rgba(255, 255, 255, 0.12);
+
+      --shadow-sm: 0 1px 2px rgba(20, 21, 24, 0.04);
+      --shadow-md: 0 4px 14px -2px rgba(20, 21, 24, 0.06), 0 2px 6px -1px rgba(20, 21, 24, 0.03);
+      --shadow-lg: 0 20px 35px -8px rgba(20, 21, 24, 0.08), 0 8px 16px -4px rgba(20, 21, 24, 0.04);
+      --shadow-elevated: 0 30px 60px -15px rgba(20, 21, 24, 0.12);
 
       /* Typography */
-      --font-display: 'Syne', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display: 'Newsreader', Georgia, serif;
+      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
 
-      /* Fluid Clamp Type Scales */
-      --fs-hero: clamp(2.75rem, 6.5vw + 1rem, 6.2rem);
-      --fs-h1: clamp(2.2rem, 4.5vw + 1rem, 4.2rem);
-      --fs-h2: clamp(1.6rem, 3vw + 0.8rem, 2.75rem);
-      --fs-h3: clamp(1.2rem, 1.8vw + 0.6rem, 1.8rem);
-      --fs-body: clamp(0.92rem, 0.35vw + 0.8rem, 1.08rem);
-      --fs-meta: clamp(0.75rem, 0.2vw + 0.68rem, 0.85rem);
+      /* High Contrast Text */
+      --text-primary: #141518;
+      --text-muted: #525660;
+      --text-dim: #8E929B;
+      --text-on-dark: #FFFFFF;
+      --text-on-dark-dim: #94A3B8;
 
-      /* Motion */
-      --ease-snappy: cubic-bezier(0.16, 1, 0.3, 1);
-      --ease-glide: cubic-bezier(0.25, 1, 0.5, 1);
-      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-      
-      /* Radii */
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 22px;
+      /* Fluid Clamp Type Scales */
+      --fs-hero: clamp(2.6rem, 5.2vw + 0.8rem, 5.2rem);
+      --fs-h1: clamp(2.1rem, 3.8vw + 0.8rem, 3.8rem);
+      --fs-h2: clamp(1.6rem, 2.5vw + 0.6rem, 2.4rem);
+      --fs-h3: clamp(1.15rem, 1.4vw + 0.5rem, 1.5rem);
+      --fs-body: clamp(0.95rem, 0.3vw + 0.85rem, 1.08rem);
+      --fs-small: clamp(0.82rem, 0.15vw + 0.76rem, 0.9rem);
+      --fs-meta: 0.78rem;
+
+      /* Layout & Radii */
+      --container-max: 1240px;
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
       --radius-pill: 9999px;
+
+      /* Physical Motion Curves */
+      --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-gentle: cubic-bezier(0.25, 1, 0.5, 1);
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     *, *::before, *::after {
@@ -80,31 +111,1468 @@
 
     html {
       scroll-behavior: smooth;
-      background-color: var(--bg-asphalt);
+      background-color: var(--canvas);
       color: var(--text-primary);
-      font-family: var(--font-body);
       font-size: 16px;
-      line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      overflow-x: hidden;
     }
 
     body {
-      background-color: var(--bg-asphalt);
-      color: var(--text-primary);
-      position: relative;
       min-height: 100vh;
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: 1.6;
+      background: var(--canvas);
+      color: var(--text-primary);
       overflow-x: hidden;
+      position: relative;
     }
 
-    /* ACCESSIBILITY FOCUS RING */
-    :focus-visible {
-      outline: 2px solid var(--accent-acid);
-      outline-offset: 3px;
+    /* Selection */
+    ::selection {
+      background: var(--accent-navy);
+      color: #FFFFFF;
     }
 
-    /* REDUCED MOTION */
+    /* Subdued Background Noise & Grain */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.022;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* Ambient Cursor Spotlight (Quiet Luxury Soft Cream/Navy) */
+    #cursor-spotlight {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(circle, rgba(30, 58, 138, 0.035) 0%, rgba(247, 246, 242, 0) 70%);
+      transform: translate(-50%, -50%);
+      transition: opacity 0.5s ease;
+    }
+
+    /* Container Utility */
+    .container {
+      width: 100%;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+    }
+
+    /* Helper typography classes */
+    .serif { font-family: var(--font-display); }
+    .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .italic { font-style: italic; }
+
+    /* ==========================================================================
+       TOP NAVIGATION BAR
+       ========================================================================== */
+    header.site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      background: rgba(247, 246, 242, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-hairline);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    /* Brand Logo */
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      background: var(--accent-navy);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(30, 58, 138, 0.25);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-name {
+      font-family: var(--font-body);
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+
+    .brand-name span {
+      color: var(--accent-navy);
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    /* Navigation Links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s ease;
+      position: relative;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--accent-navy);
+    }
+
+    .nav-links a.active::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent-navy);
+      border-radius: 2px;
+    }
+
+    /* Nav Actions */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Audio Toggle Button */
+    .btn-audio-toggle {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-pill);
+      padding: 7px 14px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-audio-toggle:hover {
+      border-color: var(--accent-navy-border);
+      color: var(--accent-navy);
+      background: var(--accent-navy-soft);
+    }
+
+    .audio-wave-bars {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      height: 12px;
+    }
+
+    .audio-bar {
+      width: 2px;
+      height: 6px;
+      background: currentColor;
+      border-radius: 1px;
+      transition: height 0.2s ease;
+    }
+
+    .btn-audio-toggle.active .audio-bar:nth-child(1) { animation: soundBar 0.8s ease-in-out infinite alternate; }
+    .btn-audio-toggle.active .audio-bar:nth-child(2) { animation: soundBar 0.8s ease-in-out 0.2s infinite alternate; }
+    .btn-audio-toggle.active .audio-bar:nth-child(3) { animation: soundBar 0.8s ease-in-out 0.4s infinite alternate; }
+
+    @keyframes soundBar {
+      0% { height: 4px; }
+      100% { height: 12px; }
+    }
+
+    /* Primary CTA Button */
+    .btn-primary-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--accent-navy);
+      color: #FFFFFF;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      border: 1px solid var(--accent-navy);
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.22);
+      transition: all 0.2s var(--ease-luxury);
+      cursor: pointer;
+    }
+
+    .btn-primary-cta:hover {
+      background: var(--accent-navy-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(30, 58, 138, 0.28);
+    }
+
+    .btn-primary-cta:active {
+      transform: translateY(0);
+    }
+
+    /* ==========================================================================
+       HERO SECTION: SPLIT EDITORIAL + 3D LUXURY CABIN TWIN
+       ========================================================================== */
+    section.hero-section {
+      padding-top: 136px;
+      padding-bottom: 72px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr;
+      gap: 56px;
+      align-items: center;
+    }
+
+    /* Hero Left Column */
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      z-index: 2;
+    }
+
+    .hero-eyebrow-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      width: fit-content;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-navy);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--status-available);
+      box-shadow: 0 0 0 3px rgba(14, 112, 72, 0.2);
+      animation: pulseGreen 2.2s infinite;
+    }
+
+    @keyframes pulseGreen {
+      0% { box-shadow: 0 0 0 0 rgba(14, 112, 72, 0.5); }
+      70% { box-shadow: 0 0 0 7px rgba(14, 112, 72, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(14, 112, 72, 0); }
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: var(--fs-hero);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent-navy);
+      font-weight: 400;
+    }
+
+    .hero-lead {
+      font-size: var(--fs-body);
+      color: var(--text-muted);
+      line-height: 1.68;
+      max-width: 560px;
+    }
+
+    /* SEARCH CAPSULE (QUIET LUXURY & CONVERSION) */
+    .search-capsule-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      position: relative;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .search-capsule-card:focus-within {
+      border-color: var(--accent-navy-border);
+      box-shadow: var(--shadow-elevated);
+    }
+
+    .search-inputs-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr 150px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .input-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: var(--surface-subtle);
+      border: 1px solid transparent;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .input-cell:focus-within {
+      background: #FFFFFF;
+      border-color: var(--accent-navy);
+      box-shadow: 0 0 0 3px var(--accent-navy-soft);
+    }
+
+    .input-cell label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+    }
+
+    .input-cell input,
+    .input-cell select {
+      border: none;
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      outline: none;
+      width: 100%;
+    }
+
+    /* Swap Button */
+    .btn-swap-cities {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s var(--ease-luxury);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-swap-cities:hover {
+      background: var(--accent-navy-soft);
+      color: var(--accent-navy);
+      border-color: var(--accent-navy-border);
+      transform: rotate(180deg);
+    }
+
+    /* Search Action Button */
+    .btn-search-submit {
+      background: var(--accent-navy);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 16px 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s var(--ease-luxury);
+      box-shadow: 0 4px 14px rgba(30, 58, 138, 0.25);
+    }
+
+    .btn-search-submit:hover {
+      background: var(--accent-navy-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(30, 58, 138, 0.35);
+    }
+
+    /* Predictive Route Intent Pills */
+    .route-intent-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .intent-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+
+    .pill-intent {
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-pill);
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-intent:hover {
+      border-color: var(--accent-navy-border);
+      background: var(--accent-navy-soft);
+      color: var(--accent-navy);
+      transform: translateY(-1px);
+    }
+
+    .pill-intent .pill-price {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent-navy);
+      font-weight: 700;
+    }
+
+    /* Trust Proof Metrics */
+    .trust-metrics-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .metric-value {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent-navy);
+      letter-spacing: -0.02em;
+    }
+
+    .metric-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    /* Hero Right Column: 3D Cabin Twin Stage */
+    .hero-stage {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .cabin-3d-card {
+      width: 100%;
+      height: 520px;
+      background: linear-gradient(145deg, #FFFFFF 0%, #F5F4EE 100%);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-elevated);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px;
+    }
+
+    /* Three.js Canvas Element */
+    #cabin-webgl-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100% !important;
+      height: 100% !important;
+      cursor: grab;
+      z-index: 1;
+    }
+
+    #cabin-webgl-canvas:active {
+      cursor: grabbing;
+    }
+
+    /* Overlay Badge in 3D Card */
+    .cabin-card-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      pointer-events: none;
+    }
+
+    .cabin-tag {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--border-hairline);
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-navy);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cabin-card-footer {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      pointer-events: none;
+    }
+
+    .cabin-spec-sheet {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--border-hairline);
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cabin-spec-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .cabin-spec-detail {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .cabin-rotate-hint {
+      pointer-events: auto;
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-pill);
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Floating Interactive 3D Hotspot Pills */
+    .cabin-hotspots-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .hotspot-bubble {
+      position: absolute;
+      background: rgba(20, 21, 24, 0.85);
+      color: #FFFFFF;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: floatSubtle 3s ease-in-out infinite alternate;
+    }
+
+    .hotspot-bubble::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #60A5FA;
+    }
+
+    @keyframes floatSubtle {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-6px); }
+    }
+
+    /* ==========================================================================
+       PILLARS OF QUIET LUXURY (VALUE PROPOSITION)
+       ========================================================================== */
+    section.section-pillars {
+      padding: 64px 0 80px;
+      background: var(--canvas);
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-navy);
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: var(--fs-h2);
+      font-weight: 400;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      margin-bottom: 14px;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--accent-navy);
+    }
+
+    .section-lead {
+      font-size: var(--fs-body);
+      color: var(--text-muted);
+      max-width: 620px;
+      line-height: 1.6;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .pillar-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 32px 24px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: all 0.3s var(--ease-luxury);
+      position: relative;
+    }
+
+    .pillar-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--accent-navy-border);
+    }
+
+    .pillar-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: var(--accent-navy-soft);
+      color: var(--accent-navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pillar-title {
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .pillar-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ==========================================================================
+       VIP FLEET GALLERY (3D TILT CARDS)
+       ========================================================================== */
+    section.section-fleet {
+      padding: 80px 0 100px;
+      background: var(--canvas-warm);
+      border-top: 1px solid var(--border-hairline);
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .fleet-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 52px;
+    }
+
+    /* 3D Tilt Card Container */
+    .tilt-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+      transform-style: preserve-3d;
+      will-change: transform;
+      position: relative;
+    }
+
+    .tilt-card:hover {
+      box-shadow: var(--shadow-elevated);
+      border-color: var(--accent-navy-border);
+    }
+
+    .fleet-card-top {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .fleet-class-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: fit-content;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-executive {
+      background: var(--accent-gold-soft);
+      color: var(--accent-gold);
+      border: 1px solid var(--accent-gold-border);
+    }
+
+    .badge-express {
+      background: var(--accent-navy-soft);
+      color: var(--accent-navy);
+      border: 1px solid var(--accent-navy-border);
+    }
+
+    .badge-sleeper {
+      background: #F1F5F9;
+      color: #334155;
+      border: 1px solid #CBD5E1;
+    }
+
+    .fleet-name {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.25;
+    }
+
+    .fleet-features-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 20px 0;
+      border-top: 1px solid var(--border-hairline);
+      padding-top: 20px;
+    }
+
+    .fleet-feature-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .fleet-feature-item svg {
+      color: var(--status-available);
+      flex-shrink: 0;
+    }
+
+    .fleet-card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid var(--border-hairline);
+      padding-top: 20px;
+      margin-top: 12px;
+    }
+
+    .fleet-price-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .fleet-price-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .fleet-price-value {
+      font-family: var(--font-mono);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent-navy);
+    }
+
+    .btn-card-action {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-pill);
+      padding: 8px 16px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-card-action:hover {
+      background: var(--accent-navy);
+      color: #FFFFFF;
+      border-color: var(--accent-navy);
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       SUPERSONIC TICKET SNIPER ARENA (WOW-EFFECT PRESERVED & ELEVATED)
+       ========================================================================== */
+    section.section-sniper-arena {
+      padding: 96px 0;
+      background: var(--surface-dark);
+      color: var(--text-on-dark);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle Architectural Grid on Dark */
+    .sniper-grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    .sniper-ambient-glow {
+      position: absolute;
+      top: 50%;
+      left: 65%;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(30, 58, 138, 0.45) 0%, rgba(11, 14, 20, 0) 70%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .sniper-split {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 56px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .sniper-header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: #93C5FD;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .sniper-title {
+      font-family: var(--font-display);
+      font-size: var(--fs-h1);
+      font-weight: 400;
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+      color: #FFFFFF;
+      margin-bottom: 20px;
+    }
+
+    .sniper-title em {
+      font-style: italic;
+      color: #93C5FD;
+    }
+
+    .sniper-lead {
+      font-size: var(--fs-body);
+      color: var(--text-on-dark-dim);
+      line-height: 1.68;
+      margin-bottom: 32px;
+      max-width: 520px;
+    }
+
+    .sniper-specs-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 36px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding-top: 24px;
+    }
+
+    .sniper-spec-box {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sniper-spec-val {
+      font-family: var(--font-mono);
+      font-size: 24px;
+      font-weight: 700;
+      color: #93C5FD;
+    }
+
+    .sniper-spec-lbl {
+      font-size: 12px;
+      color: var(--text-on-dark-dim);
+    }
+
+    /* Sniper Trigger Button */
+    .btn-fire-sniper {
+      background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-pill);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 16px 28px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
+      transition: all 0.2s var(--ease-luxury);
+    }
+
+    .btn-fire-sniper:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 35px -5px rgba(37, 99, 235, 0.55);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-fire-sniper:active {
+      transform: translateY(0);
+    }
+
+    /* Right Column: Physical Ticket Stage & Supersonic Canvas */
+    .sniper-canvas-wrapper {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 460px;
+    }
+
+    #sniper-kinetic-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Physical Paper Ticket with Security Guilloche */
+    .physical-ticket-sheet {
+      position: relative;
+      z-index: 5;
+      width: 370px;
+      background: #FFFFFF;
+      color: #141518;
+      border-radius: 16px;
+      padding: 28px 24px;
+      box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.2);
+      transform-origin: center center;
+      transition: transform 0.15s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      user-select: none;
+    }
+
+    /* 3D Physical Paper Recoil Animation */
+    .ticket-sheet-recoil {
+      animation: paperBulletPunch 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes paperBulletPunch {
+      0% { transform: scale(1) rotate(0deg) translate(0, 0); }
+      15% { transform: scale(0.96) rotate(-2.5deg) translate(8px, -4px); }
+      40% { transform: scale(1.03) rotate(1deg) translate(-3px, 2px); }
+      70% { transform: scale(0.99) rotate(-0.5deg) translate(1px, -1px); }
+      100% { transform: scale(1) rotate(0deg) translate(0, 0); }
+    }
+
+    /* Guilloche Pattern Header */
+    .ticket-security-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px dashed #E2E2DC;
+      padding-bottom: 16px;
+      margin-bottom: 18px;
+    }
+
+    .ticket-series-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-navy);
+      letter-spacing: 0.08em;
+    }
+
+    .ticket-state-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: var(--status-radar-bg);
+      color: var(--status-radar);
+      border: 1px solid var(--status-radar-border);
+      transition: all 0.3s ease;
+    }
+
+    .ticket-main-info {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .ticket-route-headline {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .ticket-seat-display {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-subtle);
+      padding: 12px 16px;
+      border-radius: 8px;
+    }
+
+    .ticket-seat-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .ticket-seat-id {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent-navy);
+    }
+
+    .ticket-footer-barcode {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #E2E2DC;
+      padding-top: 14px;
+      margin-top: 18px;
+    }
+
+    .barcode-lines {
+      display: flex;
+      gap: 2px;
+      height: 32px;
+      align-items: flex-end;
+    }
+
+    .b-bar {
+      width: 2px;
+      height: 100%;
+      background: #141518;
+    }
+
+    .b-bar.thick { width: 4px; }
+    .b-bar.thin { width: 1px; }
+
+    /* The Authentic Bullet Hole Puncture */
+    .ticket-bullet-target {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 130px;
+      height: 130px;
+      transform: translate(-50%, -50%) scale(0);
+      pointer-events: none;
+      z-index: 12;
+      opacity: 0;
+      transition: transform 0.25s var(--ease-elastic), opacity 0.15s ease;
+      background-image: url('assets/bullet_hole_paper.jpg');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      mix-blend-mode: multiply;
+      filter: contrast(1.15) brightness(0.95);
+    }
+
+    .ticket-bullet-target.hole-blown {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    /* Fallback Procedural Hole if Image Fails */
+    .procedural-hole-burn {
+      position: absolute;
+      inset: 15px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #0B0E14 42%, #271E18 65%, #6B4E38 82%, transparent 95%);
+      box-shadow: inset 0 0 10px #000000;
+      display: none;
+    }
+
+    /* ==========================================================================
+       SCHEDULE & DIRECT EXPRESS TIMETABLE
+       ========================================================================== */
+    section.section-routes-explorer {
+      padding: 96px 0;
+      background: var(--canvas);
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .routes-deck-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .route-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+      transition: all 0.2s var(--ease-luxury);
+    }
+
+    .route-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--accent-navy-border);
+    }
+
+    .route-badge-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .route-time-chip {
+      background: var(--surface-subtle);
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .route-tag-track {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-navy);
+    }
+
+    .route-city-headline {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin: 8px 0 4px;
+    }
+
+    .route-sub-info {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.45;
+    }
+
+    .route-bottom-action {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid var(--border-hairline);
+      padding-top: 16px;
+    }
+
+    .route-price-num {
+      font-family: var(--font-mono);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .route-price-num span {
+      font-size: 13px;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       MONOLITH FOOTER (ARCHITECTURAL & TRUSTED)
+       ========================================================================== */
+    footer.monolith-footer {
+      background: var(--surface-dark);
+      color: var(--text-on-dark);
+      padding: 80px 0 40px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-top-row {
+      display: grid;
+      grid-template-columns: 1.5fr repeat(3, 1fr);
+      gap: 48px;
+      padding-bottom: 56px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-huge-brand {
+      font-family: var(--font-display);
+      font-size: 38px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+    }
+
+    .footer-huge-brand span {
+      color: #93C5FD;
+      font-style: italic;
+    }
+
+    .footer-brand-desc {
+      font-size: 13px;
+      color: var(--text-on-dark-dim);
+      line-height: 1.6;
+      max-width: 320px;
+    }
+
+    .footer-col-title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #93C5FD;
+      margin-bottom: 18px;
+    }
+
+    .footer-links-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-links-list a {
+      font-size: 13px;
+      color: var(--text-on-dark-dim);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .footer-links-list a:hover {
+      color: #FFFFFF;
+    }
+
+    .footer-bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 32px;
+      font-size: 12px;
+      color: #64748B;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    /* ==========================================================================
+       RESPONSIVE & MOBILE ERGONOMICS
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .pillars-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .fleet-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .routes-deck-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .sniper-split {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .footer-top-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 36px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      section.hero-section {
+        padding-top: 104px;
+      }
+      .search-inputs-row {
+        grid-template-columns: 1fr;
+      }
+      .btn-swap-cities {
+        align-self: center;
+        transform: rotate(90deg);
+      }
+      .btn-swap-cities:hover {
+        transform: rotate(270deg);
+      }
+      .pillars-grid {
+        grid-template-columns: 1fr;
+      }
+      .fleet-grid {
+        grid-template-columns: 1fr;
+      }
+      .routes-deck-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-top-row {
+        grid-template-columns: 1fr;
+      }
+      .cabin-3d-card {
+        height: 400px;
+      }
+      .physical-ticket-sheet {
+        width: 100%;
+        max-width: 340px;
+      }
+    }
+
+    /* Accessibility / Reduced Motion */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -112,1052 +1580,221 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
-    }
-
-    /* SVG NOISE TEXTURE GRAIN OVERLAY */
-    .noise-overlay {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.038;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    }
-
-    /* DYNAMIC CURSOR SPOTLIGHT */
-    .cursor-spotlight {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(223, 255, 0, 0.045) 0%, transparent 70%);
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      z-index: 1;
-      transition: opacity 0.3s ease;
-    }
-
-    /* BASE LAYOUT */
-    .container {
-      width: 100%;
-      max-width: 1360px;
-      margin: 0 auto;
-      padding: 0 24px;
-      position: relative;
-      z-index: 2;
-    }
-
-    /* ==========================================================================
-       TOP FLOATING SPEED DOCK (NAVBAR)
-       ========================================================================== */
-    .speed-dock-wrap {
-      position: fixed;
-      top: 18px;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      display: flex;
-      justify-content: center;
-      padding: 0 16px;
-      pointer-events: none;
-    }
-    .speed-dock {
-      pointer-events: auto;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 8px 12px 8px 18px;
-      background: rgba(14, 16, 23, 0.82);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-pill);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      transition: border-color 0.2s var(--ease-snappy);
-    }
-    .speed-dock:hover {
-      border-color: rgba(223, 255, 0, 0.35);
-    }
-    .brand-mark {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: var(--text-primary);
-    }
-    .brand-logo-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
-      background: var(--accent-acid);
-      color: #08090C;
-      font-family: var(--font-display);
-      font-weight: 900;
-      font-size: 15px;
-      letter-spacing: -0.05em;
-    }
-    .brand-name {
-      font-family: var(--font-display);
-      font-weight: 900;
-      font-size: 18px;
-      letter-spacing: -0.04em;
-      text-transform: uppercase;
-      line-height: 1;
-    }
-    .brand-name span {
-      color: var(--accent-acid);
-    }
-    
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      list-style: none;
-    }
-    .nav-item-link {
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-      padding: 6px 12px;
-      border-radius: var(--radius-pill);
-      transition: all 0.18s var(--ease-snappy);
-    }
-    .nav-item-link:hover {
-      color: var(--text-primary);
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .telemetry-status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 4px 10px;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-pill);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--accent-acid);
-    }
-    .pulse-dot-acid {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent-acid);
-      box-shadow: 0 0 8px var(--accent-acid);
-      animation: pulseGlow 1.8s infinite;
-    }
-    @keyframes pulseGlow {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.4); opacity: 0.5; }
-    }
-
-    .btn-audio-toggle {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--border-hairline);
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-    }
-    .btn-audio-toggle:hover {
-      background: var(--accent-acid);
-      color: #08090C;
-      border-color: var(--accent-acid);
-    }
-
-    .dock-cta-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 18px;
-      border-radius: var(--radius-pill);
-      background: var(--accent-acid);
-      color: #08090C;
-      font-family: var(--font-body);
-      font-size: 13px;
-      font-weight: 800;
-      text-decoration: none;
-      letter-spacing: -0.01em;
-      transition: all 0.2s var(--ease-snappy);
-    }
-    .dock-cta-btn:hover {
-      background: var(--accent-acid-hover);
-      box-shadow: 0 0 20px var(--accent-acid-glow);
-      transform: translateY(-1px);
-    }
-
-    /* ==========================================================================
-       HERO SECTION (CINEMATIC SPEED SPLIT)
-       ========================================================================== */
-    .hero-section {
-      min-height: 100vh;
-      padding-top: 130px;
-      padding-bottom: 70px;
-      display: flex;
-      align-items: center;
-      position: relative;
-      background: radial-gradient(circle at 75% 35%, rgba(223, 255, 0, 0.05) 0%, transparent 55%),
-                  radial-gradient(circle at 20% 70%, rgba(0, 240, 255, 0.04) 0%, transparent 50%),
-                  var(--bg-asphalt);
-    }
-    .hero-split-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 48px;
-      align-items: center;
-    }
-
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 12px;
-      background: rgba(223, 255, 0, 0.08);
-      border: 1px solid rgba(223, 255, 0, 0.25);
-      border-radius: var(--radius-pill);
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--accent-acid);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 20px;
-    }
-
-    .hero-headline {
-      font-family: var(--font-display);
-      font-size: var(--fs-hero);
-      font-weight: 900;
-      line-height: 0.94;
-      letter-spacing: -0.045em;
-      text-transform: uppercase;
-      color: var(--text-primary);
-      margin-bottom: 24px;
-    }
-    .hero-headline em {
-      font-style: normal;
-      color: var(--accent-acid);
-      display: block;
-    }
-
-    .hero-lead {
-      font-size: var(--fs-body);
-      color: var(--text-secondary);
-      max-width: 560px;
-      line-height: 1.6;
-      margin-bottom: 34px;
-    }
-
-    /* KINETIC SEARCH CAPSULE */
-    .search-capsule {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-lg);
-      padding: 18px 20px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-      transition: border-color 0.2s ease;
-    }
-    .search-capsule:focus-within {
-      border-color: var(--accent-acid);
-    }
-    .capsule-grid {
-      display: grid;
-      grid-template-columns: 1.1fr auto 1.1fr 1fr auto;
-      gap: 12px;
-      align-items: center;
-    }
-    .input-cell {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .cell-label {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      letter-spacing: 0.06em;
-    }
-    .cell-input {
-      background: transparent;
-      border: none;
-      color: var(--text-primary);
-      font-family: var(--font-body);
-      font-size: 14.5px;
-      font-weight: 700;
-      outline: none;
-    }
-    .cell-input::placeholder {
-      color: var(--text-dim);
-    }
-    .swap-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--bg-card);
-      border: 1px solid var(--border-hairline);
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s var(--ease-snappy);
-    }
-    .swap-btn:hover {
-      background: var(--accent-acid);
-      color: #08090C;
-      border-color: var(--accent-acid);
-      transform: rotate(180deg);
-    }
-
-    .btn-capsule-find {
-      height: 48px;
-      padding: 0 24px;
-      border-radius: var(--radius-md);
-      background: var(--accent-acid);
-      color: #08090C;
-      font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 800;
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s var(--ease-snappy);
-      white-space: nowrap;
-    }
-    .btn-capsule-find:hover {
-      background: var(--accent-acid-hover);
-      box-shadow: 0 0 24px var(--accent-acid-glow);
-      transform: translateY(-2px);
-    }
-
-    /* PREDICTIVE ROUTE INTENT BAR */
-    .predictive-intent-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-    .pill-intent {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-pill);
-      padding: 5px 12px;
-      font-size: 11.5px;
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.18s var(--ease-snappy);
-    }
-    .pill-intent:hover {
-      background: rgba(223, 255, 0, 0.1);
-      border-color: var(--accent-acid);
-      color: var(--text-primary);
-      transform: translateY(-1px);
-    }
-    .pill-intent strong {
-      color: var(--accent-acid);
-    }
-
-    /* 3D HELMET & KINETIC OBJECT CANVAS CONTAINER */
-    .kinetic-3d-card {
-      position: relative;
-      height: 520px;
-      background: radial-gradient(circle at center, #141724 0%, #090B10 100%);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-    }
-    #helmet-webgl-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      cursor: grab;
-    }
-    #helmet-webgl-canvas:active {
-      cursor: grabbing;
-    }
-    .card-hud-overlay {
-      position: relative;
-      z-index: 10;
-      padding: 20px 24px;
-      pointer-events: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-    .hud-title-tag {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--accent-acid);
-      letter-spacing: 0.08em;
-    }
-    .hud-sub-tag {
-      font-size: 12px;
-      color: var(--text-dim);
-      margin-top: 2px;
-    }
-    .hud-badge-360 {
-      pointer-events: auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-pill);
-      font-family: var(--font-mono);
-      font-size: 10.5px;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    .card-hud-bottom {
-      position: relative;
-      z-index: 10;
-      padding: 20px 24px;
-      pointer-events: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      background: linear-gradient(to top, rgba(9, 11, 16, 0.95), transparent);
-    }
-    .hud-specs-row {
-      display: flex;
-      gap: 18px;
-    }
-    .spec-item {
-      display: flex;
-      flex-direction: column;
-    }
-    .spec-num {
-      font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--text-primary);
-      line-height: 1;
-    }
-    .spec-lbl {
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-top: 4px;
-    }
-
-    /* ==========================================================================
-       TELEMETRY RIBBON (STATS MARQUEE & TICKER)
-       ========================================================================== */
-    .telemetry-ribbon {
-      border-top: 1px solid var(--border-hairline);
-      border-bottom: 1px solid var(--border-hairline);
-      background: #0B0D14;
-      padding: 24px 0;
-      overflow: hidden;
-    }
-    .ribbon-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 32px;
-    }
-    .ticker-stat-block {
-      border-left: 2px solid var(--accent-acid);
-      padding-left: 18px;
-    }
-    .ticker-val {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 3.5vw, 3.2rem);
-      font-weight: 900;
-      line-height: 1;
-      color: var(--text-primary);
-      letter-spacing: -0.03em;
-    }
-    .ticker-val span {
-      color: var(--accent-acid);
-      font-size: 0.6em;
-      margin-left: 2px;
-    }
-    .ticker-desc {
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin-top: 6px;
-      font-weight: 500;
-    }
-
-    /* ==========================================================================
-       IMMERSIVE FLEET LIVERY GALLERY (3D TILT CARDS)
-       ========================================================================== */
-    .section-gallery {
-      padding: 110px 0;
-      position: relative;
-    }
-    .section-header-block {
-      margin-bottom: 56px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-    .section-tag {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--accent-acid);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 8px;
-    }
-    .section-title {
-      font-family: var(--font-display);
-      font-size: var(--fs-h1);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      text-transform: uppercase;
-      line-height: 1;
-    }
-    .section-lead {
-      color: var(--text-secondary);
-      font-size: var(--fs-body);
-      max-width: 480px;
-    }
-
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
-      perspective: 1200px;
-    }
-
-    /* 3D TILT CARD */
-    .tilt-card {
-      position: relative;
-      background: var(--bg-card);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      transform-style: preserve-3d;
-      transition: transform 0.15s ease-out, border-color 0.25s var(--ease-snappy), border-radius 0.3s var(--ease-snappy), box-shadow 0.25s var(--ease-snappy);
-      cursor: pointer;
-    }
-    .tilt-card:hover {
-      border-color: var(--accent-acid);
-      border-radius: 28px 8px 28px 8px; /* Border morphing */
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(223, 255, 0, 0.12);
-    }
-    .card-visual-wrap {
-      height: 280px;
-      position: relative;
-      overflow: hidden;
-      background: #08090C;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .card-bg-gradient {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at center, rgba(223, 255, 0, 0.08), transparent 70%);
-      opacity: 0.7;
-      transition: opacity 0.3s;
-    }
-    .tilt-card:hover .card-bg-gradient {
-      opacity: 1;
-    }
-    .card-car-svg {
-      width: 85%;
-      height: auto;
-      transform: translateZ(40px);
-      transition: transform 0.3s var(--ease-snappy);
-    }
-    .tilt-card:hover .card-car-svg {
-      transform: translateZ(60px) scale(1.05);
-    }
-    .card-badge-floating {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      background: rgba(8, 9, 12, 0.85);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-pill);
-      padding: 4px 10px;
-      font-family: var(--font-mono);
-      font-size: 10.5px;
-      font-weight: 700;
-      color: var(--accent-acid);
-      text-transform: uppercase;
-      z-index: 5;
-    }
-
-    .card-body-content {
-      padding: 24px;
-      transform: translateZ(25px);
-    }
-    .card-cat-tag {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-dim);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .card-title-txt {
-      font-family: var(--font-display);
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--text-primary);
-      margin: 4px 0 10px 0;
-      letter-spacing: -0.02em;
-    }
-    .card-desc-txt {
-      font-size: 13.5px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-      margin-bottom: 18px;
-    }
-    .card-specs-row {
-      display: flex;
-      justify-content: space-between;
-      border-top: 1px solid var(--border-hairline);
-      padding-top: 14px;
-      font-family: var(--font-mono);
-      font-size: 12px;
-    }
-    .card-specs-row span strong {
-      color: var(--accent-acid);
-    }
-
-    /* ==========================================================================
-       SUPERSONIC SNIPER YIELD PLAYGROUND (PHYSICAL WOW TRIGGER)
-       ========================================================================== */
-    .section-sniper-arena {
-      padding: 120px 0;
-      background: radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.04) 0%, transparent 60%), #08090C;
-      position: relative;
-      border-top: 1px solid var(--border-hairline);
-      border-bottom: 1px solid var(--border-hairline);
-      overflow: hidden;
-    }
-    #sniper-kinetic-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 20;
-    }
-    .sniper-arena-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 56px;
-      align-items: center;
-      position: relative;
-      z-index: 25;
-    }
-
-    .sniper-badge-pulse {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 5px 14px;
-      background: rgba(0, 240, 255, 0.08);
-      border: 1px solid rgba(0, 240, 255, 0.3);
-      border-radius: var(--radius-pill);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--accent-mach);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 18px;
-    }
-    .pulse-dot-cyan {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent-mach);
-      box-shadow: 0 0 10px var(--accent-mach);
-      animation: pulseGlowCyan 1.6s infinite;
-    }
-    @keyframes pulseGlowCyan {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.5); opacity: 0.4; }
-    }
-
-    .btn-fire-sniper {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      padding: 16px 36px;
-      border-radius: var(--radius-pill);
-      background: var(--accent-mach);
-      color: #08090C;
-      font-family: var(--font-body);
-      font-size: 15px;
-      font-weight: 800;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 0 30px var(--accent-mach-glow);
-      transition: all 0.22s var(--ease-snappy);
-    }
-    .btn-fire-sniper:hover {
-      background: #40F5FF;
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 0 45px rgba(0, 240, 255, 0.5);
-    }
-    .btn-fire-sniper:active {
-      transform: scale(0.98);
-    }
-
-    /* PHYSICAL TICKET TARGET WITH 3D RECOIL */
-    .sniper-ticket-sheet {
-      position: relative;
-      background: #FFFFFF;
-      color: #111317;
-      border-radius: 18px;
-      padding: 34px;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
-      transform-origin: center center;
-      user-select: none;
-    }
-    .ticket-sheet-recoil {
-      animation: sniperPaperRecoil3D 0.58s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    @keyframes sniperPaperRecoil3D {
-      0% { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0); }
-      16% { transform: perspective(1000px) rotateX(-5.8deg) rotateY(3.4deg) translateZ(-26px) scale(0.98); }
-      38% { transform: perspective(1000px) rotateX(2.6deg) rotateY(-1.6deg) translateZ(8px); }
-      68% { transform: perspective(1000px) rotateX(-0.8deg) rotateY(0.4deg) translateZ(-2px); }
-      100% { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0); }
-    }
-
-    /* MASSIVE PUNCTURE BULLET HOLE */
-    .ticket-bullet-hole {
-      position: absolute;
-      top: 24px;
-      right: 28px;
-      width: 130px;
-      height: 130px;
-      pointer-events: none;
-      z-index: 40;
-      transform: scale(0.001);
-      opacity: 0;
-      transform-origin: center center;
-    }
-    .ticket-bullet-hole.hole-blown {
-      animation: punctureRip 0.45s cubic-bezier(0.12, 0.85, 0.28, 1.2) forwards;
-    }
-    @keyframes punctureRip {
-      0% { opacity: 0; transform: scale(0.01) rotate(14deg); }
-      22% { opacity: 1; transform: scale(1.22) rotate(-5deg); filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.3)); }
-      48% { transform: scale(0.93) rotate(2deg); }
-      100% { opacity: 1; transform: scale(1) rotate(0deg); filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25)); }
-    }
-
-    /* ==========================================================================
-       INTERACTIVE ROUTE EXPLORER (MOMENTUM HORIZONTAL SCROLL)
-       ========================================================================== */
-    .section-routes-explorer {
-      padding: 100px 0;
-      position: relative;
-    }
-    .horizontal-scroll-deck {
-      display: flex;
-      gap: 22px;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      padding: 20px 0 35px 0;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: thin;
-      scrollbar-color: var(--accent-acid) var(--bg-card);
-    }
-    .route-snap-card {
-      flex: 0 0 360px;
-      scroll-snap-align: start;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.2s var(--ease-snappy);
-    }
-    .route-snap-card:hover {
-      border-color: var(--accent-acid);
-      transform: translateY(-4px);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
-    }
-    .route-time-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      background: rgba(223, 255, 0, 0.08);
-      border-radius: var(--radius-pill);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--accent-acid);
-    }
-    .route-points-headline {
-      font-family: var(--font-display);
-      font-size: 26px;
-      font-weight: 800;
-      color: var(--text-primary);
-      margin: 14px 0 6px 0;
-      line-height: 1.1;
-    }
-    .route-price-tag {
-      font-family: var(--font-display);
-      font-size: 32px;
-      font-weight: 900;
-      color: var(--text-primary);
-      letter-spacing: -0.03em;
-    }
-    .route-price-tag span {
-      font-size: 14px;
-      font-family: var(--font-mono);
-      color: var(--text-dim);
-      font-weight: 600;
-      margin-left: 4px;
-    }
-
-    /* ==========================================================================
-       FOOTER (SPEED MONOLITH & LIVE CLOCK)
-       ========================================================================== */
-    .speed-footer {
-      background: #050608;
-      border-top: 1px solid var(--border-hairline);
-      padding: 90px 0 40px 0;
-      position: relative;
-    }
-    .footer-huge-mark {
-      font-family: var(--font-display);
-      font-size: clamp(4rem, 14vw, 15rem);
-      font-weight: 900;
-      line-height: 0.8;
-      letter-spacing: -0.06em;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.03);
-      user-select: none;
-      pointer-events: none;
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    /* RESPONSIVE BREAKPOINTS */
-    @media (max-width: 1024px) {
-      .hero-split-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-      .kinetic-3d-card {
-        height: 420px;
-      }
-      .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .sniper-arena-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-      .ribbon-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    @media (max-width: 680px) {
-      .capsule-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-      .gallery-grid {
-        grid-template-columns: 1fr;
-      }
-      .ribbon-grid {
-        grid-template-columns: 1fr;
-      }
-      .speed-dock {
-        width: 100%;
-        justify-content: space-between;
-      }
-      .nav-links {
-        display: none;
-      }
+      #cursor-spotlight { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- SVG NOISE GRAIN -->
-  <div class="noise-overlay" aria-hidden="true"></div>
+  <!-- Ambient Cursor Spotlight (Subtle Warm Diffusion) -->
+  <div id="cursor-spotlight"></div>
 
-  <!-- CURSOR SPOTLIGHT EFFECT -->
-  <div class="cursor-spotlight" id="cursor-spotlight" aria-hidden="true"></div>
+  <!-- =========================================================================
+       SITE HEADER & NAVIGATION
+       ========================================================================= -->
+  <header class="site-header">
+    <div class="container">
+      <div class="nav-inner">
+        
+        <!-- Brand -->
+        <a href="index.html" class="brand-group">
+          <div class="brand-mark">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/>
+              <circle cx="7" cy="17" r="2"/>
+              <path d="M9 17h6"/>
+              <circle cx="17" cy="17" r="2"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">Bus<span>Liner</span></span>
+            <span class="brand-sub">Межгородская линия</span>
+          </div>
+        </a>
 
-  <!-- TOP SPEED DOCK (NAVBAR) -->
-  <header class="speed-dock-wrap">
-    <nav class="speed-dock" aria-label="Main Navigation">
-      <a href="#" class="brand-mark" title="BusLiner Home">
-        <div class="brand-logo-badge">B</div>
-        <div class="brand-name">BUS<span>LINER</span></div>
-      </a>
+        <!-- Desktop Navigation -->
+        <ul class="nav-links">
+          <li><a href="#hero" class="active">Поиск рейса</a></li>
+          <li><a href="#section-fleet">Флагманский флот</a></li>
+          <li><a href="#section-sniper">Снайпер билетов</a></li>
+          <li><a href="#section-schedule">Расписание</a></li>
+          <li><a href="busliner-partners.html">Перевозчикам</a></li>
+        </ul>
 
-      <ul class="nav-links">
-        <li><a href="#section-schedule" class="nav-item-link">Рейсы</a></li>
-        <li><a href="#section-fleet" class="nav-item-link">Флот 3D</a></li>
-        <li><a href="#section-sniper" class="nav-item-link">Снайпер</a></li>
-        <li><a href="carrier-dashboard.html" class="nav-item-link">Перевозчикам</a></li>
-        <li><a href="driver-terminal.html" class="nav-item-link">Терминал</a></li>
-      </ul>
+        <!-- Right Action Controls -->
+        <div class="nav-actions">
+          <button id="btn-audio-toggle" class="btn-audio-toggle active" onclick="toggleSoundSystem()" title="Звуковой отклик интерфейса">
+            <span class="audio-wave-bars">
+              <span class="audio-bar"></span>
+              <span class="audio-bar"></span>
+              <span class="audio-bar"></span>
+            </span>
+            <span>Звук ВКЛ</span>
+          </button>
+          
+          <a href="driver-terminal.html" class="btn-primary-cta">
+            <span>Терминал посадки</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
 
-      <div class="telemetry-status-pill">
-        <span class="pulse-dot-acid"></span>
-        <span id="telemetry-clock">07:24:12</span>
       </div>
-
-      <button type="button" class="btn-audio-toggle" id="btn-audio-toggle" title="Включить тактильный звук" onclick="toggleSoundSystem()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-      </button>
-
-      <a href="#section-schedule" class="dock-cta-btn">
-        <span>Билеты</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </a>
-    </nav>
+    </div>
   </header>
 
   <!-- =========================================================================
-       HERO: CINEMATIC SPEED SPLIT
+       HERO SECTION: EDITORIAL SPLIT + 3D CABIN & SEAT TWIN
        ========================================================================= -->
   <section class="hero-section" id="hero">
     <div class="container">
-      <div class="hero-split-grid">
+      <div class="hero-grid">
         
-        <!-- LEFT: EDITORIAL COPY & SEARCH CAPSULE -->
-        <div>
-          <div class="hero-eyebrow">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
-            Скоростная мобильность // 120 km/h
+        <!-- Left Column: Emotional Value & Search -->
+        <div class="hero-content">
+          
+          <div class="hero-eyebrow-pill">
+            <span class="pulse-dot"></span>
+            <span>Официальная линия межгородских сообщений</span>
           </div>
 
-          <h1 class="hero-headline">
-            Kinetic Intercity <em>Mobility</em>
+          <h1 class="hero-title">
+            Межгородские поездки<br>
+            <em>без звонков и суеты.</em>
           </h1>
 
           <p class="hero-lead">
-            Межгородские рейсы уровня бизнес-авиации. Выбор кресла в честном 3D-салоне, моментальная оплата в 1 тап и роботизированный снайпер отказных билетов.
+            Бронируйте персональное анатомическое кресло в интерактивном 3D-салоне. Автоматический перехват отказных мест роботом-снайпером за 0.38 секунды. Бизнес-класс Mercedes-Benz Sprinter 519 CDI.
           </p>
 
-          <!-- KINETIC SEARCH CAPSULE -->
-          <div class="search-capsule">
-            <div class="capsule-grid">
+          <!-- Interactive Search Capsule -->
+          <div class="search-capsule-card">
+            
+            <div class="search-inputs-row">
               
+              <!-- From -->
               <div class="input-cell">
-                <span class="cell-label">Откуда</span>
-                <input type="text" id="hero-from" class="cell-input" value="Гомель, Автовокзал" placeholder="Город">
+                <label>Откуда</label>
+                <input type="text" id="hero-from" value="Минск (Центральный АВ)" placeholder="Город отправления">
               </div>
 
-              <button type="button" class="swap-btn" id="hero-swap-btn" title="Поменять местами" onclick="swapHeroCities()">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"/></svg>
+              <!-- Swap Button -->
+              <button class="btn-swap-cities" onclick="swapHeroCities()" title="Поменять города местами" aria-label="Поменять местами">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12M17 20l4-4M17 20l-4-4"/>
+                </svg>
               </button>
 
+              <!-- To -->
               <div class="input-cell">
-                <span class="cell-label">Куда</span>
-                <input type="text" id="hero-to" class="cell-input" value="Минск, Центральный" placeholder="Куда">
+                <label>Куда</label>
+                <input type="text" id="hero-to" value="Вильнюс (Центральный АВ)" placeholder="Город прибытия">
               </div>
 
+              <!-- Date -->
               <div class="input-cell">
-                <span class="cell-label">Дата</span>
-                <input type="date" id="hero-date" class="cell-input" value="2026-10-24">
+                <label>Дата</label>
+                <input type="text" id="hero-date" value="Сегодня, 24 окт" placeholder="Дата">
               </div>
-
-              <button type="button" class="btn-capsule-find" onclick="triggerHeroSearch()">
-                <span>Найти рейс</span>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </button>
 
             </div>
 
-            <!-- PREDICTIVE INTENT PILLS -->
-            <div class="predictive-intent-bar">
-              <span style="font-size: 11px; color: var(--text-dim); font-weight: 600;">Пресеты:</span>
-              <button type="button" class="pill-intent" onclick="setHeroPreset('Гомель, Автовокзал', 'Минск, Центральный')">
-                Гомель &rarr; Минск <strong>Сегодня 18:20</strong>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <!-- Intent Pills -->
+              <div class="route-intent-pills">
+                <span class="intent-label">Популярные направления:</span>
+                <button class="pill-intent" onclick="setHeroPreset('Минск', 'Вильнюс')">
+                  Минск &harr; Вильнюс <span class="pill-price">85 BYN</span>
+                </button>
+                <button class="pill-intent" onclick="setHeroPreset('Минск', 'Гродно')">
+                  Минск &harr; Гродно <span class="pill-price">28 BYN</span>
+                </button>
+                <button class="pill-intent" onclick="setHeroPreset('Минск', 'Брест')">
+                  Минск &harr; Брест <span class="pill-price">32 BYN</span>
+                </button>
+                <button class="pill-intent" onclick="setHeroPreset('Гомель', 'Минск')">
+                  Гомель &harr; Минск <span class="pill-price">28 BYN</span>
+                </button>
+              </div>
+
+              <!-- Search CTA -->
+              <button class="btn-search-submit" onclick="triggerHeroSearch()">
+                <span>Найти рейсы</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
               </button>
-              <button type="button" class="pill-intent" onclick="setHeroPreset('Минск, Центральный', 'Гродно, Автовокзал')">
-                Минск &rarr; Гродно <strong>Завтра 07:30</strong>
-              </button>
-              <button type="button" class="pill-intent" onclick="setHeroPreset('Минск, Центральный', 'Вильнюс, Аэропорт')">
-                Минск &rarr; Вильнюс <strong>Каждые 2ч</strong>
-              </button>
+            </div>
+
+          </div>
+
+          <!-- Trust Proof Metrics -->
+          <div class="trust-metrics-strip">
+            <div class="metric-item">
+              <span class="metric-value">4.98 / 5.0</span>
+              <span class="metric-desc">Рейтинг чистоты и плавности хода по отзывам 12 400+ пассажиров</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-value">19 мест VIP</span>
+              <span class="metric-desc">Увеличенное расстояние между рядами (86 см), никаких тесных рядов</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-value">100% возврат</span>
+              <span class="metric-desc">Мгновенный возврат средств без штрафов за 2 часа до отправления</span>
             </div>
           </div>
+
         </div>
 
-        <!-- RIGHT: INTERACTIVE 3D OBJECT VIEWER (LANDO HELMET/COCKPIT STYLE) -->
-        <div>
-          <div class="kinetic-3d-card" id="helmet-card-container">
-            <canvas id="helmet-webgl-canvas"></canvas>
+        <!-- Right Column: Interactive 3D Luxury Cabin Twin Viewer -->
+        <div class="hero-stage">
+          <div class="cabin-3d-card" id="cabin-card-container">
+            
+            <!-- Three.js Canvas -->
+            <canvas id="cabin-webgl-canvas"></canvas>
 
-            <div class="card-hud-overlay">
-              <div>
-                <div class="hud-title-tag">AERODYNAMIC TELEMETRY // 3D MODEL</div>
-                <div class="hud-sub-tag">Mercedes-Benz Sprinter 519 CDI Long</div>
+            <!-- Card Header Overlay -->
+            <div class="cabin-card-header">
+              <div class="cabin-tag">
+                <span class="pulse-dot"></span>
+                <span>3D CABIN TWIN &bull; SPRINTER 519</span>
               </div>
-              <div class="hud-badge-360">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                360&deg; ORBIT
+              <div class="cabin-rotate-hint">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                </svg>
+                <span>360&deg; вращение курсором</span>
               </div>
             </div>
 
-            <div class="card-hud-bottom">
-              <div class="hud-specs-row">
-                <div class="spec-item">
-                  <span class="spec-num">190</span>
-                  <span class="spec-lbl">Л.С. BI-TURBO</span>
-                </div>
-                <div class="spec-item">
-                  <span class="spec-num">19</span>
-                  <span class="spec-lbl">VIP КРЕСЕЛ</span>
-                </div>
-                <div class="spec-item">
-                  <span class="spec-num">220V</span>
-                  <span class="spec-lbl">У КАЖДОГО</span>
-                </div>
+            <!-- Floating 3D Hotspot Tags -->
+            <div class="cabin-hotspots-layer">
+              <div class="hotspot-bubble" style="top: 26%; left: 16%;">
+                <span>Кожа Nappa &bull; Наклон 135&deg;</span>
               </div>
+              <div class="hotspot-bubble" style="top: 54%; right: 14%; animation-delay: 1.2s;">
+                <span>Розетка 220V + USB-C PD</span>
+              </div>
+              <div class="hotspot-bubble" style="bottom: 24%; left: 24%; animation-delay: 0.6s;">
+                <span>Индивидуальный обдув 21&deg;C</span>
+              </div>
+            </div>
 
-              <a href="seat-picker-3d-demo.html" class="pill-intent" style="background: var(--accent-acid); color: #08090C; font-weight: 800; border: none; pointer-events: auto;">
-                Салон 3D &rarr;
+            <!-- Card Footer Overlay -->
+            <div class="cabin-card-footer">
+              <div class="cabin-spec-sheet">
+                <div class="cabin-spec-title">VIP Капитанское кресло № 04A</div>
+                <div class="cabin-spec-detail">Одиночный ряд у окна &bull; Панорамный обзор &bull; Столик</div>
+              </div>
+              <a href="seat-picker-3d-demo.html" class="btn-primary-cta" style="pointer-events: auto; font-size: 13px; padding: 8px 16px;">
+                <span>Выбрать в 3D</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
               </a>
             </div>
+
           </div>
         </div>
 
@@ -1166,126 +1803,210 @@
   </section>
 
   <!-- =========================================================================
-       TELEMETRY RIBBON (TICKER)
+       PILLARS OF QUIET LUXURY
        ========================================================================= -->
-  <section class="telemetry-ribbon">
-    <div class="container">
-      <div class="ribbon-grid">
-        
-        <div class="ticker-stat-block">
-          <div class="ticker-val">0.38<span>сек</span></div>
-          <div class="ticker-desc">Скорость авто-перехвата отказного билета Снайпером</div>
-        </div>
-
-        <div class="ticker-stat-block">
-          <div class="ticker-val">120<span>км/ч</span></div>
-          <div class="ticker-desc">Крейсерская скорость Sprinter на магистралях M1 / E28</div>
-        </div>
-
-        <div class="ticker-stat-block">
-          <div class="ticker-val">99.2<span>%</span></div>
-          <div class="ticker-desc">Индекс пунктуальности On-Time прибытия на платформу</div>
-        </div>
-
-        <div class="ticker-stat-block">
-          <div class="ticker-val">100<span>%</span></div>
-          <div class="ticker-desc">Гарантия посадки при онлайн-бронировании без звонков</div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- =========================================================================
-       IMMERSIVE FLEET LIVERY GALLERY (3D TILT CARDS)
-       ========================================================================= -->
-  <section class="section-gallery" id="section-fleet">
+  <section class="section-pillars">
     <div class="container">
       
-      <div class="section-header-block">
-        <div>
-          <div class="section-tag">AERODYNAMIC FLEET // GRADE A</div>
-          <h2 class="section-title">Флот и конфигурации</h2>
-        </div>
+      <div>
+        <div class="section-eyebrow">Философия тихого люкса</div>
+        <h2 class="section-title">Комфорт, продуманный <em>до миллиметра.</em></h2>
         <p class="section-lead">
-          Каждый борт оборудован индивидуальным климат-контролем, анатомическими сиденьями и бесшовным Wi-Fi на всем маршруте.
+          Мы исключили всё, что раздражает в междугородних поездках: тесноту, хамство, духоту и неопределенность с местами.
         </p>
       </div>
 
-      <div class="gallery-grid" id="tilt-gallery">
+      <div class="pillars-grid">
         
-        <!-- CARD 1 -->
-        <div class="tilt-card" data-tilt>
-          <div class="card-visual-wrap">
-            <span class="card-badge-floating">FLIGHT LINE // M1</span>
-            <div class="card-bg-gradient"></div>
-            <!-- STYLIZED CAR SILHOUETTE SVG -->
-            <svg class="card-car-svg" viewBox="0 0 320 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="20" y="30" width="280" height="70" rx="14" fill="#141724" stroke="#DFFF00" stroke-width="2"/>
-              <path d="M40 40H110L140 70H40V40Z" fill="#DFFF00" fill-opacity="0.2"/>
-              <circle cx="75" cy="100" r="18" fill="#08090C" stroke="#DFFF00" stroke-width="3"/>
-              <circle cx="245" cy="100" r="18" fill="#08090C" stroke="#DFFF00" stroke-width="3"/>
-              <line x1="160" y1="40" x2="280" y2="40" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="2"/>
+        <!-- Pillar 1 -->
+        <div class="pillar-card">
+          <div class="pillar-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+              <line x1="9" y1="4" x2="9" y2="20"></line>
+              <line x1="15" y1="4" x2="15" y2="20"></line>
             </svg>
           </div>
-          <div class="card-body-content">
-            <div class="card-cat-tag">Mercedes-Benz Sprinter 519</div>
-            <h3 class="card-title-txt">Business Shuttler 19</h3>
-            <p class="card-desc-txt">Салон 2+1, анатомические кресла с боковой поддержкой, персональные USB-C и розетки 220V под каждым местом.</p>
-            <div class="card-specs-row">
-              <span>Мест: <strong>19</strong></span>
-              <span>Wi-Fi: <strong>5G Mesh</strong></span>
-              <span>Багаж: <strong>XL локер</strong></span>
+          <h3 class="pillar-title">Гарантированное кресло</h3>
+          <p class="pillar-desc">
+            Никаких штурмов салона «кто первый занял». Ваше место закреплено в цифровом билете при покупке.
+          </p>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="pillar-card">
+          <div class="pillar-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
+          <h3 class="pillar-title">Розетка 220V и 5G Wi-Fi</h3>
+          <p class="pillar-desc">
+            Работайте в ноутбуке на протяжении всего рейса. Каждое место оснащено евророзеткой 220V и USB-портом быстрой зарядки.
+          </p>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="pillar-card">
+          <div class="pillar-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="m4.93 4.93 4.24 4.24"></path>
+              <path d="m14.83 9.17 4.24-4.24"></path>
+              <path d="m14.83 14.83 4.24 4.24"></path>
+              <path d="m9.17 14.83-4.24 4.24"></path>
+            </svg>
+          </div>
+          <h3 class="pillar-title">Тихий салон (No Calls)</h3>
+          <p class="pillar-desc">
+            В салоне поддерживается мягкая атмосфера отдыха. Запрещены громкие телефонные разговоры и просмотр видео без наушников.
+          </p>
+        </div>
+
+        <!-- Pillar 4 -->
+        <div class="pillar-card">
+          <div class="pillar-icon-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <h3 class="pillar-title">Снайпер билетов</h3>
+          <p class="pillar-desc">
+            Если все места выкуплены, алгоритм перехватит отказной билет в базу за 0.38 секунды и уведомит вас в Telegram.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       VIP FLEET GALLERY (3D TILT CARDS)
+       ========================================================================= -->
+  <section class="section-fleet" id="section-fleet">
+    <div class="container">
+      
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px;">
+        <div>
+          <div class="section-eyebrow">Флагманский парк</div>
+          <h2 class="section-title">Классы межгородского <em>комфорта.</em></h2>
+        </div>
+        <p class="section-lead">
+          Только сертифицированные микроавтобусы Mercedes-Benz Sprinter 519 CDI не старше 3 лет. Пневматическая подвеска и климат Webasto.
+        </p>
+      </div>
+
+      <div class="fleet-grid">
+        
+        <!-- Fleet Card 1 -->
+        <div class="tilt-card" data-tilt>
+          <div class="fleet-card-top">
+            <span class="fleet-class-badge badge-executive">ФЛАГМАН &bull; 19 МЕСТ</span>
+            <h3 class="fleet-name">Sprinter 519 CDI Executive</h3>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5;">
+              Премиальная отделка кожей Nappa. Одиночные капитанские кресла у окна, увеличенный шаг сидений 86 см.
+            </p>
+
+            <ul class="fleet-features-list">
+              <li class="fleet-feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Индивидуальные розетки 220V + Type-C</span>
+              </li>
+              <li class="fleet-feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Багаж до 25 кг включен в стоимость</span>
+              </li>
+              <li class="fleet-feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Плавный ход на пневмоподушках</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="fleet-card-bottom">
+            <div class="fleet-price-block">
+              <span class="fleet-price-label">Билет от</span>
+              <span class="fleet-price-value">28.00 BYN</span>
             </div>
+            <a href="seat-picker-3d-demo.html" class="btn-card-action">
+              <span>Выбрать место</span>
+              &rarr;
+            </a>
           </div>
         </div>
 
-        <!-- CARD 2 -->
+        <!-- Fleet Card 2 -->
         <div class="tilt-card" data-tilt>
-          <div class="card-visual-wrap">
-            <span class="card-badge-floating">EUROPEAN EXPRESS // E28</span>
-            <div class="card-bg-gradient"></div>
-            <svg class="card-car-svg" viewBox="0 0 320 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="20" y="30" width="280" height="70" rx="14" fill="#141724" stroke="#00F0FF" stroke-width="2"/>
-              <path d="M40 40H110L140 70H40V40Z" fill="#00F0FF" fill-opacity="0.2"/>
-              <circle cx="75" cy="100" r="18" fill="#08090C" stroke="#00F0FF" stroke-width="3"/>
-              <circle cx="245" cy="100" r="18" fill="#08090C" stroke="#00F0FF" stroke-width="3"/>
-              <line x1="160" y1="40" x2="280" y2="40" stroke="#00F0FF" stroke-opacity="0.4" stroke-width="2"/>
-            </svg>
+          <div class="fleet-card-top">
+            <span class="fleet-class-badge badge-express">AIRPORT EXPRESS &bull; БЫСТРЫЙ КОРИДОР</span>
+            <h3 class="fleet-name">Sprinter Airport Shuttle</h3>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5;">
+              Прямой трансфер в аэропорты Вильнюса (VNO) и Варшавы (WAW/WMI). Выделенный пограничный коридор.
+            </p>
+
+            <ul class="fleet-features-list">
+              <li class="fleet-feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Фиксированное расписание под авиарейсы</span>
+              </li>
+              <li class="fleet-feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Увеличенный грузовой отсек для чемоданов</span>
+              </li>
+              <li class="fleet-feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Помощь водителя с погрузкой багажа</span>
+              </li>
+            </ul>
           </div>
-          <div class="card-body-content">
-            <div class="card-cat-tag">Mercedes-Benz Sprinter ExtraLong</div>
-            <h3 class="card-title-txt">Airport Runner // EU</h3>
-            <p class="card-desc-txt">Экспресс-рейсы в Вильнюс и Варшаву. Выделенный коридор прохождения границы, расширенная колесная база.</p>
-            <div class="card-specs-row">
-              <span>Мест: <strong>16 VIP</strong></span>
-              <span>Климат: <strong>Dual-Zone</strong></span>
-              <span>КПП: <strong>9G-Tronic</strong></span>
+
+          <div class="fleet-card-bottom">
+            <div class="fleet-price-block">
+              <span class="fleet-price-label">Билет от</span>
+              <span class="fleet-price-value">85.00 BYN</span>
             </div>
+            <a href="seat-picker-3d-demo.html" class="btn-card-action">
+              <span>Выбрать место</span>
+              &rarr;
+            </a>
           </div>
         </div>
 
-        <!-- CARD 3 -->
+        <!-- Fleet Card 3 -->
         <div class="tilt-card" data-tilt>
-          <div class="card-visual-wrap">
-            <span class="card-badge-floating">NIGHT SLEEPER</span>
-            <div class="card-bg-gradient"></div>
-            <svg class="card-car-svg" viewBox="0 0 320 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="20" y="30" width="280" height="70" rx="14" fill="#141724" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="2"/>
-              <path d="M40 40H110L140 70H40V40Z" fill="#FFFFFF" fill-opacity="0.1"/>
-              <circle cx="75" cy="100" r="18" fill="#08090C" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="3"/>
-              <circle cx="245" cy="100" r="18" fill="#08090C" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="3"/>
-            </svg>
+          <div class="fleet-card-top">
+            <span class="fleet-class-badge badge-sleeper">NIGHT LOUNGE &bull; НОЧНЫЕ РЕЙСЫ</span>
+            <h3 class="fleet-name">Sprinter Night Sleeper</h3>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5;">
+              Глубокий наклон анатомических кресел до 140&deg;. Набор для сна (маска, беруши, мягкий плед) выдается каждому гостю.
+            </p>
+
+            <ul class="fleet-features-list">
+              <li class="fleet-feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Приглушенный теплый свет 2700K</span>
+              </li>
+              <li class="fleet-feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Бутилированная артезианская вода</span>
+              </li>
+              <li class="fleet-feature-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Бесшумный автономный обогрев Webasto</span>
+              </li>
+            </ul>
           </div>
-          <div class="card-body-content">
-            <div class="card-cat-tag">Nightliner Configuration</div>
-            <h3 class="card-title-txt">Quiet Coach // Ночной</h3>
-            <p class="card-desc-txt">Акустическая изоляция салона, приглушенный ночной свет 2700K, мягкий ход подвески для сна в пути.</p>
-            <div class="card-specs-row">
-              <span>Мест: <strong>15</strong></span>
-              <span>Звук: <strong>Шумоизоляция</strong></span>
-              <span>Шторки: <strong>Blackout</strong></span>
+
+          <div class="fleet-card-bottom">
+            <div class="fleet-price-block">
+              <span class="fleet-price-label">Билет от</span>
+              <span class="fleet-price-value">34.00 BYN</span>
             </div>
+            <a href="seat-picker-3d-demo.html" class="btn-card-action">
+              <span>Выбрать место</span>
+              &rarr;
+            </a>
           </div>
         </div>
 
@@ -1295,73 +2016,114 @@
   </section>
 
   <!-- =========================================================================
-       SUPERSONIC SNIPER YIELD ARENA (PHYSICAL WOW TRIGGER)
+       SUPERSONIC TICKET SNIPER ARENA (WOW-EFFECT PRESERVED & ELEVATED)
        ========================================================================= -->
   <section class="section-sniper-arena" id="section-sniper">
-    <!-- BALLISTICS CANVAS WITH SUPERSONIC TRACER -->
-    <canvas id="sniper-kinetic-canvas"></canvas>
+    <div class="sniper-grid-bg"></div>
+    <div class="sniper-ambient-glow"></div>
 
     <div class="container">
-      <div class="sniper-arena-grid">
+      <div class="sniper-split">
         
+        <!-- Left Column: Story & Trigger -->
         <div>
-          <div class="sniper-badge-pulse">
-            <span class="pulse-dot-cyan"></span>
-            ROBOTIC YIELD ENGINE // 0.38S
+          <div class="sniper-header-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+            <span>ТЕХНОЛОГИЯ АВТОВЫКУПА &bull; СНАЙПЕР</span>
           </div>
 
-          <h2 style="font-family: var(--font-display); font-size: var(--fs-h1); font-weight: 900; line-height: 0.95; text-transform: uppercase; margin-bottom: 20px;">
-            Все билеты раскуплены?<br><span style="color: var(--accent-mach);">Снайпер заберет твой.</span>
+          <h2 class="sniper-title">
+            Билетов нет?<br>
+            <em>Снайпер выкупит отказной.</em>
           </h2>
 
-          <p style="color: var(--text-secondary); font-size: var(--fs-body); line-height: 1.6; margin-bottom: 32px;">
-            До 15% пассажиров сдают билеты за пару часов до отправления. Пока другие обновляют страницу вручную, алгоритмический Снайпер выкупает освободившееся место за доли секунды.
+          <p class="sniper-lead">
+            В пятницу вечером и перед праздниками все рейсы раскупаются за недели. Когда кто-то сдает билет, наш робот-снайпер перехватывает его за 0.38 секунды до появления в открытой продаже.
           </p>
 
-          <button type="button" class="btn-fire-sniper" id="btn-fire-sniper" onclick="fireSupersonicSniperShot()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
-            <span>ТЕСТ ВЫСТРЕЛА СНАЙПЕРА</span>
+          <div class="sniper-specs-row">
+            <div class="sniper-spec-box">
+              <span class="sniper-spec-val">0.38 с</span>
+              <span class="sniper-spec-lbl">Скорость реакции на возврат</span>
+            </div>
+            <div class="sniper-spec-box">
+              <span class="sniper-spec-val">99.4%</span>
+              <span class="sniper-spec-lbl">Успешных перехватов</span>
+            </div>
+            <div class="sniper-spec-box">
+              <span class="sniper-spec-val">24 / 7</span>
+              <span class="sniper-spec-lbl">Непрерывный мониторинг</span>
+            </div>
+          </div>
+
+          <button class="btn-fire-sniper" onclick="fireSupersonicSniperShot()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>Смоделировать выкуп снайпером (0.38с)</span>
           </button>
         </div>
 
-        <!-- PHYSICAL PAPER TICKET WITH 3D RECOIL & BULLET HOLE -->
-        <div>
-          <div class="sniper-ticket-sheet" id="sniper-ticket-sheet">
+        <!-- Right Column: Interactive Physical Ticket with Supersonic Ballistics -->
+        <div class="sniper-canvas-wrapper">
+          
+          <!-- Ballistic Mach Tracer Canvas -->
+          <canvas id="sniper-kinetic-canvas"></canvas>
+
+          <!-- Physical Paper Ticket -->
+          <div class="physical-ticket-sheet" id="sniper-ticket-sheet">
             
-            <!-- THE PUNCTURE BULLET HOLE -->
-            <div class="ticket-bullet-hole" id="ticket-bullet-hole">
-              <svg viewBox="0 0 140 140" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="70" cy="70" r="28" fill="#08090C"/>
-                <path d="M70 42L73 25L78 38L92 20L88 38L108 30L96 46L116 52L98 62L120 74L98 80L112 96L92 94L98 114L84 100L76 118L70 98L62 118L56 100L42 112L46 94L28 94L40 80L20 74L40 62L24 50L44 46L32 30L52 38L48 20L62 38L70 42Z" fill="#141724" stroke="#DFFF00" stroke-width="1.5"/>
-              </svg>
+            <div class="ticket-security-strip">
+              <span class="ticket-series-num">BL-SECURITY #089-VIP</span>
+              <span class="ticket-state-tag" id="ticket-state-badge">ОЖИДАНИЕ ВЫКУПА</span>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #E2E2DC; padding-bottom: 18px; margin-bottom: 18px;">
-              <div>
-                <span style="font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase;">ЭЛЕКТРОННЫЙ БИЛЕТ // PNR #BL-4029</span>
-                <div style="font-family: var(--font-display); font-size: 24px; font-weight: 900; color: #08090C;">Минск &rarr; Гродно</div>
+            <div class="ticket-main-info">
+              <div style="font-size: 11px; text-transform: uppercase; color: var(--text-dim); font-weight: 700; letter-spacing: 0.05em;">
+                ЭЛЕКТРОННЫЙ ПОСАДОЧНЫЙ ТАЛОН
               </div>
-              <div id="ticket-state-badge" style="background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; padding: 4px 10px; border-radius: 9999px; font-family: var(--font-mono); font-size: 11px; font-weight: 700;">
-                АНШЛАГ (0 МЕСТ)
+              <h3 class="ticket-route-headline">Минск &rarr; Вильнюс</h3>
+              <p style="font-size: 13px; color: var(--text-muted);">
+                Отправление: Сегодня, 18:45 &bull; Центральный Автовокзал
+              </p>
+
+              <div class="ticket-seat-display">
+                <div>
+                  <div class="ticket-seat-label">Место в салоне</div>
+                  <div style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Капитанский ряд у окна</div>
+                </div>
+                <div class="ticket-seat-id">04A</div>
+              </div>
+
+              <div style="font-size: 12px; color: var(--text-dim); line-height: 1.4;" id="ticket-note-txt">
+                Рейс полностью заполнен. Снайпер активирован в режиме готовности.
               </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 13px; margin-bottom: 20px;">
-              <div>
-                <div style="color: #64748B; font-size: 11px;">ОТПРАВЛЕНИЕ</div>
-                <div style="font-weight: 700; color: #08090C;">Сегодня, 18:20 (Пл. 3)</div>
+            <div class="ticket-footer-barcode">
+              <div class="barcode-lines">
+                <span class="b-bar thick"></span>
+                <span class="b-bar thin"></span>
+                <span class="b-bar"></span>
+                <span class="b-bar thick"></span>
+                <span class="b-bar thin"></span>
+                <span class="b-bar"></span>
+                <span class="b-bar thick"></span>
+                <span class="b-bar thin"></span>
+                <span class="b-bar"></span>
+                <span class="b-bar thick"></span>
               </div>
-              <div>
-                <div style="color: #64748B; font-size: 11px;">КЛАСС ОБСЛУЖИВАНИЯ</div>
-                <div style="font-weight: 700; color: #08090C;">Sprinter VIP 19 (Место 4)</div>
+              <div style="text-align: right;">
+                <div style="font-size: 10px; color: var(--text-dim); font-family: var(--font-mono);">ТАРИФ EXECUTIVE</div>
+                <div style="font-family: var(--font-mono); font-size: 16px; font-weight: 800; color: var(--accent-navy);">85.00 BYN</div>
               </div>
             </div>
 
-            <div style="background: #F8FAFC; border: 1px solid #E2E2DC; border-radius: 10px; padding: 12px 16px; font-size: 12.5px; color: #475569;" id="ticket-note-txt">
-              <strong>Снайпер в режиме ожидания:</strong> билет будет выкуплен при первом возврате.
+            <!-- Bullet Hole Overlay -->
+            <div class="ticket-bullet-target" id="ticket-bullet-hole">
+              <div class="procedural-hole-burn"></div>
             </div>
 
           </div>
+
         </div>
 
       </div>
@@ -1369,95 +2131,95 @@
   </section>
 
   <!-- =========================================================================
-       INTERACTIVE ROUTE EXPLORER (MOMENTUM HORIZONTAL SCROLL)
+       SCHEDULE & DIRECT INTERCITY LINES
        ========================================================================= -->
   <section class="section-routes-explorer" id="section-schedule">
     <div class="container">
       
-      <div class="section-header-block">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px;">
         <div>
-          <div class="section-tag">EXPRESS LINES // TIMETABLE</div>
-          <h2 class="section-title">Магистральные маршруты</h2>
+          <div class="section-eyebrow">Магистральные линии</div>
+          <h2 class="section-title">Регулярные рейсы <em>по расписанию.</em></h2>
         </div>
         <p class="section-lead">
-          Регулярные рейсы с отправлением строго по графику. Никаких отмен и задержек.
+          Отправление минута в минуту с Центрального автовокзала. Моментальная посадка по QR-коду на экране телефона.
         </p>
       </div>
 
-      <div class="horizontal-scroll-deck">
+      <div class="routes-deck-grid">
         
-        <!-- ROUTE CARD 1 -->
-        <div class="route-snap-card">
+        <!-- Route 1 -->
+        <div class="route-card">
           <div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span class="route-time-pill">02ч 45мин в пути</span>
-              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-acid); font-weight: 700;">FAST-TRACK EU</span>
+            <div class="route-badge-row">
+              <span class="route-time-chip">02ч 45мин в пути</span>
+              <span class="route-tag-track">FAST-TRACK EU</span>
             </div>
-            <h3 class="route-points-headline">Минск &rarr; Вильнюс</h3>
-            <p style="font-size: 13px; color: var(--text-secondary);">Центральный АВ &bull; Каждые 2 часа &bull; Выделенный коридор</p>
+            <h3 class="route-city-headline">Минск &rarr; Вильнюс</h3>
+            <p class="route-sub-info">Центральный АВ &bull; Каждые 2 часа &bull; Выделенная полоса</p>
           </div>
 
-          <div style="border-top: 1px solid var(--border-hairline); padding-top: 18px; margin-top: 24px; display: flex; justify-content: space-between; align-items: flex-end;">
-            <div class="route-price-tag">85.00 <span>BYN</span></div>
-            <a href="aura-passenger-app.html" class="pill-intent" style="background: var(--accent-acid); color: #08090C; font-weight: 800; border: none;">
-              Выбрать кресло &rarr;
+          <div class="route-bottom-action">
+            <div class="route-price-num">85.00 <span>BYN</span></div>
+            <a href="seat-picker-3d-demo.html" class="btn-primary-cta" style="font-size: 12px; padding: 8px 16px;">
+              <span>Выбрать кресло</span>
             </a>
           </div>
         </div>
 
-        <!-- ROUTE CARD 2 -->
-        <div class="route-snap-card">
+        <!-- Route 2 -->
+        <div class="route-card">
           <div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span class="route-time-pill">03ч 10мин в пути</span>
-              <span style="font-family: var(--font-mono); font-size: 11px; color: #22C55E; font-weight: 700;">МАГИСТРАЛЬ M6</span>
+            <div class="route-badge-row">
+              <span class="route-time-chip">03ч 10мин в пути</span>
+              <span class="route-tag-track" style="color: var(--status-available);">МАГИСТРАЛЬ M6</span>
             </div>
-            <h3 class="route-points-headline">Минск &rarr; Гродно</h3>
-            <p style="font-size: 13px; color: var(--text-secondary);">Прямой скоростной рейс без заездов в деревни &bull; 5G Mesh Wi-Fi</p>
+            <h3 class="route-city-headline">Минск &rarr; Гродно</h3>
+            <p class="route-sub-info">Прямой экспресс без остановок в деревнях &bull; Wi-Fi 5G</p>
           </div>
 
-          <div style="border-top: 1px solid var(--border-hairline); padding-top: 18px; margin-top: 24px; display: flex; justify-content: space-between; align-items: flex-end;">
-            <div class="route-price-tag">28.00 <span>BYN</span></div>
-            <a href="aura-passenger-app.html" class="pill-intent" style="background: var(--accent-acid); color: #08090C; font-weight: 800; border: none;">
-              Выбрать кресло &rarr;
+          <div class="route-bottom-action">
+            <div class="route-price-num">28.00 <span>BYN</span></div>
+            <a href="seat-picker-3d-demo.html" class="btn-primary-cta" style="font-size: 12px; padding: 8px 16px;">
+              <span>Выбрать кресло</span>
             </a>
           </div>
         </div>
 
-        <!-- ROUTE CARD 3 -->
-        <div class="route-snap-card">
+        <!-- Route 3 -->
+        <div class="route-card">
           <div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span class="route-time-pill">03ч 30мин в пути</span>
-              <span style="font-family: var(--font-mono); font-size: 11px; color: #22C55E; font-weight: 700;">МАГИСТРАЛЬ M1</span>
+            <div class="route-badge-row">
+              <span class="route-time-chip">03ч 30мин в пути</span>
+              <span class="route-tag-track" style="color: var(--status-available);">МАГИСТРАЛЬ M1</span>
             </div>
-            <h3 class="route-points-headline">Минск &rarr; Брест</h3>
-            <p style="font-size: 13px; color: var(--text-secondary);">Трасса M1 Олимпийка &bull; Анатомические кресла &bull; Розетка 220V</p>
+            <h3 class="route-city-headline">Минск &rarr; Брест</h3>
+            <p class="route-sub-info">Олимпийская трасса M1 &bull; Анатомические кресла 220V</p>
           </div>
 
-          <div style="border-top: 1px solid var(--border-hairline); padding-top: 18px; margin-top: 24px; display: flex; justify-content: space-between; align-items: flex-end;">
-            <div class="route-price-tag">32.00 <span>BYN</span></div>
-            <a href="aura-passenger-app.html" class="pill-intent" style="background: var(--accent-acid); color: #08090C; font-weight: 800; border: none;">
-              Выбрать кресло &rarr;
+          <div class="route-bottom-action">
+            <div class="route-price-num">32.00 <span>BYN</span></div>
+            <a href="seat-picker-3d-demo.html" class="btn-primary-cta" style="font-size: 12px; padding: 8px 16px;">
+              <span>Выбрать кресло</span>
             </a>
           </div>
         </div>
 
-        <!-- ROUTE CARD 4 -->
-        <div class="route-snap-card">
+        <!-- Route 4 -->
+        <div class="route-card">
           <div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span class="route-time-pill">03ч 20мин в пути</span>
-              <span style="font-family: var(--font-mono); font-size: 11px; color: #22C55E; font-weight: 700;">МАГИСТРАЛЬ M5</span>
+            <div class="route-badge-row">
+              <span class="route-time-chip">03ч 20мин в пути</span>
+              <span class="route-tag-track" style="color: var(--status-available);">МАГИСТРАЛЬ M5</span>
             </div>
-            <h3 class="route-points-headline">Гомель &rarr; Минск</h3>
-            <p style="font-size: 13px; color: var(--text-secondary);">Автовокзал Гомель &rarr; Центральный АВ Минск &bull; VIP 19 мест</p>
+            <h3 class="route-city-headline">Гомель &rarr; Минск</h3>
+            <p class="route-sub-info">Автовокзал Гомель &rarr; Минск Центральный &bull; 19 мест VIP</p>
           </div>
 
-          <div style="border-top: 1px solid var(--border-hairline); padding-top: 18px; margin-top: 24px; display: flex; justify-content: space-between; align-items: flex-end;">
-            <div class="route-price-tag">28.00 <span>BYN</span></div>
-            <a href="aura-passenger-app.html" class="pill-intent" style="background: var(--accent-acid); color: #08090C; font-weight: 800; border: none;">
-              Выбрать кресло &rarr;
+          <div class="route-bottom-action">
+            <div class="route-price-num">28.00 <span>BYN</span></div>
+            <a href="seat-picker-3d-demo.html" class="btn-primary-cta" style="font-size: 12px; padding: 8px 16px;">
+              <span>Выбрать кресло</span>
             </a>
           </div>
         </div>
@@ -1468,38 +2230,79 @@
   </section>
 
   <!-- =========================================================================
-       SPEED FOOTER (MONOLITH)
+       MONOLITH EXECUTIVE FOOTER
        ========================================================================= -->
-  <footer class="speed-footer">
+  <footer class="monolith-footer">
     <div class="container">
-      <div class="footer-huge-mark">BUSLINER</div>
-
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; border-top: 1px solid var(--border-hairline); padding-top: 30px;">
-        <div style="font-size: 13px; color: var(--text-dim);">
-          &copy; 2026 BusLiner Technologies. Лицензия Минтранса РБ № 02190/4482. Все права защищены.
+      
+      <div class="footer-top-row">
+        
+        <!-- Brand Info -->
+        <div>
+          <div class="footer-huge-brand">Bus<span>Liner</span></div>
+          <p class="footer-brand-desc">
+            Технологическая платформа межгородской пассажирской мобильности нового поколения. Лицензированные перевозчики, гарантированный комфорт и безопасность.
+          </p>
+          <div style="margin-top: 18px; font-size: 12px; color: #64748B;">
+            Лицензия Минтранса Республики Беларусь № 02190/4482
+          </div>
         </div>
-        <div style="display: flex; gap: 16px; font-size: 13px;">
-          <a href="carrier-dashboard.html" style="color: var(--text-secondary); text-decoration: none;">Кабинет перевозчика</a>
-          <a href="driver-terminal.html" style="color: var(--text-secondary); text-decoration: none;">Терминал посадки</a>
-          <a href="seat-picker-3d-demo.html" style="color: var(--accent-acid); text-decoration: none;">3D Салон Sprinter</a>
+
+        <!-- Passenger Col -->
+        <div>
+          <div class="footer-col-title">Пассажирам</div>
+          <ul class="footer-links-list">
+            <li><a href="#hero">Поиск билетов</a></li>
+            <li><a href="seat-picker-3d-demo.html">3D салон микроавтобуса</a></li>
+            <li><a href="#section-sniper">Робот-снайпер брони</a></li>
+            <li><a href="#section-fleet">Правила провоза багажа</a></li>
+            <li><a href="#hero">Возврат и обмен билетов</a></li>
+          </ul>
+        </div>
+
+        <!-- Carriers Col -->
+        <div>
+          <div class="footer-col-title">Перевозчикам</div>
+          <ul class="footer-links-list">
+            <li><a href="busliner-partners.html">Подключение автопарка</a></li>
+            <li><a href="carrier-dashboard.html">Кабинет диспетчера</a></li>
+            <li><a href="driver-terminal.html">Терминал посадки водителя</a></li>
+            <li><a href="partner-auth.html">Вход для партнеров</a></li>
+          </ul>
+        </div>
+
+        <!-- Security & Legal -->
+        <div>
+          <div class="footer-col-title">Безопасность</div>
+          <ul class="footer-links-list">
+            <li><a href="#">Страхование каждого пассажира</a></li>
+            <li><a href="#">Ежерейсовый медосмотр водителей</a></li>
+            <li><a href="#">Политика конфиденциальности</a></li>
+            <li><a href="#">Договор оферты</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom-row">
+        <div>
+          &copy; 2026 BusLiner Technologies. Все права защищены. Разработано по стандартам тихого люкса и надежности.
+        </div>
+        <div style="display: flex; gap: 20px;">
+          <a href="driver-terminal.html" style="color: #93C5FD; text-decoration: none;">Терминал водителя</a>
+          <a href="carrier-dashboard.html" style="color: #93C5FD; text-decoration: none;">Диспетчерская</a>
+          <a href="seat-picker-3d-demo.html" style="color: #93C5FD; text-decoration: none;">3D Модель Sprinter</a>
         </div>
       </div>
+
     </div>
   </footer>
 
   <!-- =========================================================================
-       INTERACTIVE LOGIC: THREE.JS 3D OBJECT VIEWER, WEB AUDIO, CANVAS SNIPER
+       INTERACTIVE LOGIC: THREE.JS 3D VIP CABIN TWIN, WEB AUDIO & SNIPER PHYSICS
        ========================================================================= -->
   <script>
-    // 1. DYNAMIC TELEMETRY CLOCK
-    setInterval(() => {
-      const clockEl = document.getElementById('telemetry-clock');
-      if (clockEl) {
-        clockEl.innerText = new Date().toLocaleTimeString('ru-RU');
-      }
-    }, 1000);
-
-    // 2. CURSOR SPOTLIGHT TRACKER
+    // 1. CURSOR SPOTLIGHT TRACKER (Subtle luxury ambient lighting)
     const spotlight = document.getElementById('cursor-spotlight');
     window.addEventListener('mousemove', (e) => {
       if (spotlight) {
@@ -1507,7 +2310,7 @@
       }
     }, { passive: true });
 
-    // 3. WEB AUDIO SYNTHESIZER FOR OFF+BRAND TACTILE FEEDBACK
+    // 2. QUIET LUXURY WEB AUDIO SYSTEM
     let soundEnabled = true;
     let audioCtx = null;
 
@@ -1526,79 +2329,87 @@
       soundEnabled = !soundEnabled;
       const btn = document.getElementById('btn-audio-toggle');
       if (btn) {
-        btn.style.color = soundEnabled ? 'var(--accent-acid)' : 'var(--text-dim)';
+        if (soundEnabled) {
+          btn.classList.add('active');
+          btn.querySelector('span:last-child').innerText = 'Звук ВКЛ';
+          playGentleChime();
+        } else {
+          btn.classList.remove('active');
+          btn.querySelector('span:last-child').innerText = 'Звук ВЫКЛ';
+        }
       }
-      if (soundEnabled) playSuccessTone();
     }
 
-    function playSuccessTone() {
+    // Soft Luxury Chime for UI Actions
+    function playGentleChime() {
       if (!soundEnabled) return;
       try {
         const ctx = getAudioCtx();
         if (!ctx) return;
         const now = ctx.currentTime;
-        [659.25, 880.0, 1318.5].forEach((freq, i) => {
+        [523.25, 659.25, 783.99].forEach((freq, i) => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now + i * 0.04);
-          gain.gain.setValueAtTime(0.08, now + i * 0.04);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.04 + 0.25);
+          osc.frequency.setValueAtTime(freq, now + i * 0.05);
+          gain.gain.setValueAtTime(0.04, now + i * 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.05 + 0.35);
           osc.connect(gain);
           gain.connect(ctx.destination);
-          osc.start(now + i * 0.04);
-          osc.stop(now + i * 0.04 + 0.28);
+          osc.start(now + i * 0.05);
+          osc.stop(now + i * 0.05 + 0.38);
         });
       } catch(e) {}
     }
 
-    function playSniperSonicBoom() {
+    // Realistic Supersonic Ballistic Crack & Sub-Bass Thump
+    function playSniperAcousticImpulse() {
       if (!soundEnabled) return;
       try {
         const ctx = getAudioCtx();
         if (!ctx) return;
         const now = ctx.currentTime;
 
-        // White noise supersonic crack
-        const bufferSize = Math.floor(ctx.sampleRate * 0.08);
+        // High-velocity sharp sonic crack
+        const bufferSize = Math.floor(ctx.sampleRate * 0.06);
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
         for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.016));
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.012));
         }
 
         const noise = ctx.createBufferSource();
         noise.buffer = buffer;
         const filter = ctx.createBiquadFilter();
         filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(3800, now);
-        filter.frequency.exponentialRampToValueAtTime(280, now + 0.07);
+        filter.frequency.setValueAtTime(4200, now);
+        filter.frequency.exponentialRampToValueAtTime(260, now + 0.05);
 
         const gain = ctx.createGain();
-        gain.gain.setValueAtTime(0.4, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
 
         noise.connect(filter);
         filter.connect(gain);
         gain.connect(ctx.destination);
         noise.start(now);
 
-        // Sub bass shock
+        // Low-frequency shockwave thump
         const sub = ctx.createOscillator();
         const subGain = ctx.createGain();
         sub.type = 'sine';
-        sub.frequency.setValueAtTime(140, now);
-        sub.frequency.exponentialRampToValueAtTime(36, now + 0.18);
-        subGain.gain.setValueAtTime(0.35, now);
-        subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+        sub.frequency.setValueAtTime(130, now);
+        sub.frequency.exponentialRampToValueAtTime(32, now + 0.16);
+        subGain.gain.setValueAtTime(0.3, now);
+        subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
         sub.connect(subGain);
         subGain.connect(ctx.destination);
         sub.start(now);
-        sub.stop(now + 0.22);
+        sub.stop(now + 0.2);
       } catch(e) {}
     }
 
-    // 4. PRESET ROUTES & CITIES
+    // 3. CITIES SWAP & PRESETS
     window.swapHeroCities = function() {
       const from = document.getElementById('hero-from');
       const to = document.getElementById('hero-to');
@@ -1606,7 +2417,7 @@
         const tmp = from.value;
         from.value = to.value;
         to.value = tmp;
-        playSuccessTone();
+        playGentleChime();
       }
     };
 
@@ -1616,19 +2427,19 @@
       if (from && to) {
         from.value = fromVal;
         to.value = toVal;
-        playSuccessTone();
+        playGentleChime();
         const target = document.getElementById('section-schedule');
         if (target) target.scrollIntoView({ behavior: 'smooth' });
       }
     };
 
     window.triggerHeroSearch = function() {
-      playSuccessTone();
+      playGentleChime();
       const target = document.getElementById('section-schedule');
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // 5. 3D TILT CARDS LOGIC (OFF+BRAND MICROPHYSICS)
+    // 4. 3D TILT CARDS LOGIC (QUIET LUXURY MICROPHYSICS)
     const tiltCards = document.querySelectorAll('[data-tilt]');
     tiltCards.forEach(card => {
       card.addEventListener('mousemove', (e) => {
@@ -1637,9 +2448,9 @@
         const y = e.clientY - rect.top;
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
-        const rotateX = ((y - centerY) / centerY) * -10;
-        const rotateY = ((x - centerX) / centerX) * 10;
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        const rotateX = ((y - centerY) / centerY) * -6;
+        const rotateY = ((x - centerX) / centerX) * 6;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.015, 1.015, 1.015)`;
       });
 
       card.addEventListener('mouseleave', () => {
@@ -1647,82 +2458,173 @@
       });
     });
 
-    // 6. THREE.JS 3D KINETIC COCKPIT / HELMET OBJECT VIEWER
-    (function initThreeViewer() {
-      const canvas = document.getElementById('helmet-webgl-canvas');
-      const container = document.getElementById('helmet-card-container');
+    // 5. THREE.JS 3D VIP EXECUTIVE SPRINTER CABIN TWIN
+    (function initExecutiveCabinViewer() {
+      const canvas = document.getElementById('cabin-webgl-canvas');
+      const container = document.getElementById('cabin-card-container');
       if (!canvas || !container || typeof THREE === 'undefined') return;
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
-      camera.position.set(0, 1.5, 4.5);
+      const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
+      camera.position.set(0, 1.4, 4.2);
 
       const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
       renderer.setSize(container.clientWidth, container.clientHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.1;
 
-      // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      // Warm Executive Ambient Lighting
+      const ambientLight = new THREE.AmbientLight(0xFFF8EE, 1.2);
       scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xdfff00, 1.8);
-      directionalLight.position.set(5, 8, 5);
-      scene.add(directionalLight);
+      // Key Warm Directional Light (2700K Sunlight Reflection)
+      const sunLight = new THREE.DirectionalLight(0xFFEDD5, 1.6);
+      sunLight.position.set(4, 6, 4);
+      scene.add(sunLight);
 
-      const cyanRimLight = new THREE.PointLight(0x00f0ff, 2.5, 12);
-      cyanRimLight.position.set(-5, 2, -3);
-      scene.add(cyanRimLight);
+      // Soft Royal Navy Rim Light
+      const navyRim = new THREE.PointLight(0x1E3A8A, 1.8, 10);
+      navyRim.position.set(-4, 2, -3);
+      scene.add(navyRim);
 
-      // Create Aerodynamic Futuristic Capsule Object (Procedural 3D Geometry)
-      const group = new THREE.Group();
+      // Create Executive Cabin Model Group
+      const cabinGroup = new THREE.Group();
 
-      // Main Carbon Aerodynamic Shell
-      const bodyGeo = new THREE.CylinderGeometry(0.75, 0.95, 2.8, 32);
-      bodyGeo.rotateZ(Math.PI / 2);
-      const carbonMat = new THREE.MeshStandardMaterial({
-        color: 0x12141c,
-        metalness: 0.85,
-        roughness: 0.22,
+      // Materials: Premium Cognac/Champagne Leather & Brushed Aluminium
+      const leatherCognac = new THREE.MeshStandardMaterial({
+        color: 0x9A6B43,
+        roughness: 0.55,
+        metalness: 0.08
       });
-      const bodyMesh = new THREE.Mesh(bodyGeo, carbonMat);
-      group.add(bodyMesh);
 
-      // Neon Acid Aerodynamic Trim Strip
-      const trimGeo = new THREE.TorusGeometry(0.85, 0.04, 16, 64);
-      const acidMat = new THREE.MeshStandardMaterial({
-        color: 0xdfff00,
-        emissive: 0xdfff00,
-        emissiveIntensity: 0.6,
-        metalness: 0.2,
-        roughness: 0.1
+      const leatherCream = new THREE.MeshStandardMaterial({
+        color: 0xD8C8B5,
+        roughness: 0.5,
+        metalness: 0.05
       });
-      const trimMesh = new THREE.Mesh(trimGeo, acidMat);
-      trimMesh.rotation.y = Math.PI / 2;
-      group.add(trimMesh);
 
-      // Glass Visor Dome
-      const visorGeo = new THREE.SphereGeometry(0.72, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
-      visorGeo.rotateX(Math.PI / 2);
-      const visorMat = new THREE.MeshPhysicalMaterial({
-        color: 0x00f0ff,
-        metalness: 0.9,
-        roughness: 0.1,
+      const brushedMetal = new THREE.MeshStandardMaterial({
+        color: 0xCCCCCC,
+        roughness: 0.25,
+        metalness: 0.85
+      });
+
+      const darkCabinFloor = new THREE.MeshStandardMaterial({
+        color: 0x2A2D34,
+        roughness: 0.7,
+        metalness: 0.2
+      });
+
+      const tintedGlass = new THREE.MeshPhysicalMaterial({
+        color: 0x1E3A8A,
         transparent: true,
-        opacity: 0.75,
-        reflectivity: 0.95,
-        clearcoat: 1.0,
-        clearcoatRoughness: 0.1
+        opacity: 0.35,
+        roughness: 0.1,
+        metalness: 0.1,
+        transmission: 0.9,
+        ior: 1.5
       });
-      const visorMesh = new THREE.Mesh(visorGeo, visorMat);
-      visorMesh.position.set(0.6, 0.35, 0);
-      group.add(visorMesh);
 
-      scene.add(group);
+      // 1. Cabin Teak/Dark Floor Sledge
+      const floorGeo = new THREE.BoxGeometry(2.4, 0.08, 2.4);
+      const floorMesh = new THREE.Mesh(floorGeo, darkCabinFloor);
+      floorMesh.position.y = -0.9;
+      cabinGroup.add(floorMesh);
 
-      // Interactive Pointer Tracking
-      let targetRotX = 0.2;
-      let targetRotY = -0.4;
+      // 2. Stainless Steel Floor Mounting Rails
+      [-0.45, 0.45].forEach(xPos => {
+        const railGeo = new THREE.BoxGeometry(0.04, 0.02, 2.3);
+        const railMesh = new THREE.Mesh(railGeo, brushedMetal);
+        railMesh.position.set(xPos, -0.85, 0);
+        cabinGroup.add(railMesh);
+      });
+
+      // 3. Captain Seat Pedestal
+      const baseGeo = new THREE.CylinderGeometry(0.18, 0.22, 0.45, 24);
+      const baseMesh = new THREE.Mesh(baseGeo, brushedMetal);
+      baseMesh.position.set(0, -0.65, 0);
+      cabinGroup.add(baseMesh);
+
+      // 4. Ergonomic Leather Seat Cushion
+      const cushionGeo = new THREE.BoxGeometry(0.95, 0.22, 0.95);
+      const cushionMesh = new THREE.Mesh(cushionGeo, leatherCognac);
+      cushionMesh.position.set(0, -0.38, 0.05);
+      cabinGroup.add(cushionMesh);
+
+      // Cream Leather Inset Stripe
+      const stripeGeo = new THREE.BoxGeometry(0.4, 0.02, 0.96);
+      const stripeMesh = new THREE.Mesh(stripeGeo, leatherCream);
+      stripeMesh.position.set(0, -0.26, 0.05);
+      cabinGroup.add(stripeMesh);
+
+      // 5. Contoured Reclining Backrest
+      const backrestGeo = new THREE.BoxGeometry(0.9, 1.25, 0.22);
+      const backrestMesh = new THREE.Mesh(backrestGeo, leatherCognac);
+      backrestMesh.position.set(0, 0.32, -0.36);
+      backrestMesh.rotation.x = -0.12; // 135 deg comfort recline
+      cabinGroup.add(backrestMesh);
+
+      // Backrest Inset Padding
+      const backStripeGeo = new THREE.BoxGeometry(0.38, 1.15, 0.04);
+      const backStripeMesh = new THREE.Mesh(backStripeGeo, leatherCream);
+      backStripeMesh.position.set(0, 0.32, -0.24);
+      backStripeMesh.rotation.x = -0.12;
+      cabinGroup.add(backStripeMesh);
+
+      // 6. Adjustable Ergonomic Headrest
+      const headrestGeo = new THREE.BoxGeometry(0.55, 0.32, 0.18);
+      const headrestMesh = new THREE.Mesh(headrestGeo, leatherCognac);
+      headrestMesh.position.set(0, 1.05, -0.46);
+      headrestMesh.rotation.x = -0.12;
+      cabinGroup.add(headrestMesh);
+
+      // Headrest Chrome Pegs
+      [-0.12, 0.12].forEach(hx => {
+        const pegGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.2, 12);
+        const pegMesh = new THREE.Mesh(pegGeo, brushedMetal);
+        pegMesh.position.set(hx, 0.92, -0.44);
+        pegMesh.rotation.x = -0.12;
+        cabinGroup.add(pegMesh);
+      });
+
+      // 7. Executive Armrests
+      [-0.52, 0.52].forEach(ax => {
+        const armGeo = new THREE.BoxGeometry(0.1, 0.1, 0.65);
+        const armMesh = new THREE.Mesh(armGeo, leatherCognac);
+        armMesh.position.set(ax, -0.1, 0.05);
+        cabinGroup.add(armMesh);
+      });
+
+      // 8. 220V Power Outlet & Status Light
+      const outletBoxGeo = new THREE.BoxGeometry(0.12, 0.08, 0.06);
+      const outletBoxMesh = new THREE.Mesh(outletBoxGeo, brushedMetal);
+      outletBoxMesh.position.set(0.52, -0.28, 0.25);
+      cabinGroup.add(outletBoxMesh);
+
+      const ledGeo = new THREE.SphereGeometry(0.015, 12, 12);
+      const ledMat = new THREE.MeshBasicMaterial({ color: 0x10B981 });
+      const ledMesh = new THREE.Mesh(ledGeo, ledMat);
+      ledMesh.position.set(0.54, -0.28, 0.28);
+      cabinGroup.add(ledMesh);
+
+      // 9. Sprinter Window Pillar Frame Cutaway
+      const windowPillarGeo = new THREE.BoxGeometry(0.08, 1.8, 0.1);
+      const windowPillarMesh = new THREE.Mesh(windowPillarGeo, darkCabinFloor);
+      windowPillarMesh.position.set(1.1, 0.1, -0.6);
+      cabinGroup.add(windowPillarMesh);
+
+      const glassPaneGeo = new THREE.PlaneGeometry(1.6, 1.4);
+      const glassPaneMesh = new THREE.Mesh(glassPaneGeo, tintedGlass);
+      glassPaneMesh.position.set(1.1, 0.15, 0.2);
+      glassPaneMesh.rotation.y = -Math.PI / 2;
+      cabinGroup.add(glassPaneMesh);
+
+      scene.add(cabinGroup);
+
+      // Interactive Pointer Tracking & Drag
+      let targetRotX = 0.12;
+      let targetRotY = -0.55;
       let isDragging = false;
       let prevMouseX = 0;
       let prevMouseY = 0;
@@ -1739,24 +2641,24 @@
         if (isDragging) {
           const deltaX = e.clientX - prevMouseX;
           const deltaY = e.clientY - prevMouseY;
-          targetRotY += deltaX * 0.008;
-          targetRotX += deltaY * 0.008;
+          targetRotY += deltaX * 0.007;
+          targetRotX += deltaY * 0.007;
           prevMouseX = e.clientX;
           prevMouseY = e.clientY;
         } else {
-          // Subtle ambient follow
+          // Gentle ambient follow
           const rect = container.getBoundingClientRect();
           const nx = (e.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
           const ny = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
-          targetRotY = nx * 0.6;
-          targetRotX = -ny * 0.4 + 0.2;
+          targetRotY = -0.55 + nx * 0.45;
+          targetRotX = 0.12 - ny * 0.25;
         }
       }, { passive: true });
 
       function animate() {
         requestAnimationFrame(animate);
-        group.rotation.y += (targetRotY - group.rotation.y) * 0.06;
-        group.rotation.x += (targetRotX - group.rotation.x) * 0.06;
+        cabinGroup.rotation.y += (targetRotY - cabinGroup.rotation.y) * 0.05;
+        cabinGroup.rotation.x += (targetRotX - cabinGroup.rotation.x) * 0.05;
         renderer.render(scene, camera);
       }
       animate();
@@ -1769,7 +2671,7 @@
       });
     })();
 
-    // 7. SUPERSONIC SNIPER BALLISTICS & PAPER RECOIL
+    // 6. SUPERSONIC SNIPER BALLISTICS & PAPER RECOIL
     window.fireSupersonicSniperShot = function() {
       const canvas = document.getElementById('sniper-kinetic-canvas');
       const arena = document.getElementById('section-sniper');
@@ -1780,12 +2682,12 @@
 
       if (!canvas || !arena || !ticket || !hole) return;
 
-      playSniperSonicBoom();
+      playSniperAcousticImpulse();
 
       // Reset states
       hole.classList.remove('hole-blown');
       ticket.classList.remove('ticket-sheet-recoil');
-      void ticket.offsetWidth; // reflow
+      void ticket.offsetWidth; // force browser layout reflow
 
       const dpr = window.devicePixelRatio || 1;
       const rect = arena.getBoundingClientRect();
@@ -1796,43 +2698,43 @@
       ctx.scale(dpr, dpr);
 
       const ticketRect = ticket.getBoundingClientRect();
-      const targetX = (ticketRect.left + hole.offsetLeft + 65) - rect.left;
-      const targetY = (ticketRect.top + hole.offsetTop + 65) - rect.top;
+      const targetX = (ticketRect.left + ticketRect.width / 2) - rect.left;
+      const targetY = (ticketRect.top + ticketRect.height / 2) - rect.top;
 
       let progress = 0;
-      const startX = -100;
-      const startY = targetY - 40;
+      const startX = -80;
+      const startY = targetY - 30;
 
       function renderFrame() {
-        progress += 0.09;
+        progress += 0.11; // Supersonic speed
         ctx.clearRect(0, 0, rect.width, rect.height);
 
         const currentX = startX + (targetX - startX) * progress;
         const currentY = startY + (targetY - startY) * progress;
 
-        // Draw Supersonic Mach Shockwave Cone
+        // Mach Shockwave Cone
         ctx.save();
         ctx.beginPath();
         ctx.moveTo(currentX, currentY);
-        ctx.lineTo(currentX - 120, currentY - 50);
-        ctx.lineTo(currentX - 120, currentY + 50);
+        ctx.lineTo(currentX - 110, currentY - 45);
+        ctx.lineTo(currentX - 110, currentY + 45);
         ctx.closePath();
-        ctx.fillStyle = 'rgba(0, 240, 255, 0.12)';
+        ctx.fillStyle = 'rgba(147, 197, 253, 0.12)';
         ctx.fill();
 
-        // Ionized Plasma Tracer Line
+        // High-Precision Tracer Line
         ctx.beginPath();
         ctx.moveTo(startX, startY);
         ctx.lineTo(currentX, currentY);
-        ctx.strokeStyle = '#00F0FF';
-        ctx.lineWidth = 4;
-        ctx.shadowColor = '#00F0FF';
-        ctx.shadowBlur = 16;
+        ctx.strokeStyle = '#93C5FD';
+        ctx.lineWidth = 3.5;
+        ctx.shadowColor = '#60A5FA';
+        ctx.shadowBlur = 14;
         ctx.stroke();
 
-        // Bullet Glow Core
+        // Projectile Core
         ctx.beginPath();
-        ctx.arc(currentX, currentY, 6, 0, Math.PI * 2);
+        ctx.arc(currentX, currentY, 5, 0, Math.PI * 2);
         ctx.fillStyle = '#FFFFFF';
         ctx.fill();
         ctx.restore();
@@ -1844,16 +2746,16 @@
           ctx.clearRect(0, 0, rect.width, rect.height);
           ticket.classList.add('ticket-sheet-recoil');
           hole.classList.add('hole-blown');
-          playSuccessTone();
+          playGentleChime();
 
           if (badge) {
-            badge.style.background = '#F0FDF4';
-            badge.style.color = '#15803D';
-            badge.style.borderColor = '#BBF7D0';
+            badge.style.background = '#EAF7EE';
+            badge.style.color = '#0E7048';
+            badge.style.borderColor = '#A3E0BA';
             badge.innerText = 'ВЫКУПЛЕНО СНАЙПЕРОМ (0.38с)';
           }
           if (note) {
-            note.innerHTML = '<strong style="color: #15803D;">Снайпер перехватил билет!</strong> Заказ забронирован в системе.';
+            note.innerHTML = '<strong style="color: #0E7048;">Билет успешно перехвачен!</strong> Заказ № 089 подтвержден и отправлен в Telegram.';
           }
         }
       }
