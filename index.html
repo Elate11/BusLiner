@@ -3,104 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>BusLiner &mdash; Межгородские поездки без звонков и суеты</title>
+  <title>BusLiner &mdash; Искусство межгородских перемещений</title>
   
-  <meta name="description" content="BusLiner — Межгородские поездки бизнес-класса. Интерактивный 3D-выбор анатомического кресла, моментальный выкуп билетов роботом-снайпером за 0.38 секунды, Mercedes-Benz Sprinter 519 CDI.">
-  <meta name="theme-color" content="#F7F6F2">
+  <meta name="description" content="BusLiner — Тихий люкс межгородской мобильности. Регулярные рейсы первого класса, анатомические кресла, автоматический перехват билетов за 0.38 секунды.">
+  <meta name="theme-color" content="#F5F1EA">
 
-  <!-- FONTS: Newsreader (Editorial Serif), Plus Jakarta Sans (UI Grotesk), JetBrains Mono (Telemetry) -->
+  <!-- FONTS: Cormorant Garamond (Aristocratic Editorial Serif) + Plus Jakarta Sans (Humanist Grotesk) + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Three.js for 3D Executive Cabin & Seat Twin Viewer -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     /* ==========================================================================
-       BUSLINER // QUIET LUXURY & PASSENGER COMFORT DESIGN SYSTEM
-       Art Direction: Swiss Porcelain (#F7F6F2) + Royal Institutional Navy (#1E3A8A)
-       Editorial Elegance: Newsreader Display Serif + Plus Jakarta Sans + JetBrains Mono
-       Tactile 3D Microphysics, Supersonic Ballistic Sniper, Zero Slop
+       BUSLINER // THE QUIET LUXURY DESIGN SYSTEM
+       Aesthetic Reference: Loro Piana, The Row, Bottega Veneta, Aesop
+       Motion Engineering: Lando Norris custom cubic-bezier choreography
+       Zero 3D, Zero WebGL, Zero Neon, Zero Slop
        ========================================================================== */
 
     :root {
-      /* Palette: Quiet Luxury & Original Brand Heritage */
-      --canvas: #F7F6F2;
-      --canvas-warm: #F2F0E9;
-      --surface-card: #FFFFFF;
-      --surface-subtle: #F0EFEA;
-      --surface-hover: #FAF9F6;
-      --surface-dark: #0B0E14;
-      --surface-dark-card: #131722;
-      
-      /* Royal Institutional Navy (Sole Signature Accent) */
-      --accent-navy: #1E3A8A;
-      --accent-navy-hover: #172554;
-      --accent-navy-soft: #EEF4FF;
-      --accent-navy-border: #BCD0FA;
-      --accent-navy-glow: rgba(30, 58, 138, 0.18);
+      /* Warm Neutrals (No pure white #FFF, no pure black #000) */
+      --canvas-ivory: #F5F1EA;
+      --canvas-warm: #EFEAE0;
+      --surface-bone: #E8E2D6;
+      --surface-stone: #E1DACD;
+      --surface-elevated: #FAF7F2;
+      --surface-card: #FAF8F5;
 
-      /* Champagne Gold (VIP / Quiet Luxury micro-accents) */
-      --accent-gold: #93704C;
-      --accent-gold-soft: #FBF8F3;
-      --accent-gold-border: #E8DCCB;
+      /* Restrained Typography & Borders */
+      --text-graphite: #2B2A28;
+      --text-muted: #5C5852;
+      --text-faint: #8A847C;
+      --border-taupe: #B8A99A;
+      --border-hairline: rgba(184, 169, 154, 0.45);
+      --border-subtle: rgba(184, 169, 154, 0.25);
 
-      /* Status & Trust Indicators */
-      --status-available: #0E7048;
-      --status-available-bg: #EAF7EE;
-      --status-available-border: #A3E0BA;
+      /* Solitary Restrained Accents */
+      --accent-olive: #4A5340;
+      --accent-olive-soft: #ECEFEA;
+      --accent-terracotta: #8C4A32;
+      --accent-terracotta-soft: #F5ECE8;
 
-      --status-radar: #B45309;
-      --status-radar-bg: #FFFBEB;
-      --status-radar-border: #FCD34D;
+      /* Motion Tokens (Lando Norris curve DNA in quiet delivery) */
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-glide: cubic-bezier(0.25, 1, 0.5, 1);
+      --ease-enter: cubic-bezier(0.7, 0, 0.84, 0);
 
-      --status-soldout: #991B1B;
-      --status-soldout-bg: #FEF2F2;
-      --status-soldout-border: #FCA5A5;
+      --duration-rapid: 220ms;
+      --duration-medium: 460ms;
+      --duration-slow: 850ms;
 
-      /* Hairline Borders & Shadows */
-      --border-hairline: #E2E2DC;
-      --border-subtle: rgba(20, 21, 24, 0.08);
-      --border-dark: rgba(255, 255, 255, 0.12);
-
-      --shadow-sm: 0 1px 2px rgba(20, 21, 24, 0.04);
-      --shadow-md: 0 4px 14px -2px rgba(20, 21, 24, 0.06), 0 2px 6px -1px rgba(20, 21, 24, 0.03);
-      --shadow-lg: 0 20px 35px -8px rgba(20, 21, 24, 0.08), 0 8px 16px -4px rgba(20, 21, 24, 0.04);
-      --shadow-elevated: 0 30px 60px -15px rgba(20, 21, 24, 0.12);
-
-      /* Typography */
-      --font-display: 'Newsreader', Georgia, serif;
+      /* Typography Tokens */
+      --font-display: 'Cormorant Garamond', Garamond, Georgia, serif;
       --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
 
-      /* High Contrast Text */
-      --text-primary: #141518;
-      --text-muted: #525660;
-      --text-dim: #8E929B;
-      --text-on-dark: #FFFFFF;
-      --text-on-dark-dim: #94A3B8;
+      /* Fluid Typography Scales */
+      --fs-hero: clamp(2.8rem, 5.5vw + 1rem, 6rem);
+      --fs-h1: clamp(2.2rem, 4vw + 0.8rem, 4.2rem);
+      --fs-h2: clamp(1.7rem, 2.6vw + 0.6rem, 2.8rem);
+      --fs-h3: clamp(1.2rem, 1.4vw + 0.5rem, 1.65rem);
+      --fs-body: clamp(0.98rem, 0.25vw + 0.92rem, 1.12rem);
+      --fs-small: clamp(0.82rem, 0.15vw + 0.78rem, 0.92rem);
+      --fs-meta: 0.76rem;
 
-      /* Fluid Clamp Type Scales */
-      --fs-hero: clamp(2.6rem, 5.2vw + 0.8rem, 5.2rem);
-      --fs-h1: clamp(2.1rem, 3.8vw + 0.8rem, 3.8rem);
-      --fs-h2: clamp(1.6rem, 2.5vw + 0.6rem, 2.4rem);
-      --fs-h3: clamp(1.15rem, 1.4vw + 0.5rem, 1.5rem);
-      --fs-body: clamp(0.95rem, 0.3vw + 0.85rem, 1.08rem);
-      --fs-small: clamp(0.82rem, 0.15vw + 0.76rem, 0.9rem);
-      --fs-meta: 0.78rem;
+      /* Generous Whitespace Rhythm */
+      --space-xs: 8px;
+      --space-sm: 16px;
+      --space-md: 24px;
+      --space-lg: 48px;
+      --space-xl: 80px;
+      --space-2xl: 128px;
+      --space-3xl: 160px;
 
-      /* Layout & Radii */
-      --container-max: 1240px;
-      --radius-sm: 6px;
-      --radius-md: 12px;
-      --radius-lg: 20px;
+      --container-max: 1360px;
+      --radius-sm: 3px;
+      --radius-md: 6px;
+      --radius-lg: 12px;
       --radius-pill: 9999px;
-
-      /* Physical Motion Curves */
-      --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
-      --ease-gentle: cubic-bezier(0.25, 1, 0.5, 1);
-      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     *, *::before, *::after {
@@ -111,8 +91,8 @@
 
     html {
       scroll-behavior: smooth;
-      background-color: var(--canvas);
-      color: var(--text-primary);
+      background-color: var(--canvas-ivory);
+      color: var(--text-graphite);
       font-size: 16px;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -122,43 +102,45 @@
       min-height: 100vh;
       font-family: var(--font-body);
       font-size: var(--fs-body);
-      line-height: 1.6;
-      background: var(--canvas);
-      color: var(--text-primary);
+      line-height: 1.7;
+      background: var(--canvas-ivory);
+      color: var(--text-graphite);
       overflow-x: hidden;
       position: relative;
     }
 
-    /* Selection */
-    ::selection {
-      background: var(--accent-navy);
-      color: #FFFFFF;
-    }
-
-    /* Subdued Background Noise & Grain */
-    body::before {
-      content: "";
+    /* Subdued Artisanal Paper Grain Overlay (3.5% opacity) */
+    .paper-grain-overlay {
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 999;
-      opacity: 0.022;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      z-index: 9999;
+      opacity: 0.038;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
-    /* Ambient Cursor Spotlight (Quiet Luxury Soft Cream/Navy) */
-    #cursor-spotlight {
+    /* Custom Quiet Luxury Lerp Cursor */
+    .custom-cursor-follower {
       position: fixed;
       top: 0;
       left: 0;
-      width: 600px;
-      height: 600px;
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--border-taupe);
       border-radius: 50%;
       pointer-events: none;
-      z-index: 1;
-      background: radial-gradient(circle, rgba(30, 58, 138, 0.035) 0%, rgba(247, 246, 242, 0) 70%);
+      z-index: 10000;
       transform: translate(-50%, -50%);
-      transition: opacity 0.5s ease;
+      transition: width 0.3s var(--ease-out-expo), height 0.3s var(--ease-out-expo), border-color 0.3s ease, background 0.3s ease;
+      opacity: 0.7;
+    }
+
+    .custom-cursor-follower.hovering {
+      width: 54px;
+      height: 54px;
+      border-color: var(--accent-olive);
+      background: rgba(74, 83, 64, 0.05);
+      opacity: 1;
     }
 
     /* Container Utility */
@@ -166,17 +148,23 @@
       width: 100%;
       max-width: var(--container-max);
       margin: 0 auto;
-      padding: 0 24px;
+      padding: 0 40px;
       position: relative;
     }
 
-    /* Helper typography classes */
+    /* Selection */
+    ::selection {
+      background: var(--surface-bone);
+      color: var(--text-graphite);
+    }
+
+    /* Typography Utilities */
     .serif { font-family: var(--font-display); }
     .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
     .italic { font-style: italic; }
 
     /* ==========================================================================
-       TOP NAVIGATION BAR
+       HEADER & ARCHITECTURAL NAVIGATION
        ========================================================================== */
     header.site-header {
       position: fixed;
@@ -184,1395 +172,1131 @@
       left: 0;
       right: 0;
       z-index: 1000;
-      height: 72px;
+      height: 84px;
       display: flex;
       align-items: center;
-      background: rgba(247, 246, 242, 0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(245, 241, 234, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border-hairline);
-      transition: background 0.3s ease, border-color 0.3s ease;
+      transition: all var(--duration-medium) var(--ease-out-expo);
     }
 
-    .nav-inner {
+    .header-inner {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       width: 100%;
     }
 
-    /* Brand Logo */
-    .brand-group {
+    .brand-mark-group {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       gap: 12px;
       text-decoration: none;
-      color: var(--text-primary);
+      color: var(--text-graphite);
     }
 
-    .brand-mark {
-      width: 36px;
-      height: 36px;
-      background: var(--accent-navy);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #FFFFFF;
-      box-shadow: 0 2px 8px rgba(30, 58, 138, 0.25);
-    }
-
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brand-name {
-      font-family: var(--font-body);
-      font-size: 19px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--text-primary);
-      line-height: 1.1;
-    }
-
-    .brand-name span {
-      color: var(--accent-navy);
-    }
-
-    .brand-sub {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
+    .brand-wordmark {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--text-dim);
+      color: var(--text-graphite);
     }
 
-    /* Navigation Links */
-    .nav-links {
+    .brand-meta-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    .nav-menu {
       display: flex;
       align-items: center;
-      gap: 32px;
+      gap: 40px;
       list-style: none;
     }
 
-    .nav-links a {
-      font-size: 14px;
-      font-weight: 600;
+    .nav-item-link {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
       color: var(--text-muted);
       text-decoration: none;
-      transition: color 0.15s ease;
       position: relative;
+      padding: 6px 0;
+      transition: color var(--duration-rapid) ease;
     }
 
-    .nav-links a:hover,
-    .nav-links a.active {
-      color: var(--accent-navy);
-    }
-
-    .nav-links a.active::after {
+    /* Expanding underline from left to right (Lando Norris transition craft) */
+    .nav-item-link::after {
       content: "";
       position: absolute;
-      bottom: -6px;
+      bottom: 0;
       left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--accent-navy);
-      border-radius: 2px;
+      width: 100%;
+      height: 1px;
+      background: var(--text-graphite);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--duration-medium) var(--ease-out-expo);
     }
 
-    /* Nav Actions */
-    .nav-actions {
+    .nav-item-link:hover {
+      color: var(--text-graphite);
+    }
+
+    .nav-item-link:hover::after,
+    .nav-item-link.active::after {
+      transform: scaleX(1);
+    }
+
+    .header-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 24px;
     }
 
-    /* Audio Toggle Button */
-    .btn-audio-toggle {
-      background: var(--surface-card);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-pill);
-      padding: 7px 14px;
+    .link-subtle-cta {
       font-family: var(--font-body);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-audio-toggle:hover {
-      border-color: var(--accent-navy-border);
-      color: var(--accent-navy);
-      background: var(--accent-navy-soft);
-    }
-
-    .audio-wave-bars {
-      display: inline-flex;
-      align-items: center;
-      gap: 2px;
-      height: 12px;
-    }
-
-    .audio-bar {
-      width: 2px;
-      height: 6px;
-      background: currentColor;
-      border-radius: 1px;
-      transition: height 0.2s ease;
-    }
-
-    .btn-audio-toggle.active .audio-bar:nth-child(1) { animation: soundBar 0.8s ease-in-out infinite alternate; }
-    .btn-audio-toggle.active .audio-bar:nth-child(2) { animation: soundBar 0.8s ease-in-out 0.2s infinite alternate; }
-    .btn-audio-toggle.active .audio-bar:nth-child(3) { animation: soundBar 0.8s ease-in-out 0.4s infinite alternate; }
-
-    @keyframes soundBar {
-      0% { height: 4px; }
-      100% { height: 12px; }
-    }
-
-    /* Primary CTA Button */
-    .btn-primary-cta {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: var(--accent-navy);
-      color: #FFFFFF;
-      font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 700;
-      padding: 10px 20px;
-      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-graphite);
       text-decoration: none;
-      border: 1px solid var(--accent-navy);
-      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.22);
-      transition: all 0.2s var(--ease-luxury);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border: 1px solid var(--border-taupe);
+      border-radius: var(--radius-sm);
+      background: transparent;
+      transition: all var(--duration-medium) var(--ease-out-expo);
+    }
+
+    .link-subtle-cta:hover {
+      background: var(--surface-bone);
+      border-color: var(--text-graphite);
+    }
+
+    .link-subtle-cta svg {
+      transition: transform var(--duration-rapid) var(--ease-out-expo);
+    }
+
+    .link-subtle-cta:hover svg {
+      transform: translateX(3px);
+    }
+
+    /* Audio Toggle */
+    .sound-discreet-toggle {
+      background: transparent;
+      border: none;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      padding: 6px 0;
+      transition: color var(--duration-rapid) ease;
     }
 
-    .btn-primary-cta:hover {
-      background: var(--accent-navy-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 8px 20px rgba(30, 58, 138, 0.28);
+    .sound-discreet-toggle:hover {
+      color: var(--text-graphite);
     }
 
-    .btn-primary-cta:active {
-      transform: translateY(0);
+    .sound-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent-olive);
+      transition: opacity var(--duration-rapid) ease;
+    }
+
+    .sound-discreet-toggle.muted .sound-dot {
+      background: var(--border-taupe);
+      opacity: 0.5;
     }
 
     /* ==========================================================================
-       HERO SECTION: SPLIT EDITORIAL + 3D LUXURY CABIN TWIN
+       HERO SECTION: AIR, ARISTOCRATIC PROPORTIONS & RESTRAINT
        ========================================================================== */
-    section.hero-section {
-      padding-top: 136px;
-      padding-bottom: 72px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.95fr;
-      gap: 56px;
-      align-items: center;
-    }
-
-    /* Hero Left Column */
-    .hero-content {
+    section.hero-quiet {
+      padding-top: calc(84px + var(--space-3xl));
+      padding-bottom: var(--space-3xl);
+      min-height: 92vh;
       display: flex;
       flex-direction: column;
-      gap: 28px;
-      z-index: 2;
+      justify-content: space-between;
+      position: relative;
     }
 
-    .hero-eyebrow-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: #FFFFFF;
-      border: 1px solid var(--border-hairline);
-      padding: 6px 14px;
-      border-radius: var(--radius-pill);
-      width: fit-content;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--accent-navy);
-      letter-spacing: 0.04em;
+    .hero-pre-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      box-shadow: var(--shadow-sm);
+      color: var(--accent-olive);
+      margin-bottom: var(--space-md);
+      display: block;
     }
 
-    .pulse-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--status-available);
-      box-shadow: 0 0 0 3px rgba(14, 112, 72, 0.2);
-      animation: pulseGreen 2.2s infinite;
-    }
-
-    @keyframes pulseGreen {
-      0% { box-shadow: 0 0 0 0 rgba(14, 112, 72, 0.5); }
-      70% { box-shadow: 0 0 0 7px rgba(14, 112, 72, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(14, 112, 72, 0); }
-    }
-
-    .hero-title {
+    .hero-editorial-headline {
       font-family: var(--font-display);
       font-size: var(--fs-hero);
-      font-weight: 400;
-      line-height: 1.08;
-      letter-spacing: -0.02em;
-      color: var(--text-primary);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      color: var(--text-graphite);
+      max-width: 1100px;
+      margin-bottom: var(--space-lg);
     }
 
-    .hero-title em {
+    .hero-editorial-headline em {
+      font-family: var(--font-display);
       font-style: italic;
-      color: var(--accent-navy);
       font-weight: 400;
     }
 
-    .hero-lead {
+    .hero-editorial-lead {
       font-size: var(--fs-body);
+      font-weight: 400;
+      line-height: 1.8;
       color: var(--text-muted);
-      line-height: 1.68;
-      max-width: 560px;
+      max-width: 640px;
+      margin-bottom: var(--space-2xl);
     }
 
-    /* SEARCH CAPSULE (QUIET LUXURY & CONVERSION) */
-    .search-capsule-card {
-      background: #FFFFFF;
+    /* Quiet Luxury Search Capsule */
+    .search-monograph-card {
+      background: var(--surface-card);
       border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      box-shadow: var(--shadow-lg);
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
+      border-radius: var(--radius-sm);
+      padding: var(--space-lg) var(--space-lg) var(--space-md);
+      box-shadow: 0 12px 32px -10px rgba(43, 42, 40, 0.05);
       position: relative;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      margin-bottom: var(--space-xl);
     }
 
-    .search-capsule-card:focus-within {
-      border-color: var(--accent-navy-border);
-      box-shadow: var(--shadow-elevated);
-    }
-
-    .search-inputs-row {
+    .search-monograph-grid {
       display: grid;
-      grid-template-columns: 1fr auto 1fr 150px;
-      gap: 12px;
-      align-items: center;
+      grid-template-columns: 1.2fr auto 1.2fr 0.8fr auto;
+      gap: 20px;
+      align-items: flex-end;
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid var(--border-subtle);
     }
 
-    .input-cell {
+    .field-column {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      background: var(--surface-subtle);
-      border: 1px solid transparent;
-      padding: 10px 14px;
-      border-radius: var(--radius-md);
-      transition: all 0.2s ease;
-      position: relative;
+      gap: 6px;
     }
 
-    .input-cell:focus-within {
-      background: #FFFFFF;
-      border-color: var(--accent-navy);
-      box-shadow: 0 0 0 3px var(--accent-navy-soft);
-    }
-
-    .input-cell label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-dim);
-    }
-
-    .input-cell input,
-    .input-cell select {
-      border: none;
-      background: transparent;
-      font-family: var(--font-body);
-      font-size: 15px;
+    .field-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
       font-weight: 600;
-      color: var(--text-primary);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    .field-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border-taupe);
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text-graphite);
+      padding: 6px 0 8px;
       outline: none;
+      border-radius: 0;
+      transition: border-color var(--duration-rapid) ease;
       width: 100%;
     }
 
-    /* Swap Button */
+    .field-input:focus {
+      border-color: var(--text-graphite);
+    }
+
     .btn-swap-cities {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #FFFFFF;
+      background: transparent;
       border: 1px solid var(--border-hairline);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       color: var(--text-muted);
-      transition: all 0.2s var(--ease-luxury);
-      box-shadow: var(--shadow-sm);
+      transition: all var(--duration-rapid) var(--ease-out-expo);
+      margin-bottom: 6px;
     }
 
     .btn-swap-cities:hover {
-      background: var(--accent-navy-soft);
-      color: var(--accent-navy);
-      border-color: var(--accent-navy-border);
+      border-color: var(--text-graphite);
+      color: var(--text-graphite);
       transform: rotate(180deg);
     }
 
-    /* Search Action Button */
-    .btn-search-submit {
-      background: var(--accent-navy);
-      color: #FFFFFF;
-      border: none;
-      border-radius: var(--radius-md);
+    .btn-search-action {
+      background: var(--text-graphite);
+      color: var(--canvas-ivory);
+      border: 1px solid var(--text-graphite);
+      border-radius: var(--radius-sm);
       font-family: var(--font-body);
-      font-size: 15px;
-      font-weight: 700;
-      padding: 16px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 14px 28px;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 10px;
-      transition: all 0.2s var(--ease-luxury);
-      box-shadow: 0 4px 14px rgba(30, 58, 138, 0.25);
+      transition: all var(--duration-medium) var(--ease-out-expo);
+      margin-bottom: 4px;
     }
 
-    .btn-search-submit:hover {
-      background: var(--accent-navy-hover);
+    .btn-search-action:hover {
+      background: var(--accent-olive);
+      border-color: var(--accent-olive);
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(30, 58, 138, 0.35);
+      box-shadow: 0 8px 20px -6px rgba(43, 42, 40, 0.2);
     }
 
-    /* Predictive Route Intent Pills */
-    .route-intent-pills {
+    .search-intent-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: var(--space-sm);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .intent-links-group {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 16px;
       flex-wrap: wrap;
     }
 
-    .intent-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-dim);
-    }
-
-    .pill-intent {
-      background: #FFFFFF;
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-pill);
-      padding: 5px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-primary);
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .pill-intent:hover {
-      border-color: var(--accent-navy-border);
-      background: var(--accent-navy-soft);
-      color: var(--accent-navy);
-      transform: translateY(-1px);
-    }
-
-    .pill-intent .pill-price {
+    .intent-heading {
       font-family: var(--font-mono);
       font-size: 11px;
-      color: var(--accent-navy);
-      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-faint);
     }
 
-    /* Trust Proof Metrics */
-    .trust-metrics-strip {
+    .intent-text-btn {
+      background: transparent;
+      border: none;
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 2px 0;
+      position: relative;
+      transition: color var(--duration-rapid) ease;
+    }
+
+    .intent-text-btn::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: var(--border-taupe);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--duration-medium) var(--ease-out-expo);
+    }
+
+    .intent-text-btn:hover {
+      color: var(--text-graphite);
+    }
+
+    .intent-text-btn:hover::after {
+      transform: scaleX(1);
+    }
+
+    .intent-price {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent-olive);
+      font-weight: 600;
+      margin-left: 4px;
+    }
+
+    /* Hero Sub-Footer Status Row */
+    .hero-registry-strip {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      padding-top: 12px;
+      gap: var(--space-lg);
+      padding-top: var(--space-lg);
       border-top: 1px solid var(--border-hairline);
     }
 
-    .metric-item {
+    .registry-col {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 4px;
     }
 
-    .metric-value {
-      font-family: var(--font-mono);
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--accent-navy);
-      letter-spacing: -0.02em;
-    }
-
-    .metric-desc {
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.35;
-    }
-
-    /* Hero Right Column: 3D Cabin Twin Stage */
-    .hero-stage {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .cabin-3d-card {
-      width: 100%;
-      height: 520px;
-      background: linear-gradient(145deg, #FFFFFF 0%, #F5F4EE 100%);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-elevated);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 24px;
-    }
-
-    /* Three.js Canvas Element */
-    #cabin-webgl-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100% !important;
-      height: 100% !important;
-      cursor: grab;
-      z-index: 1;
-    }
-
-    #cabin-webgl-canvas:active {
-      cursor: grabbing;
-    }
-
-    /* Overlay Badge in 3D Card */
-    .cabin-card-header {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      pointer-events: none;
-    }
-
-    .cabin-tag {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid var(--border-hairline);
-      padding: 6px 12px;
-      border-radius: var(--radius-pill);
+    .registry-number {
       font-family: var(--font-mono);
       font-size: 11px;
-      font-weight: 700;
-      color: var(--accent-navy);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-olive);
     }
 
-    .cabin-card-footer {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      pointer-events: none;
+    .registry-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--text-graphite);
     }
 
-    .cabin-spec-sheet {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid var(--border-hairline);
-      padding: 12px 16px;
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .cabin-spec-title {
+    .registry-text {
       font-size: 13px;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    .cabin-spec-detail {
-      font-size: 11px;
       color: var(--text-muted);
-    }
-
-    .cabin-rotate-hint {
-      pointer-events: auto;
-      background: var(--surface-card);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-pill);
-      padding: 6px 12px;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-dim);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: var(--shadow-sm);
-    }
-
-    /* Floating Interactive 3D Hotspot Pills */
-    .cabin-hotspots-layer {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 3;
-    }
-
-    .hotspot-bubble {
-      position: absolute;
-      background: rgba(20, 21, 24, 0.85);
-      color: #FFFFFF;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      padding: 5px 10px;
-      border-radius: var(--radius-pill);
-      font-size: 11px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      animation: floatSubtle 3s ease-in-out infinite alternate;
-    }
-
-    .hotspot-bubble::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #60A5FA;
-    }
-
-    @keyframes floatSubtle {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-6px); }
+      line-height: 1.5;
     }
 
     /* ==========================================================================
-       PILLARS OF QUIET LUXURY (VALUE PROPOSITION)
+       SECTION: THE MANIFESTO (EDITORIAL RESTRAINT)
        ========================================================================== */
-    section.section-pillars {
-      padding: 64px 0 80px;
-      background: var(--canvas);
+    section.section-manifesto {
+      padding: var(--space-3xl) 0;
       border-top: 1px solid var(--border-hairline);
+      background: var(--canvas-warm);
+    }
+
+    .manifesto-quote-wrapper {
+      max-width: 980px;
+      margin: 0 auto var(--space-2xl);
+      text-align: center;
+    }
+
+    .manifesto-quote {
+      font-family: var(--font-display);
+      font-size: var(--fs-h1);
+      font-weight: 300;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--text-graphite);
+      margin-bottom: var(--space-md);
+    }
+
+    .manifesto-quote em {
+      font-style: italic;
+      color: var(--text-graphite);
+    }
+
+    .manifesto-author {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    .principles-triad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-xl);
+      margin-top: var(--space-2xl);
+    }
+
+    .triad-col {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      border-top: 1px solid var(--border-taupe);
+      padding-top: var(--space-md);
+    }
+
+    .triad-idx {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--accent-olive);
+    }
+
+    .triad-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--text-graphite);
+      line-height: 1.2;
+    }
+
+    .triad-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ==========================================================================
+       SECTION: COLLECTION & FLEET (TACTILE CARDS, NO 3D)
+       ========================================================================== */
+    section.section-fleet-collection {
+      padding: var(--space-3xl) 0;
+      border-top: 1px solid var(--border-hairline);
+      background: var(--canvas-ivory);
+    }
+
+    .section-editorial-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: var(--space-2xl);
+      flex-wrap: wrap;
+      gap: var(--space-md);
     }
 
     .section-eyebrow {
       font-family: var(--font-mono);
       font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--accent-navy);
+      color: var(--accent-olive);
       margin-bottom: 8px;
+      display: block;
     }
 
-    .section-title {
+    .section-editorial-title {
       font-family: var(--font-display);
       font-size: var(--fs-h2);
-      font-weight: 400;
-      color: var(--text-primary);
-      letter-spacing: -0.01em;
-      margin-bottom: 14px;
+      font-weight: 300;
+      color: var(--text-graphite);
+      line-height: 1.15;
     }
 
-    .section-title em {
+    .section-editorial-title em {
       font-style: italic;
-      color: var(--accent-navy);
     }
 
-    .section-lead {
-      font-size: var(--fs-body);
-      color: var(--text-muted);
-      max-width: 620px;
-      line-height: 1.6;
-    }
-
-    .pillars-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
-      margin-top: 48px;
-    }
-
-    .pillar-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-lg);
-      padding: 32px 24px;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      transition: all 0.3s var(--ease-luxury);
-      position: relative;
-    }
-
-    .pillar-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-lg);
-      border-color: var(--accent-navy-border);
-    }
-
-    .pillar-icon-box {
-      width: 44px;
-      height: 44px;
-      border-radius: var(--radius-md);
-      background: var(--accent-navy-soft);
-      color: var(--accent-navy);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .pillar-title {
-      font-family: var(--font-body);
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text-primary);
-      letter-spacing: -0.01em;
-    }
-
-    .pillar-desc {
+    .section-editorial-side {
       font-size: 14px;
       color: var(--text-muted);
+      max-width: 420px;
       line-height: 1.6;
     }
 
-    /* ==========================================================================
-       VIP FLEET GALLERY (3D TILT CARDS)
-       ========================================================================== */
-    section.section-fleet {
-      padding: 80px 0 100px;
-      background: var(--canvas-warm);
-      border-top: 1px solid var(--border-hairline);
-      border-bottom: 1px solid var(--border-hairline);
-    }
-
-    .fleet-grid {
+    /* Fleet Collection Grid */
+    .fleet-collection-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
-      margin-top: 52px;
+      gap: 36px;
     }
 
-    /* 3D Tilt Card Container */
-    .tilt-card {
-      background: #FFFFFF;
+    /* Tactile Monograph Card */
+    .monograph-card {
+      background: var(--surface-card);
       border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-lg);
-      padding: 32px;
-      box-shadow: var(--shadow-md);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s ease, border-color 0.2s ease;
-      transform-style: preserve-3d;
-      will-change: transform;
-      position: relative;
+      transition: transform var(--duration-medium) var(--ease-out-expo), box-shadow var(--duration-medium) var(--ease-out-expo), border-color var(--duration-medium) ease;
     }
 
-    .tilt-card:hover {
-      box-shadow: var(--shadow-elevated);
-      border-color: var(--accent-navy-border);
+    .monograph-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px -12px rgba(43, 42, 40, 0.08);
+      border-color: var(--border-taupe);
     }
 
-    .fleet-card-top {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .fleet-class-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      width: fit-content;
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .badge-executive {
-      background: var(--accent-gold-soft);
-      color: var(--accent-gold);
-      border: 1px solid var(--accent-gold-border);
-    }
-
-    .badge-express {
-      background: var(--accent-navy-soft);
-      color: var(--accent-navy);
-      border: 1px solid var(--accent-navy-border);
-    }
-
-    .badge-sleeper {
-      background: #F1F5F9;
-      color: #334155;
-      border: 1px solid #CBD5E1;
-    }
-
-    .fleet-name {
-      font-family: var(--font-display);
-      font-size: 24px;
-      font-weight: 500;
-      color: var(--text-primary);
-      line-height: 1.25;
-    }
-
-    .fleet-features-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin: 20px 0;
-      border-top: 1px solid var(--border-hairline);
-      padding-top: 20px;
-    }
-
-    .fleet-feature-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .fleet-feature-item svg {
-      color: var(--status-available);
-      flex-shrink: 0;
-    }
-
-    .fleet-card-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      border-top: 1px solid var(--border-hairline);
-      padding-top: 20px;
-      margin-top: 12px;
-    }
-
-    .fleet-price-block {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .fleet-price-label {
-      font-size: 11px;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .fleet-price-value {
-      font-family: var(--font-mono);
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--accent-navy);
-    }
-
-    .btn-card-action {
-      background: var(--surface-subtle);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-pill);
-      padding: 8px 16px;
-      font-family: var(--font-body);
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-primary);
-      text-decoration: none;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-card-action:hover {
-      background: var(--accent-navy);
-      color: #FFFFFF;
-      border-color: var(--accent-navy);
-      transform: translateY(-1px);
-    }
-
-    /* ==========================================================================
-       SUPERSONIC TICKET SNIPER ARENA (WOW-EFFECT PRESERVED & ELEVATED)
-       ========================================================================== */
-    section.section-sniper-arena {
-      padding: 96px 0;
-      background: var(--surface-dark);
-      color: var(--text-on-dark);
+    .card-photo-container {
+      width: 100%;
+      height: 240px;
+      background: var(--surface-stone);
       position: relative;
       overflow: hidden;
     }
 
-    /* Subtle Architectural Grid on Dark */
-    .sniper-grid-bg {
+    /* Desaturated Film Tone Aesthetic */
+    .card-photo-surface {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      filter: saturate(0.85) contrast(0.95) brightness(0.98);
+      transition: transform var(--duration-slow) var(--ease-out-expo);
+    }
+
+    .monograph-card:hover .card-photo-surface {
+      transform: scale(1.025);
+    }
+
+    .card-photo-tag {
       position: absolute;
-      inset: 0;
-      background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-      opacity: 0.8;
-    }
-
-    .sniper-ambient-glow {
-      position: absolute;
-      top: 50%;
-      left: 65%;
-      width: 500px;
-      height: 500px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(30, 58, 138, 0.45) 0%, rgba(11, 14, 20, 0) 70%);
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .sniper-split {
-      display: grid;
-      grid-template-columns: 1.05fr 1fr;
-      gap: 56px;
-      align-items: center;
-      position: relative;
-      z-index: 2;
-    }
-
-    .sniper-header-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 6px 14px;
-      border-radius: var(--radius-pill);
+      top: 16px;
+      left: 16px;
+      background: rgba(245, 241, 234, 0.9);
+      backdrop-filter: blur(8px);
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
       font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      color: #93C5FD;
-      letter-spacing: 0.06em;
+      font-size: 10px;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      margin-bottom: 20px;
+      color: var(--text-graphite);
     }
 
-    .sniper-title {
-      font-family: var(--font-display);
-      font-size: var(--fs-h1);
-      font-weight: 400;
-      line-height: 1.12;
-      letter-spacing: -0.01em;
-      color: #FFFFFF;
-      margin-bottom: 20px;
-    }
-
-    .sniper-title em {
-      font-style: italic;
-      color: #93C5FD;
-    }
-
-    .sniper-lead {
-      font-size: var(--fs-body);
-      color: var(--text-on-dark-dim);
-      line-height: 1.68;
-      margin-bottom: 32px;
-      max-width: 520px;
-    }
-
-    .sniper-specs-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-bottom: 36px;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      padding-top: 24px;
-    }
-
-    .sniper-spec-box {
+    .card-content-block {
+      padding: 28px 28px 24px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 16px;
     }
 
-    .sniper-spec-val {
-      font-family: var(--font-mono);
-      font-size: 24px;
-      font-weight: 700;
-      color: #93C5FD;
+    .card-class-heading {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--text-graphite);
+      line-height: 1.2;
     }
 
-    .sniper-spec-lbl {
-      font-size: 12px;
-      color: var(--text-on-dark-dim);
+    .card-specs-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 16px;
     }
 
-    /* Sniper Trigger Button */
-    .btn-fire-sniper {
-      background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
-      color: #FFFFFF;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: var(--radius-pill);
-      font-family: var(--font-body);
-      font-size: 15px;
-      font-weight: 700;
+    .card-spec-item {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .card-spec-item span:first-child {
+      color: var(--text-faint);
+    }
+
+    .card-footer-action {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border-hairline);
       padding: 16px 28px;
-      cursor: pointer;
+      background: var(--surface-elevated);
+    }
+
+    .fare-price-display {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-graphite);
+    }
+
+    .fare-price-display span {
+      font-size: 11px;
+      color: var(--text-faint);
+      font-weight: 400;
+    }
+
+    .link-card-reserve {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-graphite);
+      text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
-      transition: all 0.2s var(--ease-luxury);
+      gap: 6px;
+      transition: color var(--duration-rapid) ease;
     }
 
-    .btn-fire-sniper:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 35px -5px rgba(37, 99, 235, 0.55);
-      border-color: rgba(255, 255, 255, 0.4);
+    .link-card-reserve:hover {
+      color: var(--accent-olive);
     }
 
-    .btn-fire-sniper:active {
-      transform: translateY(0);
+    /* ==========================================================================
+       SECTION: THE ROBOT-SNIPER CHRONICLE (QUIET LUXURY PRESENTATION)
+       ========================================================================== */
+    section.section-sniper-chronicle {
+      padding: var(--space-3xl) 0;
+      border-top: 1px solid var(--border-hairline);
+      background: var(--canvas-warm);
     }
 
-    /* Right Column: Physical Ticket Stage & Supersonic Canvas */
-    .sniper-canvas-wrapper {
+    .sniper-editorial-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .sniper-story-block {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .sniper-meta-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent-terracotta);
+    }
+
+    .sniper-story-title {
+      font-family: var(--font-display);
+      font-size: var(--fs-h1);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--text-graphite);
+    }
+
+    .sniper-story-title em {
+      font-style: italic;
+    }
+
+    .sniper-story-lead {
+      font-size: var(--fs-body);
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    .sniper-metrics-duo {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      border-top: 1px solid var(--border-taupe);
+      padding-top: var(--space-md);
+      margin-top: var(--space-sm);
+    }
+
+    .sniper-metric-val {
+      font-family: var(--font-mono);
+      font-size: 32px;
+      font-weight: 400;
+      color: var(--text-graphite);
+    }
+
+    .sniper-metric-lbl {
+      font-size: 12px;
+      color: var(--text-faint);
+      line-height: 1.4;
+    }
+
+    /* Interactive Physical Ticket Paper */
+    .sniper-ticket-stage {
       position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 460px;
+      padding: 40px;
     }
 
-    #sniper-kinetic-canvas {
-      position: absolute;
-      inset: 0;
+    .archival-paper-ticket {
       width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 10;
-    }
-
-    /* Physical Paper Ticket with Security Guilloche */
-    .physical-ticket-sheet {
+      max-width: 380px;
+      background: #FDFBF7;
+      border: 1px solid var(--border-taupe);
+      border-radius: var(--radius-sm);
+      padding: 36px 32px;
+      box-shadow: 0 20px 48px -15px rgba(43, 42, 40, 0.12);
       position: relative;
-      z-index: 5;
-      width: 370px;
-      background: #FFFFFF;
-      color: #141518;
-      border-radius: 16px;
-      padding: 28px 24px;
-      box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.2);
-      transform-origin: center center;
-      transition: transform 0.15s cubic-bezier(0.18, 0.89, 0.32, 1.28);
       user-select: none;
+      transition: transform var(--duration-medium) var(--ease-out-expo);
     }
 
-    /* 3D Physical Paper Recoil Animation */
-    .ticket-sheet-recoil {
-      animation: paperBulletPunch 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    .ticket-paper-recoil {
+      animation: paperRecoilSubtle 0.4s var(--ease-out-expo) forwards;
     }
 
-    @keyframes paperBulletPunch {
-      0% { transform: scale(1) rotate(0deg) translate(0, 0); }
-      15% { transform: scale(0.96) rotate(-2.5deg) translate(8px, -4px); }
-      40% { transform: scale(1.03) rotate(1deg) translate(-3px, 2px); }
-      70% { transform: scale(0.99) rotate(-0.5deg) translate(1px, -1px); }
-      100% { transform: scale(1) rotate(0deg) translate(0, 0); }
+    @keyframes paperRecoilSubtle {
+      0% { transform: scale(1) translateY(0); }
+      20% { transform: scale(0.98) translateY(4px); }
+      50% { transform: scale(1.015) translateY(-2px); }
+      100% { transform: scale(1) translateY(0); }
     }
 
-    /* Guilloche Pattern Header */
-    .ticket-security-strip {
+    .ticket-guilloche-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 2px dashed #E2E2DC;
+      border-bottom: 1px dashed var(--border-taupe);
       padding-bottom: 16px;
-      margin-bottom: 18px;
+      margin-bottom: 24px;
     }
 
-    .ticket-series-num {
+    .ticket-serial-mono {
       font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--accent-navy);
-      letter-spacing: 0.08em;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--text-faint);
     }
 
-    .ticket-state-tag {
+    .ticket-status-pill {
       font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      background: var(--status-radar-bg);
-      color: var(--status-radar);
-      border: 1px solid var(--status-radar-border);
-      transition: all 0.3s ease;
-    }
-
-    .ticket-main-info {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .ticket-route-headline {
-      font-family: var(--font-display);
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--text-primary);
-      line-height: 1.2;
-    }
-
-    .ticket-seat-display {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--surface-subtle);
-      padding: 12px 16px;
-      border-radius: 8px;
-    }
-
-    .ticket-seat-label {
-      font-size: 12px;
-      color: var(--text-dim);
+      font-size: 10px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      font-weight: 700;
+      padding: 3px 8px;
+      border: 1px solid var(--border-taupe);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      background: var(--surface-bone);
+      transition: all var(--duration-rapid) ease;
     }
 
-    .ticket-seat-id {
-      font-family: var(--font-mono);
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--accent-navy);
+    .ticket-status-pill.intercepted {
+      background: var(--accent-olive-soft);
+      color: var(--accent-olive);
+      border-color: var(--accent-olive);
     }
 
-    .ticket-footer-barcode {
+    .ticket-headline-route {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--text-graphite);
+      margin-bottom: 6px;
+    }
+
+    .ticket-subline-date {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .ticket-seat-monogram {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-top: 1px solid #E2E2DC;
-      padding-top: 14px;
-      margin-top: 18px;
+      background: var(--canvas-ivory);
+      border: 1px solid var(--border-hairline);
+      padding: 12px 18px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 24px;
     }
 
-    .barcode-lines {
+    .ticket-barcode-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid var(--border-hairline);
+      padding-top: 18px;
+    }
+
+    .barcode-svg-mimic {
       display: flex;
       gap: 2px;
-      height: 32px;
+      height: 28px;
       align-items: flex-end;
     }
 
-    .b-bar {
-      width: 2px;
+    .bar {
+      width: 1.5px;
       height: 100%;
-      background: #141518;
+      background: var(--text-graphite);
     }
+    .bar.w2 { width: 3px; }
+    .bar.w3 { width: 5px; }
 
-    .b-bar.thick { width: 4px; }
-    .b-bar.thin { width: 1px; }
-
-    /* The Authentic Bullet Hole Puncture */
-    .ticket-bullet-target {
+    /* The Authentic Bullet Hole Overlay */
+    .ticket-puncture-target {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 130px;
-      height: 130px;
+      width: 120px;
+      height: 120px;
       transform: translate(-50%, -50%) scale(0);
       pointer-events: none;
-      z-index: 12;
+      z-index: 10;
       opacity: 0;
-      transition: transform 0.25s var(--ease-elastic), opacity 0.15s ease;
+      transition: transform 0.3s var(--ease-out-expo), opacity 0.2s ease;
       background-image: url('assets/bullet_hole_paper.jpg');
       background-size: contain;
       background-position: center;
       background-repeat: no-repeat;
       mix-blend-mode: multiply;
-      filter: contrast(1.15) brightness(0.95);
+      filter: contrast(1.2) brightness(0.95);
     }
 
-    .ticket-bullet-target.hole-blown {
+    .ticket-puncture-target.active {
       transform: translate(-50%, -50%) scale(1);
       opacity: 1;
     }
 
-    /* Fallback Procedural Hole if Image Fails */
-    .procedural-hole-burn {
-      position: absolute;
-      inset: 15px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #0B0E14 42%, #271E18 65%, #6B4E38 82%, transparent 95%);
-      box-shadow: inset 0 0 10px #000000;
-      display: none;
+    /* Simulation Trigger */
+    .btn-sniper-simulation {
+      margin-top: 28px;
+      background: transparent;
+      border: 1px solid var(--border-taupe);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-graphite);
+      padding: 14px 24px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all var(--duration-medium) var(--ease-out-expo);
+    }
+
+    .btn-sniper-simulation:hover {
+      background: var(--surface-bone);
+      border-color: var(--text-graphite);
     }
 
     /* ==========================================================================
-       SCHEDULE & DIRECT EXPRESS TIMETABLE
+       SECTION: TIMETABLE & DIRECT ARTERIES
        ========================================================================== */
-    section.section-routes-explorer {
-      padding: 96px 0;
-      background: var(--canvas);
+    section.section-timetable {
+      padding: var(--space-3xl) 0;
       border-top: 1px solid var(--border-hairline);
+      background: var(--canvas-ivory);
     }
 
-    .routes-deck-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
-      margin-top: 48px;
+    .timetable-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: var(--space-xl);
     }
 
-    .route-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 20px;
-      transition: all 0.2s var(--ease-luxury);
-    }
-
-    .route-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-md);
-      border-color: var(--accent-navy-border);
-    }
-
-    .route-badge-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .route-time-chip {
-      background: var(--surface-subtle);
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .route-tag-track {
+    .timetable-table th {
       font-family: var(--font-mono);
       font-size: 11px;
-      font-weight: 700;
-      color: var(--accent-navy);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      text-align: left;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-taupe);
     }
 
-    .route-city-headline {
+    .timetable-table td {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--border-hairline);
+      font-size: 14px;
+      color: var(--text-graphite);
+      vertical-align: middle;
+      transition: background var(--duration-rapid) ease;
+    }
+
+    .timetable-table tr:hover td {
+      background: var(--canvas-warm);
+    }
+
+    .route-city-cell {
       font-family: var(--font-display);
       font-size: 22px;
       font-weight: 500;
-      color: var(--text-primary);
-      margin: 8px 0 4px;
     }
 
-    .route-sub-info {
-      font-size: 12px;
-      color: var(--text-dim);
-      line-height: 1.45;
-    }
-
-    .route-bottom-action {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      border-top: 1px solid var(--border-hairline);
-      padding-top: 16px;
-    }
-
-    .route-price-num {
-      font-family: var(--font-mono);
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--text-primary);
-      letter-spacing: -0.02em;
-    }
-
-    .route-price-num span {
+    .route-meta-cell {
       font-size: 13px;
-      color: var(--text-dim);
-      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .route-price-cell {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .btn-table-book {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-graphite);
+      text-decoration: none;
+      padding: 8px 16px;
+      border: 1px solid var(--border-taupe);
+      border-radius: var(--radius-sm);
+      display: inline-block;
+      transition: all var(--duration-rapid) ease;
+    }
+
+    .btn-table-book:hover {
+      background: var(--text-graphite);
+      color: var(--canvas-ivory);
+      border-color: var(--text-graphite);
     }
 
     /* ==========================================================================
-       MONOLITH FOOTER (ARCHITECTURAL & TRUSTED)
+       FOOTER: ARCHITECTURAL MONOLITH
        ========================================================================== */
-    footer.monolith-footer {
-      background: var(--surface-dark);
-      color: var(--text-on-dark);
-      padding: 80px 0 40px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    footer.site-footer-monolith {
+      padding: var(--space-3xl) 0 var(--space-lg);
+      border-top: 1px solid var(--border-hairline);
+      background: var(--canvas-warm);
     }
 
-    .footer-top-row {
+    .footer-top-grid {
       display: grid;
-      grid-template-columns: 1.5fr repeat(3, 1fr);
-      gap: 48px;
-      padding-bottom: 56px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      grid-template-columns: 1.4fr repeat(3, 1fr);
+      gap: var(--space-2xl);
+      padding-bottom: var(--space-2xl);
+      border-bottom: 1px solid var(--border-hairline);
     }
 
-    .footer-huge-brand {
+    .footer-brand-monogram {
       font-family: var(--font-display);
-      font-size: 38px;
-      font-weight: 400;
-      letter-spacing: -0.02em;
-      color: #FFFFFF;
-      margin-bottom: 12px;
-    }
-
-    .footer-huge-brand span {
-      color: #93C5FD;
-      font-style: italic;
-    }
-
-    .footer-brand-desc {
-      font-size: 13px;
-      color: var(--text-on-dark-dim);
-      line-height: 1.6;
-      max-width: 320px;
-    }
-
-    .footer-col-title {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 32px;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #93C5FD;
-      margin-bottom: 18px;
+      color: var(--text-graphite);
+      margin-bottom: var(--space-sm);
     }
 
-    .footer-links-list {
+    .footer-brand-philosophy {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 320px;
+      margin-bottom: var(--space-md);
+    }
+
+    .footer-column-heading {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-olive);
+      margin-bottom: var(--space-md);
+    }
+
+    .footer-nav-list {
       list-style: none;
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
 
-    .footer-links-list a {
+    .footer-nav-list a {
       font-size: 13px;
-      color: var(--text-on-dark-dim);
+      color: var(--text-muted);
       text-decoration: none;
-      transition: color 0.15s ease;
+      transition: color var(--duration-rapid) ease;
     }
 
-    .footer-links-list a:hover {
-      color: #FFFFFF;
+    .footer-nav-list a:hover {
+      color: var(--text-graphite);
     }
 
-    .footer-bottom-row {
+    .footer-sub-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 32px;
+      padding-top: var(--space-md);
       font-size: 12px;
-      color: #64748B;
+      color: var(--text-faint);
       flex-wrap: wrap;
       gap: 16px;
     }
 
     /* ==========================================================================
-       RESPONSIVE & MOBILE ERGONOMICS
+       SCROLL-TRIGGERED FADE-UP ANIMATIONS (INTERSECTION OBSERVER)
        ========================================================================== */
+    .fade-up-element {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity var(--duration-slow) var(--ease-out-expo), transform var(--duration-slow) var(--ease-out-expo);
+      will-change: opacity, transform;
+    }
+
+    .fade-up-element.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Stagger delays */
+    .stagger-1 { transition-delay: 60ms; }
+    .stagger-2 { transition-delay: 140ms; }
+    .stagger-3 { transition-delay: 220ms; }
+    .stagger-4 { transition-delay: 300ms; }
+
+    /* ==========================================================================
+       ACCESSIBILITY & FOCUS VISIBLE & RESPONSIVE
+       ========================================================================== */
+    :focus-visible {
+      outline: 2px solid var(--accent-olive);
+      outline-offset: 3px;
+    }
+
     @media (max-width: 1024px) {
-      .hero-grid {
-        grid-template-columns: 1fr;
-        gap: 48px;
-      }
-      .pillars-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .fleet-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .routes-deck-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .sniper-split {
-        grid-template-columns: 1fr;
-        gap: 48px;
-      }
-      .footer-top-row {
+      .search-monograph-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 36px;
+      }
+      .fleet-collection-grid {
+        grid-template-columns: 1fr;
+      }
+      .principles-triad {
+        grid-template-columns: 1fr;
+        gap: var(--space-lg);
+      }
+      .sniper-editorial-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-top-grid {
+        grid-template-columns: 1fr 1fr;
       }
     }
 
     @media (max-width: 768px) {
-      .nav-links {
+      .container {
+        padding: 0 24px;
+      }
+      .nav-menu {
         display: none;
       }
-      section.hero-section {
-        padding-top: 104px;
-      }
-      .search-inputs-row {
+      .search-monograph-grid {
         grid-template-columns: 1fr;
       }
       .btn-swap-cities {
         align-self: center;
         transform: rotate(90deg);
       }
-      .btn-swap-cities:hover {
-        transform: rotate(270deg);
-      }
-      .pillars-grid {
+      .hero-registry-strip {
         grid-template-columns: 1fr;
       }
-      .fleet-grid {
+      .footer-top-grid {
         grid-template-columns: 1fr;
       }
-      .routes-deck-grid {
-        grid-template-columns: 1fr;
-      }
-      .footer-top-row {
-        grid-template-columns: 1fr;
-      }
-      .cabin-3d-card {
-        height: 400px;
-      }
-      .physical-ticket-sheet {
-        width: 100%;
-        max-width: 340px;
+      .custom-cursor-follower {
+        display: none;
       }
     }
 
-    /* Accessibility / Reduced Motion */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -1580,61 +1304,57 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
-      #cursor-spotlight { display: none; }
+      .fade-up-element {
+        transform: none !important;
+        opacity: 1 !important;
+      }
+      .custom-cursor-follower {
+        display: none !important;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Ambient Cursor Spotlight (Subtle Warm Diffusion) -->
-  <div id="cursor-spotlight"></div>
+  <!-- Subtle Artisanal Paper Texture Grain Overlay -->
+  <div class="paper-grain-overlay"></div>
+
+  <!-- Quiet Luxury Lerp Cursor Follower -->
+  <div class="custom-cursor-follower" id="cursorFollower"></div>
 
   <!-- =========================================================================
-       SITE HEADER & NAVIGATION
+       SITE HEADER
        ========================================================================= -->
   <header class="site-header">
     <div class="container">
-      <div class="nav-inner">
+      <div class="header-inner">
         
         <!-- Brand -->
-        <a href="index.html" class="brand-group">
-          <div class="brand-mark">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/>
-              <circle cx="7" cy="17" r="2"/>
-              <path d="M9 17h6"/>
-              <circle cx="17" cy="17" r="2"/>
-            </svg>
-          </div>
-          <div class="brand-text">
-            <span class="brand-name">Bus<span>Liner</span></span>
-            <span class="brand-sub">Межгородская линия</span>
-          </div>
+        <a href="index.html" class="brand-mark-group" data-cursor="hover">
+          <span class="brand-wordmark">BusLiner</span>
+          <span class="brand-meta-badge">Ligne Officielle</span>
         </a>
 
-        <!-- Desktop Navigation -->
-        <ul class="nav-links">
-          <li><a href="#hero" class="active">Поиск рейса</a></li>
-          <li><a href="#section-fleet">Флагманский флот</a></li>
-          <li><a href="#section-sniper">Снайпер билетов</a></li>
-          <li><a href="#section-schedule">Расписание</a></li>
-          <li><a href="busliner-partners.html">Перевозчикам</a></li>
+        <!-- Navigation Menu -->
+        <ul class="nav-menu">
+          <li><a href="#hero" class="nav-item-link active" data-cursor="hover">Рейсы</a></li>
+          <li><a href="#manifesto" class="nav-item-link" data-cursor="hover">Философия</a></li>
+          <li><a href="#collection" class="nav-item-link" data-cursor="hover">Флот</a></li>
+          <li><a href="#sniper" class="nav-item-link" data-cursor="hover">Снайпер</a></li>
+          <li><a href="#timetable" class="nav-item-link" data-cursor="hover">Расписание</a></li>
+          <li><a href="busliner-partners.html" class="nav-item-link" data-cursor="hover">Перевозчикам</a></li>
         </ul>
 
-        <!-- Right Action Controls -->
-        <div class="nav-actions">
-          <button id="btn-audio-toggle" class="btn-audio-toggle active" onclick="toggleSoundSystem()" title="Звуковой отклик интерфейса">
-            <span class="audio-wave-bars">
-              <span class="audio-bar"></span>
-              <span class="audio-bar"></span>
-              <span class="audio-bar"></span>
-            </span>
-            <span>Звук ВКЛ</span>
+        <!-- Action / Sound -->
+        <div class="header-actions">
+          <button class="sound-discreet-toggle" id="soundToggle" onclick="toggleAudio()" title="Акустический отклик" data-cursor="hover">
+            <span class="sound-dot"></span>
+            <span id="soundLabel">Звук</span>
           </button>
-          
-          <a href="driver-terminal.html" class="btn-primary-cta">
-            <span>Терминал посадки</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+
+          <a href="driver-terminal.html" class="link-subtle-cta" data-cursor="hover">
+            <span>Терминал</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
@@ -1646,234 +1366,112 @@
   </header>
 
   <!-- =========================================================================
-       HERO SECTION: EDITORIAL SPLIT + 3D CABIN & SEAT TWIN
+       HERO SECTION: AIR, ARISTOCRATIC PROPORTIONS & RESTRAINT
        ========================================================================= -->
-  <section class="hero-section" id="hero">
-    <div class="container">
-      <div class="hero-grid">
-        
-        <!-- Left Column: Emotional Value & Search -->
-        <div class="hero-content">
-          
-          <div class="hero-eyebrow-pill">
-            <span class="pulse-dot"></span>
-            <span>Официальная линия межгородских сообщений</span>
-          </div>
-
-          <h1 class="hero-title">
-            Межгородские поездки<br>
-            <em>без звонков и суеты.</em>
-          </h1>
-
-          <p class="hero-lead">
-            Бронируйте персональное анатомическое кресло в интерактивном 3D-салоне. Автоматический перехват отказных мест роботом-снайпером за 0.38 секунды. Бизнес-класс Mercedes-Benz Sprinter 519 CDI.
-          </p>
-
-          <!-- Interactive Search Capsule -->
-          <div class="search-capsule-card">
-            
-            <div class="search-inputs-row">
-              
-              <!-- From -->
-              <div class="input-cell">
-                <label>Откуда</label>
-                <input type="text" id="hero-from" value="Минск (Центральный АВ)" placeholder="Город отправления">
-              </div>
-
-              <!-- Swap Button -->
-              <button class="btn-swap-cities" onclick="swapHeroCities()" title="Поменять города местами" aria-label="Поменять местами">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12M17 20l4-4M17 20l-4-4"/>
-                </svg>
-              </button>
-
-              <!-- To -->
-              <div class="input-cell">
-                <label>Куда</label>
-                <input type="text" id="hero-to" value="Вильнюс (Центральный АВ)" placeholder="Город прибытия">
-              </div>
-
-              <!-- Date -->
-              <div class="input-cell">
-                <label>Дата</label>
-                <input type="text" id="hero-date" value="Сегодня, 24 окт" placeholder="Дата">
-              </div>
-
-            </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-              <!-- Intent Pills -->
-              <div class="route-intent-pills">
-                <span class="intent-label">Популярные направления:</span>
-                <button class="pill-intent" onclick="setHeroPreset('Минск', 'Вильнюс')">
-                  Минск &harr; Вильнюс <span class="pill-price">85 BYN</span>
-                </button>
-                <button class="pill-intent" onclick="setHeroPreset('Минск', 'Гродно')">
-                  Минск &harr; Гродно <span class="pill-price">28 BYN</span>
-                </button>
-                <button class="pill-intent" onclick="setHeroPreset('Минск', 'Брест')">
-                  Минск &harr; Брест <span class="pill-price">32 BYN</span>
-                </button>
-                <button class="pill-intent" onclick="setHeroPreset('Гомель', 'Минск')">
-                  Гомель &harr; Минск <span class="pill-price">28 BYN</span>
-                </button>
-              </div>
-
-              <!-- Search CTA -->
-              <button class="btn-search-submit" onclick="triggerHeroSearch()">
-                <span>Найти рейсы</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-              </button>
-            </div>
-
-          </div>
-
-          <!-- Trust Proof Metrics -->
-          <div class="trust-metrics-strip">
-            <div class="metric-item">
-              <span class="metric-value">4.98 / 5.0</span>
-              <span class="metric-desc">Рейтинг чистоты и плавности хода по отзывам 12 400+ пассажиров</span>
-            </div>
-            <div class="metric-item">
-              <span class="metric-value">19 мест VIP</span>
-              <span class="metric-desc">Увеличенное расстояние между рядами (86 см), никаких тесных рядов</span>
-            </div>
-            <div class="metric-item">
-              <span class="metric-value">100% возврат</span>
-              <span class="metric-desc">Мгновенный возврат средств без штрафов за 2 часа до отправления</span>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Right Column: Interactive 3D Luxury Cabin Twin Viewer -->
-        <div class="hero-stage">
-          <div class="cabin-3d-card" id="cabin-card-container">
-            
-            <!-- Three.js Canvas -->
-            <canvas id="cabin-webgl-canvas"></canvas>
-
-            <!-- Card Header Overlay -->
-            <div class="cabin-card-header">
-              <div class="cabin-tag">
-                <span class="pulse-dot"></span>
-                <span>3D CABIN TWIN &bull; SPRINTER 519</span>
-              </div>
-              <div class="cabin-rotate-hint">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
-                </svg>
-                <span>360&deg; вращение курсором</span>
-              </div>
-            </div>
-
-            <!-- Floating 3D Hotspot Tags -->
-            <div class="cabin-hotspots-layer">
-              <div class="hotspot-bubble" style="top: 26%; left: 16%;">
-                <span>Кожа Nappa &bull; Наклон 135&deg;</span>
-              </div>
-              <div class="hotspot-bubble" style="top: 54%; right: 14%; animation-delay: 1.2s;">
-                <span>Розетка 220V + USB-C PD</span>
-              </div>
-              <div class="hotspot-bubble" style="bottom: 24%; left: 24%; animation-delay: 0.6s;">
-                <span>Индивидуальный обдув 21&deg;C</span>
-              </div>
-            </div>
-
-            <!-- Card Footer Overlay -->
-            <div class="cabin-card-footer">
-              <div class="cabin-spec-sheet">
-                <div class="cabin-spec-title">VIP Капитанское кресло № 04A</div>
-                <div class="cabin-spec-detail">Одиночный ряд у окна &bull; Панорамный обзор &bull; Столик</div>
-              </div>
-              <a href="seat-picker-3d-demo.html" class="btn-primary-cta" style="pointer-events: auto; font-size: 13px; padding: 8px 16px;">
-                <span>Выбрать в 3D</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-              </a>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- =========================================================================
-       PILLARS OF QUIET LUXURY
-       ========================================================================= -->
-  <section class="section-pillars">
+  <section class="hero-quiet" id="hero">
     <div class="container">
       
       <div>
-        <div class="section-eyebrow">Философия тихого люкса</div>
-        <h2 class="section-title">Комфорт, продуманный <em>до миллиметра.</em></h2>
-        <p class="section-lead">
-          Мы исключили всё, что раздражает в междугородних поездках: тесноту, хамство, духоту и неопределенность с местами.
+        <span class="hero-pre-label fade-up-element stagger-1">
+          N&deg; 01 &mdash; ОФИЦИАЛЬНАЯ ЛИНИЯ МЕЖГОРОДСКОГО СООБЩЕНИЯ
+        </span>
+
+        <h1 class="hero-editorial-headline fade-up-element stagger-2">
+          Искусство межгородских перемещений.<br>
+          <em>Тишина. Личное пространство. Безупречное время.</em>
+        </h1>
+
+        <p class="hero-editorial-lead fade-up-element stagger-3">
+          Регулярные рейсы между столицами и областными центрами в микроавтобусах первого класса. Без спешки, вокзального шума и компромиссов.
         </p>
+
+        <!-- Search Monograph Card -->
+        <div class="search-monograph-card fade-up-element stagger-4">
+          
+          <div class="search-monograph-grid">
+            
+            <!-- From -->
+            <div class="field-column">
+              <label class="field-label">Отправление</label>
+              <input type="text" id="inputFrom" class="field-input" value="Минск (Центральный АВ)">
+            </div>
+
+            <!-- Swap -->
+            <button class="btn-swap-cities" onclick="swapDestinations()" title="Поменять местами" data-cursor="hover">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8v12M17 20l4-4M17 20l-4-4"/>
+              </svg>
+            </button>
+
+            <!-- To -->
+            <div class="field-column">
+              <label class="field-label">Прибытие</label>
+              <input type="text" id="inputTo" class="field-input" value="Вильнюс (Центральный АВ)">
+            </div>
+
+            <!-- Date -->
+            <div class="field-column">
+              <label class="field-label">Дата рейса</label>
+              <input type="text" id="inputDate" class="field-input" value="Сегодня, 24 октября">
+            </div>
+
+            <!-- Submit Button -->
+            <button class="btn-search-action" onclick="scrollToTimetable()" data-cursor="hover">
+              <span>Выбрать отправление</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+
+          </div>
+
+          <!-- Quick Intent Shortcuts -->
+          <div class="search-intent-row">
+            <div class="intent-links-group">
+              <span class="intent-heading">Направления дня:</span>
+              <button class="intent-text-btn" onclick="setPreset('Минск', 'Вильнюс')" data-cursor="hover">
+                Минск &mdash; Вильнюс <span class="intent-price">85 BYN</span>
+              </button>
+              <button class="intent-text-btn" onclick="setPreset('Минск', 'Гродно')" data-cursor="hover">
+                Минск &mdash; Гродно <span class="intent-price">28 BYN</span>
+              </button>
+              <button class="intent-text-btn" onclick="setPreset('Минск', 'Брест')" data-cursor="hover">
+                Минск &mdash; Брест <span class="intent-price">32 BYN</span>
+              </button>
+              <button class="intent-text-btn" onclick="setPreset('Гомель', 'Минск')" data-cursor="hover">
+                Гомель &mdash; Минск <span class="intent-price">28 BYN</span>
+              </button>
+            </div>
+
+            <span style="font-size: 12px; color: var(--text-faint);">
+              Гарантированный возврат 100% за 2 часа
+            </span>
+          </div>
+
+        </div>
+
       </div>
 
-      <div class="pillars-grid">
+      <!-- Hero Registry Strip -->
+      <div class="hero-registry-strip fade-up-element stagger-4">
         
-        <!-- Pillar 1 -->
-        <div class="pillar-card">
-          <div class="pillar-icon-box">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="16" rx="2"></rect>
-              <line x1="9" y1="4" x2="9" y2="20"></line>
-              <line x1="15" y1="4" x2="15" y2="20"></line>
-            </svg>
-          </div>
-          <h3 class="pillar-title">Гарантированное кресло</h3>
-          <p class="pillar-desc">
-            Никаких штурмов салона «кто первый занял». Ваше место закреплено в цифровом билете при покупке.
-          </p>
+        <div class="registry-col">
+          <span class="registry-number">REGISTRE &bull; 01</span>
+          <div class="registry-title">Персональное кресло</div>
+          <p class="registry-text">Выбранное место закрепляется в билете с точностью до ряда.</p>
         </div>
 
-        <!-- Pillar 2 -->
-        <div class="pillar-card">
-          <div class="pillar-icon-box">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-            </svg>
-          </div>
-          <h3 class="pillar-title">Розетка 220V и 5G Wi-Fi</h3>
-          <p class="pillar-desc">
-            Работайте в ноутбуке на протяжении всего рейса. Каждое место оснащено евророзеткой 220V и USB-портом быстрой зарядки.
-          </p>
+        <div class="registry-col">
+          <span class="registry-number">REGISTRE &bull; 02</span>
+          <div class="registry-title">Mercedes-Benz Sprinter 519</div>
+          <p class="registry-text">Пневматическая подвеска, отделка натуральной кожей, 220V у каждого кресла.</p>
         </div>
 
-        <!-- Pillar 3 -->
-        <div class="pillar-card">
-          <div class="pillar-icon-box">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="m4.93 4.93 4.24 4.24"></path>
-              <path d="m14.83 9.17 4.24-4.24"></path>
-              <path d="m14.83 14.83 4.24 4.24"></path>
-              <path d="m9.17 14.83-4.24 4.24"></path>
-            </svg>
-          </div>
-          <h3 class="pillar-title">Тихий салон (No Calls)</h3>
-          <p class="pillar-desc">
-            В салоне поддерживается мягкая атмосфера отдыха. Запрещены громкие телефонные разговоры и просмотр видео без наушников.
-          </p>
-        </div>
-
-        <!-- Pillar 4 -->
-        <div class="pillar-card">
-          <div class="pillar-icon-box">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-            </svg>
-          </div>
-          <h3 class="pillar-title">Снайпер билетов</h3>
-          <p class="pillar-desc">
-            Если все места выкуплены, алгоритм перехватит отказной билет в базу за 0.38 секунды и уведомит вас в Telegram.
-          </p>
+        <div class="registry-col">
+          <span class="registry-number">REGISTRE &bull; 03</span>
+          <div class="registry-title">Автоперехват за 0.38с</div>
+          <p class="registry-text">Алгоритм мгновенно выкупает отказные билеты при полной загрузке рейса.</p>
         </div>
 
       </div>
@@ -1882,132 +1480,42 @@
   </section>
 
   <!-- =========================================================================
-       VIP FLEET GALLERY (3D TILT CARDS)
+       SECTION: THE MANIFESTO (EDITORIAL RESTRAINT)
        ========================================================================= -->
-  <section class="section-fleet" id="section-fleet">
+  <section class="section-manifesto" id="manifesto">
     <div class="container">
       
-      <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px;">
-        <div>
-          <div class="section-eyebrow">Флагманский парк</div>
-          <h2 class="section-title">Классы межгородского <em>комфорта.</em></h2>
-        </div>
-        <p class="section-lead">
-          Только сертифицированные микроавтобусы Mercedes-Benz Sprinter 519 CDI не старше 3 лет. Пневматическая подвеска и климат Webasto.
-        </p>
+      <div class="manifesto-quote-wrapper fade-up-element">
+        <blockquote class="manifesto-quote">
+          &laquo;Настоящая роскошь в путешествии &mdash; это не блеск и не суета. Это возможность закрыть глаза и знать, что время принадлежит вам&raquo;.
+        </blockquote>
+        <div class="manifesto-author">&mdash; Манифест BusLiner, 2026</div>
       </div>
 
-      <div class="fleet-grid">
+      <div class="principles-triad">
         
-        <!-- Fleet Card 1 -->
-        <div class="tilt-card" data-tilt>
-          <div class="fleet-card-top">
-            <span class="fleet-class-badge badge-executive">ФЛАГМАН &bull; 19 МЕСТ</span>
-            <h3 class="fleet-name">Sprinter 519 CDI Executive</h3>
-            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5;">
-              Премиальная отделка кожей Nappa. Одиночные капитанские кресла у окна, увеличенный шаг сидений 86 см.
-            </p>
-
-            <ul class="fleet-features-list">
-              <li class="fleet-feature-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Индивидуальные розетки 220V + Type-C</span>
-              </li>
-              <li class="fleet-feature-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Багаж до 25 кг включен в стоимость</span>
-              </li>
-              <li class="fleet-feature-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Плавный ход на пневмоподушках</span>
-              </li>
-            </ul>
-          </div>
-
-          <div class="fleet-card-bottom">
-            <div class="fleet-price-block">
-              <span class="fleet-price-label">Билет от</span>
-              <span class="fleet-price-value">28.00 BYN</span>
-            </div>
-            <a href="seat-picker-3d-demo.html" class="btn-card-action">
-              <span>Выбрать место</span>
-              &rarr;
-            </a>
-          </div>
+        <div class="triad-col fade-up-element stagger-1">
+          <span class="triad-idx">[ ПРИНЦИП I ]</span>
+          <h3 class="triad-title">Неприкосновенность покоя</h3>
+          <p class="triad-desc">
+            В салоне строго соблюдается тихий режим: запрещены громкие разговоры по телефону и воспроизведение звука без наушников. Вы можете спать или сосредоточенно работать на протяжении всей дороги.
+          </p>
         </div>
 
-        <!-- Fleet Card 2 -->
-        <div class="tilt-card" data-tilt>
-          <div class="fleet-card-top">
-            <span class="fleet-class-badge badge-express">AIRPORT EXPRESS &bull; БЫСТРЫЙ КОРИДОР</span>
-            <h3 class="fleet-name">Sprinter Airport Shuttle</h3>
-            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5;">
-              Прямой трансфер в аэропорты Вильнюса (VNO) и Варшавы (WAW/WMI). Выделенный пограничный коридор.
-            </p>
-
-            <ul class="fleet-features-list">
-              <li class="fleet-feature-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Фиксированное расписание под авиарейсы</span>
-              </li>
-              <li class="fleet-feature-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Увеличенный грузовой отсек для чемоданов</span>
-              </li>
-              <li class="fleet-feature-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Помощь водителя с погрузкой багажа</span>
-              </li>
-            </ul>
-          </div>
-
-          <div class="fleet-card-bottom">
-            <div class="fleet-price-block">
-              <span class="fleet-price-label">Билет от</span>
-              <span class="fleet-price-value">85.00 BYN</span>
-            </div>
-            <a href="seat-picker-3d-demo.html" class="btn-card-action">
-              <span>Выбрать место</span>
-              &rarr;
-            </a>
-          </div>
+        <div class="triad-col fade-up-element stagger-2">
+          <span class="triad-idx">[ ПРИНЦИП II ]</span>
+          <h3 class="triad-title">Пространство как ценность</h3>
+          <p class="triad-desc">
+            В наших микроавтобусах всего 19 мест вместо стандартных 22. Увеличенное расстояние между рядами (86 см) позволяет вытянуть ноги и откинуться на угол до 135 градусов.
+          </p>
         </div>
 
-        <!-- Fleet Card 3 -->
-        <div class="tilt-card" data-tilt>
-          <div class="fleet-card-top">
-            <span class="fleet-class-badge badge-sleeper">NIGHT LOUNGE &bull; НОЧНЫЕ РЕЙСЫ</span>
-            <h3 class="fleet-name">Sprinter Night Sleeper</h3>
-            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5;">
-              Глубокий наклон анатомических кресел до 140&deg;. Набор для сна (маска, беруши, мягкий плед) выдается каждому гостю.
-            </p>
-
-            <ul class="fleet-features-list">
-              <li class="fleet-feature-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Приглушенный теплый свет 2700K</span>
-              </li>
-              <li class="fleet-feature-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Бутилированная артезианская вода</span>
-              </li>
-              <li class="fleet-feature-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Бесшумный автономный обогрев Webasto</span>
-              </li>
-            </ul>
-          </div>
-
-          <div class="fleet-card-bottom">
-            <div class="fleet-price-block">
-              <span class="fleet-price-label">Билет от</span>
-              <span class="fleet-price-value">34.00 BYN</span>
-            </div>
-            <a href="seat-picker-3d-demo.html" class="btn-card-action">
-              <span>Выбрать место</span>
-              &rarr;
-            </a>
-          </div>
+        <div class="triad-col fade-up-element stagger-3">
+          <span class="triad-idx">[ ПРИНЦИП III ]</span>
+          <h3 class="triad-title">Абсолютная точность</h3>
+          <p class="triad-desc">
+            Отправление по швейцарскому хронометражу минута в минуту. Никаких промежуточных посадок у обочин и непредвиденных задержек.
+          </p>
         </div>
 
       </div>
@@ -2016,111 +1524,233 @@
   </section>
 
   <!-- =========================================================================
-       SUPERSONIC TICKET SNIPER ARENA (WOW-EFFECT PRESERVED & ELEVATED)
+       SECTION: COLLECTION & FLEET (TACTILE CARDS, NO 3D)
        ========================================================================= -->
-  <section class="section-sniper-arena" id="section-sniper">
-    <div class="sniper-grid-bg"></div>
-    <div class="sniper-ambient-glow"></div>
-
+  <section class="section-fleet-collection" id="collection">
     <div class="container">
-      <div class="sniper-split">
-        
-        <!-- Left Column: Story & Trigger -->
+      
+      <div class="section-editorial-header fade-up-element">
         <div>
-          <div class="sniper-header-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
-            <span>ТЕХНОЛОГИЯ АВТОВЫКУПА &bull; СНАЙПЕР</span>
-          </div>
-
-          <h2 class="sniper-title">
-            Билетов нет?<br>
-            <em>Снайпер выкупит отказной.</em>
-          </h2>
-
-          <p class="sniper-lead">
-            В пятницу вечером и перед праздниками все рейсы раскупаются за недели. Когда кто-то сдает билет, наш робот-снайпер перехватывает его за 0.38 секунды до появления в открытой продаже.
-          </p>
-
-          <div class="sniper-specs-row">
-            <div class="sniper-spec-box">
-              <span class="sniper-spec-val">0.38 с</span>
-              <span class="sniper-spec-lbl">Скорость реакции на возврат</span>
-            </div>
-            <div class="sniper-spec-box">
-              <span class="sniper-spec-val">99.4%</span>
-              <span class="sniper-spec-lbl">Успешных перехватов</span>
-            </div>
-            <div class="sniper-spec-box">
-              <span class="sniper-spec-val">24 / 7</span>
-              <span class="sniper-spec-lbl">Непрерывный мониторинг</span>
-            </div>
-          </div>
-
-          <button class="btn-fire-sniper" onclick="fireSupersonicSniperShot()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span>Смоделировать выкуп снайпером (0.38с)</span>
-          </button>
+          <span class="section-eyebrow">КОЛЛЕКЦИЯ ФЛОТА</span>
+          <h2 class="section-editorial-title">Три класса <em>межгородского достоинства.</em></h2>
         </div>
+        <p class="section-editorial-side">
+          Все микроавтобусы парка находятся на официальной заводской гарантии Mercedes-Benz и проходят ежедневный технический аудит перед рейсом.
+        </p>
+      </div>
 
-        <!-- Right Column: Interactive Physical Ticket with Supersonic Ballistics -->
-        <div class="sniper-canvas-wrapper">
-          
-          <!-- Ballistic Mach Tracer Canvas -->
-          <canvas id="sniper-kinetic-canvas"></canvas>
-
-          <!-- Physical Paper Ticket -->
-          <div class="physical-ticket-sheet" id="sniper-ticket-sheet">
-            
-            <div class="ticket-security-strip">
-              <span class="ticket-series-num">BL-SECURITY #089-VIP</span>
-              <span class="ticket-state-tag" id="ticket-state-badge">ОЖИДАНИЕ ВЫКУПА</span>
+      <div class="fleet-collection-grid">
+        
+        <!-- Card 1: Classe Premiere -->
+        <div class="monograph-card fade-up-element stagger-1" data-cursor="hover">
+          <div>
+            <div class="card-photo-container">
+              <div class="card-photo-surface" style="background-color: #DDD4C6; background-image: radial-gradient(circle at 50% 50%, #ECE6DC 0%, #D8CFC0 100%);"></div>
+              <span class="card-photo-tag">CLASSE PREMI&Egrave;RE</span>
             </div>
 
-            <div class="ticket-main-info">
-              <div style="font-size: 11px; text-transform: uppercase; color: var(--text-dim); font-weight: 700; letter-spacing: 0.05em;">
-                ЭЛЕКТРОННЫЙ ПОСАДОЧНЫЙ ТАЛОН
-              </div>
-              <h3 class="ticket-route-headline">Минск &rarr; Вильнюс</h3>
-              <p style="font-size: 13px; color: var(--text-muted);">
-                Отправление: Сегодня, 18:45 &bull; Центральный Автовокзал
+            <div class="card-content-block">
+              <h3 class="card-class-heading">Sprinter 519 CDI Executive</h3>
+              <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+                Капитанские анатомические кресла с отделкой натуральной кожей Nappa. Индивидуальный столик, подстаканник и лампа чтения 2700K.
               </p>
 
-              <div class="ticket-seat-display">
-                <div>
-                  <div class="ticket-seat-label">Место в салоне</div>
-                  <div style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Капитанский ряд у окна</div>
-                </div>
-                <div class="ticket-seat-id">04A</div>
-              </div>
+              <ul class="card-specs-list">
+                <li class="card-spec-item">
+                  <span>Вместимость</span>
+                  <strong>19 кресел</strong>
+                </li>
+                <li class="card-spec-item">
+                  <span>Питание</span>
+                  <strong>220V + Type-C PD</strong>
+                </li>
+                <li class="card-spec-item">
+                  <span>Багаж</span>
+                  <strong>До 25 кг включен</strong>
+                </li>
+              </ul>
+            </div>
+          </div>
 
-              <div style="font-size: 12px; color: var(--text-dim); line-height: 1.4;" id="ticket-note-txt">
-                Рейс полностью заполнен. Снайпер активирован в режиме готовности.
-              </div>
+          <div class="card-footer-action">
+            <div class="fare-price-display">28.00 <span>BYN</span></div>
+            <a href="seat-picker-3d-demo.html" class="link-card-reserve">
+              <span>Выбрать кресло</span>
+              &rarr;
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 2: Navette Express -->
+        <div class="monograph-card fade-up-element stagger-2" data-cursor="hover">
+          <div>
+            <div class="card-photo-container">
+              <div class="card-photo-surface" style="background-color: #D3CDC2; background-image: radial-gradient(circle at 50% 50%, #E2DDD3 0%, #CCC4B6 100%);"></div>
+              <span class="card-photo-tag">NAVETTE EXPRESS</span>
             </div>
 
-            <div class="ticket-footer-barcode">
-              <div class="barcode-lines">
-                <span class="b-bar thick"></span>
-                <span class="b-bar thin"></span>
-                <span class="b-bar"></span>
-                <span class="b-bar thick"></span>
-                <span class="b-bar thin"></span>
-                <span class="b-bar"></span>
-                <span class="b-bar thick"></span>
-                <span class="b-bar thin"></span>
-                <span class="b-bar"></span>
-                <span class="b-bar thick"></span>
+            <div class="card-content-block">
+              <h3 class="card-class-heading">Airport Corridor Shuttle</h3>
+              <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+                Прямой трансфер в аэропорты Вильнюса и Варшавы. Выделенный пограничный коридор и помощь водителя с размещением багажа.
+              </p>
+
+              <ul class="card-specs-list">
+                <li class="card-spec-item">
+                  <span>График</span>
+                  <strong>Под рейсы авиакомпаний</strong>
+                </li>
+                <li class="card-spec-item">
+                  <span>Связь</span>
+                  <strong>5G Mesh роутер</strong>
+                </li>
+                <li class="card-spec-item">
+                  <span>Пограничный коридор</span>
+                  <strong>Приоритетный проезд</strong>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card-footer-action">
+            <div class="fare-price-display">85.00 <span>BYN</span></div>
+            <a href="seat-picker-3d-demo.html" class="link-card-reserve">
+              <span>Выбрать кресло</span>
+              &rarr;
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 3: Salon de Nuit -->
+        <div class="monograph-card fade-up-element stagger-3" data-cursor="hover">
+          <div>
+            <div class="card-photo-container">
+              <div class="card-photo-surface" style="background-color: #C9C2B5; background-image: radial-gradient(circle at 50% 50%, #DDD6C9 0%, #BFB7A8 100%);"></div>
+              <span class="card-photo-tag">SALON DE NUIT</span>
+            </div>
+
+            <div class="card-content-block">
+              <h3 class="card-class-heading">Night Sleeper Lounge</h3>
+              <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+                Рейсы ночного сообщения. Увеличенный наклон спинки до 140 градусов, шелковая маска для сна, беруши и артезианская вода каждому гостю.
+              </p>
+
+              <ul class="card-specs-list">
+                <li class="card-spec-item">
+                  <span>Наклон спинки</span>
+                  <strong>140&deg; анатомический</strong>
+                </li>
+                <li class="card-spec-item">
+                  <span>Климат-контроль</span>
+                  <strong>Автономный Webasto</strong>
+                </li>
+                <li class="card-spec-item">
+                  <span>Набор для отдыха</span>
+                  <strong>Включен в билет</strong>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card-footer-action">
+            <div class="fare-price-display">34.00 <span>BYN</span></div>
+            <a href="seat-picker-3d-demo.html" class="link-card-reserve">
+              <span>Выбрать кресло</span>
+              &rarr;
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SECTION: THE ROBOT-SNIPER CHRONICLE (QUIET LUXURY PRESENTATION)
+       ========================================================================= -->
+  <section class="section-sniper-chronicle" id="sniper">
+    <div class="container">
+      <div class="sniper-editorial-grid">
+        
+        <!-- Story -->
+        <div class="sniper-story-block fade-up-element">
+          <span class="sniper-meta-tag">ТЕХНОЛОГИЯ АВТОВЫКУПА &bull; СНАЙПЕР</span>
+          
+          <h2 class="sniper-story-title">
+            Билетов нет в продаже?<br>
+            <em>Снайпер вернет вам место.</em>
+          </h2>
+
+          <p class="sniper-story-lead">
+            В пятницу вечером и перед праздниками билеты раскупаются за недели. Когда другой пассажир оформляет возврат, наш робот-снайпер перехватывает его за 0.38 секунды до появления в открытом доступе.
+          </p>
+
+          <div class="sniper-metrics-duo">
+            <div>
+              <div class="sniper-metric-val">0.38 с</div>
+              <div class="sniper-metric-lbl">Скорость выкупа при оформлении возврата</div>
+            </div>
+            <div>
+              <div class="sniper-metric-val">99.4%</div>
+              <div class="sniper-metric-lbl">Точность перехвата целевого направления</div>
+            </div>
+          </div>
+
+          <div>
+            <button class="btn-sniper-simulation" onclick="triggerTactileSniperImpulse()" data-cursor="hover">
+              <span>Смоделировать выкуп (0.38с)</span>
+              &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- Archival Paper Ticket Stage -->
+        <div class="sniper-ticket-stage fade-up-element">
+          
+          <div class="archival-paper-ticket" id="archivalTicket">
+            
+            <div class="ticket-guilloche-top">
+              <span class="ticket-serial-mono">BL &bull; 089-ARCHIVE</span>
+              <span class="ticket-status-pill" id="ticketStatusPill">ОЖИДАНИЕ ВОЗВРАТА</span>
+            </div>
+
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); letter-spacing: 0.12em; text-transform: uppercase;">
+                ЭЛЕКТРОННЫЙ ПОСАДОЧНЫЙ ТАЛОН
+              </div>
+              <div class="ticket-headline-route">Минск &rarr; Вильнюс</div>
+              <div class="ticket-subline-date">Отправление: Сегодня, 18:45 &bull; Центральный АВ</div>
+            </div>
+
+            <div class="ticket-seat-monogram">
+              <div>
+                <div style="font-size: 11px; text-transform: uppercase; color: var(--text-faint); font-weight: 600;">Место</div>
+                <div style="font-size: 13px; color: var(--text-muted);">Капитанский ряд у окна</div>
+              </div>
+              <div style="font-family: var(--font-mono); font-size: 20px; font-weight: 600; color: var(--text-graphite);">04A</div>
+            </div>
+
+            <div class="ticket-barcode-footer">
+              <div class="barcode-svg-mimic">
+                <span class="bar w2"></span>
+                <span class="bar"></span>
+                <span class="bar w3"></span>
+                <span class="bar"></span>
+                <span class="bar w2"></span>
+                <span class="bar"></span>
+                <span class="bar w3"></span>
+                <span class="bar"></span>
+                <span class="bar w2"></span>
               </div>
               <div style="text-align: right;">
-                <div style="font-size: 10px; color: var(--text-dim); font-family: var(--font-mono);">ТАРИФ EXECUTIVE</div>
-                <div style="font-family: var(--font-mono); font-size: 16px; font-weight: 800; color: var(--accent-navy);">85.00 BYN</div>
+                <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-faint);">ТАРИФ PREMI&Egrave;RE</div>
+                <div style="font-family: var(--font-mono); font-size: 18px; font-weight: 600; color: var(--text-graphite);">85.00 BYN</div>
               </div>
             </div>
 
-            <!-- Bullet Hole Overlay -->
-            <div class="ticket-bullet-target" id="ticket-bullet-hole">
-              <div class="procedural-hole-burn"></div>
-            </div>
+            <!-- Bullet Hole Puncture Effect -->
+            <div class="ticket-puncture-target" id="ticketPuncture"></div>
 
           </div>
 
@@ -2131,167 +1761,132 @@
   </section>
 
   <!-- =========================================================================
-       SCHEDULE & DIRECT INTERCITY LINES
+       SECTION: TIMETABLE & DIRECT ARTERIES
        ========================================================================= -->
-  <section class="section-routes-explorer" id="section-schedule">
+  <section class="section-timetable" id="timetable">
     <div class="container">
       
-      <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px;">
+      <div class="section-editorial-header fade-up-element">
         <div>
-          <div class="section-eyebrow">Магистральные линии</div>
-          <h2 class="section-title">Регулярные рейсы <em>по расписанию.</em></h2>
+          <span class="section-eyebrow">РЕГУЛЯРНЫЙ РЕЕСТР</span>
+          <h2 class="section-editorial-title">Магистральные линии <em>сезона.</em></h2>
         </div>
-        <p class="section-lead">
-          Отправление минута в минуту с Центрального автовокзала. Моментальная посадка по QR-коду на экране телефона.
+        <p class="section-editorial-side">
+          Отправление минута в минуту. Посадка осуществляется по бесконтактному QR-билету без предъявления распечатанных документов.
         </p>
       </div>
 
-      <div class="routes-deck-grid">
-        
-        <!-- Route 1 -->
-        <div class="route-card">
-          <div>
-            <div class="route-badge-row">
-              <span class="route-time-chip">02ч 45мин в пути</span>
-              <span class="route-tag-track">FAST-TRACK EU</span>
-            </div>
-            <h3 class="route-city-headline">Минск &rarr; Вильнюс</h3>
-            <p class="route-sub-info">Центральный АВ &bull; Каждые 2 часа &bull; Выделенная полоса</p>
-          </div>
-
-          <div class="route-bottom-action">
-            <div class="route-price-num">85.00 <span>BYN</span></div>
-            <a href="seat-picker-3d-demo.html" class="btn-primary-cta" style="font-size: 12px; padding: 8px 16px;">
-              <span>Выбрать кресло</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Route 2 -->
-        <div class="route-card">
-          <div>
-            <div class="route-badge-row">
-              <span class="route-time-chip">03ч 10мин в пути</span>
-              <span class="route-tag-track" style="color: var(--status-available);">МАГИСТРАЛЬ M6</span>
-            </div>
-            <h3 class="route-city-headline">Минск &rarr; Гродно</h3>
-            <p class="route-sub-info">Прямой экспресс без остановок в деревнях &bull; Wi-Fi 5G</p>
-          </div>
-
-          <div class="route-bottom-action">
-            <div class="route-price-num">28.00 <span>BYN</span></div>
-            <a href="seat-picker-3d-demo.html" class="btn-primary-cta" style="font-size: 12px; padding: 8px 16px;">
-              <span>Выбрать кресло</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Route 3 -->
-        <div class="route-card">
-          <div>
-            <div class="route-badge-row">
-              <span class="route-time-chip">03ч 30мин в пути</span>
-              <span class="route-tag-track" style="color: var(--status-available);">МАГИСТРАЛЬ M1</span>
-            </div>
-            <h3 class="route-city-headline">Минск &rarr; Брест</h3>
-            <p class="route-sub-info">Олимпийская трасса M1 &bull; Анатомические кресла 220V</p>
-          </div>
-
-          <div class="route-bottom-action">
-            <div class="route-price-num">32.00 <span>BYN</span></div>
-            <a href="seat-picker-3d-demo.html" class="btn-primary-cta" style="font-size: 12px; padding: 8px 16px;">
-              <span>Выбрать кресло</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Route 4 -->
-        <div class="route-card">
-          <div>
-            <div class="route-badge-row">
-              <span class="route-time-chip">03ч 20мин в пути</span>
-              <span class="route-tag-track" style="color: var(--status-available);">МАГИСТРАЛЬ M5</span>
-            </div>
-            <h3 class="route-city-headline">Гомель &rarr; Минск</h3>
-            <p class="route-sub-info">Автовокзал Гомель &rarr; Минск Центральный &bull; 19 мест VIP</p>
-          </div>
-
-          <div class="route-bottom-action">
-            <div class="route-price-num">28.00 <span>BYN</span></div>
-            <a href="seat-picker-3d-demo.html" class="btn-primary-cta" style="font-size: 12px; padding: 8px 16px;">
-              <span>Выбрать кресло</span>
-            </a>
-          </div>
-        </div>
-
-      </div>
+      <table class="timetable-table fade-up-element">
+        <thead>
+          <tr>
+            <th>Направление</th>
+            <th>Время в пути</th>
+            <th>Интервал</th>
+            <th>Тариф</th>
+            <th style="text-align: right;">Бронирование</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="route-city-cell">Минск &mdash; Вильнюс</td>
+            <td class="route-meta-cell">02ч 45мин</td>
+            <td class="route-meta-cell">Каждые 2 часа</td>
+            <td class="route-price-cell">85.00 BYN</td>
+            <td style="text-align: right;">
+              <a href="seat-picker-3d-demo.html" class="btn-table-book" data-cursor="hover">Выбрать место</a>
+            </td>
+          </tr>
+          <tr>
+            <td class="route-city-cell">Минск &mdash; Гродно</td>
+            <td class="route-meta-cell">03ч 10мин</td>
+            <td class="route-meta-cell">Каждые 90 минут</td>
+            <td class="route-price-cell">28.00 BYN</td>
+            <td style="text-align: right;">
+              <a href="seat-picker-3d-demo.html" class="btn-table-book" data-cursor="hover">Выбрать место</a>
+            </td>
+          </tr>
+          <tr>
+            <td class="route-city-cell">Минск &mdash; Брест</td>
+            <td class="route-meta-cell">03ч 30мин</td>
+            <td class="route-meta-cell">Каждые 2 часа</td>
+            <td class="route-price-cell">32.00 BYN</td>
+            <td style="text-align: right;">
+              <a href="seat-picker-3d-demo.html" class="btn-table-book" data-cursor="hover">Выбрать место</a>
+            </td>
+          </tr>
+          <tr>
+            <td class="route-city-cell">Гомель &mdash; Минск</td>
+            <td class="route-meta-cell">03ч 20мин</td>
+            <td class="route-meta-cell">Каждые 2 часа</td>
+            <td class="route-price-cell">28.00 BYN</td>
+            <td style="text-align: right;">
+              <a href="seat-picker-3d-demo.html" class="btn-table-book" data-cursor="hover">Выбрать место</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
     </div>
   </section>
 
   <!-- =========================================================================
-       MONOLITH EXECUTIVE FOOTER
+       FOOTER: ARCHITECTURAL MONOLITH
        ========================================================================= -->
-  <footer class="monolith-footer">
+  <footer class="site-footer-monolith">
     <div class="container">
       
-      <div class="footer-top-row">
+      <div class="footer-top-grid">
         
-        <!-- Brand Info -->
         <div>
-          <div class="footer-huge-brand">Bus<span>Liner</span></div>
-          <p class="footer-brand-desc">
-            Технологическая платформа межгородской пассажирской мобильности нового поколения. Лицензированные перевозчики, гарантированный комфорт и безопасность.
+          <div class="footer-brand-monogram">BusLiner</div>
+          <p class="footer-brand-philosophy">
+            Архитектура спокойных путешествий. Официальная сеть междугородных сообщений повышенной комфортности.
           </p>
-          <div style="margin-top: 18px; font-size: 12px; color: #64748B;">
-            Лицензия Минтранса Республики Беларусь № 02190/4482
+          <div style="font-size: 12px; color: var(--text-faint);">
+            Лицензия Минтранса Республики Беларусь &numero; 02190/4482
           </div>
         </div>
 
-        <!-- Passenger Col -->
         <div>
-          <div class="footer-col-title">Пассажирам</div>
-          <ul class="footer-links-list">
-            <li><a href="#hero">Поиск билетов</a></li>
-            <li><a href="seat-picker-3d-demo.html">3D салон микроавтобуса</a></li>
-            <li><a href="#section-sniper">Робот-снайпер брони</a></li>
-            <li><a href="#section-fleet">Правила провоза багажа</a></li>
-            <li><a href="#hero">Возврат и обмен билетов</a></li>
+          <div class="footer-column-heading">Пассажирам</div>
+          <ul class="footer-nav-list">
+            <li><a href="#hero" data-cursor="hover">Поиск билетов</a></li>
+            <li><a href="seat-picker-3d-demo.html" data-cursor="hover">Карта салона 19 мест</a></li>
+            <li><a href="#sniper" data-cursor="hover">Технология снайпера</a></li>
+            <li><a href="#collection" data-cursor="hover">Правила провоза багажа</a></li>
           </ul>
         </div>
 
-        <!-- Carriers Col -->
         <div>
-          <div class="footer-col-title">Перевозчикам</div>
-          <ul class="footer-links-list">
-            <li><a href="busliner-partners.html">Подключение автопарка</a></li>
-            <li><a href="carrier-dashboard.html">Кабинет диспетчера</a></li>
-            <li><a href="driver-terminal.html">Терминал посадки водителя</a></li>
-            <li><a href="partner-auth.html">Вход для партнеров</a></li>
+          <div class="footer-column-heading">Перевозчикам</div>
+          <ul class="footer-nav-list">
+            <li><a href="busliner-partners.html" data-cursor="hover">Подключение автопарка</a></li>
+            <li><a href="carrier-dashboard.html" data-cursor="hover">Диспетчерский кабинет</a></li>
+            <li><a href="driver-terminal.html" data-cursor="hover">Терминал посадки водителя</a></li>
+            <li><a href="partner-auth.html" data-cursor="hover">Вход для партнеров</a></li>
           </ul>
         </div>
 
-        <!-- Security & Legal -->
         <div>
-          <div class="footer-col-title">Безопасность</div>
-          <ul class="footer-links-list">
-            <li><a href="#">Страхование каждого пассажира</a></li>
-            <li><a href="#">Ежерейсовый медосмотр водителей</a></li>
-            <li><a href="#">Политика конфиденциальности</a></li>
-            <li><a href="#">Договор оферты</a></li>
+          <div class="footer-column-heading">Доверие</div>
+          <ul class="footer-nav-list">
+            <li><a href="#" data-cursor="hover">Страховой полис пассажира</a></li>
+            <li><a href="#" data-cursor="hover">Медицинский осмотр водителей</a></li>
+            <li><a href="#" data-cursor="hover">Политика конфиденциальности</a></li>
+            <li><a href="#" data-cursor="hover">Регламент возврата средств</a></li>
           </ul>
         </div>
 
       </div>
 
-      <div class="footer-bottom-row">
+      <div class="footer-sub-bar">
         <div>
-          &copy; 2026 BusLiner Technologies. Все права защищены. Разработано по стандартам тихого люкса и надежности.
+          &copy; 2026 BusLiner Technologies. Сдержанность как наивысшая форма роскоши.
         </div>
-        <div style="display: flex; gap: 20px;">
-          <a href="driver-terminal.html" style="color: #93C5FD; text-decoration: none;">Терминал водителя</a>
-          <a href="carrier-dashboard.html" style="color: #93C5FD; text-decoration: none;">Диспетчерская</a>
-          <a href="seat-picker-3d-demo.html" style="color: #93C5FD; text-decoration: none;">3D Модель Sprinter</a>
+        <div style="display: flex; gap: 24px;">
+          <a href="driver-terminal.html" style="color: var(--text-muted); text-decoration: none;" data-cursor="hover">Терминал водителя</a>
+          <a href="carrier-dashboard.html" style="color: var(--text-muted); text-decoration: none;" data-cursor="hover">Диспетчерская</a>
+          <a href="seat-picker-3d-demo.html" style="color: var(--text-muted); text-decoration: none;" data-cursor="hover">Салон 19 мест</a>
         </div>
       </div>
 
@@ -2299,20 +1894,62 @@
   </footer>
 
   <!-- =========================================================================
-       INTERACTIVE LOGIC: THREE.JS 3D VIP CABIN TWIN, WEB AUDIO & SNIPER PHYSICS
+       MOTION SCRIPTS: INTERSECTION OBSERVER, LERP CURSOR & WEB AUDIO
        ========================================================================= -->
   <script>
-    // 1. CURSOR SPOTLIGHT TRACKER (Subtle luxury ambient lighting)
-    const spotlight = document.getElementById('cursor-spotlight');
-    window.addEventListener('mousemove', (e) => {
-      if (spotlight) {
-        spotlight.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+    // 1. CUSTOM LERP CURSOR (Tactile Quiet Luxury Follower)
+    (function initQuietCursor() {
+      const cursor = document.getElementById('cursorFollower');
+      if (!cursor || window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.innerWidth < 768) {
+        if (cursor) cursor.style.display = 'none';
+        return;
       }
-    }, { passive: true });
 
-    // 2. QUIET LUXURY WEB AUDIO SYSTEM
-    let soundEnabled = true;
+      let mouseX = -100;
+      let mouseY = -100;
+      let cursorX = -100;
+      let cursorY = -100;
+      const lerp = 0.14; // Smooth trailing delay
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      }, { passive: true });
+
+      function renderCursor() {
+        cursorX += (mouseX - cursorX) * lerp;
+        cursorY += (mouseY - cursorY) * lerp;
+        cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+        requestAnimationFrame(renderCursor);
+      }
+      renderCursor();
+
+      // Interactive targets expand cursor softly
+      document.querySelectorAll('[data-cursor="hover"], a, button, input').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+      });
+    })();
+
+    // 2. INTERSECTION OBSERVER FOR EDITORIAL FADE-UPS
+    (function initScrollObserver() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+          }
+        });
+      }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      document.querySelectorAll('.fade-up-element').forEach(el => observer.observe(el));
+    })();
+
+    // 3. DISCREET WEB AUDIO SYSTEM (Calm Acoustic Chimes)
     let audioCtx = null;
+    let isSoundOn = true;
 
     function getAudioCtx() {
       if (!audioCtx) {
@@ -2325,441 +1962,144 @@
       return audioCtx;
     }
 
-    function toggleSoundSystem() {
-      soundEnabled = !soundEnabled;
-      const btn = document.getElementById('btn-audio-toggle');
-      if (btn) {
-        if (soundEnabled) {
-          btn.classList.add('active');
-          btn.querySelector('span:last-child').innerText = 'Звук ВКЛ';
-          playGentleChime();
+    function toggleAudio() {
+      isSoundOn = !isSoundOn;
+      const btn = document.getElementById('soundToggle');
+      const label = document.getElementById('soundLabel');
+      if (btn && label) {
+        if (isSoundOn) {
+          btn.classList.remove('muted');
+          label.innerText = 'Звук';
+          playWarmWoodChime();
         } else {
-          btn.classList.remove('active');
-          btn.querySelector('span:last-child').innerText = 'Звук ВЫКЛ';
+          btn.classList.add('muted');
+          label.innerText = 'Тишина';
         }
       }
     }
 
-    // Soft Luxury Chime for UI Actions
-    function playGentleChime() {
-      if (!soundEnabled) return;
+    function playWarmWoodChime() {
+      if (!isSoundOn) return;
       try {
         const ctx = getAudioCtx();
         if (!ctx) return;
         const now = ctx.currentTime;
-        [523.25, 659.25, 783.99].forEach((freq, i) => {
+        // Warm organic chime (sine harmonics)
+        [440, 554.37, 659.25].forEach((freq, idx) => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now + i * 0.05);
-          gain.gain.setValueAtTime(0.04, now + i * 0.05);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.05 + 0.35);
+          osc.frequency.setValueAtTime(freq, now + idx * 0.04);
+          gain.gain.setValueAtTime(0.025, now + idx * 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.04 + 0.45);
           osc.connect(gain);
           gain.connect(ctx.destination);
-          osc.start(now + i * 0.05);
-          osc.stop(now + i * 0.05 + 0.38);
+          osc.start(now + idx * 0.04);
+          osc.stop(now + idx * 0.04 + 0.48);
         });
       } catch(e) {}
     }
 
-    // Realistic Supersonic Ballistic Crack & Sub-Bass Thump
-    function playSniperAcousticImpulse() {
-      if (!soundEnabled) return;
+    function playSniperImpulse() {
+      if (!isSoundOn) return;
       try {
         const ctx = getAudioCtx();
         if (!ctx) return;
         const now = ctx.currentTime;
 
-        // High-velocity sharp sonic crack
-        const bufferSize = Math.floor(ctx.sampleRate * 0.06);
+        // Dry supersonic precision click
+        const bufferSize = Math.floor(ctx.sampleRate * 0.05);
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
         for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.012));
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.008));
         }
 
         const noise = ctx.createBufferSource();
         noise.buffer = buffer;
         const filter = ctx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(4200, now);
-        filter.frequency.exponentialRampToValueAtTime(260, now + 0.05);
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(2400, now);
+        filter.Q.setValueAtTime(3.5, now);
 
         const gain = ctx.createGain();
-        gain.gain.setValueAtTime(0.35, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
 
         noise.connect(filter);
         filter.connect(gain);
         gain.connect(ctx.destination);
         noise.start(now);
 
-        // Low-frequency shockwave thump
+        // Low frequency paper stamp bump
         const sub = ctx.createOscillator();
         const subGain = ctx.createGain();
         sub.type = 'sine';
-        sub.frequency.setValueAtTime(130, now);
-        sub.frequency.exponentialRampToValueAtTime(32, now + 0.16);
-        subGain.gain.setValueAtTime(0.3, now);
-        subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+        sub.frequency.setValueAtTime(120, now);
+        sub.frequency.exponentialRampToValueAtTime(38, now + 0.12);
+        subGain.gain.setValueAtTime(0.18, now);
+        subGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
         sub.connect(subGain);
         subGain.connect(ctx.destination);
         sub.start(now);
-        sub.stop(now + 0.2);
+        sub.stop(now + 0.15);
       } catch(e) {}
     }
 
-    // 3. CITIES SWAP & PRESETS
-    window.swapHeroCities = function() {
-      const from = document.getElementById('hero-from');
-      const to = document.getElementById('hero-to');
+    // 4. INTERACTION HELPERS
+    window.swapDestinations = function() {
+      const from = document.getElementById('inputFrom');
+      const to = document.getElementById('inputTo');
       if (from && to) {
         const tmp = from.value;
         from.value = to.value;
         to.value = tmp;
-        playGentleChime();
+        playWarmWoodChime();
       }
     };
 
-    window.setHeroPreset = function(fromVal, toVal) {
-      const from = document.getElementById('hero-from');
-      const to = document.getElementById('hero-to');
+    window.setPreset = function(fromVal, toVal) {
+      const from = document.getElementById('inputFrom');
+      const to = document.getElementById('inputTo');
       if (from && to) {
         from.value = fromVal;
         to.value = toVal;
-        playGentleChime();
-        const target = document.getElementById('section-schedule');
-        if (target) target.scrollIntoView({ behavior: 'smooth' });
+        playWarmWoodChime();
+        scrollToTimetable();
       }
     };
 
-    window.triggerHeroSearch = function() {
-      playGentleChime();
-      const target = document.getElementById('section-schedule');
+    window.scrollToTimetable = function() {
+      playWarmWoodChime();
+      const target = document.getElementById('timetable');
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // 4. 3D TILT CARDS LOGIC (QUIET LUXURY MICROPHYSICS)
-    const tiltCards = document.querySelectorAll('[data-tilt]');
-    tiltCards.forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = ((y - centerY) / centerY) * -6;
-        const rotateY = ((x - centerX) / centerX) * 6;
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.015, 1.015, 1.015)`;
-      });
+    // 5. TACTILE SNIPER IMPULSE SIMULATION
+    window.triggerTactileSniperImpulse = function() {
+      const ticket = document.getElementById('archivalTicket');
+      const puncture = document.getElementById('ticketPuncture');
+      const statusPill = document.getElementById('ticketStatusPill');
 
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-      });
-    });
+      if (!ticket || !puncture) return;
 
-    // 5. THREE.JS 3D VIP EXECUTIVE SPRINTER CABIN TWIN
-    (function initExecutiveCabinViewer() {
-      const canvas = document.getElementById('cabin-webgl-canvas');
-      const container = document.getElementById('cabin-card-container');
-      if (!canvas || !container || typeof THREE === 'undefined') return;
+      playSniperImpulse();
 
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
-      camera.position.set(0, 1.4, 4.2);
+      // Reset
+      puncture.classList.remove('active');
+      ticket.classList.remove('ticket-paper-recoil');
+      void ticket.offsetWidth; // reflow
 
-      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-      renderer.setSize(container.clientWidth, container.clientHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.1;
+      setTimeout(() => {
+        ticket.classList.add('ticket-paper-recoil');
+        puncture.classList.add('active');
+        playWarmWoodChime();
 
-      // Warm Executive Ambient Lighting
-      const ambientLight = new THREE.AmbientLight(0xFFF8EE, 1.2);
-      scene.add(ambientLight);
-
-      // Key Warm Directional Light (2700K Sunlight Reflection)
-      const sunLight = new THREE.DirectionalLight(0xFFEDD5, 1.6);
-      sunLight.position.set(4, 6, 4);
-      scene.add(sunLight);
-
-      // Soft Royal Navy Rim Light
-      const navyRim = new THREE.PointLight(0x1E3A8A, 1.8, 10);
-      navyRim.position.set(-4, 2, -3);
-      scene.add(navyRim);
-
-      // Create Executive Cabin Model Group
-      const cabinGroup = new THREE.Group();
-
-      // Materials: Premium Cognac/Champagne Leather & Brushed Aluminium
-      const leatherCognac = new THREE.MeshStandardMaterial({
-        color: 0x9A6B43,
-        roughness: 0.55,
-        metalness: 0.08
-      });
-
-      const leatherCream = new THREE.MeshStandardMaterial({
-        color: 0xD8C8B5,
-        roughness: 0.5,
-        metalness: 0.05
-      });
-
-      const brushedMetal = new THREE.MeshStandardMaterial({
-        color: 0xCCCCCC,
-        roughness: 0.25,
-        metalness: 0.85
-      });
-
-      const darkCabinFloor = new THREE.MeshStandardMaterial({
-        color: 0x2A2D34,
-        roughness: 0.7,
-        metalness: 0.2
-      });
-
-      const tintedGlass = new THREE.MeshPhysicalMaterial({
-        color: 0x1E3A8A,
-        transparent: true,
-        opacity: 0.35,
-        roughness: 0.1,
-        metalness: 0.1,
-        transmission: 0.9,
-        ior: 1.5
-      });
-
-      // 1. Cabin Teak/Dark Floor Sledge
-      const floorGeo = new THREE.BoxGeometry(2.4, 0.08, 2.4);
-      const floorMesh = new THREE.Mesh(floorGeo, darkCabinFloor);
-      floorMesh.position.y = -0.9;
-      cabinGroup.add(floorMesh);
-
-      // 2. Stainless Steel Floor Mounting Rails
-      [-0.45, 0.45].forEach(xPos => {
-        const railGeo = new THREE.BoxGeometry(0.04, 0.02, 2.3);
-        const railMesh = new THREE.Mesh(railGeo, brushedMetal);
-        railMesh.position.set(xPos, -0.85, 0);
-        cabinGroup.add(railMesh);
-      });
-
-      // 3. Captain Seat Pedestal
-      const baseGeo = new THREE.CylinderGeometry(0.18, 0.22, 0.45, 24);
-      const baseMesh = new THREE.Mesh(baseGeo, brushedMetal);
-      baseMesh.position.set(0, -0.65, 0);
-      cabinGroup.add(baseMesh);
-
-      // 4. Ergonomic Leather Seat Cushion
-      const cushionGeo = new THREE.BoxGeometry(0.95, 0.22, 0.95);
-      const cushionMesh = new THREE.Mesh(cushionGeo, leatherCognac);
-      cushionMesh.position.set(0, -0.38, 0.05);
-      cabinGroup.add(cushionMesh);
-
-      // Cream Leather Inset Stripe
-      const stripeGeo = new THREE.BoxGeometry(0.4, 0.02, 0.96);
-      const stripeMesh = new THREE.Mesh(stripeGeo, leatherCream);
-      stripeMesh.position.set(0, -0.26, 0.05);
-      cabinGroup.add(stripeMesh);
-
-      // 5. Contoured Reclining Backrest
-      const backrestGeo = new THREE.BoxGeometry(0.9, 1.25, 0.22);
-      const backrestMesh = new THREE.Mesh(backrestGeo, leatherCognac);
-      backrestMesh.position.set(0, 0.32, -0.36);
-      backrestMesh.rotation.x = -0.12; // 135 deg comfort recline
-      cabinGroup.add(backrestMesh);
-
-      // Backrest Inset Padding
-      const backStripeGeo = new THREE.BoxGeometry(0.38, 1.15, 0.04);
-      const backStripeMesh = new THREE.Mesh(backStripeGeo, leatherCream);
-      backStripeMesh.position.set(0, 0.32, -0.24);
-      backStripeMesh.rotation.x = -0.12;
-      cabinGroup.add(backStripeMesh);
-
-      // 6. Adjustable Ergonomic Headrest
-      const headrestGeo = new THREE.BoxGeometry(0.55, 0.32, 0.18);
-      const headrestMesh = new THREE.Mesh(headrestGeo, leatherCognac);
-      headrestMesh.position.set(0, 1.05, -0.46);
-      headrestMesh.rotation.x = -0.12;
-      cabinGroup.add(headrestMesh);
-
-      // Headrest Chrome Pegs
-      [-0.12, 0.12].forEach(hx => {
-        const pegGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.2, 12);
-        const pegMesh = new THREE.Mesh(pegGeo, brushedMetal);
-        pegMesh.position.set(hx, 0.92, -0.44);
-        pegMesh.rotation.x = -0.12;
-        cabinGroup.add(pegMesh);
-      });
-
-      // 7. Executive Armrests
-      [-0.52, 0.52].forEach(ax => {
-        const armGeo = new THREE.BoxGeometry(0.1, 0.1, 0.65);
-        const armMesh = new THREE.Mesh(armGeo, leatherCognac);
-        armMesh.position.set(ax, -0.1, 0.05);
-        cabinGroup.add(armMesh);
-      });
-
-      // 8. 220V Power Outlet & Status Light
-      const outletBoxGeo = new THREE.BoxGeometry(0.12, 0.08, 0.06);
-      const outletBoxMesh = new THREE.Mesh(outletBoxGeo, brushedMetal);
-      outletBoxMesh.position.set(0.52, -0.28, 0.25);
-      cabinGroup.add(outletBoxMesh);
-
-      const ledGeo = new THREE.SphereGeometry(0.015, 12, 12);
-      const ledMat = new THREE.MeshBasicMaterial({ color: 0x10B981 });
-      const ledMesh = new THREE.Mesh(ledGeo, ledMat);
-      ledMesh.position.set(0.54, -0.28, 0.28);
-      cabinGroup.add(ledMesh);
-
-      // 9. Sprinter Window Pillar Frame Cutaway
-      const windowPillarGeo = new THREE.BoxGeometry(0.08, 1.8, 0.1);
-      const windowPillarMesh = new THREE.Mesh(windowPillarGeo, darkCabinFloor);
-      windowPillarMesh.position.set(1.1, 0.1, -0.6);
-      cabinGroup.add(windowPillarMesh);
-
-      const glassPaneGeo = new THREE.PlaneGeometry(1.6, 1.4);
-      const glassPaneMesh = new THREE.Mesh(glassPaneGeo, tintedGlass);
-      glassPaneMesh.position.set(1.1, 0.15, 0.2);
-      glassPaneMesh.rotation.y = -Math.PI / 2;
-      cabinGroup.add(glassPaneMesh);
-
-      scene.add(cabinGroup);
-
-      // Interactive Pointer Tracking & Drag
-      let targetRotX = 0.12;
-      let targetRotY = -0.55;
-      let isDragging = false;
-      let prevMouseX = 0;
-      let prevMouseY = 0;
-
-      container.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        prevMouseX = e.clientX;
-        prevMouseY = e.clientY;
-      });
-
-      window.addEventListener('mouseup', () => { isDragging = false; });
-
-      window.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-          const deltaX = e.clientX - prevMouseX;
-          const deltaY = e.clientY - prevMouseY;
-          targetRotY += deltaX * 0.007;
-          targetRotX += deltaY * 0.007;
-          prevMouseX = e.clientX;
-          prevMouseY = e.clientY;
-        } else {
-          // Gentle ambient follow
-          const rect = container.getBoundingClientRect();
-          const nx = (e.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
-          const ny = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
-          targetRotY = -0.55 + nx * 0.45;
-          targetRotX = 0.12 - ny * 0.25;
+        if (statusPill) {
+          statusPill.classList.add('intercepted');
+          statusPill.innerText = 'ВЫКУПЛЕНО СНАЙПЕРОМ (0.38с)';
         }
-      }, { passive: true });
-
-      function animate() {
-        requestAnimationFrame(animate);
-        cabinGroup.rotation.y += (targetRotY - cabinGroup.rotation.y) * 0.05;
-        cabinGroup.rotation.x += (targetRotX - cabinGroup.rotation.x) * 0.05;
-        renderer.render(scene, camera);
-      }
-      animate();
-
-      window.addEventListener('resize', () => {
-        if (!container) return;
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
-      });
-    })();
-
-    // 6. SUPERSONIC SNIPER BALLISTICS & PAPER RECOIL
-    window.fireSupersonicSniperShot = function() {
-      const canvas = document.getElementById('sniper-kinetic-canvas');
-      const arena = document.getElementById('section-sniper');
-      const ticket = document.getElementById('sniper-ticket-sheet');
-      const hole = document.getElementById('ticket-bullet-hole');
-      const badge = document.getElementById('ticket-state-badge');
-      const note = document.getElementById('ticket-note-txt');
-
-      if (!canvas || !arena || !ticket || !hole) return;
-
-      playSniperAcousticImpulse();
-
-      // Reset states
-      hole.classList.remove('hole-blown');
-      ticket.classList.remove('ticket-sheet-recoil');
-      void ticket.offsetWidth; // force browser layout reflow
-
-      const dpr = window.devicePixelRatio || 1;
-      const rect = arena.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      const ctx = canvas.getContext('2d');
-      ctx.resetTransform();
-      ctx.scale(dpr, dpr);
-
-      const ticketRect = ticket.getBoundingClientRect();
-      const targetX = (ticketRect.left + ticketRect.width / 2) - rect.left;
-      const targetY = (ticketRect.top + ticketRect.height / 2) - rect.top;
-
-      let progress = 0;
-      const startX = -80;
-      const startY = targetY - 30;
-
-      function renderFrame() {
-        progress += 0.11; // Supersonic speed
-        ctx.clearRect(0, 0, rect.width, rect.height);
-
-        const currentX = startX + (targetX - startX) * progress;
-        const currentY = startY + (targetY - startY) * progress;
-
-        // Mach Shockwave Cone
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(currentX, currentY);
-        ctx.lineTo(currentX - 110, currentY - 45);
-        ctx.lineTo(currentX - 110, currentY + 45);
-        ctx.closePath();
-        ctx.fillStyle = 'rgba(147, 197, 253, 0.12)';
-        ctx.fill();
-
-        // High-Precision Tracer Line
-        ctx.beginPath();
-        ctx.moveTo(startX, startY);
-        ctx.lineTo(currentX, currentY);
-        ctx.strokeStyle = '#93C5FD';
-        ctx.lineWidth = 3.5;
-        ctx.shadowColor = '#60A5FA';
-        ctx.shadowBlur = 14;
-        ctx.stroke();
-
-        // Projectile Core
-        ctx.beginPath();
-        ctx.arc(currentX, currentY, 5, 0, Math.PI * 2);
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fill();
-        ctx.restore();
-
-        if (progress < 1.0) {
-          requestAnimationFrame(renderFrame);
-        } else {
-          // Impact Event
-          ctx.clearRect(0, 0, rect.width, rect.height);
-          ticket.classList.add('ticket-sheet-recoil');
-          hole.classList.add('hole-blown');
-          playGentleChime();
-
-          if (badge) {
-            badge.style.background = '#EAF7EE';
-            badge.style.color = '#0E7048';
-            badge.style.borderColor = '#A3E0BA';
-            badge.innerText = 'ВЫКУПЛЕНО СНАЙПЕРОМ (0.38с)';
-          }
-          if (note) {
-            note.innerHTML = '<strong style="color: #0E7048;">Билет успешно перехвачен!</strong> Заказ № 089 подтвержден и отправлен в Telegram.';
-          }
-        }
-      }
-      renderFrame();
+      }, 80);
     };
   </script>
 </body>
