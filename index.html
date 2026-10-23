@@ -1023,29 +1023,63 @@
     .bar.w2 { width: 3px; }
     .bar.w3 { width: 5px; }
 
-    /* The Authentic Bullet Hole Overlay */
-    .ticket-puncture-target {
+    /* Debossed Verification Seal of Priority Allocation */
+    .ticket-verification-seal {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 120px;
-      height: 120px;
-      transform: translate(-50%, -50%) scale(0);
+      width: 140px;
+      height: 140px;
+      border: 1px dashed var(--accent-olive);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0.92);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
       pointer-events: none;
       z-index: 10;
       opacity: 0;
-      transition: transform 0.3s var(--ease-out-expo), opacity 0.2s ease;
-      background-image: url('assets/bullet_hole_paper.jpg');
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
-      mix-blend-mode: multiply;
-      filter: contrast(1.2) brightness(0.95);
+      transition: transform var(--duration-medium) var(--ease-out-expo), opacity var(--duration-medium) ease;
+      background: rgba(245, 241, 234, 0.95);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 8px 24px -4px rgba(74, 83, 64, 0.12);
+      color: var(--accent-olive);
     }
 
-    .ticket-puncture-target.active {
+    .ticket-verification-seal.active {
       transform: translate(-50%, -50%) scale(1);
       opacity: 1;
+    }
+
+    .seal-inner-circle {
+      width: 122px;
+      height: 122px;
+      border: 1px solid var(--accent-olive);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+    }
+
+    .seal-monogram {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .seal-text {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      line-height: 1.3;
     }
 
     /* Simulation Trigger */
@@ -1667,7 +1701,7 @@
   </section>
 
   <!-- =========================================================================
-       SECTION: THE ROBOT-SNIPER CHRONICLE (QUIET LUXURY PRESENTATION)
+       SECTION: THE CONCIERGE CHRONICLE (QUIET LUXURY WAITLIST)
        ========================================================================= -->
   <section class="section-sniper-chronicle" id="sniper">
     <div class="container">
@@ -1675,21 +1709,21 @@
         
         <!-- Story -->
         <div class="sniper-story-block fade-up-element">
-          <span class="sniper-meta-tag">ТЕХНОЛОГИЯ АВТОВЫКУПА &bull; СНАЙПЕР</span>
+          <span class="sniper-meta-tag">АЛГОРИТМ ПРИОРИТЕТНОГО ВЫКУПА &bull; 0.38с</span>
           
           <h2 class="sniper-story-title">
             Билетов нет в продаже?<br>
-            <em>Снайпер вернет вам место.</em>
+            <em>Консьерж закрепит за вами место.</em>
           </h2>
 
           <p class="sniper-story-lead">
-            В пятницу вечером и перед праздниками билеты раскупаются за недели. Когда другой пассажир оформляет возврат, наш робот-снайпер перехватывает его за 0.38 секунды до появления в открытом доступе.
+            В пятницу вечером и перед праздниками все 19 мест раскупаются за недели. Когда другой пассажир оформляет возврат, интеллектуальный алгоритм перехватывает его за 0.38 секунды и моментально закрепляет за вашим бронированием.
           </p>
 
           <div class="sniper-metrics-duo">
             <div>
               <div class="sniper-metric-val">0.38 с</div>
-              <div class="sniper-metric-lbl">Скорость выкупа при оформлении возврата</div>
+              <div class="sniper-metric-lbl">Скорость закрепления при оформлении возврата</div>
             </div>
             <div>
               <div class="sniper-metric-val">99.4%</div>
@@ -1698,8 +1732,8 @@
           </div>
 
           <div>
-            <button class="btn-sniper-simulation" onclick="triggerTactileSniperImpulse()" data-cursor="hover">
-              <span>Смоделировать выкуп (0.38с)</span>
+            <button class="btn-sniper-simulation" onclick="triggerTactileConciergeAllocation()" data-cursor="hover">
+              <span>Проверить перехват места (0.38с)</span>
               &rarr;
             </button>
           </div>
@@ -1749,8 +1783,17 @@
               </div>
             </div>
 
-            <!-- Bullet Hole Puncture Effect -->
-            <div class="ticket-puncture-target" id="ticketPuncture"></div>
+            <!-- Elegant Embossed Verification Seal -->
+            <div class="ticket-verification-seal" id="ticketSeal">
+              <div class="seal-inner-circle">
+                <div class="seal-monogram">BL</div>
+                <div class="seal-text">
+                  ПОДТВЕРЖДЕНО<br>
+                  ВЫКУП 0.38 СЕК<br>
+                  РЕЕСТР 2026
+                </div>
+              </div>
+            </div>
 
           </div>
 
@@ -2000,49 +2043,26 @@
       } catch(e) {}
     }
 
-    function playSniperImpulse() {
+    function playConciergeLatchChime() {
       if (!isSoundOn) return;
       try {
         const ctx = getAudioCtx();
         if (!ctx) return;
         const now = ctx.currentTime;
 
-        // Dry supersonic precision click
-        const bufferSize = Math.floor(ctx.sampleRate * 0.05);
-        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.008));
-        }
-
-        const noise = ctx.createBufferSource();
-        noise.buffer = buffer;
-        const filter = ctx.createBiquadFilter();
-        filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(2400, now);
-        filter.Q.setValueAtTime(3.5, now);
-
-        const gain = ctx.createGain();
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
-
-        noise.connect(filter);
-        filter.connect(gain);
-        gain.connect(ctx.destination);
-        noise.start(now);
-
-        // Low frequency paper stamp bump
-        const sub = ctx.createOscillator();
-        const subGain = ctx.createGain();
-        sub.type = 'sine';
-        sub.frequency.setValueAtTime(120, now);
-        sub.frequency.exponentialRampToValueAtTime(38, now + 0.12);
-        subGain.gain.setValueAtTime(0.18, now);
-        subGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
-        sub.connect(subGain);
-        subGain.connect(ctx.destination);
-        sub.start(now);
-        sub.stop(now + 0.15);
+        // Elegant double chime (harmonious luxury confirmation)
+        [587.33, 880.0].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+          gain.gain.setValueAtTime(0.03, now + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.5);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.55);
+        });
       } catch(e) {}
     }
 
@@ -2075,31 +2095,31 @@
       if (target) target.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // 5. TACTILE SNIPER IMPULSE SIMULATION
-    window.triggerTactileSniperImpulse = function() {
+    // 5. TACTILE CONCIERGE ALLOCATION SIMULATION
+    window.triggerTactileConciergeAllocation = function() {
       const ticket = document.getElementById('archivalTicket');
-      const puncture = document.getElementById('ticketPuncture');
+      const seal = document.getElementById('ticketSeal');
       const statusPill = document.getElementById('ticketStatusPill');
 
-      if (!ticket || !puncture) return;
+      if (!ticket || !seal) return;
 
-      playSniperImpulse();
+      playConciergeLatchChime();
 
       // Reset
-      puncture.classList.remove('active');
-      ticket.classList.remove('ticket-paper-recoil');
+      seal.classList.remove('active');
+      ticket.style.transform = 'translateY(0)';
       void ticket.offsetWidth; // reflow
 
       setTimeout(() => {
-        ticket.classList.add('ticket-paper-recoil');
-        puncture.classList.add('active');
-        playWarmWoodChime();
+        seal.classList.add('active');
+        ticket.style.boxShadow = '0 24px 56px -12px rgba(74, 83, 64, 0.16)';
+        ticket.style.borderColor = 'var(--accent-olive)';
 
         if (statusPill) {
           statusPill.classList.add('intercepted');
-          statusPill.innerText = 'ВЫКУПЛЕНО СНАЙПЕРОМ (0.38с)';
+          statusPill.innerText = 'МЕСТО ЗАКРЕПЛЕНО (0.38с)';
         }
-      }, 80);
+      }, 60);
     };
   </script>
 </body>
