@@ -16,3 +16,7 @@ Thumbs.db
 .env.local
 __pycache__/
 generate_site_avatars.py
+
+# Local AI Agent Skills
+.agents/
+.agent/
