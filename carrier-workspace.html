@@ -149,8 +149,8 @@
     .paper-grain-overlay {
       position: fixed;
       inset: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
       z-index: 99999;
       opacity: 0.038;
@@ -160,8 +160,8 @@
     .paper-noise-canvas {
       position: fixed;
       inset: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
       z-index: 99999;
       opacity: 0.038;
@@ -536,6 +536,7 @@
       min-width: 0;
       background: var(--canvas);
       position: relative;
+      overflow-x: hidden;
     }
 
     /* TOP APPLICATION BAR */
@@ -546,10 +547,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 24px;
+      padding: 0 20px;
       position: sticky;
       top: 0;
       z-index: 90;
+      min-width: 0;
+      overflow-x: hidden;
       padding-top: env(safe-area-inset-top, 0px);
     }
 
@@ -1856,6 +1859,38 @@
         flex-wrap: wrap;
         justify-content: center;
       }
+      header.top-app-bar {
+        padding: 0 12px;
+        min-width: 0;
+        overflow-x: hidden;
+      }
+      .header-breadcrumb {
+        min-width: 0;
+        flex-shrink: 1;
+      }
+      .crumb-current {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header.top-app-bar {
+        padding: 0 8px;
+        min-width: 0;
+        overflow-x: hidden;
+      }
+      .crumb-root, .crumb-separator {
+        display: none;
+      }
+      .telemetry-clock {
+        display: none;
+      }
+      .header-breadcrumb {
+        max-width: 140px;
+        overflow: hidden;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -2393,16 +2428,20 @@
             </button>
           </div>
 
-          <!-- 3D MERCEDES-BENZ SPRINTER VIEWPORT (ТУ МАРШРУТКУ 3D) -->
+          <!-- 3D MERCEDES-BENZ SPRINTER VIEWPORT (ТУ МАРШРУТКУ 3D) & 2D BLUEPRINT -->
           <div class="panel-card cockpit-cabin-card" style="margin-bottom: 24px;">
             <div class="panel-card-header">
               <div>
-                <h2 class="panel-title">3D Модель салона <em>Mercedes-Benz Sprinter 170" High Roof</em></h2>
+                <h2 class="panel-title">Салон микроавтобуса <em>Mercedes-Benz Sprinter 170" High Roof</em></h2>
                 <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
-                  Интерактивная 3D-модель микроавтобуса с разрезом кузова, вращением и выбором мест
+                  Интерактивная 3D-модель микроавтобуса с разрезом кузова, вращением и переключением на 2D-схему
                 </p>
               </div>
-              <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <div class="cockpit-view-toggle-pills" style="display: inline-flex; background: var(--canvas-bone); padding: 2px; border-radius: var(--radius-sm); border: 1px solid var(--border-hairline);">
+                  <button type="button" class="view-toggle-btn active" id="btnMode3D" onclick="switchCockpitViewMode('3d')" style="padding: 4px 10px; font-size: 11.5px; font-weight: 600; border: none; border-radius: var(--radius-sm); cursor: pointer; background: var(--color-forest); color: var(--canvas-ivory);">3D Модель</button>
+                  <button type="button" class="view-toggle-btn" id="btnMode2D" onclick="switchCockpitViewMode('2d')" style="padding: 4px 10px; font-size: 11.5px; font-weight: 600; border: none; border-radius: var(--radius-sm); cursor: pointer; background: transparent; color: var(--text-muted);">2D Схема</button>
+                </div>
                 <span class="driver-seat-box" style="font-size: 11px; padding: 4px 8px; background: var(--canvas-bone); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm);">Кабина водителя</span>
                 <span class="cabin-aisle" style="font-size: 11px; padding: 4px 8px; background: var(--canvas-bone); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm);">Проход 2+1</span>
                 <span class="panel-title-badge" id="cockpitCabinBadge">20 мест • 3D Салон</span>
@@ -2410,39 +2449,63 @@
             </div>
 
             <div style="padding: 16px 20px 20px;">
-              <div class="viewport-3d-card">
-                <div id="three-canvas-container"></div>
+              <!-- 3D VIEWPORT WRAPPER -->
+              <div id="cockpit3DWrapper" class="cockpit-viewport-wrapper">
+                <div class="viewport-3d-card">
+                  <div id="three-canvas-container"></div>
 
-                <!-- Floating 3D Tooltip -->
-                <div id="tooltip-3d" class="floating-tooltip">
-                  <div class="tt-head" id="tt-num">Место 1</div>
-                  <div class="tt-type" id="tt-type">Салон 2+1</div>
-                </div>
-
-                <!-- HUD Overlay -->
-                <div class="hud-overlay">
-                  <div class="hud-header-bar">
-                    <div class="hud-title-box">
-                      Mercedes-Benz Sprinter 170" High Roof • 20 мест (Салон 2+1)
-                    </div>
-
-                    <div class="hud-controls-row">
-                      <div class="hud-btn-group">
-                        <button type="button" class="hud-pill-btn active" id="btn-cam-all" onclick="window.Sprinter3D && window.Sprinter3D.resetToOverview()">Весь салон</button>
-                        <button type="button" class="hud-pill-btn" id="btn-cam-front" onclick="window.Sprinter3D && window.Sprinter3D.setPreset('front')">Носовая зона</button>
-                        <button type="button" class="hud-pill-btn" id="btn-cam-rear" onclick="window.Sprinter3D && window.Sprinter3D.setPreset('rear')">Корма</button>
-                      </div>
-                      <div class="hud-btn-group">
-                        <button type="button" class="hud-pill-btn active" id="btn-roof-cutaway" onclick="window.Sprinter3D && window.Sprinter3D.toggleRoof(false)">Разрез кузова</button>
-                        <button type="button" class="hud-pill-btn" id="btn-roof-full" onclick="window.Sprinter3D && window.Sprinter3D.toggleRoof(true)">Полный кузов</button>
-                      </div>
-                    </div>
+                  <!-- Floating 3D Tooltip -->
+                  <div id="tooltip-3d" class="floating-tooltip">
+                    <div class="tt-head" id="tt-num">Место 1</div>
+                    <div class="tt-type" id="tt-type">Салон 2+1</div>
                   </div>
 
-                  <div class="hud-legend-strip">
-                    <div class="leg-item"><span class="leg-dot dot-boarded"></span><span>В САЛОНЕ (<span id="three-stat-boarded">0</span>)</span></div>
-                    <div class="leg-item"><span class="leg-dot dot-waiting"></span><span>ОЖИДАЮТ (<span id="three-stat-pending">0</span>)</span></div>
-                    <div class="leg-item"><span class="leg-dot dot-free"></span><span>СВОБОДНО (<span id="three-stat-free">0</span>)</span></div>
+                  <!-- HUD Overlay -->
+                  <div class="hud-overlay">
+                    <div class="hud-header-bar">
+                      <div class="hud-title-box">
+                        Mercedes-Benz Sprinter 170" High Roof • 20 мест (Салон 2+1)
+                      </div>
+
+                      <div class="hud-controls-row">
+                        <div class="hud-btn-group">
+                          <button type="button" class="hud-pill-btn active" id="btn-cam-all" onclick="window.Sprinter3D && window.Sprinter3D.resetToOverview()">Весь салон</button>
+                          <button type="button" class="hud-pill-btn" id="btn-cam-front" onclick="window.Sprinter3D && window.Sprinter3D.setPreset('front')">Носовая зона</button>
+                          <button type="button" class="hud-pill-btn" id="btn-cam-rear" onclick="window.Sprinter3D && window.Sprinter3D.setPreset('rear')">Корма</button>
+                        </div>
+                        <div class="hud-btn-group">
+                          <button type="button" class="hud-pill-btn active" id="btn-roof-cutaway" onclick="window.Sprinter3D && window.Sprinter3D.toggleRoof(false)">Разрез кузова</button>
+                          <button type="button" class="hud-pill-btn" id="btn-roof-full" onclick="window.Sprinter3D && window.Sprinter3D.toggleRoof(true)">Полный кузов</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="hud-legend-strip">
+                      <div class="leg-item"><span class="leg-dot dot-boarded"></span><span>В САЛОНЕ (<span id="three-stat-boarded">0</span>)</span></div>
+                      <div class="leg-item"><span class="leg-dot dot-waiting"></span><span>ОЖИДАЮТ (<span id="three-stat-pending">0</span>)</span></div>
+                      <div class="leg-item"><span class="leg-dot dot-free"></span><span>СВОБОДНО (<span id="three-stat-free">0</span>)</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2D BLUEPRINT WRAPPER -->
+              <div id="cockpit2DWrapper" class="cockpit-2d-blueprint-wrapper" style="display: none;">
+                <div class="blueprint-card" style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-md); padding: 20px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-hairline); flex-wrap: wrap; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="driver-seat-box" style="font-size: 12px; font-weight: 600; padding: 6px 12px; background: var(--canvas-bone); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm);">Кабина водителя</span>
+                      <span class="cabin-aisle" style="font-size: 12px; color: var(--text-muted); padding: 6px 10px; background: var(--canvas-bone); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm);">Центральный проход 2+1</span>
+                    </div>
+                    <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-muted);">
+                      Вместимость: 20 мест
+                    </div>
+                  </div>
+                  <div class="cockpit-seats-grid seats-grid-layout" id="cockpitSeatsGrid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div>
+                  <div class="seat-legend-row" style="display: flex; align-items: center; gap: 16px; margin-top: 16px; font-size: 12px; color: var(--text-muted);">
+                    <div class="legend-item" style="display: flex; align-items: center; gap: 6px;"><span class="leg-dot dot-boarded" style="width: 10px; height: 10px; border-radius: 50%; background: var(--color-forest);"></span><span>В салоне</span></div>
+                    <div class="legend-item" style="display: flex; align-items: center; gap: 6px;"><span class="leg-dot dot-waiting" style="width: 10px; height: 10px; border-radius: 50%; background: var(--surface-subtle); border: 1px solid var(--border-hairline);"></span><span>Ожидает посадку</span></div>
+                    <div class="legend-item" style="display: flex; align-items: center; gap: 6px;"><span class="leg-dot dot-free" style="width: 10px; height: 10px; border-radius: 50%; background: var(--surface-card); border: 1px solid var(--border-hairline);"></span><span>Свободно</span></div>
                   </div>
                 </div>
               </div>
@@ -3404,8 +3467,8 @@
 
     /* PHONE SANITIZER FOR 1-TAP CALLS (PRESERVES + PREFIX) */
     function sanitizePhoneNumber(phone) {
-      if (!phone) return '';
-      return phone.replace(/[^\d+]/g, '');
+      if (!phone && phone !== 0) return '';
+      return String(phone).replace(/[^\d+]/g, '');
     }
 
     /* AUTONOMOUS DELAY BROADCAST (ZERO DISPATCHER) */
@@ -3442,10 +3505,10 @@
     /* CARRIER REACTIVE FINANCIAL ENGINE (5% PLATFORM FEE) */
     function calculateFinancials(tripsList = trips) {
       const list = Array.isArray(tripsList) ? tripsList : (trips || []);
-      const totalGross = list.reduce((sum, t) => sum + ((t.occupied || 0) * (t.fare || 0)), 0);
-      const platformFee = Math.round(totalGross * 0.05);
-      const netPayout = totalGross - platformFee;
-      const totalPassengers = list.reduce((sum, t) => sum + (t.occupied || 0), 0);
+      const totalGross = Math.max(0, list.reduce((sum, t) => sum + (Math.max(0, t.occupied || 0) * Math.max(0, t.fare || 0)), 0));
+      const platformFee = Math.max(0, Math.round(totalGross * 0.05));
+      const netPayout = Math.max(0, totalGross - platformFee);
+      const totalPassengers = Math.max(0, list.reduce((sum, t) => sum + Math.max(0, t.occupied || 0), 0));
       const avgTicket = totalPassengers > 0 ? Number((totalGross / totalPassengers).toFixed(1)) : 0;
 
       if (typeof document !== 'undefined') {
@@ -4236,20 +4299,38 @@
       }
 
       saveStore();
+      try {
+        localStorage.setItem('busliner_active_trip_status', newStatus);
+        if (trip.delay) {
+          localStorage.setItem('busliner_active_trip_delay', String(trip.delay));
+        } else {
+          localStorage.removeItem('busliner_active_trip_delay');
+        }
+      } catch (e) {}
+
       renderTrips();
       updateCockpitStatusUI(trip);
 
-      // Sync to other tabs and passenger cabinet
-      if (window.BroadcastChannel) {
+      // Real-time synchronization to other tabs and passenger cabinet via BroadcastChannel & localStorage
+      const syncPayload = {
+        event: 'TRIP_STATUS_CHANGED',
+        type: 'TRIP_STATUS_UPDATED',
+        tripId: trip.id,
+        status: newStatus,
+        delay: trip.delay || 0,
+        timestamp: Date.now()
+      };
+
+      if (typeof BroadcastChannel !== 'undefined') {
         try {
-          const ch = new BroadcastChannel('busliner_sync');
-          ch.postMessage({
-            type: 'TRIP_STATUS_UPDATED',
-            tripId: trip.id,
-            status: newStatus,
-            delay: trip.delay || 0
-          });
-          ch.close();
+          const ch1 = new BroadcastChannel('busliner_trip_sync');
+          ch1.postMessage(syncPayload);
+          ch1.close();
+        } catch (e) {}
+        try {
+          const ch2 = new BroadcastChannel('busliner_sync');
+          ch2.postMessage(syncPayload);
+          ch2.close();
         } catch (e) {}
       }
 
@@ -4421,7 +4502,49 @@
         window.Sprinter3D.updateBookings(tripBookings);
       }
 
+      // Update 2D blueprint grid with bookings!
+      renderCockpitSeatsGrid(tripBookings);
+
       renderCockpitRosterList(tripBookings);
+    }
+
+    function switchCockpitViewMode(mode) {
+      const wrapper3D = document.getElementById('cockpit3DWrapper');
+      const wrapper2D = document.getElementById('cockpit2DWrapper');
+      const btn3D = document.getElementById('btnMode3D');
+      const btn2D = document.getElementById('btnMode2D');
+      if (mode === '2d') {
+        if (wrapper3D) wrapper3D.style.display = 'none';
+        if (wrapper2D) wrapper2D.style.display = 'block';
+        if (btn3D) {
+          btn3D.classList.remove('active');
+          btn3D.style.background = 'transparent';
+          btn3D.style.color = 'var(--text-muted)';
+        }
+        if (btn2D) {
+          btn2D.classList.add('active');
+          btn2D.style.background = 'var(--color-forest)';
+          btn2D.style.color = 'var(--canvas-ivory)';
+        }
+        const tripBookings = bookings.filter(b => b.tripId === 'BL-5715');
+        renderCockpitSeatsGrid(tripBookings);
+      } else {
+        if (wrapper3D) wrapper3D.style.display = 'block';
+        if (wrapper2D) wrapper2D.style.display = 'none';
+        if (btn3D) {
+          btn3D.classList.add('active');
+          btn3D.style.background = 'var(--color-forest)';
+          btn3D.style.color = 'var(--canvas-ivory)';
+        }
+        if (btn2D) {
+          btn2D.classList.remove('active');
+          btn2D.style.background = 'transparent';
+          btn2D.style.color = 'var(--text-muted)';
+        }
+        if (window.Sprinter3D && typeof window.Sprinter3D.onResize === 'function') {
+          window.Sprinter3D.onResize();
+        }
+      }
     }
 
     function renderCockpitSeatsGrid(tripBookings) {

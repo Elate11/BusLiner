@@ -1575,6 +1575,113 @@
       color: var(--color-forest);
     }
 
+  
+    /* ==========================================================================
+       CONCIERGE TAB STYLING (КРУГЛОСУТОЧНЫЙ КОНСЬЕРЖ 24/7)
+       ========================================================================== */
+    .concierge-channels-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 840px) {
+      .concierge-channels-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .concierge-channel-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+    .concierge-channel-card:hover {
+      border-color: var(--border-focus);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+    .concierge-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      background: var(--canvas-bone);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-forest);
+      border: 1px solid var(--border-hairline);
+    }
+    .concierge-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+    .concierge-card-val {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .concierge-card-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.45;
+      flex: 1;
+    }
+    .btn-concierge-action {
+      margin-top: 10px;
+      height: 44px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      border-radius: var(--radius-sm);
+      background: var(--canvas-bone);
+      border: 1px solid var(--border-hairline);
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .btn-concierge-action:hover {
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+      border-color: var(--color-forest);
+    }
+
+    .concierge-service-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+    .concierge-service-item:last-child {
+      border-bottom: none;
+    }
+    .service-bullet {
+      width: 26px;
+      height: 26px;
+      min-width: 26px;
+      border-radius: 50%;
+      background: var(--status-forest-bg);
+      color: var(--color-forest);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
   </style>
 </head>
 <body>
@@ -1630,6 +1737,13 @@
             <circle cx="12" cy="7" r="4" />
           </svg>
           <span>Мой профиль</span>
+        </button>
+
+        <button type="button" class="header-tab-btn" data-tab="concierge" onclick="switchCabinetTab('concierge')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          <span>Консьерж</span>
         </button>
       </nav>
 
@@ -1859,6 +1973,156 @@
         </div>
       </section>
 
+    
+      <!-- ====================================================================
+           FUNCTION: КОНСЬЕРЖ-СЕРВИС 24/7 (СЛУЖБА ЗАБОТЫ И СОПРОВОЖДЕНИЯ)
+           ==================================================================== -->
+      <section class="tab-pane" id="pane-concierge">
+        <div class="pane-header-row">
+          <div>
+            <h1 class="pane-title">Круглосуточный консьерж <em>BusLiner 24/7</em></h1>
+            <p class="pane-subtitle">Персональная служба заботы, индивидуального сопровождения и оперативной помощи</p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="status-pill status-forest-pill">
+              <span class="pulse-indicator-dot" style="background: var(--status-forest);"></span>
+              <span>Линия активна 24/7</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- 3 CHANNELS HERO CARDS -->
+        <div class="concierge-channels-grid">
+          <!-- PHONE -->
+          <div class="concierge-channel-card">
+            <div class="concierge-card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+            </div>
+            <div class="concierge-card-title">Телефонная линия</div>
+            <div class="concierge-card-val">+375 (29) 190-20-26</div>
+            <div class="concierge-card-desc">Единая многоканальная линия бронирования. Время ответа оператора до 20 секунд.</div>
+            <a href="tel:+375291902026" class="btn-concierge-action">
+              <span>Позвонить консьержу</span>
+            </a>
+          </div>
+
+          <!-- TELEGRAM -->
+          <div class="concierge-channel-card">
+            <div class="concierge-card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+            </div>
+            <div class="concierge-card-title">Telegram Консьерж</div>
+            <div class="concierge-card-val">@BusLinerPassBot</div>
+            <div class="concierge-card-desc">Моментальный чат в мессенджере. Подтверждение броней, напитки и сопровождение.</div>
+            <a href="https://t.me/BusLinerPassBot" target="_blank" rel="noopener noreferrer" class="btn-concierge-action">
+              <span>Открыть чат Telegram</span>
+            </a>
+          </div>
+
+          <!-- EMAIL -->
+          <div class="concierge-channel-card">
+            <div class="concierge-card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+            <div class="concierge-card-title">Клиентская почта</div>
+            <div class="concierge-card-val">concierge@busliner.by</div>
+            <div class="concierge-card-desc">Официальные запросы, закрывающие документы и корпоративные счета.</div>
+            <a href="mailto:concierge@busliner.by" class="btn-concierge-action">
+              <span>Написать письмо</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- CONCIERGE VIP SERVICES LIST & QUICK REQUEST FORM -->
+        <div class="profile-layout-grid" style="margin-top: 24px;">
+          <!-- SERVICES -->
+          <div class="profile-card">
+            <h2 class="profile-card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              Возможности консьерж-сервиса
+            </h2>
+
+            <div class="concierge-service-item">
+              <div class="service-bullet">1</div>
+              <div>
+                <strong style="color: var(--text-primary); font-size: 14px;">Индивидуальный трансфер от трапа или подъезда</strong>
+                <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">Консьерж организует встречу у дома или в аэропорту с доставкой прямо к микроавтобусу.</p>
+              </div>
+            </div>
+
+            <div class="concierge-service-item">
+              <div class="service-bullet">2</div>
+              <div>
+                <strong style="color: var(--text-primary); font-size: 14px;">Особый негабаритный багаж и ценные грузы</strong>
+                <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">Персональная фиксация в багажном отделении и контроль бережной транспортировки.</p>
+              </div>
+            </div>
+
+            <div class="concierge-service-item">
+              <div class="service-bullet">3</div>
+              <div>
+                <strong style="color: var(--text-primary); font-size: 14px;">Срочный перенос билета без штрафов</strong>
+                <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">При задержке рейса или изменении планов консьерж перенесет поездку на любое удобное время.</p>
+              </div>
+            </div>
+
+            <div class="concierge-service-item">
+              <div class="service-bullet">4</div>
+              <div>
+                <strong style="color: var(--text-primary); font-size: 14px;">Кофе и прохладительные напитки в салон</strong>
+                <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">Предварительный заказ напитков премиум-класса к вашему посадочному месту.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- QUICK INQUIRY FORM -->
+          <div class="profile-card">
+            <h2 class="profile-card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              Запрос персональному консьержу
+            </h2>
+
+            <form onsubmit="handleConciergeRequest(event)">
+              <div class="form-group">
+                <label class="form-label" for="conciergeTopicSelect">Тема обращения</label>
+                <select id="conciergeTopicSelect" class="form-select" required>
+                  <option value="transfer">Индивидуальный трансфер к рейсу</option>
+                  <option value="baggage">Негабаритный багаж / ценный груз</option>
+                  <option value="reschedule">Срочный перенос времени поездки</option>
+                  <option value="vip">Особые пожелания к комфорту в салоне</option>
+                  <option value="other">Другой вопрос по поездке</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="conciergeMessageInput">Ваше сообщение</label>
+                <textarea id="conciergeMessageInput" class="form-textarea" rows="4" placeholder="Опишите детали вашего запроса. Консьерж свяжется с вами в течение 2 минут." required></textarea>
+              </div>
+
+              <button type="submit" class="btn-save-profile" style="background: var(--color-forest);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+                <span>Отправить консьержу</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <!-- MOBILE BOTTOM NAVIGATION (3 FUNCTIONS) -->
@@ -1886,6 +2150,13 @@
           <circle cx="12" cy="7" r="4" />
         </svg>
         <span>Профиль</span>
+      </button>
+
+      <button type="button" class="mobile-tab-btn" data-tab="concierge" onclick="switchCabinetTab('concierge')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+        <span>Консьерж</span>
       </button>
     </nav>
 
