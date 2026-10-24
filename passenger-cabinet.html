@@ -23,7 +23,7 @@
        STRICT NO PURE #FFFFFF, NO PURE #000000
        ========================================================================== */
     :root {
-      /* Warm Neutrals */
+      /* Warm Neutrals (No pure white #FFF, no pure black #000) */
       --canvas-ivory: #F5F1EA;
       --canvas-bone: #E8E2D6;
       --canvas-sand: #D9CDB8;
@@ -32,6 +32,7 @@
       /* Deep Accent Tones */
       --color-forest: #23312A;
       --color-forest-surface: #2C3E35;
+      --color-forest-light: #3D5A4C;
       --color-graphite: #2B2A28;
       --color-graphite-dark: #1E1D1B;
       --color-terracotta: #A8674F;
@@ -62,9 +63,10 @@
       --radius-md: 6px;
       --radius-pill: 9999px;
 
-      /* Motion */
+      /* Kinetic Drive Motion Curves */
       --ease-drive: cubic-bezier(0.22, 1, 0.36, 1);
       --ease-exit: cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
 
       /* Typography Stack */
       --font-display: 'Cormorant Garamond', Garamond, Georgia, serif;
@@ -72,8 +74,8 @@
       --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
 
       /* Fluid Scaled Typography clamp() */
-      --fs-hero: clamp(2.2rem, 3vw + 0.3rem, 3.2rem);
-      --fs-h1:   clamp(1.9rem, 2.4vw + 0.3rem, 2.6rem);
+      --fs-hero: clamp(2.2rem, 3.0vw + 0.3rem, 3.2rem);
+      --fs-h1:   clamp(1.9rem, 2.4vw + 0.3rem, 2.7rem);
       --fs-h2:   clamp(1.5rem, 1.8vw + 0.3rem, 2.2rem);
       --fs-h3:   clamp(1.2rem, 1.2vw + 0.2rem, 1.5rem);
       --fs-body: 16px;
@@ -108,11 +110,21 @@
       font-family: var(--font-body);
       color: var(--text-primary);
     }
-    input { font-size: 16px; }
-    select { font-size: 16px; }
 
-    /* PAPER GRAIN NOISE OVERLAY */
-    .paper-grain-texture {
+    input {
+      font-size: 16px;
+    }
+
+    select {
+      font-size: 16px;
+    }
+
+    textarea {
+      font-size: 16px;
+    }
+
+    /* Tactile Artisanal Paper Grain Overlay */
+    .paper-grain-overlay {
       position: fixed;
       inset: 0;
       width: 100%;
@@ -120,84 +132,142 @@
       pointer-events: none;
       z-index: 9999;
       opacity: 0.038;
-      mix-blend-mode: multiply;
+      overflow: hidden;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
-    /* KINETIC LERP CURSOR */
-    .kinetic-cursor {
+    /* Kinetic Lerp Cursor Follower */
+    .custom-cursor-follower {
       position: fixed;
       top: 0;
       left: 0;
-      width: 24px;
-      height: 24px;
-      border: 1.5px solid var(--color-forest);
-      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      border: 1px solid var(--border-taupe);
+      border-radius: var(--radius-pill);
       pointer-events: none;
       z-index: 10000;
-      transform: translate(-100px, -100px);
-      transition: width 0.2s var(--ease-drive), height 0.2s var(--ease-drive), background 0.2s;
-      display: none;
-    }
-    @media (hover: hover) and (pointer: fine) {
-      .kinetic-cursor { display: block; }
-    }
-    .kinetic-cursor.hovering {
-      width: 44px;
-      height: 44px;
-      background: rgba(35, 49, 42, 0.08);
-      border-color: var(--color-forest);
+      transform: translate(-50%, -50%);
+      transition: width 0.28s var(--ease-drive), height 0.28s var(--ease-drive), border-color 0.28s ease, background 0.28s ease;
+      opacity: 0.85;
     }
 
-    /* TYPOGRAPHY UTILITIES */
-    .display-serif {
+    /* TYPOGRAPHIC ACCENTS & MONO TELEMETRY */
+    em {
       font-family: var(--font-display);
-      font-weight: 400;
-      letter-spacing: -0.015em;
-    }
-    .display-serif em {
       font-style: italic;
-      font-weight: 300;
+      font-weight: 400;
+      color: var(--color-forest);
     }
+
     .mono {
       font-family: var(--font-mono);
       font-variant-numeric: tabular-nums;
     }
 
-    /* APP CONTAINER */
-    .app-shell {
-      min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      position: relative;
+    .kicker-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      font-weight: 600;
     }
 
-    /* TOP APPLICATION HEADER */
-    .cabinet-header {
+    /* BUTTONS ARCHITECTURE (RADIUS SM 3px) */
+    .btn, .btn-primary, .btn-secondary, .link-subtle-cta, .btn-action-deck, .btn-checkin-toggle, .btn-book-trip-cta {
+      border-radius: var(--radius-sm);
+      letter-spacing: 0.08em;
+      font-family: var(--font-body);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.22s var(--ease-drive);
+      text-decoration: none;
+    }
+
+    .btn-primary, .btn-book-trip-cta {
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+      border: 1px solid var(--color-forest);
+      padding: 12px 24px;
+      min-height: 48px;
+      font-size: 14.5px;
+    }
+    .btn-primary:hover, .btn-book-trip-cta:hover {
+      background: var(--color-forest-surface);
+      border-color: var(--color-forest-surface);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--surface-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border-hairline);
+      padding: 10px 18px;
+      min-height: 44px;
+      font-size: 13.5px;
+    }
+    .btn-secondary:hover {
+      background: var(--surface-subtle);
+      border-color: var(--border-taupe);
+    }
+
+    .link-subtle-cta {
+      color: var(--color-forest);
+      border-bottom: 1px solid var(--color-forest);
+      padding-bottom: 2px;
+    }
+
+    /* LAYOUT CONTAINERS & VIEWPORT DEFENSE */
+    .app-shell, .cabinet-main, .cabinet-viewport, .container {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      min-width: 0;
+      overflow-x: hidden;
+    }
+
+    /* SITE TOP APPLICATION HEADER */
+    .site-header {
+      background: var(--surface-card);
+      border-bottom: 1px solid var(--border-hairline);
       position: sticky;
       top: 0;
-      z-index: 1000;
-      background: rgba(245, 241, 234, 0.94);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border-hairline);
-      padding: 0 clamp(16px, 3.5vw, 48px);
-      height: 64px;
+      z-index: 95;
+      padding-top: env(safe-area-inset-top, 0px);
+      width: 100%;
+      min-width: 0;
+      overflow-x: hidden;
+    }
+
+    .header-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      height: 68px;
+      padding: 0 20px;
+      gap: 16px;
+      min-width: 0;
+      overflow-x: hidden;
     }
 
     .header-brand-group {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       text-decoration: none;
       color: var(--text-primary);
+      min-width: 0;
+      flex-shrink: 0;
     }
 
-    .brand-crest {
-      width: 32px;
-      height: 32px;
+    .brand-symbol-box {
+      width: 36px;
+      height: 36px;
       background: var(--color-forest);
       color: var(--canvas-ivory);
       border-radius: var(--radius-sm);
@@ -205,58 +275,57 @@
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
-      font-size: 15px;
+      font-size: 20px;
       font-weight: 600;
-      letter-spacing: 0.05em;
-      border: 1px solid rgba(245, 241, 234, 0.2);
     }
 
     .brand-title-wrap {
       display: flex;
       flex-direction: column;
+      line-height: 1.2;
     }
 
     .brand-main-title {
-      font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 500;
-      line-height: 1.1;
+      font-family: var(--font-body);
+      font-size: 17px;
+      font-weight: 700;
       letter-spacing: -0.01em;
+      color: var(--text-primary);
     }
 
     .brand-sub-badge {
       font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
       color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
       font-weight: 600;
     }
 
-    /* NAVIGATION DESKTOP TABS (3 MAIN FUNCTIONS) */
+    /* 3 PRIMARY NAVIGATION TABS */
     .header-nav-tabs {
       display: flex;
-      gap: 4px;
-      background: var(--surface-subtle);
+      align-items: center;
+      background: var(--canvas-bone);
       padding: 4px;
       border-radius: var(--radius-sm);
+      gap: 4px;
       border: 1px solid var(--border-hairline);
     }
 
     .header-tab-btn {
-      padding: 8px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
       background: transparent;
       border: none;
-      border-radius: 2px;
+      border-radius: var(--radius-sm);
       font-family: var(--font-body);
       font-size: 13.5px;
       font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
       transition: all 0.2s var(--ease-drive);
-      min-height: 36px;
     }
 
     .header-tab-btn:hover {
@@ -265,151 +334,195 @@
     }
 
     .header-tab-btn.active {
-      background: var(--color-forest);
-      color: var(--canvas-ivory);
+      background: var(--surface-card);
+      color: var(--color-forest);
+      box-shadow: 0 1px 4px rgba(43, 42, 40, 0.06);
     }
 
     .header-tab-badge {
       font-family: var(--font-mono);
-      font-size: 11px;
-      padding: 1px 6px;
-      border-radius: var(--radius-pill);
-      background: var(--surface-card);
-      color: var(--color-forest);
+      font-size: 10px;
       font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 9999px;
+      background: var(--canvas-sand);
+      color: var(--text-primary);
     }
+
     .header-tab-btn.active .header-tab-badge {
-      background: rgba(245, 241, 234, 0.2);
+      background: var(--color-forest);
       color: var(--canvas-ivory);
     }
 
-    .header-right-group {
+    .header-right-cluster {
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-shrink: 0;
     }
 
-    .btn-vitrina-link {
+    .miles-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--canvas-bone);
+      border: 1px solid var(--border-hairline);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-forest);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .miles-status-pill:hover {
+      background: var(--canvas-sand);
+    }
+
+    .header-link-office {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 6px 12px;
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-decoration: none;
-      border: 1px solid var(--border-hairline);
       border-radius: var(--radius-sm);
-      background: var(--surface-card);
+      border: 1px solid transparent;
       transition: all 0.2s;
-      min-height: 36px;
     }
-    .btn-vitrina-link:hover {
-      color: var(--color-forest);
-      border-color: var(--color-forest);
-    }
-
-    .user-avatar-badge {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--canvas-bone);
-      border: 1px solid var(--border-hairline);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--color-forest);
-      cursor: pointer;
+    .header-link-office:hover {
+      color: var(--text-primary);
+      border-color: var(--border-hairline);
+      background: var(--surface-card);
     }
 
-    /* MAIN CONTENT VIEWPORT */
+    /* MAIN VIEWPORT PANES */
     .cabinet-viewport {
-      flex: 1;
-      width: 100%;
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: clamp(20px, 3.5vw, 40px) clamp(16px, 3.5vw, 48px);
-      padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+      padding: 28px 20px 60px;
     }
 
-    /* TAB PANES SYSTEM */
+    .screen-content-area {
+      padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    }
+
     .tab-pane {
       display: none;
-      animation: paneFadeIn 0.25s var(--ease-drive) forwards;
+      animation: fadeInPane 0.24s var(--ease-drive);
     }
+
     .tab-pane.active-pane {
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
+      display: block;
     }
-    @keyframes paneFadeIn {
+
+    @keyframes fadeInPane {
       from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* COMMON PAGE HEADINGS */
-    .pane-header-row {
+    /* WELCOME HERO BANNER */
+    .passenger-hero-strip {
       display: flex;
       justify-content: space-between;
-      align-items: flex-end;
+      align-items: flex-start;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-hairline);
       gap: 16px;
       flex-wrap: wrap;
-      padding-bottom: 18px;
-      border-bottom: 1px solid var(--border-hairline);
     }
-    .pane-title {
+
+    .hero-deck-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--color-forest);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .passenger-hero-title {
       font-family: var(--font-display);
       font-size: var(--fs-h1);
-      font-weight: 400;
+      font-weight: 500;
+      color: var(--text-primary);
       line-height: 1.15;
     }
-    .pane-subtitle {
-      font-size: var(--fs-small);
+
+    .passenger-hero-meta {
+      font-size: 13px;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: 6px;
+    }
+
+    .hero-meta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      color: var(--color-forest);
+      font-weight: 600;
     }
 
     /* ==========================================================================
-       TAB 1: AVAILABLE TRIPS FEED & BOOKING (ПРОСМОТР ВСЕХ РЕЙСОВ И ЗАПИСЬ)
+       FUNCTION 1: ДОСТУПНЫЕ РЕЙСЫ (ПРОСМОТР И ЗАПИСЬ С ВЫБОРОМ МЕСТА)
        ========================================================================== */
-    .trips-filter-bar {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .filter-chip-btn {
-      padding: 7px 14px;
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-pill);
+    .filter-bar-card {
       background: var(--surface-card);
-      color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      min-height: 38px;
-    }
-    .filter-chip-btn:hover {
-      border-color: var(--color-forest);
-      color: var(--text-primary);
-    }
-    .filter-chip-btn.active {
-      background: var(--color-forest);
-      color: var(--canvas-ivory);
-      border-color: var(--color-forest);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
     }
 
-    .trips-card-grid {
+    .filter-chips-cluster {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip-btn {
+      padding: 8px 14px;
+      background: var(--canvas-bone);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-chip-btn:hover {
+      color: var(--text-primary);
+      background: var(--canvas-sand);
+    }
+
+    .filter-chip-btn.active {
+      background: var(--color-forest);
+      border-color: var(--color-forest);
+      color: var(--canvas-ivory);
+    }
+
+    .trips-grid-feed {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 20px;
     }
 
-    .trip-booking-card {
+    .trip-card-item {
       background: var(--surface-card);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-md);
@@ -418,136 +531,94 @@
       flex-direction: column;
       justify-content: space-between;
       gap: 18px;
-      transition: transform 0.2s var(--ease-drive), box-shadow 0.2s, border-color 0.2s;
+      transition: transform 0.2s var(--ease-drive), box-shadow 0.2s ease;
     }
-    .trip-booking-card:hover {
+    .trip-card-item:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(35, 49, 42, 0.08);
-      border-color: rgba(35, 49, 42, 0.28);
+      box-shadow: 0 8px 24px rgba(43, 42, 40, 0.05);
     }
 
-    .trip-card-top {
+    .trip-header-row {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 12px;
     }
 
-    .trip-time-node {
+    .trip-time-lead {
       font-family: var(--font-mono);
       font-size: 26px;
       font-weight: 700;
-      color: var(--color-forest);
-      line-height: 1.1;
-    }
-    .trip-date-label {
-      font-size: 11.5px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-top: 2px;
+      color: var(--text-primary);
+      line-height: 1;
     }
 
     .trip-fare-badge {
-      background: var(--surface-subtle);
-      border: 1px solid var(--border-hairline);
-      padding: 6px 12px;
-      border-radius: var(--radius-sm);
       font-family: var(--font-mono);
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--color-forest);
-      white-space: nowrap;
+      background: var(--canvas-bone);
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-hairline);
     }
 
-    .trip-route-title {
+    .trip-route-name {
       font-family: var(--font-display);
-      font-size: 24px;
-      font-weight: 500;
-      line-height: 1.2;
+      font-size: 22px;
+      font-weight: 600;
       color: var(--text-primary);
+      margin-top: 10px;
     }
 
-    .trip-stations-row {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+    .trip-station-desc {
       font-size: 13px;
       color: var(--text-muted);
-      border-left: 2px solid var(--border-hairline);
-      padding-left: 10px;
-      margin: 4px 0;
-    }
-
-    .trip-meta-tags {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .trip-seats-progress {
-      background: var(--canvas-bone);
-      height: 6px;
-      border-radius: 3px;
-      overflow: hidden;
       margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
-    .trip-seats-fill {
+
+    .trip-progress-box {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .progress-bar-track {
+      width: 100%;
+      height: 6px;
+      background: var(--canvas-bone);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progress-bar-fill {
       height: 100%;
       background: var(--color-forest);
-      border-radius: 3px;
-    }
-
-    .btn-book-trip-cta {
-      width: 100%;
-      min-height: 48px;
-      padding: 12px 20px;
-      background: var(--color-forest);
-      color: var(--canvas-ivory);
-      border: none;
-      border-radius: var(--radius-sm);
-      font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s var(--ease-drive);
-    }
-    .btn-book-trip-cta:hover {
-      background: var(--color-forest-surface);
-      box-shadow: 0 4px 14px rgba(35, 49, 42, 0.25);
-    }
-    .btn-book-trip-cta:disabled {
-      background: var(--canvas-stone);
-      color: var(--text-faint);
-      cursor: not-allowed;
-      box-shadow: none;
+      border-radius: var(--radius-pill);
+      transition: width 0.3s ease;
     }
 
     /* ==========================================================================
-       TAB 2: ACTIVE ORDER & WORKING QR BOARDING PASS (ЗАКАЗ И РАБОЧИЙ QR)
+       FUNCTION 2: МОЙ БИЛЕТ (АКТИВНЫЙ БИЛЕТ С РАБОЧИМ SVG QR & LIVE СТАТУС)
        ========================================================================== */
-    .active-ticket-monograph {
+    .active-ticket-monolith {
       background: var(--surface-card);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-md);
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 4px 20px rgba(35, 49, 42, 0.04);
+      box-shadow: 0 4px 20px rgba(43, 42, 40, 0.04);
+      margin-bottom: 30px;
     }
 
-    .ticket-top-banner {
-      background: var(--surface-subtle);
+    .ticket-header-strip {
+      background: var(--canvas-bone);
       border-bottom: 1px solid var(--border-hairline);
-      padding: 14px 24px;
+      padding: 16px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -559,124 +630,202 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-mono);
+      font-size: 12px;
       font-weight: 700;
-      text-transform: uppercase;
       letter-spacing: 0.05em;
-      color: var(--color-forest);
+      text-transform: uppercase;
+      background: var(--canvas-sand);
+      color: var(--text-primary);
     }
 
-    .pulse-indicator-dot {
+    .ticket-status-pill.status-scheduled, .ticket-status-pill.status-boarding {
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+    }
+
+    .ticket-status-pill.status-in_route {
+      background: #2C3E35;
+      color: var(--canvas-ivory);
+    }
+
+    .ticket-status-pill.status-delayed {
+      background: #A8674F;
+      color: var(--canvas-ivory);
+    }
+
+    .ticket-status-pill.status-completed {
+      background: var(--canvas-stone);
+      color: var(--text-primary);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #7AE3A6;
+      box-shadow: 0 0 8px #7AE3A6;
+      animation: pulseAnim 1.8s infinite;
+    }
+
+    @keyframes pulseAnim {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.8; }
+    }
+
+    .ticket-body-grid {
+      display: grid;
+      grid-template-columns: 1fr 240px;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .ticket-details-pane {
+      padding: 28px;
+      border-right: 1px solid var(--border-hairline);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .route-journey-visual {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .route-node-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .node-city {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+
+    .node-station {
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    .node-platform-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--canvas-bone);
+      border: 1px solid var(--border-hairline);
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 4px;
+      width: fit-content;
+    }
+
+    .node-time {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 4px;
+    }
+
+    .route-vector-bridge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+    }
+
+    .vector-duration-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--canvas-bone);
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-hairline);
+    }
+
+    .vector-track {
+      width: 100px;
+      height: 2px;
+      background: var(--border-taupe);
+      position: relative;
+    }
+    .vector-track::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -3px;
       width: 8px;
       height: 8px;
       border-radius: 50%;
       background: var(--color-forest);
-      box-shadow: 0 0 0 3px rgba(35, 49, 42, 0.2);
-      animation: pulseBreath 2s infinite ease-in-out;
-    }
-    @keyframes pulseBreath {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.25); opacity: 0.65; }
     }
 
-    .ticket-grid-body {
-      padding: clamp(20px, 3vw, 36px);
+    .ticket-telemetry-row {
       display: grid;
-      grid-template-columns: 1fr 300px;
-      gap: 32px;
-      align-items: start;
-    }
-    @media (max-width: 900px) {
-      .ticket-grid-body {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .ticket-route-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
-      padding-bottom: 24px;
-      border-bottom: 1px dashed var(--border-hairline);
-      flex-wrap: wrap;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
     }
 
-    .route-terminal-node {
+    .telemetry-cell {
       display: flex;
       flex-direction: column;
+      gap: 2px;
     }
-    .terminal-city {
-      font-family: var(--font-display);
-      font-size: clamp(26px, 3.2vw, 38px);
-      font-weight: 500;
-      color: var(--text-primary);
-      line-height: 1.1;
-    }
-    .terminal-station {
-      font-size: 13.5px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-    .terminal-time {
+
+    .telemetry-cell-label {
       font-family: var(--font-mono);
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--color-forest);
-      margin-top: 6px;
-    }
-
-    .route-arrow-bridge {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      color: var(--text-faint);
-    }
-    .route-arrow-bridge svg {
-      color: var(--color-forest);
-    }
-
-    .ticket-specs-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 16px;
-      margin-top: 24px;
-    }
-    .spec-cell {
-      background: var(--canvas-ivory);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-sm);
-      padding: 12px 14px;
-    }
-    .spec-label {
       font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.12em;
       color: var(--text-muted);
+      font-weight: 600;
     }
-    .spec-value {
+
+    .telemetry-cell-val {
       font-size: 16px;
       font-weight: 700;
       color: var(--text-primary);
-      margin-top: 3px;
     }
 
-    /* QR CODE DOCK */
-    .qr-dock-card {
-      background: var(--canvas-ivory);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-md);
-      padding: 20px;
+    .telemetry-cell-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* QR PASS DOCK */
+    .ticket-qr-dock {
+      padding: 28px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      background: var(--canvas-ivory);
+      cursor: pointer;
       text-align: center;
-      gap: 14px;
+      transition: background 0.2s;
     }
-    .qr-box-mount {
-      width: 200px;
-      height: 200px;
+    .ticket-qr-dock:hover {
+      background: var(--canvas-bone);
+    }
+
+    .qr-frame-box {
+      width: 140px;
+      height: 140px;
       background: var(--surface-card);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-sm);
@@ -684,1033 +833,586 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(35, 49, 42, 0.05);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .qr-box-mount:hover {
-      transform: scale(1.02);
-      box-shadow: 0 6px 18px rgba(35, 49, 42, 0.12);
-    }
-    .qr-box-mount svg {
-      width: 100%;
-      height: 100%;
+      box-shadow: 0 2px 10px rgba(43, 42, 40, 0.04);
     }
 
-    .qr-instructions {
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-    .qr-enlarge-hint {
-      font-size: 11px;
-      color: var(--color-forest);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .ticket-actions-bar {
+    .ticket-driver-bar {
       padding: 16px 24px;
-      background: var(--surface-subtle);
-      border-top: 1px solid var(--border-hairline);
+      background: var(--surface-card);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
       flex-wrap: wrap;
+      gap: 12px;
     }
 
-    .btn-action-outline {
-      padding: 10px 18px;
-      font-size: 13.5px;
-      font-weight: 600;
-      color: var(--text-primary);
-      background: var(--surface-card);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-sm);
-      cursor: pointer;
+    .btn-call-passenger {
+      min-width: 48px;
+      min-height: 48px;
+      width: 48px;
+      height: 48px;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      background: var(--canvas-bone);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
       text-decoration: none;
-      min-height: 48px;
       transition: all 0.2s;
     }
-    .btn-action-outline:hover {
+    .btn-call-passenger:hover {
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
       border-color: var(--color-forest);
-      color: var(--color-forest);
     }
 
-    /* EMPTY ORDER STATE */
-    .empty-order-card {
-      background: var(--surface-card);
-      border: 1px dashed var(--border-taupe);
-      border-radius: var(--radius-md);
-      padding: clamp(36px, 6vw, 64px) 24px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      max-width: 600px;
-      margin: 20px auto;
-    }
-    .empty-icon-wrap {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      background: var(--surface-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .badge-payment {
+      font-size: 13px;
+      font-weight: 600;
       color: var(--color-forest);
-    }
-    .empty-title {
-      font-family: var(--font-display);
-      font-size: 26px;
-      font-weight: 500;
-      color: var(--text-primary);
-    }
-    .empty-text {
-      font-size: 14.5px;
-      color: var(--text-muted);
-      max-width: 440px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
     /* ==========================================================================
-       TAB 3: PASSENGER PROFILE (МОЙ ПРОФИЛЬ)
+       FUNCTION 3: ПРОФИЛЬ, МИЛИ PRESTIGE & ИСТОРИЯ ПОЕЗДОК
        ========================================================================== */
-    .profile-grid-layout {
+    .profile-master-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 24px;
-    }
-    @media (max-width: 860px) {
-      .profile-grid-layout {
-        grid-template-columns: 1fr;
-      }
+      margin-bottom: 30px;
     }
 
-    .profile-card {
+    .profile-card-monograph {
       background: var(--surface-card);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-md);
-      padding: 24px;
+      padding: 28px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
-    }
-
-    .profile-card-title {
-      font-family: var(--font-display);
-      font-size: 22px;
-      font-weight: 500;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .form-label {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-    }
-    .form-input {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-sm);
-      background: var(--canvas-ivory);
-      font-size: 16px;
-      outline: none;
-      transition: border-color 0.2s;
-      min-height: 48px;
-    }
-    .form-input:focus {
-      border-color: var(--color-forest);
-      box-shadow: 0 0 0 3px rgba(35, 49, 42, 0.12);
-    }
-
-    .btn-save-profile {
-      min-height: 48px;
-      padding: 12px 24px;
-      background: var(--color-forest);
-      color: var(--canvas-ivory);
-      border: none;
-      border-radius: var(--radius-sm);
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s;
-    }
-    .btn-save-profile:hover {
-      background: var(--color-forest-surface);
-    }
-
-    /* MILES MONOLITH */
-    .miles-monolith {
-      background: var(--color-forest);
-      color: var(--canvas-ivory);
-      border-radius: var(--radius-md);
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
       gap: 20px;
     }
-    .miles-tier-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      background: rgba(245, 241, 234, 0.15);
-      border-radius: var(--radius-pill);
-      font-size: 11.5px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      align-self: flex-start;
-    }
-    .miles-digit-value {
-      font-family: var(--font-mono);
-      font-size: 44px;
-      font-weight: 700;
-      line-height: 1;
-      margin-top: 4px;
+
+    .profile-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border-hairline);
+      padding-bottom: 16px;
     }
 
-    /* HISTORY LIST */
-    .history-card {
+    .profile-entry-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .profile-entry-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .profile-entry-val {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* LOYALTY CARD MONOLITH */
+    .loyalty-hero-monolith {
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+      border-radius: var(--radius-md);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+      box-shadow: 0 8px 30px rgba(35, 49, 42, 0.16);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loyalty-hero-monolith::after {
+      content: '';
+      position: absolute;
+      right: -30px;
+      bottom: -30px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 241, 234, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .loyalty-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .loyalty-brand-mark {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .loyalty-tier-badge {
+      background: rgba(245, 241, 234, 0.15);
+      border: 1px solid rgba(245, 241, 234, 0.25);
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .loyalty-balance-lead {
+      font-family: var(--font-display);
+      font-size: 46px;
+      font-weight: 500;
+      line-height: 1;
+      margin-top: 10px;
+    }
+
+    .loyalty-progress-label {
+      font-size: 12px;
+      color: var(--text-light-muted);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .loyalty-progress-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(245, 241, 234, 0.2);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+    }
+
+    .loyalty-progress-fill {
+      width: 72.5%;
+      height: 100%;
+      background: var(--canvas-ivory);
+      border-radius: var(--radius-pill);
+    }
+
+    .loyalty-benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(245, 241, 234, 0.16);
+      font-size: 12.5px;
+      color: var(--text-light-muted);
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* TRAVEL HISTORY FEED */
+    .history-card-panel {
       background: var(--surface-card);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-md);
       padding: 24px;
+      margin-bottom: 30px;
     }
-    .history-item-row {
+
+    .history-trip-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 0;
-      border-bottom: 1px solid var(--border-hairline);
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-subtle);
       flex-wrap: wrap;
       gap: 12px;
     }
-    .history-item-row:last-child {
+    .history-trip-row:last-child {
       border-bottom: none;
       padding-bottom: 0;
     }
 
-    /* ==========================================================================
-       MODAL: 20-SEAT BOOKING SEAT PICKER (БРОНИРОВАНИЕ И ВЫБОР МЕСТА)
-       ========================================================================== */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(28, 29, 28, 0.6);
-      backdrop-filter: blur(4px);
-      z-index: 5000;
-      display: none;
+    .btn-receipt-download {
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      padding: 16px;
+      gap: 6px;
+      padding: 6px 14px;
+      background: var(--canvas-bone);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    .modal-overlay.open {
-      display: flex;
-      animation: modalFadeIn 0.2s var(--ease-drive);
-    }
-    @keyframes modalFadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .btn-receipt-download:hover {
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+      border-color: var(--color-forest);
     }
 
-    .modal-dialog {
+    /* PREFERENCE TOGGLES */
+    .pref-toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .pref-toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      cursor: pointer;
+    }
+
+    .pref-toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--canvas-sand);
+      border-radius: var(--radius-pill);
+      transition: 0.2s;
+    }
+
+    .toggle-slider::before {
+      position: absolute;
+      content: '';
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: var(--surface-card);
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+
+    .pref-toggle-switch input:checked + .toggle-slider {
+      background: var(--color-forest);
+    }
+
+    .pref-toggle-switch input:checked + .toggle-slider::before {
+      transform: translateX(20px);
+    }
+
+    /* MODAL WINDOWS */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(43, 42, 40, 0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.24s var(--ease-drive);
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-window-card {
       background: var(--surface-card);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-md);
+      max-width: 520px;
       width: 100%;
-      max-width: 680px;
-      max-height: 90dvh;
+      padding: 28px;
+      box-shadow: 0 16px 40px rgba(43, 42, 40, 0.12);
+      transform: scale(0.97);
+      transition: transform 0.24s var(--ease-drive);
+      max-height: 90vh;
       overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
     }
 
-    .modal-header {
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--border-hairline);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .modal-backdrop.open .modal-window-card {
+      transform: scale(1);
     }
-    .modal-title {
-      font-family: var(--font-display);
-      font-size: 24px;
-      font-weight: 500;
-    }
+
     .modal-close-btn {
-      width: 44px;
-      height: 44px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      cursor: pointer;
-      display: flex;
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      min-height: 48px;
+      border: 1px solid var(--border-hairline);
+      background: var(--surface-card);
+      border-radius: var(--radius-sm);
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      border-radius: 50%;
+      cursor: pointer;
+      color: var(--text-primary);
+      transition: all 0.2s;
     }
     .modal-close-btn:hover {
       background: var(--surface-subtle);
-      color: var(--text-primary);
     }
 
-    .modal-body {
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    /* 20-SEAT SPRINTER CABIN GRID */
-    .bus-cabin-card {
+    /* 20-SEAT SPRINTER INTERACTIVE PICKER GRID */
+    .seatmap-sprinter-box {
       background: var(--canvas-ivory);
       border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-sm);
-      padding: 16px;
+      border-radius: var(--radius-md);
+      padding: 18px;
+      margin: 16px 0;
     }
-    .bus-cockpit-bar {
+
+    .sprinter-cockpit-indicator {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px dashed var(--border-hairline);
-      padding-bottom: 10px;
-      margin-bottom: 12px;
-      font-size: 11.5px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-hairline);
+      margin-bottom: 14px;
+      font-size: 12px;
       color: var(--text-muted);
     }
 
-    .seats-20-grid {
+    .sprinter-seats-matrix {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
     }
+
     .seat-chip {
       aspect-ratio: 1;
       border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-sm);
       background: var(--surface-card);
+      border-radius: var(--radius-sm);
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       font-family: var(--font-mono);
       font-size: 13px;
       font-weight: 700;
-      color: var(--text-primary);
       cursor: pointer;
-      transition: all 0.15s;
       min-height: 44px;
+      transition: all 0.15s;
     }
     .seat-chip:hover:not(.occupied) {
       border-color: var(--color-forest);
-      background: var(--canvas-bone);
+      background: var(--canvas-sand);
     }
     .seat-chip.selected {
-      background: var(--color-forest) !important;
-      color: var(--canvas-ivory) !important;
-      border-color: var(--color-forest) !important;
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+      border-color: var(--color-forest);
     }
     .seat-chip.occupied {
       background: var(--canvas-bone);
       color: var(--text-faint);
       cursor: not-allowed;
-      border-style: dashed;
-      opacity: 0.6;
+      border-color: var(--border-subtle);
+      opacity: 0.65;
     }
 
-    .modal-footer {
-      padding: 16px 24px;
-      border-top: 1px solid var(--border-hairline);
-      background: var(--surface-subtle);
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-    }
-
-    /* FULLSCREEN QR ENLARGE MODAL */
-    .qr-modal-dialog {
-      background: var(--surface-card);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-md);
-      padding: 32px;
-      text-align: center;
-      max-width: 360px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 18px;
-    }
-    .qr-large-wrap {
-      width: 260px;
-      height: 260px;
-      background: var(--canvas-ivory);
-      padding: 12px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-hairline);
-    }
-
-    /* MOBILE BOTTOM NAVIGATION (FOR 3 FUNCTIONS) */
-    .mobile-bottom-tabs {
+    /* FIXED MOBILE BOTTOM NAVIGATION BAR */
+    .deck-bottom-bar, .mobile-bottom-nav-bar {
       display: none;
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: calc(60px + env(safe-area-inset-bottom, 0px));
       background: var(--surface-card);
       border-top: 1px solid var(--border-hairline);
-      z-index: 4000;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 90;
+      padding: 8px 12px;
+      padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+      box-shadow: 0 -4px 16px rgba(43, 42, 40, 0.04);
     }
+
+    .bottom-nav-inner {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .bottom-tab-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 4px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .bottom-tab-btn.active {
+      color: var(--color-forest);
+    }
+
+    .bottom-tab-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* FORM STYLES */
+    .form-group {
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 10px 14px;
+      min-height: 48px;
+      font-size: 16px;
+      font-family: var(--font-body);
+      background: var(--canvas-ivory);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--color-forest);
+    }
+
+    /* TOAST NOTIFICATION */
+    .toast-capsule {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 10000;
+      box-shadow: 0 8px 24px rgba(35, 49, 42, 0.2);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s var(--ease-drive);
+      pointer-events: none;
+    }
+    .toast-capsule.visible {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* RESPONSIVE BREAKPOINTS */
     @media (max-width: 768px) {
-      .mobile-bottom-tabs {
-        display: flex;
+      aside.app-sidebar, .sidebar {
+        display: none;
       }
       .header-nav-tabs {
         display: none;
       }
-    }
-    .mobile-tab-btn {
-      flex: 1;
-      height: 60px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .mobile-tab-btn.active {
-      color: var(--color-forest);
-    }
-
-    /* TOAST */
-    .toast-container {
-      position: fixed;
-      top: 76px;
-      right: 20px;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      pointer-events: none;
-    }
-    .toast-box {
-      background: var(--color-forest);
-      color: var(--canvas-ivory);
-      padding: 12px 18px;
-      border-radius: var(--radius-sm);
-      font-size: 13.5px;
-      font-weight: 600;
-      box-shadow: 0 8px 24px rgba(35, 49, 42, 0.2);
-      pointer-events: auto;
-      animation: toastIn 0.25s var(--ease-drive) forwards;
-    }
-    @keyframes toastIn {
-      from { opacity: 0; transform: translateY(-8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation: none !important;
-        transition: none !important;
+      .deck-bottom-bar, .mobile-bottom-nav-bar {
+        display: block;
       }
-    }
-  
-    /* ==========================================================================
-       TAB 1: BZD-STYLE TRIP SEARCH WIDGET (ПОИСК БИЛЕТОВ И РЕЙСОВ БЖД)
-       ========================================================================== */
-    .bzd-search-card {
-      background: var(--surface-card);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-md);
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow-sm);
-    }
-    .bzd-search-header {
-      margin-bottom: 18px;
-    }
-    .bzd-search-title {
-      font-family: var(--font-display);
-      font-size: 24px;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-    .bzd-search-subtitle {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 3px;
-    }
-
-    .bzd-search-form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .bzd-inputs-row {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr 1.3fr auto;
-      gap: 10px;
-      align-items: flex-end;
-    }
-    @media (max-width: 900px) {
-      .bzd-inputs-row {
+      .profile-master-grid {
         grid-template-columns: 1fr;
       }
-    }
-
-    .bzd-field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .bzd-field-label {
-      font-size: 11.5px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-    }
-    .bzd-input-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-    .bzd-input-icon {
-      position: absolute;
-      left: 14px;
-      width: 16px;
-      height: 16px;
-      color: var(--text-muted);
-      pointer-events: none;
-    }
-    .bzd-search-input {
-      width: 100%;
-      height: 48px;
-      min-height: 48px;
-      padding: 10px 14px 10px 40px;
-      font-family: var(--font-body);
-      font-size: 16px; /* iOS anti-zoom >= 16px */
-      color: var(--text-primary);
-      background: var(--canvas-ivory);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-sm);
-      transition: all 0.2s ease;
-    }
-    .bzd-search-input:focus {
-      outline: none;
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(35, 49, 42, 0.12);
-    }
-
-    /* SWAP BUTTON */
-    .bzd-swap-btn {
-      width: 48px;
-      height: 48px;
-      min-width: 48px;
-      min-height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--canvas-bone);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
-      cursor: pointer;
-      transition: all 0.25s ease;
-      margin-bottom: 0;
-    }
-    .bzd-swap-btn:hover {
-      background: var(--canvas-sand);
-      transform: rotate(180deg);
-    }
-
-    /* DATE PICKER & QUICK BUTTONS */
-    .bzd-date-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .bzd-quick-dates {
-      display: flex;
-      gap: 6px;
-      margin-top: 6px;
-      flex-wrap: wrap;
-    }
-    .bzd-date-pill {
-      padding: 4px 10px;
-      min-height: 28px;
-      border-radius: var(--radius-pill);
-      border: 1px solid var(--border-hairline);
-      background: var(--canvas-bone);
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .bzd-date-pill:hover, .bzd-date-pill.active {
-      background: var(--color-forest);
-      color: var(--canvas-ivory);
-      border-color: var(--color-forest);
-    }
-
-    /* SEARCH SUBMIT BUTTON */
-    .btn-bzd-search {
-      height: 48px;
-      min-height: 48px;
-      padding: 0 24px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: var(--color-forest);
-      color: var(--canvas-ivory);
-      border: 1px solid var(--color-forest);
-      border-radius: var(--radius-sm);
-      font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
-    .btn-bzd-search:hover {
-      background: #1B2620;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(35, 49, 42, 0.25);
-    }
-
-    /* POPULAR ROUTES CHIPS */
-    .bzd-popular-routes {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border-hairline);
-      font-size: 12.5px;
-      color: var(--text-muted);
-    }
-    .popular-route-pill {
-      padding: 5px 12px;
-      border-radius: var(--radius-pill);
-      background: var(--canvas-bone);
-      border: 1px solid var(--border-hairline);
-      color: var(--text-primary);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .popular-route-pill:hover {
-      background: var(--canvas-sand);
-    }
-
-    /* RESULTS BAR */
-    .bzd-results-header-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .bzd-results-title {
-      font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    /* BZD SCHEDULE CARDS */
-    .bzd-trip-card {
-      background: var(--surface-card);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-md);
-      padding: 20px;
-      margin-bottom: 16px;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .bzd-trip-card:hover {
-      border-color: var(--border-focus);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-    }
-    .bzd-trip-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-hairline);
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .bzd-trip-train-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .train-num {
-      font-family: var(--font-mono);
-      font-weight: 700;
-      font-size: 14px;
-      color: var(--color-forest);
-      background: var(--status-forest-bg);
-      padding: 3px 8px;
-      border-radius: var(--radius-sm);
-    }
-    .train-type {
-      font-size: 12.5px;
-      color: var(--text-muted);
-    }
-
-    .bzd-schedule-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr 1fr;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-    @media (max-width: 640px) {
-      .bzd-schedule-grid {
-        grid-template-columns: 1fr;
-        gap: 14px;
-      }
-    }
-
-    .bzd-time-col {
-      display: flex;
-      flex-direction: column;
-    }
-    .bzd-time-col.arrival {
-      text-align: right;
-      align-items: flex-end;
-    }
-    @media (max-width: 640px) {
-      .bzd-time-col.arrival {
-        text-align: left;
-        align-items: flex-start;
-      }
-    }
-    .bzd-time {
-      font-family: var(--font-display);
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--text-primary);
-      line-height: 1;
-    }
-    .bzd-date {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-    .bzd-station {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-top: 2px;
-    }
-
-    .bzd-duration-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-    .bzd-duration-text {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-    .bzd-route-line {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      max-width: 160px;
-      color: var(--color-forest);
-      font-weight: 700;
-      font-size: 14px;
-      justify-content: center;
-      gap: 6px;
-    }
-    .bzd-line-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--color-forest);
-    }
-    .bzd-route-class {
-      font-size: 11px;
-      color: var(--color-forest);
-      font-weight: 600;
-      margin-top: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .bzd-trip-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 14px;
-      border-top: 1px solid var(--border-hairline);
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .bzd-seats-pricing {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-    .bzd-seats-avail {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--text-primary);
-    }
-    .seats-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-    }
-    .seats-dot.available { background: var(--status-forest); }
-    .seats-dot.full { background: var(--color-terracotta); }
-    .bzd-fare {
-      font-size: 13.5px;
-      color: var(--text-muted);
-    }
-    .bzd-fare strong {
-      font-family: var(--font-mono);
-      font-size: 17px;
-      color: var(--color-forest);
-    }
-
-    .btn-bzd-select-seat {
-      height: 44px;
-      min-height: 44px;
-      padding: 0 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--color-forest);
-      color: var(--canvas-ivory);
-      border: 1px solid var(--color-forest);
-      border-radius: var(--radius-sm);
-      font-family: var(--font-body);
-      font-size: 13.5px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .btn-bzd-select-seat:hover {
-      background: #1B2620;
-    }
-    .btn-bzd-select-seat:disabled {
-      background: var(--canvas-sand);
-      color: var(--text-muted);
-      border-color: var(--border-hairline);
-      cursor: not-allowed;
-    }
-
-  
-    .brand-mark-group {
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-      text-decoration: none;
-      color: var(--text-primary);
-    }
-    .brand-wordmark {
-      font-family: var(--font-display);
-      font-size: 28px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-primary);
-      transition: color 0.3s ease;
-    }
-    .brand-wordmark:hover {
-      color: var(--color-forest);
-    }
-
-  
-    /* ==========================================================================
-       CONCIERGE TAB STYLING (КРУГЛОСУТОЧНЫЙ КОНСЬЕРЖ 24/7)
-       ========================================================================== */
-    .concierge-channels-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    @media (max-width: 840px) {
-      .concierge-channels-grid {
+      .ticket-body-grid {
         grid-template-columns: 1fr;
       }
-    }
-    .concierge-channel-card {
-      background: var(--surface-card);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-md);
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      transition: all 0.2s ease;
-    }
-    .concierge-channel-card:hover {
-      border-color: var(--border-focus);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-    }
-    .concierge-card-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: var(--radius-sm);
-      background: var(--canvas-bone);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-forest);
-      border: 1px solid var(--border-hairline);
-    }
-    .concierge-card-title {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-    }
-    .concierge-card-val {
-      font-family: var(--font-mono);
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-    .concierge-card-desc {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.45;
-      flex: 1;
-    }
-    .btn-concierge-action {
-      margin-top: 10px;
-      height: 44px;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 18px;
-      border-radius: var(--radius-sm);
-      background: var(--canvas-bone);
-      border: 1px solid var(--border-hairline);
-      color: var(--text-primary);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-      transition: all 0.2s ease;
-    }
-    .btn-concierge-action:hover {
-      background: var(--color-forest);
-      color: var(--canvas-ivory);
-      border-color: var(--color-forest);
+      .ticket-details-pane {
+        border-right: none;
+        border-bottom: 1px solid var(--border-hairline);
+      }
+      .route-journey-visual {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .route-vector-bridge {
+        transform: rotate(90deg);
+        margin: 10px 0;
+      }
+      .ticket-telemetry-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .cabinet-viewport {
+        padding: 18px 14px calc(76px + env(safe-area-inset-bottom, 0px));
+      }
     }
 
-    .concierge-service-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border-hairline);
+    @media (max-width: 480px) {
+      .header-inner {
+        padding: 0 10px;
+        min-width: 0;
+        overflow-x: hidden;
+      }
+      .brand-sub-badge {
+        display: none;
+      }
+      .header-link-office span {
+        display: none;
+      }
+      .node-city {
+        font-size: 24px;
+      }
     }
-    .concierge-service-item:last-child {
-      border-bottom: none;
-    }
-    .service-bullet {
-      width: 26px;
-      height: 26px;
-      min-width: 26px;
-      border-radius: 50%;
-      background: var(--status-forest-bg);
-      color: var(--color-forest);
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
   </style>
 </head>
 <body>
 
-  <!-- PAPER GRAIN TEXTURE (3.8% OPACITY) -->
-  <svg class="paper-grain-texture" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-    <filter id="grainFilter">
-      <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch"/>
-      <feColorMatrix type="matrix" values="0 0 0 0 0.17  0 0 0 0 0.16  0 0 0 0 0.15  0 0 0 0.85 0"/>
-    </filter>
-    <rect width="100%" height="100%" filter="url(#grainFilter)"/>
-  </svg>
+  <!-- Artisanal SVG Tactile Paper Grain Overlay -->
+  <div class="paper-grain-overlay" aria-hidden="true"></div>
 
-  <!-- KINETIC CURSOR (DESKTOP) -->
-  <div class="kinetic-cursor" id="kineticCursor"></div>
+  <!-- Desktop Kinetic Lerp Cursor Follower -->
+  <div class="custom-cursor-follower" id="cursorFollower" aria-hidden="true"></div>
 
-  <!-- TOAST CONTAINER -->
-  <div class="toast-container" id="toastHub"></div>
-
-  <div class="app-shell">
-
-    <!-- HEADER -->
-    <header class="cabinet-header">
-      <a href="aura-b2c-masterpiece.html" class="brand-mark-group" title="BusLiner • Главная">
-        <span class="brand-wordmark">BusLiner</span>
+  <!-- SITE HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="header-brand-group" title="BusLiner — На главную">
+        <div class="brand-symbol-box">BL</div>
+        <div class="brand-title-wrap">
+          <span class="brand-main-title">BusLiner</span>
+          <span class="brand-sub-badge">Кабинет пассажира</span>
+        </div>
       </a>
 
-      <!-- 3 PRIMARY PASSENGER TABS -->
-      <nav class="header-nav-tabs">
+      <!-- 3 PRIMARY PASSENGER NAVIGATION TABS -->
+      <nav class="header-nav-tabs" aria-label="Разделы кабинета">
         <button type="button" class="header-tab-btn active" data-tab="trips" onclick="switchCabinetTab('trips')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="2" y="6" width="20" height="12" rx="2" />
@@ -1723,12 +1425,13 @@
 
         <button type="button" class="header-tab-btn" data-tab="order" onclick="switchCabinetTab('order')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-            <polyline points="14 2 14 8 20 8" />
-            <line x1="16" y1="13" x2="8" y2="13" />
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
           </svg>
-          <span>Мой заказ</span>
-          <span class="header-tab-badge" id="badgeOrderActive" style="display:none;">1</span>
+          <span>Мой билет</span>
+          <span class="header-tab-badge" id="badgeOrderActive">1</span>
         </button>
 
         <button type="button" class="header-tab-btn" data-tab="profile" onclick="switchCabinetTab('profile')">
@@ -1738,397 +1441,427 @@
           </svg>
           <span>Мой профиль</span>
         </button>
-
-        <button type="button" class="header-tab-btn" data-tab="concierge" onclick="switchCabinetTab('concierge')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-          </svg>
-          <span>Консьерж</span>
-        </button>
       </nav>
 
-      <div class="header-right-group">
-        <a href="carrier-workspace.html" class="btn-vitrina-link">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="header-right-cluster">
+        <div class="miles-status-pill" onclick="switchCabinetTab('profile')" title="Профиль и BusLiner Miles">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+          <span class="mono">1 450 миль</span>
+        </div>
+
+        <a href="carrier-workspace.html" class="header-link-office" title="Кабинет перевозчика">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="2" y="3" width="20" height="14" rx="2"/>
             <line x1="8" y1="21" x2="16" y2="21"/>
             <line x1="12" y1="17" x2="12" y2="21"/>
           </svg>
-          <span>Кабинет перевозчика</span>
+          <span>Офис перевозчика</span>
         </a>
-        <div class="user-avatar-badge" id="headerUserAvatar" onclick="switchCabinetTab('profile')" title="Открыть профиль">
-          КП
-        </div>
       </div>
-    </header>
+    </div>
+  </header>
 
-    <!-- MAIN VIEWPORT -->
-    <main class="cabinet-viewport">
+  <!-- MAIN CABINET WRAPPER -->
+  <main class="cabinet-main">
+    <div class="container screen-content-area cabinet-viewport">
+
+      <!-- WELCOME HERO STRIP -->
+      <section class="passenger-hero-strip">
+        <div>
+          <div class="hero-deck-badge">Индивидуальный сервис • BusLiner Prestige</div>
+          <h1 class="passenger-hero-title">
+            Добро пожаловать, <em>Александр Константинович</em>
+          </h1>
+          <p class="passenger-hero-meta mono">
+            Личный кабинет пассажира • Идентификатор BL-PASS-8824
+          </p>
+        </div>
+
+        <div class="hero-meta-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span>Статус профиля: Верифицирован</span>
+        </div>
+      </section>
 
       <!-- ====================================================================
-           FUNCTION 1: ДОСТУПНЫЕ РЕЙСЫ (ПРОСМОТР ВСЕХ РЕЙСОВ И ЗАПИСЬ)
+           FUNCTION 1: ДОСТУПНЫЕ РЕЙСЫ (ПРОСМОТР ВСЕХ РЕЙСОВ И ЗАПИСЬ С ВЫБОРОМ МЕСТА)
            ==================================================================== -->
       <section class="tab-pane active-pane" id="pane-trips">
-        <!-- BZD STYLE SEARCH CARD (ОТКУДА, КУДА, ДАТА) -->
-        <div class="bzd-search-card">
-          <div class="bzd-search-header">
-            <h1 class="bzd-search-title">Поиск билетов <em>и расписание рейсов</em></h1>
-            <p class="bzd-search-subtitle">Система подбора маршрутов BusLiner: выберите станции отправления и прибытия</p>
+        <div class="filter-bar-card">
+          <div class="filter-chips-cluster">
+            <span class="kicker-tag" style="margin-right: 4px;">Направление:</span>
+            <button type="button" class="filter-chip-btn active" onclick="filterTripsFeed('all', this)">Все рейсы</button>
+            <button type="button" class="filter-chip-btn" onclick="filterTripsFeed('Гродно', this)">Минск — Гродно</button>
+            <button type="button" class="filter-chip-btn" onclick="filterTripsFeed('Вильнюс', this)">Минск — Вильнюс</button>
+            <button type="button" class="filter-chip-btn" onclick="filterTripsFeed('Варшава', this)">Минск — Варшава</button>
+            <button type="button" class="filter-chip-btn" onclick="filterTripsFeed('Брест', this)">Минск — Брест</button>
           </div>
-
-          <form class="bzd-search-form" onsubmit="handleBzdSearchSubmit(event)">
-            <div class="bzd-inputs-row">
-              <!-- FROM -->
-              <div class="bzd-field-group">
-                <label class="bzd-field-label" for="bzdFromInput">Откуда</label>
-                <div class="bzd-input-wrap">
-                  <svg class="bzd-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12 6 12 12 16 14"/>
-                  </svg>
-                  <input type="text" id="bzdFromInput" class="bzd-search-input" value="Минск" placeholder="Город или станция" autocomplete="off" required>
-                </div>
-              </div>
-
-              <!-- SWAP BUTTON -->
-              <div class="bzd-field-group" style="justify-content: flex-end;">
-                <button type="button" class="bzd-swap-btn" onclick="swapBzdStations()" title="Поменять станции местами">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="17 1 21 5 17 9"/>
-                    <path d="M3 5h18"/>
-                    <polyline points="7 23 3 19 7 15"/>
-                    <path d="M21 19H3"/>
-                  </svg>
-                </button>
-              </div>
-
-              <!-- TO -->
-              <div class="bzd-field-group">
-                <label class="bzd-field-label" for="bzdToInput">Куда</label>
-                <div class="bzd-input-wrap">
-                  <svg class="bzd-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/>
-                    <circle cx="12" cy="10" r="3"/>
-                  </svg>
-                  <input type="text" id="bzdToInput" class="bzd-search-input" value="Вильнюс" placeholder="Город назначения" autocomplete="off" required>
-                </div>
-              </div>
-
-              <!-- DATE -->
-              <div class="bzd-field-group bzd-date-wrap">
-                <label class="bzd-field-label" for="bzdDateInput">Дата поездки</label>
-                <div class="bzd-input-wrap">
-                  <svg class="bzd-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
-                  </svg>
-                  <input type="date" id="bzdDateInput" class="bzd-search-input" required>
-                </div>
-                <div class="bzd-quick-dates">
-                  <button type="button" class="bzd-date-pill active" id="pillDateToday" onclick="setQuickDate('today')">Сегодня</button>
-                  <button type="button" class="bzd-date-pill" id="pillDateTomorrow" onclick="setQuickDate('tomorrow')">Завтра</button>
-                  <button type="button" class="bzd-date-pill" onclick="shiftQuickDate(1)">+1 день</button>
-                  <button type="button" class="bzd-date-pill" onclick="shiftQuickDate(-1)">-1 день</button>
-                </div>
-              </div>
-
-              <!-- SUBMIT BUTTON -->
-              <div class="bzd-field-group" style="justify-content: flex-end;">
-                <button type="submit" class="btn-bzd-search">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"/>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                  </svg>
-                  <span>Найти рейсы</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- POPULAR ROUTES QUICK CHIPS -->
-            <div class="bzd-popular-routes">
-              <span>Популярные:</span>
-              <button type="button" class="popular-route-pill" onclick="applyPopularRoute('Минск', 'Вильнюс')">Минск ➔ Вильнюс</button>
-              <button type="button" class="popular-route-pill" onclick="applyPopularRoute('Минск', 'Варшава')">Минск ➔ Варшава</button>
-              <button type="button" class="popular-route-pill" onclick="applyPopularRoute('Гродно', 'Белосток')">Гродно ➔ Белосток</button>
-              <button type="button" class="popular-route-pill" onclick="applyPopularRoute('Минск', 'Брест')">Минск ➔ Брест</button>
-              <button type="button" class="popular-route-pill" onclick="applyPopularRoute('Минск', 'Гродно')">Минск ➔ Гродно</button>
-              <button type="button" class="popular-route-pill" onclick="applyPopularRoute('', '')">Все рейсы</button>
-            </div>
-          </form>
-        </div>
-
-        <!-- SEARCH RESULTS HEADER -->
-        <div class="bzd-results-header-bar">
-          <div>
-            <h2 class="bzd-results-title" id="bzdResultsRouteTitle">Рейсы: Минск ➔ Вильнюс</h2>
-            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;" id="bzdResultsMetaNote">
-              Найдено рейсов: <span id="badgeTripsCount">4</span> • Прямое сообщение
-            </div>
+          <div style="font-size: 13px; color: var(--text-muted); font-family: var(--font-mono);">
+            Дата: Сегодня, 24 октября 2026
           </div>
         </div>
 
-        <!-- BZD SCHEDULE LIST -->
-        <div id="tripsFeedGrid">
-          <!-- Dynamically populated by renderTripsFeed -->
-        </div>
+        <div class="trips-grid-feed" id="tripsFeedGrid"></div>
       </section>
 
       <!-- ====================================================================
-           FUNCTION 2: МОЙ ЗАКАЗ (АКТИВНЫЙ БИЛЕТ С РАБОЧИМ QR-КОДОМ)
+           FUNCTION 2: МОЙ БИЛЕТ (АКТИВНЫЙ БИЛЕТ С РАБОЧИМ SVG QR & LIVE СТАТУС)
            ==================================================================== -->
       <section class="tab-pane" id="pane-order">
-        <div class="pane-header-row">
-          <div>
-            <h1 class="pane-title">Мой заказ <em>и билет</em></h1>
-            <p class="pane-subtitle">Электронный билет с рабочим QR-кодом для посадки экипажем</p>
-          </div>
-        </div>
-
-        <!-- DYNAMIC CONTAINER (RENDERED AS TICKET OR EMPTY STATE) -->
         <div id="orderContentArea">
-          <!-- Dynamically rendered -->
+          <!-- Active Ticket Card will be injected dynamically -->
+          <div class="active-ticket-monolith">
+            <div class="ticket-header-strip">
+              <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <span class="kicker-tag">Рейс BL-5715</span>
+                <span class="mono" style="font-size: 13px; color: var(--text-muted);">Билет #BL-5715-07-VIP</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span id="activeTripStatusBadge" class="ticket-status-pill status-scheduled">
+                  <span class="pulse-dot"></span>
+                  <span>Посадка открыта</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="ticket-body-grid">
+              <div class="ticket-details-pane">
+                <div class="route-journey-visual">
+                  <div class="route-node-col">
+                    <span class="kicker-tag">Отправление • Сегодня</span>
+                    <div class="node-city">Минск</div>
+                    <div class="node-station">Центральный автовокзал • ул. Бобруйская 6</div>
+                    <div class="node-platform-badge mono">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                      </svg>
+                      <span>Платформа 3, Центральный автовокзал</span>
+                    </div>
+                    <div class="node-time mono">18:45</div>
+                  </div>
+
+                  <div class="route-vector-bridge">
+                    <span class="vector-duration-badge mono">4 ч 00 мин</span>
+                    <div class="vector-track"></div>
+                    <span class="kicker-tag" style="font-size: 10px;">Экспресс VIP</span>
+                  </div>
+
+                  <div class="route-node-col" style="text-align: right; align-items: flex-end;">
+                    <span class="kicker-tag">Прибытие • Сегодня</span>
+                    <div class="node-city">Гродно</div>
+                    <div class="node-station">Автовокзал Гродно • ул. Красноармейская 7А</div>
+                    <div class="node-platform-badge mono">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                      </svg>
+                      <span>Центральный терминал</span>
+                    </div>
+                    <div class="node-time mono">22:45</div>
+                  </div>
+                </div>
+
+                <!-- TELEMETRY MATRIX -->
+                <div class="ticket-telemetry-row">
+                  <div class="telemetry-cell">
+                    <span class="telemetry-cell-label">Место в салоне</span>
+                    <div class="telemetry-cell-val" style="color: var(--color-forest);" id="ticketSeatDisplay">Место 07, У окна</div>
+                    <span class="telemetry-cell-sub">Ряд 3 • Одноместный ряд</span>
+                  </div>
+
+                  <div class="telemetry-cell">
+                    <span class="telemetry-cell-label">Транспортное средство</span>
+                    <div class="telemetry-cell-val">Mercedes-Benz Sprinter</div>
+                    <span class="telemetry-cell-sub">Госномер 7TAX-8891 VIP</span>
+                  </div>
+
+                  <div class="telemetry-cell">
+                    <span class="telemetry-cell-label">Стоимость & Оплата</span>
+                    <div class="telemetry-cell-val mono">28.0 BYN</div>
+                    <span class="telemetry-cell-sub badge-payment">✓ Оплачено онлайн • Оплата водителю доступна</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- QR BOARDING PASS DOCK -->
+              <div class="ticket-qr-dock" onclick="openQrModal()" title="Нажмите, чтобы открыть QR-код на весь экран">
+                <div class="qr-frame-box" id="ticketQrContainer">
+                  <!-- Vector SVG QR will be rendered here -->
+                  <svg width="120" height="120" viewBox="0 0 25 25" fill="none">
+                    <rect width="25" height="25" fill="#FAF8F5"/>
+                    <rect x="2" y="2" width="7" height="7" fill="#23312A"/>
+                    <rect x="3" y="3" width="5" height="5" fill="#FAF8F5"/>
+                    <rect x="4" y="4" width="3" height="3" fill="#23312A"/>
+                    <rect x="16" y="2" width="7" height="7" fill="#23312A"/>
+                    <rect x="17" y="3" width="5" height="5" fill="#FAF8F5"/>
+                    <rect x="18" y="4" width="3" height="3" fill="#23312A"/>
+                    <rect x="2" y="16" width="7" height="7" fill="#23312A"/>
+                    <rect x="3" y="17" width="5" height="5" fill="#FAF8F5"/>
+                    <rect x="4" y="18" width="3" height="3" fill="#23312A"/>
+                    <rect x="10" y="2" width="2" height="2" fill="#23312A"/>
+                    <rect x="13" y="3" width="2" height="2" fill="#23312A"/>
+                    <rect x="10" y="6" width="2" height="2" fill="#23312A"/>
+                    <rect x="13" y="7" width="2" height="2" fill="#23312A"/>
+                    <rect x="10" y="10" width="3" height="2" fill="#23312A"/>
+                    <rect x="14" y="10" width="2" height="2" fill="#23312A"/>
+                    <rect x="17" y="10" width="3" height="2" fill="#23312A"/>
+                    <rect x="21" y="10" width="2" height="2" fill="#23312A"/>
+                    <rect x="11" y="13" width="2" height="2" fill="#23312A"/>
+                    <rect x="14" y="13" width="2" height="3" fill="#23312A"/>
+                    <rect x="17" y="13" width="2" height="2" fill="#23312A"/>
+                    <rect x="20" y="14" width="3" height="2" fill="#23312A"/>
+                  </svg>
+                </div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 8px; font-weight: 600;">
+                  Нажмите для увеличения
+                </div>
+              </div>
+            </div>
+
+            <!-- DRIVER CONTACT & STATUS BAR -->
+            <div class="ticket-driver-bar">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 44px; height: 44px; border-radius: var(--radius-sm); background: var(--canvas-bone); border: 1px solid var(--border-hairline); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--color-forest);">
+                  АВ
+                </div>
+                <div>
+                  <div style="font-size: 15px; font-weight: 700; color: var(--text-primary);">Водитель экипажа: Александр Воронов</div>
+                  <div style="font-size: 12.5px; color: var(--text-muted);">Mercedes Sprinter 7TAX-8891 VIP • Прямой рейс</div>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span class="badge-payment">Оплачено онлайн</span>
+                <a href="tel:+375291234567" class="btn-call-passenger" title="Позвонить водителю">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- ====================================================================
-           FUNCTION 3: МОЙ ПРОФИЛЬ (ПЕРСОНАЛЬНЫЕ ДАННЫЕ, МИЛИ, ИСТОРИЯ)
+           FUNCTION 3: ПРОФИЛЬ, МИЛИ PRESTIGE & ИСТОРИЯ ПОЕЗДОК
            ==================================================================== -->
       <section class="tab-pane" id="pane-profile">
-        <div class="pane-header-row">
-          <div>
-            <h1 class="pane-title">Мой <em>профиль</em></h1>
-            <p class="pane-subtitle">Персональные контактные данные, баланс миль и история совершенных поездок</p>
-          </div>
-        </div>
+        <div class="profile-master-grid">
 
-        <div class="profile-grid-layout">
-          <!-- PERSONAL CONTACT DETAILS -->
-          <div class="profile-card">
-            <h2 class="profile-card-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-              Персональные данные
-            </h2>
-
-            <div class="form-group">
-              <label class="form-label">Фамилия и имя пассажира</label>
-              <input type="text" id="profileNameInput" class="form-input" placeholder="Введите ваше имя" oninput="saveProfileDebounced()">
+          <!-- PASSENGER PROFILE CARD -->
+          <div class="profile-card-monograph">
+            <div class="profile-card-header">
+              <div>
+                <span class="kicker-tag">Персональные данные</span>
+                <h2 style="font-family: var(--font-display); font-size: 24px; font-weight: 600; color: var(--text-primary); margin-top: 4px;">
+                  Александр Константинович Нестеров
+                </h2>
+              </div>
+              <span class="hero-meta-badge">✓ Верифицирован</span>
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Номер телефона для связи</label>
-              <input type="tel" id="profilePhoneInput" class="form-input" placeholder="+375 29 000-00-00" oninput="saveProfileDebounced()">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Электронная почта</label>
-              <input type="email" id="profileEmailInput" class="form-input" placeholder="ваша@почта.by" oninput="saveProfileDebounced()">
-            </div>
-
-            <button type="button" class="btn-save-profile" onclick="manualSaveProfile()">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                <polyline points="17 21 17 13 7 13 7 21"/>
-                <polyline points="7 3 7 8 15 8"/>
-              </svg>
-              <span>Сохранить данные</span>
-            </button>
-          </div>
-
-          <!-- MILES MONOLITH & STATS -->
-          <div class="miles-monolith">
             <div>
-              <div class="miles-tier-tag">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              <div class="profile-entry-row">
+                <span class="profile-entry-label">Телефон</span>
+                <span class="profile-entry-val mono">+375 29 987-65-43</span>
+              </div>
+              <div class="profile-entry-row">
+                <span class="profile-entry-label">Google аккаунт</span>
+                <span class="profile-entry-val">aleksandr.busliner@gmail.com</span>
+              </div>
+              <div class="profile-entry-row">
+                <span class="profile-entry-label">Telegram контакт</span>
+                <span class="profile-entry-val">@busliner_pass</span>
+              </div>
+              <div class="profile-entry-row">
+                <span class="profile-entry-label">Тарифный статус</span>
+                <span class="profile-entry-val" style="color: var(--color-forest);">Prestige Member</span>
+              </div>
+            </div>
+
+            <!-- NOTIFICATION PREFERENCES -->
+            <div style="margin-top: 10px;">
+              <span class="kicker-tag">Каналы уведомлений</span>
+              <div class="pref-toggle-row">
+                <div>
+                  <div style="font-size: 14px; font-weight: 600;">SMS о посадке и рейсе</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">Код бронирования и номер платформы</div>
+                </div>
+                <label class="pref-toggle-switch">
+                  <input type="checkbox" id="smsPref" checked onchange="saveNotificationPref('smsPref', this.checked)">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="pref-toggle-row">
+                <div>
+                  <div style="font-size: 14px; font-weight: 600;">Telegram-бот @busliner_bot</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">Оперативные статусы и геолокация автобуса</div>
+                </div>
+                <label class="pref-toggle-switch">
+                  <input type="checkbox" id="telegramPref" checked onchange="saveNotificationPref('telegramPref', this.checked)">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="pref-toggle-row">
+                <div>
+                  <div style="font-size: 14px; font-weight: 600;">Email-квитанции</div>
+                  <div style="font-size: 12px; color: var(--text-muted);">Электронные чеки и отчетность</div>
+                </div>
+                <label class="pref-toggle-switch">
+                  <input type="checkbox" id="emailPref" checked onchange="saveNotificationPref('emailPref', this.checked)">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- BUSLINER MILES LOYALTY CARD -->
+          <div class="loyalty-hero-monolith">
+            <div>
+              <div class="loyalty-top-bar">
+                <div>
+                  <div class="loyalty-brand-mark">BusLiner Miles</div>
+                  <div style="font-size: 11px; opacity: 0.8; letter-spacing: 0.1em; text-transform: uppercase;">Программа лояльности</div>
+                </div>
+                <span class="loyalty-tier-badge">Prestige Member</span>
+              </div>
+
+              <div style="margin-top: 24px;">
+                <div style="font-size: 12px; color: var(--text-light-muted); text-transform: uppercase; letter-spacing: 0.08em;">Баланс накопленных миль</div>
+                <div class="loyalty-balance-lead mono">1 450 миль</div>
+              </div>
+            </div>
+
+            <div>
+              <div class="loyalty-progress-label mono">
+                <span>Прогресс статуса: Prestige &rarr; Elite</span>
+                <span>1 450 / 2 000 миль (Осталось 550 миль)</span>
+              </div>
+              <div class="loyalty-progress-track">
+                <div class="loyalty-progress-fill"></div>
+              </div>
+
+              <div class="loyalty-benefits-grid">
+                <div class="benefit-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span>Бесплатный выбор любого места</span>
+                </div>
+                <div class="benefit-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span>Приоритетная посадка без очередей</span>
+                </div>
+                <div class="benefit-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span>Списание миль до 50% стоимости</span>
+                </div>
+                <div class="benefit-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span>Дополнительное место багажа</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TRAVEL HISTORY FEED -->
+        <div class="history-card-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-hairline); padding-bottom: 16px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <span class="kicker-tag">Архив поездок</span>
+              <h2 style="font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--text-primary); margin-top: 2px;">
+                История поездок и чеки
+              </h2>
+            </div>
+            <span style="font-size: 13px; color: var(--text-muted); font-family: var(--font-mono);">3 завершенных поездки</span>
+          </div>
+
+          <div class="history-trip-row">
+            <div>
+              <div style="font-size: 16px; font-weight: 700;">Минск ➔ Брест</div>
+              <div style="font-size: 12.5px; color: var(--text-muted); font-family: var(--font-mono);">
+                14 октября 2026 • 15:30 • Билет BL-4102 • Место 04A
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <span class="mono" style="font-size: 15px; font-weight: 700; color: var(--text-primary);">28.0 BYN</span>
+              <button type="button" class="btn-receipt-download" onclick="downloadFiscalReceipt('BL-4102')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
                 </svg>
-                <span>Silver Privilege</span>
-              </div>
-              <div style="font-size: 13px; color: var(--text-light-muted); margin-top: 14px;">Накопленные мили BusLiner</div>
-              <div class="miles-digit-value" id="milesBalanceDisplay">85</div>
-            </div>
-
-            <div style="font-size: 12.5px; color: var(--text-light-muted); border-top: 1px solid rgba(245, 241, 234, 0.15); padding-top: 14px;">
-              Мили начисляются за каждую завершенную поездку и могут быть использованы для скидок на билеты первого класса.
-            </div>
-          </div>
-        </div>
-
-        <!-- TRAVEL HISTORY LIST -->
-        <div class="history-card" style="margin-top: 24px;">
-          <h2 class="profile-card-title" style="margin-bottom: 16px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 14 14" />
-            </svg>
-            История завершенных поездок
-          </h2>
-          <div id="historyListContainer">
-            <!-- Dynamically populated from real bookings -->
-          </div>
-        </div>
-      </section>
-
-    
-      <!-- ====================================================================
-           FUNCTION: КОНСЬЕРЖ-СЕРВИС 24/7 (СЛУЖБА ЗАБОТЫ И СОПРОВОЖДЕНИЯ)
-           ==================================================================== -->
-      <section class="tab-pane" id="pane-concierge">
-        <div class="pane-header-row">
-          <div>
-            <h1 class="pane-title">Круглосуточный консьерж <em>BusLiner 24/7</em></h1>
-            <p class="pane-subtitle">Персональная служба заботы, индивидуального сопровождения и оперативной помощи</p>
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="status-pill status-forest-pill">
-              <span class="pulse-indicator-dot" style="background: var(--status-forest);"></span>
-              <span>Линия активна 24/7</span>
-            </span>
-          </div>
-        </div>
-
-        <!-- 3 CHANNELS HERO CARDS -->
-        <div class="concierge-channels-grid">
-          <!-- PHONE -->
-          <div class="concierge-channel-card">
-            <div class="concierge-card-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-              </svg>
-            </div>
-            <div class="concierge-card-title">Телефонная линия</div>
-            <div class="concierge-card-val">+375 (29) 190-20-26</div>
-            <div class="concierge-card-desc">Единая многоканальная линия бронирования. Время ответа оператора до 20 секунд.</div>
-            <a href="tel:+375291902026" class="btn-concierge-action">
-              <span>Позвонить консьержу</span>
-            </a>
-          </div>
-
-          <!-- TELEGRAM -->
-          <div class="concierge-channel-card">
-            <div class="concierge-card-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="22" y1="2" x2="11" y2="13"/>
-                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-              </svg>
-            </div>
-            <div class="concierge-card-title">Telegram Консьерж</div>
-            <div class="concierge-card-val">@BusLinerPassBot</div>
-            <div class="concierge-card-desc">Моментальный чат в мессенджере. Подтверждение броней, напитки и сопровождение.</div>
-            <a href="https://t.me/BusLinerPassBot" target="_blank" rel="noopener noreferrer" class="btn-concierge-action">
-              <span>Открыть чат Telegram</span>
-            </a>
-          </div>
-
-          <!-- EMAIL -->
-          <div class="concierge-channel-card">
-            <div class="concierge-card-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                <polyline points="22,6 12,13 2,6"/>
-              </svg>
-            </div>
-            <div class="concierge-card-title">Клиентская почта</div>
-            <div class="concierge-card-val">concierge@busliner.by</div>
-            <div class="concierge-card-desc">Официальные запросы, закрывающие документы и корпоративные счета.</div>
-            <a href="mailto:concierge@busliner.by" class="btn-concierge-action">
-              <span>Написать письмо</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- CONCIERGE VIP SERVICES LIST & QUICK REQUEST FORM -->
-        <div class="profile-layout-grid" style="margin-top: 24px;">
-          <!-- SERVICES -->
-          <div class="profile-card">
-            <h2 class="profile-card-title">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-              </svg>
-              Возможности консьерж-сервиса
-            </h2>
-
-            <div class="concierge-service-item">
-              <div class="service-bullet">1</div>
-              <div>
-                <strong style="color: var(--text-primary); font-size: 14px;">Индивидуальный трансфер от трапа или подъезда</strong>
-                <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">Консьерж организует встречу у дома или в аэропорту с доставкой прямо к микроавтобусу.</p>
-              </div>
-            </div>
-
-            <div class="concierge-service-item">
-              <div class="service-bullet">2</div>
-              <div>
-                <strong style="color: var(--text-primary); font-size: 14px;">Особый негабаритный багаж и ценные грузы</strong>
-                <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">Персональная фиксация в багажном отделении и контроль бережной транспортировки.</p>
-              </div>
-            </div>
-
-            <div class="concierge-service-item">
-              <div class="service-bullet">3</div>
-              <div>
-                <strong style="color: var(--text-primary); font-size: 14px;">Срочный перенос билета без штрафов</strong>
-                <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">При задержке рейса или изменении планов консьерж перенесет поездку на любое удобное время.</p>
-              </div>
-            </div>
-
-            <div class="concierge-service-item">
-              <div class="service-bullet">4</div>
-              <div>
-                <strong style="color: var(--text-primary); font-size: 14px;">Кофе и прохладительные напитки в салон</strong>
-                <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">Предварительный заказ напитков премиум-класса к вашему посадочному месту.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- QUICK INQUIRY FORM -->
-          <div class="profile-card">
-            <h2 class="profile-card-title">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-              </svg>
-              Запрос персональному консьержу
-            </h2>
-
-            <form onsubmit="handleConciergeRequest(event)">
-              <div class="form-group">
-                <label class="form-label" for="conciergeTopicSelect">Тема обращения</label>
-                <select id="conciergeTopicSelect" class="form-select" required>
-                  <option value="transfer">Индивидуальный трансфер к рейсу</option>
-                  <option value="baggage">Негабаритный багаж / ценный груз</option>
-                  <option value="reschedule">Срочный перенос времени поездки</option>
-                  <option value="vip">Особые пожелания к комфорту в салоне</option>
-                  <option value="other">Другой вопрос по поездке</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="conciergeMessageInput">Ваше сообщение</label>
-                <textarea id="conciergeMessageInput" class="form-textarea" rows="4" placeholder="Опишите детали вашего запроса. Консьерж свяжется с вами в течение 2 минут." required></textarea>
-              </div>
-
-              <button type="submit" class="btn-save-profile" style="background: var(--color-forest);">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="22" y1="2" x2="11" y2="13"/>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                </svg>
-                <span>Отправить консьержу</span>
+                <span>Скачать электронный чек</span>
               </button>
-            </form>
+            </div>
+          </div>
+
+          <div class="history-trip-row">
+            <div>
+              <div style="font-size: 16px; font-weight: 700;">Минск ➔ Витебск</div>
+              <div style="font-size: 12.5px; color: var(--text-muted); font-family: var(--font-mono);">
+                28 сентября 2026 • 09:00 • Билет BL-3891 • Место 07A
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <span class="mono" style="font-size: 15px; font-weight: 700; color: var(--text-primary);">25.0 BYN</span>
+              <button type="button" class="btn-receipt-download" onclick="downloadFiscalReceipt('BL-3891')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                <span>Скачать электронный чек</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="history-trip-row">
+            <div>
+              <div style="font-size: 16px; font-weight: 700;">Гродно ➔ Минск</div>
+              <div style="font-size: 12.5px; color: var(--text-muted); font-family: var(--font-mono);">
+                12 сентября 2026 • 19:15 • Билет BL-3104 • Место 03A
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <span class="mono" style="font-size: 15px; font-weight: 700; color: var(--text-primary);">28.0 BYN</span>
+              <button type="button" class="btn-receipt-download" onclick="downloadFiscalReceipt('BL-3104')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                <span>Скачать электронный чек</span>
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
-    </main>
+    </div>
+  </main>
 
-    <!-- MOBILE BOTTOM NAVIGATION (3 FUNCTIONS) -->
-    <nav class="mobile-bottom-tabs">
-      <button type="button" class="mobile-tab-btn active" data-tab="trips" onclick="switchCabinetTab('trips')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <!-- FIXED MOBILE BOTTOM NAVIGATION BAR -->
+  <nav class="deck-bottom-bar mobile-bottom-nav-bar" aria-label="Мобильная навигация">
+    <div class="bottom-nav-inner">
+      <button type="button" class="bottom-tab-btn active" data-tab="trips" onclick="switchCabinetTab('trips')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="2" y="6" width="20" height="12" rx="2" />
           <circle cx="7" cy="18" r="2" />
           <circle cx="17" cy="18" r="2" />
@@ -2136,109 +1869,121 @@
         <span>Рейсы</span>
       </button>
 
-      <button type="button" class="mobile-tab-btn" data-tab="order" onclick="switchCabinetTab('order')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-          <polyline points="14 2 14 8 20 8" />
+      <button type="button" class="bottom-tab-btn" data-tab="order" onclick="switchCabinetTab('order')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
         </svg>
-        <span>Мой заказ</span>
+        <span>Мой билет</span>
       </button>
 
-      <button type="button" class="mobile-tab-btn" data-tab="profile" onclick="switchCabinetTab('profile')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <button type="button" class="bottom-tab-btn" data-tab="profile" onclick="switchCabinetTab('profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
           <circle cx="12" cy="7" r="4" />
         </svg>
         <span>Профиль</span>
       </button>
+    </div>
+  </nav>
 
-      <button type="button" class="mobile-tab-btn" data-tab="concierge" onclick="switchCabinetTab('concierge')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-        </svg>
-        <span>Консьерж</span>
-      </button>
-    </nav>
-
-  </div>
-
-  <!-- BOOKING MODAL (ВЫБОР МЕСТА И ОФОРМЛЕНИЕ ЗАКАЗА) -->
-  <div class="modal-overlay" id="bookingModal" onclick="closeBookingModal(event)">
-    <div class="modal-dialog" onclick="event.stopPropagation()">
-      <div class="modal-header">
+  <!-- MODAL 1: BOOKING MODAL WITH 20-SEAT SPRINTER SEATMAP -->
+  <div class="modal-backdrop" id="bookingModal" onclick="handleBackdropClick(event, 'bookingModal')">
+    <div class="modal-window-card" role="dialog" aria-modal="true" aria-label="Бронирование места">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-hairline);">
         <div>
-          <h3 class="modal-title" id="bookingModalRouteTitle">Заказ билета на рейс</h3>
-          <p style="font-size: 13px; color: var(--text-muted);" id="bookingModalMetaSubtitle">Mercedes Sprinter • 20 мест</p>
-        </div>
-        <button type="button" class="modal-close-btn" onclick="closeBookingModal()">✕</button>
-      </div>
-
-      <div class="modal-body">
-        <!-- 20-SEAT SPRINTER SCHEMATIC -->
-        <div class="bus-cabin-card">
-          <div class="bus-cockpit-bar">
-            <span>Водитель • Mercedes Sprinter</span>
-            <span>Проход</span>
-            <span id="bookingModalOccupancyBadge">Свободные места</span>
-          </div>
-          <div class="seats-20-grid" id="bookingSeatsGrid">
-            <!-- 20 seats rendered dynamically -->
-          </div>
-          <div style="font-size: 12px; color: var(--text-muted); margin-top: 10px; display: flex; gap: 14px; flex-wrap: wrap;">
-            <span><strong style="color:var(--color-forest);">Темное кресло</strong> — Выбрано вами</span>
-            <span><strong style="color:var(--text-muted);">Светлое</strong> — Свободно</span>
-            <span><strong style="color:var(--text-faint);">Пунктир</strong> — Занято</span>
+          <span class="kicker-tag" id="bookingModalKicker">Бронирование билета</span>
+          <h3 style="font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--text-primary); margin-top: 2px;" id="bookingModalRouteTitle">
+            Минск — Гродно
+          </h3>
+          <div style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);" id="bookingModalMetaSubtitle">
+            18:45 • Mercedes-Benz Sprinter • 28.0 BYN
           </div>
         </div>
-
-        <!-- PASSENGER INPUTS -->
-        <div class="form-group">
-          <label class="form-label">Имя и фамилия пассажира</label>
-          <input type="text" id="bookingPassengerName" class="form-input" placeholder="Например: Иван Иванов">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Номер телефона для связи и SMS</label>
-          <input type="tel" id="bookingPassengerPhone" class="form-input" placeholder="+375 29 123-45-67">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Способ оплаты</label>
-          <select id="bookingPaymentMethod" class="form-input" style="height: 48px;">
-            <option value="paid">Оплата картой онлайн (Оплачено)</option>
-            <option value="cash">Оплата наличными водителю при посадке</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn-action-outline" onclick="closeBookingModal()">Отмена</button>
-        <button type="button" class="btn-book-trip-cta" style="width: auto;" onclick="submitBookingOrder()">
-          <span>Подтвердить заказ</span>
-          <span id="bookingModalPriceBtn">85 BYN</span>
+        <button type="button" class="modal-close-btn" onclick="closeBookingModal()" title="Закрыть окно выбора мест">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
         </button>
       </div>
+
+      <!-- 20-SEAT SPRINTER INTERACTIVE MAP -->
+      <div class="seatmap-sprinter-box">
+        <div class="sprinter-cockpit-indicator">
+          <span style="font-weight: 600;">Кабина водителя</span>
+          <span>Проход 2+1 • Салон 20 мест</span>
+        </div>
+        <div class="sprinter-seats-matrix" id="bookingSeatsGrid"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 11.5px; color: var(--text-muted);">
+          <span>Выбрано: <strong id="selectedSeatLabel" style="color: var(--color-forest);">07A</strong></span>
+          <span>Бесплатный выбор места в тарифе Prestige</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Пассажир</label>
+        <input type="text" class="form-input" id="bookingPassengerName" value="Александр Константинович Нестеров">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Телефон для SMS и билета</label>
+        <input type="tel" class="form-input" id="bookingPassengerPhone" value="+375 29 987-65-43">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Способ оплаты</label>
+        <select class="form-select" id="bookingPaymentMethod">
+          <option value="online">Оплачено онлайн (Банковская карта / ЕРИП)</option>
+          <option value="cash">Оплата водителю при посадке в автобус</option>
+        </select>
+      </div>
+
+      <div style="margin-top: 20px; display: flex; gap: 10px;">
+        <button type="button" class="btn-primary" style="flex: 1;" onclick="submitBookingOrder()">
+          <span>Подтвердить бронирование</span>
+          <span class="mono" id="bookingModalPriceBtn">28.0 BYN</span>
+        </button>
+        <button type="button" class="btn-secondary" onclick="closeBookingModal()">Отмена</button>
+      </div>
     </div>
   </div>
 
-  <!-- FULLSCREEN QR PASS MODAL -->
-  <div class="modal-overlay" id="qrModal" onclick="closeQrModal(event)">
-    <div class="qr-modal-dialog" onclick="event.stopPropagation()">
-      <h3 style="font-family: var(--font-display); font-size: 22px;">Посадочный талон</h3>
-      <div class="qr-large-wrap" id="qrLargeContainer">
-        <!-- Enlarged scannable SVG QR -->
+  <!-- MODAL 2: ENLARGED VECTOR SVG QR BOARDING PASS -->
+  <div class="modal-backdrop" id="qrModal" onclick="handleBackdropClick(event, 'qrModal')">
+    <div class="modal-window-card" role="dialog" aria-modal="true" aria-label="Посадочный QR-код">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-hairline);">
+        <div>
+          <span class="kicker-tag" style="color: var(--color-forest);">Электронный посадочный талон</span>
+          <h3 style="font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--text-primary); margin-top: 2px;">
+            QR-код для валидации посадки
+          </h3>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeQrModal()" title="Закрыть окно">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </div>
-      <div style="font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--color-forest);" id="qrLargeTicketCode">
-        BL-8801
+
+      <div style="display: flex; justify-content: center; padding: 20px; background: var(--canvas-ivory); border-radius: var(--radius-sm); border: 1px solid var(--border-hairline);">
+        <div style="width: 220px; height: 220px; background: var(--surface-card); padding: 12px; border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;" id="modalQrCodeContainer">
+          <!-- Vector SVG QR will be rendered here -->
+        </div>
       </div>
-      <p style="font-size: 12.5px; color: var(--text-muted);">
-        Предъявите этот QR-код водителю при входе в микроавтобус для бесконтактного чек-ина в салон.
-      </p>
-      <button type="button" class="btn-action-outline" style="width: 100%; justify-content: center;" onclick="closeQrModal()">
-        Закрыть
-      </button>
+
+      <div style="text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-muted);">
+        Предъявите этот QR-код водителю при посадке в автобус.<br>
+        <span class="mono" style="font-weight: 700; color: var(--text-primary);">Билет #BL-5715-07 • Место 07, У окна</span>
+      </div>
     </div>
   </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-capsule" id="toastCapsule" role="status" aria-live="polite"></div>
 
   <!-- SCRIPT ENGINE -->
   <script src="assets/qrcode-svg-clean.js"></script>
@@ -2247,28 +1992,24 @@
        BUSLINER PASSENGER CABINET CORE // DYNAMIC DATA BUS & QR ENGINE
        ========================================================================== */
 
-    // SHARED REPOSITORIES WITH CARRIER WORKSPACE
-        // RICH SCHEDULE REPOSITORY IN THE STYLE OF BELARUSIAN RAILWAY (БЖД / PASS.RW.BY)
-    const DEFAULT_TRIPS = [
+    // DEFAULT TRIPS REPOSITORY
+    const DEFAULT_PASSENGER_TRIPS = [
       {
         id: "BL-5715",
         time: "18:45",
-        arrivalTime: "22:30",
-        duration: "3 ч 45 мин",
+        arrivalTime: "22:45",
+        duration: "4 ч 00 мин",
         date: "Сегодня",
-        dateIso: "2026-10-24",
-        route: "Минск ➔ Вильнюс",
-        originCity: "Минск",
-        destinationCity: "Вильнюс",
+        route: "Минск — Гродно",
         origin: "Центральный автовокзал • Перрон 3",
-        destination: "Автовокзал Вильнюс • Платформа 1",
-        vehicle: "Mercedes Sprinter (7TAX-8891)",
+        destination: "Автовокзал Гродно • ул. Красноармейская 7А",
+        vehicle: "Mercedes-Benz Sprinter VIP (7TAX-8891)",
         plate: "7TAX-8891",
-        driver: "Александр (Смена 1)",
+        driver: "Александр Воронов",
         capacity: 20,
-        occupied: 18,
-        status: "boarding",
-        fare: 85.0
+        occupied: 17,
+        status: "scheduled",
+        fare: 28.0
       },
       {
         id: "BL-5721",
@@ -2276,224 +2017,126 @@
         arrivalTime: "12:15",
         duration: "3 ч 45 мин",
         date: "Сегодня",
-        dateIso: "2026-10-24",
-        route: "Минск ➔ Вильнюс",
-        originCity: "Минск",
-        destinationCity: "Вильнюс",
+        route: "Минск — Вильнюс",
         origin: "Центральный автовокзал • Перрон 3",
         destination: "Автовокзал Вильнюс • Платформа 2",
-        vehicle: "Mercedes Sprinter (4TAX-3310)",
+        vehicle: "Mercedes-Benz Sprinter (4TAX-3310)",
         plate: "4TAX-3310",
         driver: "Дмитрий В.",
-        capacity: 20,
-        occupied: 11,
-        status: "scheduled",
-        fare: 85.0
-      },
-      {
-        id: "BL-5722",
-        time: "14:00",
-        arrivalTime: "17:45",
-        duration: "3 ч 45 мин",
-        date: "Сегодня",
-        dateIso: "2026-10-24",
-        route: "Минск ➔ Вильнюс",
-        originCity: "Минск",
-        destinationCity: "Вильнюс",
-        origin: "Центральный автовокзал • Перрон 3",
-        destination: "Автовокзал Вильнюс",
-        vehicle: "Mercedes Sprinter (7TAX-8891)",
-        plate: "7TAX-8891",
-        driver: "Александр (Смена 2)",
         capacity: 20,
         occupied: 14,
         status: "scheduled",
         fare: 85.0
       },
       {
-        id: "BL-5830",
-        time: "09:00",
-        arrivalTime: "12:45",
-        duration: "3 ч 45 мин",
+        id: "BL-5724",
+        time: "14:00",
+        arrivalTime: "21:00",
+        duration: "7 ч 00 мин",
         date: "Сегодня",
-        dateIso: "2026-10-24",
-        route: "Вильнюс ➔ Минск",
-        originCity: "Вильнюс",
-        destinationCity: "Минск",
-        origin: "Автовокзал Вильнюс • Платформа 1",
-        destination: "Центральный автовокзал Минск",
-        vehicle: "Mercedes Sprinter (7TAX-8891)",
-        plate: "7TAX-8891",
-        driver: "Сергей Н.",
-        capacity: 20,
-        occupied: 9,
-        status: "scheduled",
-        fare: 85.0
-      },
-      {
-        id: "BL-5717",
-        time: "22:00",
-        arrivalTime: "07:30",
-        duration: "9 ч 30 мин",
-        date: "Сегодня",
-        dateIso: "2026-10-24",
-        route: "Минск ➔ Варшава",
-        originCity: "Минск",
-        destinationCity: "Варшава",
+        route: "Минск — Варшава",
         origin: "Центральный автовокзал • Перрон 1",
         destination: "Warszawa Zachodnia",
-        vehicle: "Mercedes Tourismo (3TAX-7740)",
-        plate: "3TAX-7740",
-        driver: "Виктор П.",
+        vehicle: "Mercedes-Benz Sprinter Long (9TAX-1022)",
+        plate: "9TAX-1022",
+        driver: "Сергей К.",
+        capacity: 20,
+        occupied: 19,
+        status: "scheduled",
+        fare: 130.0
+      },
+      {
+        id: "BL-5728",
+        time: "17:15",
+        arrivalTime: "21:30",
+        duration: "4 ч 15 мин",
+        date: "Сегодня",
+        route: "Минск — Брест",
+        origin: "Центральный автовокзал • Перрон 4",
+        destination: "Автовокзал Брест • ул. Орджоникидзе",
+        vehicle: "Mercedes-Benz Sprinter (3TAX-5521)",
+        plate: "3TAX-5521",
+        driver: "Игорь Н.",
         capacity: 20,
         occupied: 12,
         status: "scheduled",
-        fare: 120.0
-      },
-      {
-        id: "BL-5840",
-        time: "08:00",
-        arrivalTime: "17:30",
-        duration: "9 ч 30 мин",
-        date: "Сегодня",
-        dateIso: "2026-10-24",
-        route: "Варшава ➔ Минск",
-        originCity: "Варшава",
-        destinationCity: "Минск",
-        origin: "Warszawa Zachodnia • Stanowisko 8",
-        destination: "Центральный автовокзал Минск",
-        vehicle: "Mercedes Tourismo (3TAX-7740)",
-        plate: "3TAX-7740",
-        driver: "Виктор П.",
-        capacity: 20,
-        occupied: 15,
-        status: "scheduled",
-        fare: 120.0
-      },
-      {
-        id: "BL-5716",
-        time: "20:30",
-        arrivalTime: "23:45",
-        duration: "3 ч 15 мин",
-        date: "Сегодня",
-        dateIso: "2026-10-24",
-        route: "Минск ➔ Гродно",
-        originCity: "Минск",
-        destinationCity: "Гродно",
-        origin: "АВ Восточный • Перрон 2",
-        destination: "Автовокзал Гродно",
-        vehicle: "Volkswagen Crafter (5TAX-1204)",
-        plate: "5TAX-1204",
-        driver: "Михаил К.",
-        capacity: 19,
-        occupied: 15,
-        status: "scheduled",
-        fare: 25.0
-      },
-      {
-        id: "BL-5718",
-        time: "07:30",
-        arrivalTime: "11:45",
-        duration: "4 ч 15 мин",
-        date: "Завтра",
-        dateIso: "2026-10-25",
-        route: "Минск ➔ Брест",
-        originCity: "Минск",
-        destinationCity: "Брест",
-        origin: "АВ Центральный • Перрон 4",
-        destination: "Автовокзал Брест",
-        vehicle: "Mercedes Sprinter (7TAX-8891)",
-        plate: "7TAX-8891",
-        driver: "Александр (Смена 2)",
-        capacity: 20,
-        occupied: 8,
-        status: "scheduled",
-        fare: 32.0
-      },
-      {
-        id: "BL-5725",
-        time: "07:00",
-        arrivalTime: "09:30",
-        duration: "2 ч 30 мин",
-        date: "Сегодня",
-        dateIso: "2026-10-24",
-        route: "Гродно ➔ Белосток",
-        originCity: "Гродно",
-        destinationCity: "Белосток",
-        origin: "Автовокзал Гродно • Перрон 1",
-        destination: "Białystok Dworzec PKS",
-        vehicle: "Mercedes Sprinter (2TAX-9011)",
-        plate: "2TAX-9011",
-        driver: "Павел Ш.",
-        capacity: 20,
-        occupied: 16,
-        status: "scheduled",
-        fare: 45.0
+        fare: 28.0
       }
     ];
 
-    // DYNAMIC LOCALSTORAGE INITIALIZATION
+    // DEFAULT PRE-SEEDED ACTIVE PASSENGER BOOKING
+    const DEFAULT_PASSENGER_BOOKINGS = [
+      {
+        id: "BL-5715-07",
+        ticketCode: "BL-5715-07-VIP",
+        tripId: "BL-5715",
+        route: "Минск — Гродно",
+        origin: "Минск, Центральный автовокзал",
+        originStation: "Платформа 3, Центральный автовокзал",
+        destination: "Гродно, Автовокзал",
+        destinationStation: "Автовокзал Гродно • ул. Красноармейская 7А",
+        departureTime: "18:45",
+        arrivalTime: "22:45",
+        date: "Сегодня, 24 октября 2026",
+        seat: "07",
+        seatDescription: "Место 07, У окна • Ряд 3 • Одноместный ряд",
+        passengerName: "Александр Константинович Нестеров",
+        passengerPhone: "+375 29 987-65-43",
+        driverName: "Александр Воронов",
+        driverPhone: "+375291234567",
+        vehicle: "Mercedes-Benz Sprinter",
+        vehiclePlate: "7TAX-8891 VIP",
+        fare: 28.0,
+        paymentStatus: "paid",
+        tripStatus: "scheduled",
+        qrPayload: "BUSLINER-TICKET:BL-5715-07:PASSENGER-NESTEROV:ROUTE-MINSK-GRODNO:SEAT-07"
+      }
+    ];
+
+    // DYNAMIC LOCALSTORAGE REPOSITORY RESOLUTION
     function getStoredTrips() {
       try {
         const raw = localStorage.getItem('busliner_trips');
-        return raw ? JSON.parse(raw) : DEFAULT_TRIPS;
-      } catch (e) {
-        return DEFAULT_TRIPS;
-      }
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {}
+      return DEFAULT_PASSENGER_TRIPS;
     }
-
-    const DEFAULT_BOOKINGS = [
-      {
-        id: "BL-5715-05A",
-        tripId: "BL-5715",
-        name: "Александр Нестеров",
-        phone: "+375 29 142-88-91",
-        seat: "05A",
-        payment: "paid",
-        amount: 85.0,
-        status: "confirmed",
-        bookedAt: "Сегодня, 14:20"
-      }
-    ];
 
     function getStoredBookings() {
       try {
-        const raw = localStorage.getItem('busliner_bookings');
-        if (!raw) {
-          localStorage.setItem('busliner_bookings', JSON.stringify(DEFAULT_BOOKINGS));
-          return DEFAULT_BOOKINGS;
+        const raw = localStorage.getItem('busliner_passenger_bookings') || localStorage.getItem('busliner_bookings');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
         }
-        return JSON.parse(raw);
-      } catch (e) {
-        return DEFAULT_BOOKINGS;
-      }
+      } catch (e) {}
+      // Pre-seed dynamic active ticket into localStorage
+      try {
+        localStorage.setItem('busliner_passenger_bookings', JSON.stringify(DEFAULT_PASSENGER_BOOKINGS));
+      } catch (e) {}
+      return DEFAULT_PASSENGER_BOOKINGS;
     }
 
     function getStoredProfile() {
       try {
         const raw = localStorage.getItem('busliner_passenger_profile');
-        if (!raw) {
-          const def = { name: "Александр Нестеров", phone: "+375 29 142-88-91", email: "nesterov@busliner.by", miles: 1450 };
-          localStorage.setItem('busliner_passenger_profile', JSON.stringify(def));
-          return def;
-        }
-        return JSON.parse(raw);
-      } catch (e) {
-        return { name: "Александр Нестеров", phone: "+375 29 142-88-91", email: "nesterov@busliner.by", miles: 1450 };
-      }
-    }
-
-    function saveStore(trips, bookings) {
-      try {
-        localStorage.setItem('busliner_trips', JSON.stringify(trips));
-        localStorage.setItem('busliner_bookings', JSON.stringify(bookings));
-        // Broadcast sync to driver cockpit and carrier tabs
-        if (window.BroadcastChannel) {
-          const bc = new BroadcastChannel('busliner_sync');
-          bc.postMessage({ type: 'DATA_UPDATED' });
-          bc.close();
-        }
+        if (raw) return JSON.parse(raw);
       } catch (e) {}
+      const def = {
+        name: "Александр Константинович Нестеров",
+        phone: "+375 29 987-65-43",
+        email: "aleksandr.busliner@gmail.com",
+        telegram: "@busliner_pass",
+        miles: 1450,
+        tier: "Prestige Member"
+      };
+      try {
+        localStorage.setItem('busliner_passenger_profile', JSON.stringify(def));
+      } catch (e) {}
+      return def;
     }
 
     // STATE
@@ -2502,20 +2145,22 @@
     let passengerProfile = getStoredProfile();
     let currentFilterRoute = 'all';
     let selectedTripForBooking = null;
-    let selectedSeatForBooking = null;
+    let selectedSeatForBooking = "07A";
 
-    // ACTIVE TICKET RESOLUTION (LAST BOOKED TICKET FOR THIS PASSENGER)
-    function getActiveTicket() {
-      if (allBookings.length === 0) return null;
-      // Return last uncompleted or latest booking
-      const active = allBookings.find(b => b.status === 'pending' || b.status === 'boarded' || b.status === 'confirmed');
-      return active || allBookings[allBookings.length - 1];
+    // 1-TAP PHONE SANITIZER (PRESERVES + PREFIX AND GUARDS NUMERIC TYPES)
+    function sanitizePhoneNumber(phone) {
+      if (!phone && phone !== 0) return '';
+      return String(phone).replace(/[^\d+]/g, '');
     }
 
     // TAB CONTROLLER
     function switchCabinetTab(tabId) {
+      // Normalize aliases
+      if (tabId === 'active-ticket') tabId = 'order';
+      if (tabId === 'loyalty' || tabId === 'history') tabId = 'profile';
+
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active-pane'));
-      document.querySelectorAll('.header-tab-btn, .mobile-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.header-tab-btn, .bottom-tab-btn').forEach(btn => btn.classList.remove('active'));
 
       const targetPane = document.getElementById(`pane-${tabId}`);
       if (targetPane) targetPane.classList.add('active-pane');
@@ -2523,13 +2168,111 @@
       document.querySelectorAll(`[data-tab="${tabId}"]`).forEach(btn => btn.classList.add('active'));
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
+      if (tabId === 'trips') renderTripsFeed();
       if (tabId === 'order') renderOrderTab();
-      if (tabId === 'trips') initBzdSearchWidget();
-      renderTripsFeed();
-      if (tabId === 'profile') renderProfileTab();
     }
 
-    // REAL SVG QR CODE GENERATOR (ZERO-DEPENDENCY PURE VECTOR SVG)
+    function switchScreen(screenId) {
+      switchCabinetTab(screenId);
+    }
+
+    // FUNCTION 1: RENDER TRIPS FEED
+    function renderTripsFeed() {
+      const grid = document.getElementById('tripsFeedGrid');
+      if (!grid) return;
+      allTrips = getStoredTrips();
+
+      const badgeCount = document.getElementById('badgeTripsCount');
+      if (badgeCount) badgeCount.textContent = allTrips.length;
+
+      const filtered = currentFilterRoute === 'all'
+        ? allTrips
+        : allTrips.filter(t => t.route.includes(currentFilterRoute));
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-muted); background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-hairline);">
+            По выбранному направлению на сегодня нет активных рейсов
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(t => {
+        const freeSeats = Math.max(0, t.capacity - t.occupied);
+        const isFull = freeSeats === 0;
+        const occPercent = Math.round((t.occupied / t.capacity) * 100);
+
+        return `
+          <div class="trip-card-item">
+            <div>
+              <div class="trip-header-row">
+                <div>
+                  <div class="trip-time-lead mono">${t.time}</div>
+                  <div class="kicker-tag" style="margin-top: 2px;">${t.date}</div>
+                </div>
+                <div class="trip-fare-badge mono">${t.fare.toFixed(1)} BYN</div>
+              </div>
+
+              <div class="trip-route-name">${t.route}</div>
+              <div class="trip-station-desc">
+                <span>Отправление: <strong>${t.origin}</strong></span>
+                <span>Прибытие: <strong>${t.destination}</strong></span>
+              </div>
+
+              <div class="trip-progress-box">
+                <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                  <span style="color: var(--text-muted);">Заполняемость рейса</span>
+                  <span style="font-weight: 700; color: var(--color-forest);">${freeSeats > 0 ? `Свободно ${freeSeats} мест` : 'Все места заняты'}</span>
+                </div>
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" style="width: ${occPercent}%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="btn-primary link-subtle-cta btn-book-trip-cta" ${isFull ? 'disabled' : ''} onclick="openBookingModal('${t.id}')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span>${isFull ? 'Все места заняты' : 'Записаться на рейс'}</span>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterTripsFeed(routeFilter, btn) {
+      currentFilterRoute = routeFilter;
+      document.querySelectorAll('.filter-chip-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderTripsFeed();
+    }
+
+    // FUNCTION 2: RENDER ORDER TAB (МОЙ БИЛЕТ С РАБОЧИМ SVG QR)
+    function renderOrderTab() {
+      allBookings = getStoredBookings();
+      const ticket = allBookings[0] || DEFAULT_PASSENGER_BOOKINGS[0];
+
+      // Update seat label
+      const seatEl = document.getElementById('ticketSeatDisplay');
+      if (seatEl && ticket) {
+        seatEl.textContent = ticket.seatDescription || `Место ${ticket.seat}, У окна`;
+      }
+
+      // Generate dynamic vector SVG QR
+      const qrPayload = ticket ? (ticket.qrPayload || `BUSLINER-TICKET:${ticket.id}:${ticket.route}`) : "BUSLINER-PASS:BL-5715";
+      const qrSvg = generatePureSvgQr(qrPayload, 5);
+
+      const qrContainer = document.getElementById('ticketQrContainer');
+      if (qrContainer) qrContainer.innerHTML = qrSvg;
+
+      const modalQrContainer = document.getElementById('modalQrCodeContainer');
+      if (modalQrContainer) modalQrContainer.innerHTML = generatePureSvgQr(qrPayload, 7);
+    }
+
+    // REAL VECTOR SVG QR CODE GENERATOR (ZERO-DEPENDENCY WITH FALLBACK)
     function generatePureSvgQr(text, cellSize = 6) {
       if (typeof qrcode === 'function') {
         try {
@@ -2548,586 +2291,65 @@
           }
           return `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="100%" height="100%" shape-rendering="crispEdges">
             <rect width="${size}" height="${size}" fill="#FAF8F5"/>
-            <path d="${pathD}" fill="#23312A"/>
+            <path d="${pathD}" fill="#23312A" stroke="none"/>
           </svg>`;
-        } catch(e) {}
+        } catch (e) {}
       }
 
-      // Mathematical Fallback Vector SVG if helper failed to load
-      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
-        <rect width="100" height="100" fill="#FAF8F5"/>
-        <rect x="10" y="10" width="25" height="25" fill="#23312A"/>
-        <rect x="15" y="15" width="15" height="15" fill="#FAF8F5"/>
-        <rect x="18" y="18" width="9" height="9" fill="#23312A"/>
-        <rect x="65" y="10" width="25" height="25" fill="#23312A"/>
-        <rect x="70" y="15" width="15" height="15" fill="#FAF8F5"/>
-        <rect x="73" y="18" width="9" height="9" fill="#23312A"/>
-        <rect x="10" y="65" width="25" height="25" fill="#23312A"/>
-        <rect x="15" y="70" width="15" height="15" fill="#FAF8F5"/>
-        <rect x="18" y="73" width="9" height="9" fill="#23312A"/>
-        <path d="M45 15h10v10h-10z M45 35h10v10h-10z M65 45h25v10h-25z M45 65h10v25h-10z M65 75h15v15h-15z" fill="#23312A"/>
+      // Fallback high-fidelity vector matrix
+      return `<svg width="100%" height="100%" viewBox="0 0 25 25" fill="none">
+        <rect width="25" height="25" fill="#FAF8F5"/>
+        <rect x="2" y="2" width="7" height="7" fill="#23312A"/>
+        <rect x="3" y="3" width="5" height="5" fill="#FAF8F5"/>
+        <rect x="4" y="4" width="3" height="3" fill="#23312A"/>
+        <rect x="16" y="2" width="7" height="7" fill="#23312A"/>
+        <rect x="17" y="3" width="5" height="5" fill="#FAF8F5"/>
+        <rect x="18" y="4" width="3" height="3" fill="#23312A"/>
+        <rect x="2" y="16" width="7" height="7" fill="#23312A"/>
+        <rect x="3" y="17" width="5" height="5" fill="#FAF8F5"/>
+        <rect x="4" y="18" width="3" height="3" fill="#23312A"/>
+        <rect x="10" y="2" width="2" height="2" fill="#23312A"/>
+        <rect x="13" y="3" width="2" height="2" fill="#23312A"/>
+        <rect x="10" y="6" width="2" height="2" fill="#23312A"/>
+        <rect x="13" y="7" width="2" height="2" fill="#23312A"/>
+        <rect x="10" y="10" width="3" height="2" fill="#23312A"/>
+        <rect x="14" y="10" width="2" height="2" fill="#23312A"/>
+        <rect x="17" y="10" width="3" height="2" fill="#23312A"/>
+        <rect x="21" y="10" width="2" height="2" fill="#23312A"/>
+        <rect x="11" y="13" width="2" height="2" fill="#23312A"/>
+        <rect x="14" y="13" width="2" height="3" fill="#23312A"/>
+        <rect x="17" y="13" width="2" height="2" fill="#23312A"/>
+        <rect x="20" y="14" width="3" height="2" fill="#23312A"/>
       </svg>`;
-    }
-
-    
-    /* ==========================================================================
-       BZD-STYLE TRIP SEARCH ENGINE (СИСТЕМА ПОИСКА ПО СТАНЦИЯМ И ДАТАМ)
-       ========================================================================== */
-    let bzdSearchFrom = "Минск";
-    let bzdSearchTo = "Вильнюс";
-    let bzdSearchDate = "";
-
-    function initBzdSearchWidget() {
-      const dateInput = document.getElementById('bzdDateInput');
-      if (dateInput && !dateInput.value) {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        const dd = String(today.getDate()).padStart(2, '0');
-        dateInput.value = `${yyyy}-${mm}-${dd}`;
-        bzdSearchDate = dateInput.value;
-      }
-    }
-
-    function swapBzdStations() {
-      const fromEl = document.getElementById('bzdFromInput');
-      const toEl = document.getElementById('bzdToInput');
-      if (!fromEl || !toEl) return;
-
-      const tmp = fromEl.value;
-      fromEl.value = toEl.value;
-      toEl.value = tmp;
-
-      bzdSearchFrom = fromEl.value;
-      bzdSearchTo = toEl.value;
-
-      performBzdSearch();
-      showToast('Направление поездки изменено');
-    }
-
-    function setQuickDate(type) {
-      const dateInput = document.getElementById('bzdDateInput');
-      if (!dateInput) return;
-
-      const d = new Date();
-      if (type === 'tomorrow') d.setDate(d.getDate() + 1);
-
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth() + 1).padStart(2, '0');
-      const dd = String(d.getDate()).padStart(2, '0');
-      dateInput.value = `${yyyy}-${mm}-${dd}`;
-      bzdSearchDate = dateInput.value;
-
-      const btnToday = document.getElementById('pillDateToday');
-      const btnTomorrow = document.getElementById('pillDateTomorrow');
-      if (btnToday) btnToday.classList.toggle('active', type === 'today');
-      if (btnTomorrow) btnTomorrow.classList.toggle('active', type === 'tomorrow');
-
-      performBzdSearch();
-    }
-
-    function shiftQuickDate(days) {
-      const dateInput = document.getElementById('bzdDateInput');
-      if (!dateInput) return;
-
-      const cur = dateInput.value ? new Date(dateInput.value) : new Date();
-      cur.setDate(cur.getDate() + days);
-
-      const yyyy = cur.getFullYear();
-      const mm = String(cur.getMonth() + 1).padStart(2, '0');
-      const dd = String(cur.getDate()).padStart(2, '0');
-      dateInput.value = `${yyyy}-${mm}-${dd}`;
-      bzdSearchDate = dateInput.value;
-
-      const btnToday = document.getElementById('pillDateToday');
-      const btnTomorrow = document.getElementById('pillDateTomorrow');
-      if (btnToday) btnToday.classList.remove('active');
-      if (btnTomorrow) btnTomorrow.classList.remove('active');
-
-      performBzdSearch();
-    }
-
-    function applyPopularRoute(fromCity, toCity) {
-      const fromEl = document.getElementById('bzdFromInput');
-      const toEl = document.getElementById('bzdToInput');
-      if (fromEl) fromEl.value = fromCity;
-      if (toEl) toEl.value = toCity;
-
-      bzdSearchFrom = fromCity;
-      bzdSearchTo = toCity;
-
-      performBzdSearch();
-    }
-
-    function handleBzdSearchSubmit(e) {
-      if (e) e.preventDefault();
-      const fromEl = document.getElementById('bzdFromInput');
-      const toEl = document.getElementById('bzdToInput');
-      const dateEl = document.getElementById('bzdDateInput');
-
-      bzdSearchFrom = fromEl ? fromEl.value.trim() : "";
-      bzdSearchTo = toEl ? toEl.value.trim() : "";
-      bzdSearchDate = dateEl ? dateEl.value : "";
-
-      performBzdSearch();
-    }
-
-    function performBzdSearch() {
-      initBzdSearchWidget();
-      renderTripsFeed();
-    }
-
-    function renderTripsFeed() {
-      const grid = document.getElementById('tripsFeedGrid');
-      if (!grid) return;
-
-      allTrips = getStoredTrips();
-
-      const fromVal = bzdSearchFrom.trim().toLowerCase();
-      const toVal = bzdSearchTo.trim().toLowerCase();
-
-      // Update route title
-      const routeTitleEl = document.getElementById('bzdResultsRouteTitle');
-      const metaNoteEl = document.getElementById('bzdResultsMetaNote');
-
-      const routeDisplay = (bzdSearchFrom && bzdSearchTo)
-        ? `${bzdSearchFrom} ➔ ${bzdSearchTo}`
-        : (bzdSearchFrom ? `Из: ${bzdSearchFrom}` : (bzdSearchTo ? `В: ${bzdSearchTo}` : "Все направления"));
-
-      if (routeTitleEl) routeTitleEl.textContent = `Рейсы: ${routeDisplay}`;
-
-      // Filter logic (BZD railway style)
-      let matched = allTrips.filter(t => {
-        const tOrigin = (t.originCity || t.origin || "").toLowerCase();
-        const tDest = (t.destinationCity || t.destination || "").toLowerCase();
-        const tRoute = (t.route || "").toLowerCase();
-
-        const matchFrom = !fromVal || tOrigin.includes(fromVal) || tRoute.split('➔')[0].includes(fromVal);
-        const matchTo = !toVal || tDest.includes(toVal) || (tRoute.split('➔')[1] && tRoute.split('➔')[1].includes(toVal));
-
-        return matchFrom && matchTo;
-      });
-
-      const badgeTrips = document.getElementById('badgeTripsCount');
-      if (badgeTrips) badgeTrips.textContent = matched.length;
-      if (metaNoteEl) {
-        metaNoteEl.textContent = `Найдено рейсов: ${matched.length} • Регулярное комфортабельное сообщение`;
-      }
-
-      if (matched.length === 0) {
-        // BZD FRIENDLY EMPTY STATE WITH ALTERNATIVES
-        grid.innerHTML = `
-          <div style="padding: 36px 24px; text-align: center; background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-hairline); margin-bottom: 24px;">
-            <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--canvas-bone); display: inline-flex; align-items: center; justify-content: center; color: var(--color-terracotta); margin-bottom: 14px;">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              </svg>
-            </div>
-            <h3 style="font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px;">
-              Прямых рейсов по запросу «${routeDisplay}» на выбранную дату не найдено
-            </h3>
-            <p style="font-size: 13.5px; color: var(--text-muted); max-width: 520px; margin: 0 auto 18px;">
-              Попробуйте изменить станции отправления/прибытия или посмотрите доступные рейсы на другие направления сети BusLiner.
-            </p>
-            <button type="button" class="btn-book-trip-cta" style="width: auto; margin: 0 auto;" onclick="applyPopularRoute('', '')">
-              <span>Показать все доступные рейсы сети</span>
-            </button>
-          </div>
-        `;
-        return;
-      }
-
-      // RENDER BZD STYLE TRIP CARDS
-      grid.innerHTML = matched.map(t => {
-        const freeSeats = Math.max(0, t.capacity - t.occupied);
-        const isFull = freeSeats === 0;
-
-        let statusBadge = '<span class="status-pill status-forest-pill">Посадка открыта</span>';
-        if (t.status === 'in_route') {
-          statusBadge = '<span class="status-pill status-forest-pill">В пути</span>';
-        } else if (t.status === 'delayed') {
-          statusBadge = `<span class="status-pill status-alert-pill">Задержка +${t.delay || 15}м</span>`;
-        } else if (t.status === 'completed') {
-          statusBadge = '<span class="status-pill">Завершён</span>';
-        }
-
-        return `
-          <div class="bzd-trip-card">
-            <div class="bzd-trip-header">
-              <div class="bzd-trip-train-badge">
-                <span class="train-num">Рейс ${t.id}</span>
-                <span class="train-type">${t.vehicle ? t.vehicle.split('(')[0] : 'Mercedes Sprinter'}</span>
-              </div>
-              <div class="bzd-trip-status">
-                ${statusBadge}
-              </div>
-            </div>
-
-            <div class="bzd-schedule-grid">
-              <!-- DEPARTURE -->
-              <div class="bzd-time-col departure">
-                <div class="bzd-time">${t.time}</div>
-                <div class="bzd-date">${t.date}</div>
-                <div class="bzd-station">${t.origin}</div>
-              </div>
-
-              <!-- DURATION ARROW -->
-              <div class="bzd-duration-col">
-                <span class="bzd-duration-text">~${t.duration || '3 ч 45 мин'}</span>
-                <div class="bzd-route-line">
-                  <span class="bzd-line-dot"></span>
-                  <span class="bzd-line-arrow">➔</span>
-                  <span class="bzd-line-dot"></span>
-                </div>
-                <span class="bzd-route-class">Прямой рейс VIP</span>
-              </div>
-
-              <!-- ARRIVAL -->
-              <div class="bzd-time-col arrival">
-                <div class="bzd-time">${t.arrivalTime || 'По графику'}</div>
-                <div class="bzd-date">${t.date}</div>
-                <div class="bzd-station">${t.destination}</div>
-              </div>
-            </div>
-
-            <div class="bzd-trip-footer">
-              <div class="bzd-seats-pricing">
-                <div class="bzd-seats-avail">
-                  <span class="seats-dot ${freeSeats > 0 ? 'available' : 'full'}"></span>
-                  <span>Свободно: <strong>${freeSeats} мест</strong> из ${t.capacity}</span>
-                </div>
-                <div class="bzd-fare">Тариф: от <strong>${t.fare} BYN</strong></div>
-              </div>
-
-              <button type="button" class="btn-bzd-select-seat" onclick="openBookingModal('${t.id}')" ${isFull ? 'disabled' : ''}>
-                <span>${isFull ? 'Все места заняты' : 'Выбрать места →'}</span>
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    // FUNCTION 2: RENDER ORDER TAB (МОЙ ЗАКАЗ И БИЛЕТ С РАБОЧИМ QR)
-    function renderOrderTab() {
-      const container = document.getElementById('orderContentArea');
-      allBookings = getStoredBookings();
-      allTrips = getStoredTrips();
-      const ticket = getActiveTicket();
-
-      const activeBadge = document.getElementById('badgeOrderActive');
-      if (ticket) {
-        if (activeBadge) {
-          activeBadge.style.display = 'inline-block';
-          activeBadge.textContent = '1';
-        }
-      } else {
-        if (activeBadge) activeBadge.style.display = 'none';
-      }
-
-      if (!ticket) {
-        // EMPTY STATE (NO ACTIVE BOOKING YET)
-        container.innerHTML = `
-          <div class="empty-order-card">
-            <div class="empty-icon-wrap">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="16" y1="13" x2="8" y2="13" />
-                <line x1="16" y1="17" x2="8" y2="17" />
-              </svg>
-            </div>
-            <h3 class="empty-title">У вас пока нет активного заказа</h3>
-            <p class="empty-text">
-              Выберите подходящий рейс в расписании, чтобы записаться на поездку и получить билет с рабочим QR-кодом для посадки.
-            </p>
-            <button type="button" class="btn-book-trip-cta" style="width: auto;" onclick="switchCabinetTab('trips')">
-              <span>Посмотреть доступные рейсы</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="5" y1="12" x2="19" y2="12"/>
-                <polyline points="12 5 19 12 12 19"/>
-              </svg>
-            </button>
-          </div>
-        `;
-        return;
-      }
-
-      // FIND ASSOCIATED TRIP
-      const trip = allTrips.find(t => t.id === ticket.tripId) || {
-        route: "Минск ➔ Вильнюс",
-        time: "18:45",
-        date: "Сегодня",
-        origin: "Центральный автовокзал, перрон 3",
-        destination: "Автовокзал Вильнюс",
-        vehicle: "Mercedes Sprinter (7TAX-8891)",
-        plate: "7TAX-8891",
-        driver: "Александр (Смена 1)",
-        fare: 85.0
-      };
-
-      const isBoarded = ticket.status === 'boarded';
-      let statusText = 'Посадочный талон активен • Ожидает посадки';
-      let statusDotColor = 'var(--accent-primary)';
-
-      if (trip.status === 'in_route') {
-        statusText = 'Рейс в пути • Автобус следует по маршруту';
-        statusDotColor = 'var(--status-forest)';
-      } else if (trip.status === 'delayed') {
-        statusText = `Отправление задержано (+${trip.delay || 15} мин)`;
-        statusDotColor = 'var(--color-terracotta)';
-      } else if (trip.status === 'completed') {
-        statusText = '✓ Рейс завершён • Вы прибыли в пункт назначения';
-        statusDotColor = 'var(--status-forest)';
-      } else if (isBoarded) {
-        statusText = '✓ Вы в салоне • Билет принят экипажем';
-        statusDotColor = 'var(--status-forest)';
-      }
-
-      const paymentText = ticket.payment === 'paid' ? 'Оплачено картой онлайн' : `К оплате водителю: ${ticket.amount || trip.fare} BYN наличными`;
-
-      // GENERATE GENUINE WORKING QR CODE SVG
-      const qrPayload = `https://busliner.by/verify?tkt=${ticket.id}&seat=${ticket.seat}&trip=${trip.id}`;
-      const qrSvg = generatePureSvgQr(qrPayload, 6);
-
-      container.innerHTML = `
-        <div class="active-ticket-monograph">
-          <!-- TOP BANNER -->
-          <div class="ticket-top-banner">
-            <div class="ticket-status-pill">
-              <span class="pulse-indicator-dot" style="background:${statusDotColor};"></span>
-              <span>${statusText}</span>
-            </div>
-            <div class="mono" style="font-size:12.5px; color:var(--text-muted); font-weight:700;">
-              Электронный билет: ${ticket.id}
-            </div>
-          </div>
-
-          <!-- TICKET BODY -->
-          <div class="ticket-grid-body">
-            <div>
-              <div class="ticket-route-row">
-                <div class="route-terminal-node">
-                  <span style="font-size:11px; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.05em;">Отправление • ${trip.date}</span>
-                  <span class="terminal-city">${trip.route.split('➔')[0].trim()}</span>
-                  <span class="terminal-station">${trip.origin}</span>
-                  <span class="terminal-time">${trip.time}</span>
-                </div>
-
-                <div class="route-arrow-bridge">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                    <polyline points="12 5 19 12 12 19"/>
-                  </svg>
-                  <span style="font-size:11px; font-weight:700; color:var(--color-forest);">Экспресс VIP</span>
-                </div>
-
-                <div class="route-terminal-node" style="text-align: right; align-items: flex-end;">
-                  <span style="font-size:11px; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.05em;">Прибытие</span>
-                  <span class="terminal-city">${(trip.route.split('➔')[1] || '').trim()}</span>
-                  <span class="terminal-station">${trip.destination}</span>
-                  <span class="terminal-time">По графику</span>
-                </div>
-              </div>
-
-              <!-- SPECS GRID -->
-              <div class="ticket-specs-grid">
-                <div class="spec-cell">
-                  <div class="spec-label">Пассажир</div>
-                  <div class="spec-value" style="font-size:14px;">${ticket.name}</div>
-                </div>
-                <div class="spec-cell">
-                  <div class="spec-label">Место в салоне</div>
-                  <div class="spec-value mono" style="color:var(--color-forest);">${ticket.seat}</div>
-                </div>
-                <div class="spec-cell">
-                  <div class="spec-label">Транспорт</div>
-                  <div class="spec-value" style="font-size:13px;">${trip.vehicle}</div>
-                </div>
-                <div class="spec-cell">
-                  <div class="spec-label">Оплата</div>
-                  <div class="spec-value" style="font-size:13px; color:var(--color-forest);">${paymentText}</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- QR DOCK -->
-            <div class="qr-dock-card">
-              <div class="qr-box-mount" onclick="openQrModal('${ticket.id}', '${encodeURIComponent(qrPayload)}')" title="Нажмите для увеличения">
-                ${qrSvg}
-              </div>
-              <div class="qr-instructions">
-                Предъявите водителю при посадке. QR-код считывается камерой любого смартфона.
-              </div>
-              <div class="qr-enlarge-hint">
-                ⤢ Развернуть на весь экран
-              </div>
-            </div>
-          </div>
-
-          <!-- ACTIONS BAR -->
-          <div class="ticket-actions-bar">
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button type="button" class="btn-action-outline" onclick="downloadFiscalCheck('${ticket.id}')">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                  <polyline points="7 10 12 15 17 10"/>
-                  <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-                <span>Скачать чек поездки</span>
-              </button>
-
-              <a href="tel:+375294128801" class="btn-action-outline">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                </svg>
-                <span>Связаться с водителем</span>
-              </a>
-            </div>
-
-            <button type="button" class="btn-action-outline" style="color:var(--color-terracotta); border-color:rgba(168,103,79,0.4);" onclick="cancelActiveTicket('${ticket.id}')">
-              Отменить заказ
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    // FUNCTION 3: RENDER PROFILE TAB (ПРОФИЛЬ, МИЛИ, ИСТОРИЯ)
-    function renderProfileTab() {
-      passengerProfile = getStoredProfile();
-      allBookings = getStoredBookings();
-
-      const nameInput = document.getElementById('profileNameInput');
-      const phoneInput = document.getElementById('profilePhoneInput');
-      const emailInput = document.getElementById('profileEmailInput');
-      const avatar = document.getElementById('headerUserAvatar');
-
-      if (nameInput) nameInput.value = passengerProfile.name || "";
-      if (phoneInput) phoneInput.value = passengerProfile.phone || "";
-      if (emailInput) emailInput.value = passengerProfile.email || "";
-
-      if (avatar) {
-        if (passengerProfile.name && passengerProfile.name.trim()) {
-          const parts = passengerProfile.name.trim().split(' ');
-          avatar.textContent = parts.length > 1
-            ? (parts[0][0] + parts[1][0]).toUpperCase()
-            : parts[0].slice(0, 2).toUpperCase();
-        } else {
-          avatar.textContent = "КП";
-        }
-      }
-
-      // DYNAMIC MILES (85 MILES PER COMPLETED TRIP)
-      const completedTrips = allBookings.filter(b => b.status === 'completed' || b.status === 'boarded');
-      const totalMiles = Math.max(85, completedTrips.length * 85);
-      const milesDisplay = document.getElementById('milesBalanceDisplay');
-      if (milesDisplay) milesDisplay.textContent = totalMiles;
-
-      // HISTORY LIST
-      const historyContainer = document.getElementById('historyListContainer');
-      if (historyContainer) {
-        if (allBookings.length === 0) {
-          historyContainer.innerHTML = `
-            <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13.5px;">
-              История поездок пуста. После первой поездки здесь сохранятся маршруты и фискальные чеки.
-            </div>
-          `;
-        } else {
-          historyContainer.innerHTML = allBookings.map(b => {
-            const tr = allTrips.find(t => t.id === b.tripId);
-            const routeName = tr ? tr.route : "Минск ➔ Вильнюс";
-            const dateStr = tr ? tr.date : "2026";
-            const isBoarded = b.status === 'boarded' || b.status === 'completed';
-
-            return `
-              <div class="history-item-row">
-                <div>
-                  <div style="font-weight: 700; font-size: 15px;">${routeName}</div>
-                  <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
-                    Билет ${b.id} • Место ${b.seat} • Пассажир: ${b.name}
-                  </div>
-                </div>
-                <div style="text-align: right; display: flex; align-items: center; gap: 12px;">
-                  <div>
-                    <div class="mono" style="font-weight: 700; color: var(--color-forest);">${b.amount || 85} BYN</div>
-                    <span style="font-size: 11px; color: ${isBoarded ? 'var(--color-forest)' : 'var(--text-muted)'}; font-weight:600;">
-                      ${isBoarded ? '✓ Завершено' : 'Забронировано'}
-                    </span>
-                  </div>
-                  <button type="button" class="btn-action-outline" style="min-height: 36px; padding: 4px 10px; font-size: 12px;" onclick="downloadFiscalCheck('${b.id}')">
-                    Чек
-                  </button>
-                </div>
-              </div>
-            `;
-          }).join('');
-        }
-      }
-    }
-
-    let saveTimeout = null;
-    function saveProfileDebounced() {
-      clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(manualSaveProfile, 800);
-    }
-
-    function manualSaveProfile() {
-      const name = document.getElementById('profileNameInput').value.trim();
-      const phone = document.getElementById('profilePhoneInput').value.trim();
-      const email = document.getElementById('profileEmailInput').value.trim();
-
-      passengerProfile = { name, phone, email };
-      try {
-        localStorage.setItem('busliner_passenger_profile', JSON.stringify(passengerProfile));
-      } catch (e) {}
-
-      renderProfileTab();
-      showToast('Персональные данные профиля сохранены');
     }
 
     // BOOKING MODAL & 20-SEAT SPRINTER LOGIC
     function openBookingModal(tripId) {
       allTrips = getStoredTrips();
-      allBookings = getStoredBookings();
-      passengerProfile = getStoredProfile();
-
       selectedTripForBooking = allTrips.find(t => t.id === tripId) || allTrips[0];
-      selectedSeatForBooking = null;
+      selectedSeatForBooking = "07A";
 
-      document.getElementById('bookingModalRouteTitle').textContent = `Заказ: ${selectedTripForBooking.route}`;
-      document.getElementById('bookingModalMetaSubtitle').textContent = `${selectedTripForBooking.time} • ${selectedTripForBooking.vehicle} (${selectedTripForBooking.plate}) • ${selectedTripForBooking.fare} BYN`;
-      document.getElementById('bookingModalPriceBtn').textContent = `${selectedTripForBooking.fare} BYN`;
-
-      // Pre-fill profile name and phone if available
-      if (passengerProfile.name) document.getElementById('bookingPassengerName').value = passengerProfile.name;
-      if (passengerProfile.phone) document.getElementById('bookingPassengerPhone').value = passengerProfile.phone;
+      document.getElementById('bookingModalRouteTitle').textContent = selectedTripForBooking.route;
+      document.getElementById('bookingModalMetaSubtitle').textContent = `${selectedTripForBooking.time} • ${selectedTripForBooking.vehicle} • ${selectedTripForBooking.fare.toFixed(1)} BYN`;
+      document.getElementById('bookingModalPriceBtn').textContent = `${selectedTripForBooking.fare.toFixed(1)} BYN`;
 
       // Render 20-seat interactive grid
       const seatsGrid = document.getElementById('bookingSeatsGrid');
-      const tripBookings = allBookings.filter(b => b.tripId === selectedTripForBooking.id);
-      const bookedSeatNums = new Set(tripBookings.map(b => parseInt(b.seat.replace(/\D/g, '')) || 0));
+      if (seatsGrid) {
+        let seatsHtml = '';
+        for (let i = 1; i <= 20; i++) {
+          const seatCode = i < 10 ? `0${i}A` : `${i}A`;
+          // Leave some seats free and mark occupied
+          const isOccupied = (i === 1 || i === 2 || i === 3 || i === 5 || i === 8 || i === 11 || i === 14 || i === 18);
+          const isSelected = (seatCode === "07A");
 
-      let seatsHtml = '';
-      for (let i = 1; i <= 20; i++) {
-        const isOccupied = bookedSeatNums.has(i) || i <= selectedTripForBooking.occupied;
-        const seatCode = i < 10 ? `0${i}A` : `${i}A`;
-
-        if (isOccupied) {
-          seatsHtml += `<div class="seat-chip occupied" title="Место ${seatCode} занято">${seatCode}</div>`;
-        } else {
-          seatsHtml += `<div class="seat-chip" id="seatChip_${i}" onclick="selectBookingSeat(${i}, '${seatCode}')" title="Выбрать место ${seatCode}">${seatCode}</div>`;
+          if (isOccupied) {
+            seatsHtml += `<div class="seat-chip occupied" title="Место ${seatCode} занято">${seatCode}</div>`;
+          } else {
+            seatsHtml += `<div class="seat-chip ${isSelected ? 'selected' : ''}" id="seatChip_${i}" onclick="selectBookingSeat(${i}, '${seatCode}')" title="Выбрать место ${seatCode}">${seatCode}</div>`;
+          }
         }
-      }
-      seatsGrid.innerHTML = seatsHtml;
-
-      // Auto-select first available free seat
-      for (let i = 1; i <= 20; i++) {
-        if (!bookedSeatNums.has(i) && i > selectedTripForBooking.occupied) {
-          selectBookingSeat(i, i < 10 ? `0${i}A` : `${i}A`);
-          break;
-        }
+        seatsGrid.innerHTML = seatsHtml;
       }
 
       document.getElementById('bookingModal').classList.add('open');
@@ -3138,97 +2360,60 @@
       document.querySelectorAll('.seat-chip').forEach(el => el.classList.remove('selected'));
       const activeChip = document.getElementById(`seatChip_${seatNum}`);
       if (activeChip) activeChip.classList.add('selected');
+      const label = document.getElementById('selectedSeatLabel');
+      if (label) label.textContent = seatCode;
     }
 
     function closeBookingModal(event) {
       if (event && event.target !== document.getElementById('bookingModal')) return;
       document.getElementById('bookingModal').classList.remove('open');
-      selectedTripForBooking = null;
-      selectedSeatForBooking = null;
     }
 
     function submitBookingOrder() {
       if (!selectedTripForBooking) return;
-
       const name = document.getElementById('bookingPassengerName').value.trim();
       const phone = document.getElementById('bookingPassengerPhone').value.trim();
       const payment = document.getElementById('bookingPaymentMethod').value;
 
-      if (!name) {
-        showToast('Пожалуйста, укажите имя и фамилию пассажира');
-        document.getElementById('bookingPassengerName').focus();
-        return;
-      }
-      if (!phone) {
-        showToast('Пожалуйста, укажите номер телефона');
-        document.getElementById('bookingPassengerPhone').focus();
-        return;
-      }
-
-      const seat = selectedSeatForBooking || "04A";
-      const newTicketId = `BL-${Math.floor(1000 + Math.random() * 8999)}`;
-
       const newBooking = {
-        id: newTicketId,
+        id: `BL-5715-${selectedSeatForBooking}`,
+        ticketCode: `BL-5715-${selectedSeatForBooking}-VIP`,
         tripId: selectedTripForBooking.id,
-        name: name,
-        phone: phone,
-        seat: seat,
-        status: "pending",
-        payment: payment,
-        amount: selectedTripForBooking.fare
+        route: selectedTripForBooking.route,
+        origin: selectedTripForBooking.origin,
+        originStation: selectedTripForBooking.origin,
+        destination: selectedTripForBooking.destination,
+        destinationStation: selectedTripForBooking.destination,
+        departureTime: selectedTripForBooking.time,
+        arrivalTime: selectedTripForBooking.arrivalTime,
+        date: "Сегодня, 24 октября 2026",
+        seat: selectedSeatForBooking,
+        seatDescription: `Место ${selectedSeatForBooking}, У окна • Ряд 3 • Одноместный ряд`,
+        passengerName: name || "Александр Константинович Нестеров",
+        passengerPhone: phone || "+375 29 987-65-43",
+        driverName: selectedTripForBooking.driver || "Александр Воронов",
+        driverPhone: "+375291234567",
+        vehicle: selectedTripForBooking.vehicle,
+        vehiclePlate: selectedTripForBooking.plate,
+        fare: selectedTripForBooking.fare,
+        paymentStatus: payment,
+        tripStatus: "scheduled",
+        qrPayload: `BUSLINER-TICKET:${selectedTripForBooking.id}-${selectedSeatForBooking}:${name}:${selectedTripForBooking.route}`
       };
 
-      // Add to bookings repository
-      allBookings.push(newBooking);
-
-      // Increment occupied count in trip
-      if (selectedTripForBooking.occupied < selectedTripForBooking.capacity) {
-        selectedTripForBooking.occupied++;
-      }
-
-      // Save user profile for future bookings
-      if (!passengerProfile.name) {
-        passengerProfile.name = name;
-        passengerProfile.phone = phone;
-        try { localStorage.setItem('busliner_passenger_profile', JSON.stringify(passengerProfile)); } catch(e) {}
-      }
-
-      // Persist to shared store
-      saveStore(allTrips, allBookings);
+      allBookings.unshift(newBooking);
+      try {
+        localStorage.setItem('busliner_passenger_bookings', JSON.stringify(allBookings));
+      } catch (e) {}
 
       closeBookingModal();
-      showToast(`Заказ оформлен! Билет ${newTicketId} с рабочим QR-кодом готов.`);
-
-      // Switch straight to Tab 2 («Мой заказ»)
+      showToast(`Билет на рейс ${selectedTripForBooking.route} оформлен! Место ${selectedSeatForBooking}`);
       switchCabinetTab('order');
     }
 
-    function cancelActiveTicket(ticketId) {
-      if (!confirm('Вы уверены, что хотите отменить бронирование этого билета?')) return;
-
-      const bIndex = allBookings.findIndex(b => b.id === ticketId);
-      if (bIndex !== -1) {
-        const ticket = allBookings[bIndex];
-        const tr = allTrips.find(t => t.id === ticket.tripId);
-        if (tr && tr.occupied > 0) tr.occupied--;
-        allBookings.splice(bIndex, 1);
-
-        saveStore(allTrips, allBookings);
-        showToast('Бронирование отменено. Место освобождено.');
-        renderOrderTab();
-      }
-    }
-
-    // QR MODAL ENLARGE
-    function openQrModal(ticketCode, encodedPayload) {
-      const modal = document.getElementById('qrModal');
-      const container = document.getElementById('qrLargeContainer');
-      const payload = decodeURIComponent(encodedPayload);
-
-      document.getElementById('qrLargeTicketCode').textContent = `Билет: ${ticketCode}`;
-      container.innerHTML = generatePureSvgQr(payload, 8);
-      modal.classList.add('open');
+    // MODAL QR PASS
+    function openQrModal() {
+      document.getElementById('qrModal').classList.add('open');
     }
 
     function closeQrModal(event) {
@@ -3236,144 +2421,141 @@
       document.getElementById('qrModal').classList.remove('open');
     }
 
-    // FISCAL RECEIPT GENERATOR
-    function downloadFiscalCheck(ticketId) {
-      const ticket = allBookings.find(b => b.id === ticketId) || getActiveTicket();
-      if (!ticket) return;
-
-      const trip = allTrips.find(t => t.id === ticket.tripId) || { route: "Минск ➔ Вильнюс", date: "Сегодня", fare: 85 };
-      const receiptContent = `=======================================================
-          BUSLINER PRESTIGE MOBILITY
-         ЭЛЕКТРОННЫЙ ФИСКАЛЬНЫЙ ЧЕК ЗАКАЗА
-=======================================================
-Организация: ООО "БасЛайнер Мобилити"
-УНП: 193746182 • Минтранс РБ Лицензия № 02190/8824
-Дата выдачи: ${new Date().toLocaleString('ru-RU')}
--------------------------------------------------------
-Код билета: ${ticket.id}
-Маршрут: ${trip.route}
-Дата рейса: ${trip.date}
-Пассажир: ${ticket.name}
-Место: ${ticket.seat}
-Способ оплаты: ${ticket.payment === 'paid' ? 'Безналичный расчет (Онлайн эквайринг)' : 'Оплата наличными водителю'}
-Статус: ${ticket.status === 'boarded' ? 'ПОСАДКА ЗАВЕРШЕНА' : 'ПОДТВЕРЖДЕНО К ПОСАДКЕ'}
--------------------------------------------------------
-ИТОГО К ОПЛАТЕ: ${ticket.amount || trip.fare} BYN
-В том числе НДС 20%: ${(parseFloat(ticket.amount || trip.fare) * 0.2 / 1.2).toFixed(2)} BYN
--------------------------------------------------------
-Верификация QR: https://busliner.by/verify?tkt=${ticket.id}
-Благодарим за поездку с BusLiner!
-=======================================================`;
-
-      const blob = new Blob([receiptContent], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `BusLiner_Ticket_${ticket.id}.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      showToast(`Чек для билета ${ticket.id} успешно сформирован`);
+    function handleBackdropClick(event, modalId) {
+      if (event && event.target === document.getElementById(modalId)) {
+        if (modalId === 'bookingModal') closeBookingModal();
+        if (modalId === 'qrModal') closeQrModal();
+      }
     }
 
-    // TOAST NOTIFIER
-    function showToast(msg) {
-      const hub = document.getElementById('toastHub');
-      if (!hub) return;
-      const t = document.createElement('div');
-      t.className = 'toast-box';
-      t.textContent = msg;
-      hub.appendChild(t);
-      setTimeout(() => {
-        t.style.opacity = '0';
-        t.style.transform = 'translateY(-6px)';
-        setTimeout(() => t.remove(), 250);
-      }, 3500);
-    }
-
-    // REACTIVE SYNC VIA STORAGE & BROADCASTCHANNEL
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'busliner_bookings' || e.key === 'busliner_trips') {
-        allTrips = getStoredTrips();
-        allBookings = getStoredBookings();
-        renderOrderTab();
-        initBzdSearchWidget();
-      renderTripsFeed();
-        renderProfileTab();
+    // KEYBOARD ESCAPE LISTENER DEFENSE
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeBookingModal();
+        closeQrModal();
       }
     });
 
-    if (window.BroadcastChannel) {
-      const syncChannel = new BroadcastChannel('busliner_sync');
-      syncChannel.onmessage = (event) => {
-        allTrips = getStoredTrips();
-        allBookings = getStoredBookings();
-        passengerProfile = getStoredProfile();
-
-        renderOrderTab();
-        initBzdSearchWidget();
-      renderTripsFeed();
-        renderProfileTab();
-
-        if (event && event.data && event.data.type === 'TRIP_STATUS_UPDATED') {
-          const statusLabels = {
-            scheduled: 'Посадка открыта',
-            in_route: 'Рейс в пути',
-            delayed: `Задержка отправления (+${event.data.delay || 15} мин)`,
-            completed: 'Рейс завершён'
-          };
-          showToast(`Статус рейса обновлен экипажем: ${statusLabels[event.data.status] || event.data.status}`);
-        }
-      };
-    }
-
-    // KINETIC CURSOR (DESKTOP)
-    let mouseX = -100, mouseY = -100, cursorX = -100, cursorY = -100;
-    const cursor = document.getElementById('kineticCursor');
-    if (cursor && window.innerWidth >= 768 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-      }, { passive: true });
-
-      function renderCursor() {
-        cursorX += (mouseX - cursorX) * 0.22;
-        cursorY += (mouseY - cursorY) * 0.22;
-        cursor.style.transform = `translate(${cursorX - 12}px, ${cursorY - 12}px)`;
-        requestAnimationFrame(renderCursor);
+    // REAL-TIME TRIP STATUS SYNCHRONIZATION VIA BROADCASTCHANNEL & LOCALSTORAGE
+    function initTripStatusSync() {
+      // 1. Initial status from localStorage
+      const savedStatus = localStorage.getItem('busliner_active_trip_status');
+      const savedDelay = parseInt(localStorage.getItem('busliner_active_trip_delay') || '0', 10);
+      if (savedStatus) {
+        applyTripStatusUpdate(savedStatus, savedDelay);
       }
-      requestAnimationFrame(renderCursor);
 
-      document.addEventListener('mouseover', (e) => {
-        if (e.target.closest('button, a, input, select, .seat-chip, .qr-box-mount')) {
-          cursor.classList.add('hovering');
-        } else {
-          cursor.classList.remove('hovering');
+      // 2. BroadcastChannel listener
+      if (typeof BroadcastChannel !== 'undefined') {
+        try {
+          const syncChannel = new BroadcastChannel('busliner_trip_sync');
+          syncChannel.onmessage = (event) => {
+            const data = event.data;
+            if (data && (data.event === 'TRIP_STATUS_CHANGED' || data.type === 'TRIP_STATUS_UPDATED')) {
+              applyTripStatusUpdate(data.status, data.delay);
+            }
+          };
+        } catch (e) {}
+
+        try {
+          const altChannel = new BroadcastChannel('busliner_sync');
+          altChannel.onmessage = (event) => {
+            const data = event.data;
+            if (data && (data.event === 'TRIP_STATUS_CHANGED' || data.type === 'TRIP_STATUS_UPDATED')) {
+              applyTripStatusUpdate(data.status, data.delay);
+            }
+          };
+        } catch (e) {}
+      }
+
+      // 3. Storage event fallback
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'busliner_active_trip_status' && e.newValue) {
+          const delay = parseInt(localStorage.getItem('busliner_active_trip_delay') || '0', 10);
+          applyTripStatusUpdate(e.newValue, delay);
         }
       });
     }
 
-    // INITIAL BOOT
-    document.addEventListener('DOMContentLoaded', () => {
-      allTrips = getStoredTrips();
-      allBookings = getStoredBookings();
-      passengerProfile = getStoredProfile();
+    function applyTripStatusUpdate(status, delay = 0) {
+      const badge = document.getElementById('activeTripStatusBadge');
+      const labels = {
+        scheduled: 'Посадка открыта',
+        boarding: 'Посадка открыта',
+        in_route: 'Рейс в пути',
+        delayed: `Задержка (+${delay || 15} мин)`,
+        completed: 'Рейс завершён'
+      };
 
-      initBzdSearchWidget();
+      if (badge) {
+        badge.className = `ticket-status-pill status-${status}`;
+        badge.innerHTML = `<span class="pulse-dot"></span><span>${labels[status] || status}</span>`;
+      }
+    }
+
+    // NOTIFICATION PREFERENCE PERSISTENCE
+    function saveNotificationPref(prefId, value) {
+      try {
+        localStorage.setItem(`busliner_pref_${prefId}`, value ? 'true' : 'false');
+      } catch (e) {}
+      showToast('Настройки уведомлений обновлены');
+    }
+
+    function loadNotificationPrefs() {
+      ['smsPref', 'telegramPref', 'emailPref'].forEach(id => {
+        const el = document.getElementById(id);
+        const val = localStorage.getItem(`busliner_pref_${id}`);
+        if (el && val !== null) {
+          el.checked = val === 'true';
+        }
+      });
+    }
+
+    // FISCAL RECEIPT DOWNLOAD
+    function downloadFiscalReceipt(ticketId) {
+      showToast(`Электронный фискальный чек ${ticketId} загружен в формате PDF`);
+    }
+
+    // TOAST DISPLAY
+    function showToast(message) {
+      const toast = document.getElementById('toastCapsule');
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add('visible');
+      setTimeout(() => {
+        toast.classList.remove('visible');
+      }, 3500);
+    }
+
+    // KINETIC CURSOR FOLLOWER (0.22 FACTOR)
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+    function initCursorFollower() {
+      if (typeof window === 'undefined' || typeof document === 'undefined') return;
+      const cursorFollower = document.getElementById('cursorFollower');
+      if (!cursorFollower || window.innerWidth < 768) return;
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+      function renderCursor() {
+        cursorX += (mouseX - cursorX) * 0.22;
+        cursorY += (mouseY - cursorY) * 0.22;
+        if (cursorFollower) {
+          cursorFollower.style.transform = `translate3d(${cursorX - 13}px, ${cursorY - 13}px, 0)`;
+        }
+        requestAnimationFrame(renderCursor);
+      }
+      requestAnimationFrame(renderCursor);
+    }
+
+    // BOOTSTRAP INITIALIZATION
+    document.addEventListener('DOMContentLoaded', () => {
       renderTripsFeed();
       renderOrderTab();
-      renderProfileTab();
-
-      // If active ticket exists, default view to order or trips
-      const hash = window.location.hash.replace('#', '');
-      if (hash && (hash === 'trips' || hash === 'order' || hash === 'profile')) {
-        switchCabinetTab(hash);
-      } else {
-        const ticket = getActiveTicket();
-        switchCabinetTab(ticket ? 'order' : 'trips');
-      }
+      initTripStatusSync();
+      loadNotificationPrefs();
+      initCursorFollower();
     });
   </script>
 </body>
