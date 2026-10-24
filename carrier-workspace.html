@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-  <title>Рабочий кабинет перевозчика — BusLiner Workspace</title>
+  <meta name="theme-color" content="#F5F1EA">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Кабинет перевозчика и пульт водителя — BusLiner</title>
 
   <!-- TYPOGRAPHY FONTS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,10 +15,10 @@
 
   <style>
     /* ==========================================================================
-       BUSLINER WORKSPACE // QUIET LUXURY OPERATIONAL DESIGN TOKENS
-       Aesthetic: Hermès / Loro Piana / High-Craft Telemetry Console
-       Ergonomics Priority: FUNCTION > ERGONOMICS > AESTHETICS > MOTION
-       Rules: Exactly 0 image tags, Exactly 0 square brackets in visible copy
+       BUSLINER WORKSPACE & DRIVER COCKPIT // QUIET LUXURY OPERATIONAL TOKENS
+       Designed for: Carriers (Fleet owners) and Drivers (Mobile-first in road)
+       Ergonomics: FUNCTION > ERGONOMICS > AESTHETICS > MOTION
+       Rules: Exactly 0 image tags, Exactly 0 square brackets in visible UI
        ========================================================================== */
     :root {
       --canvas: #F5F1EA;              /* Warm Ivory Canvas */
@@ -40,7 +43,7 @@
       --accent-oxblood-hover: #631917;
       --accent-oxblood-subtle: rgba(122, 35, 32, 0.08);
 
-      --status-forest: #2E4F3E;       /* In-Route / Confirmed / Healthy */
+      --status-forest: #2E4F3E;       /* In-Route / Boarded / Healthy */
       --status-forest-bg: #EAEFEA;
       --status-forest-border: #A3C9A8;
 
@@ -76,16 +79,17 @@
       --ease-snappy: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* GLOBAL RESET & BASE */
+    /* GLOBAL MOBILE HARDENING */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     html, body {
       width: 100%;
-      height: 100%;
+      min-height: 100dvh;
       background-color: var(--canvas);
       color: var(--text-primary);
       font-family: var(--font-body);
@@ -93,7 +97,25 @@
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior: none;
       overflow-x: hidden;
+    }
+
+    button, a, [role="button"], .tappable {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    button:active, .btn-action-icon:active, .tappable:active {
+      transform: scale(0.97);
+      transition: transform 100ms var(--ease-snappy);
+    }
+
+    /* Minimum 16px inputs to prevent iOS Safari auto-zoom */
+    input, select, textarea {
+      font-size: 16px !important;
     }
 
     /* TACTILE PAPER NOISE OVERLAY */
@@ -112,12 +134,12 @@
     /* APP SHELL GRID */
     .app-shell {
       display: flex;
-      min-height: 100vh;
+      min-height: 100dvh;
       width: 100%;
       position: relative;
     }
 
-    /* SIDEBAR NAVIGATION */
+    /* SIDEBAR NAVIGATION (DESKTOP / TABLET) */
     aside.app-sidebar {
       width: var(--sidebar-width);
       background: var(--surface-card);
@@ -126,7 +148,7 @@
       flex-direction: column;
       position: sticky;
       top: 0;
-      height: 100vh;
+      height: 100dvh;
       flex-shrink: 0;
       z-index: 100;
       transition: width 0.25s var(--ease-fluid);
@@ -139,6 +161,7 @@
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid var(--border-hairline);
+      padding-top: env(safe-area-inset-top, 0px);
     }
 
     .brand-mark {
@@ -181,7 +204,7 @@
     }
 
     .brand-label {
-      font-size: 10.5px;
+      font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--accent-oxblood);
@@ -202,15 +225,49 @@
       cursor: pointer;
       transition: all 0.2s var(--ease-snappy);
     }
-    .sidebar-toggle-btn:hover {
+
+    /* ROLE SWITCHER TOGGLE PILL (CARRIER ↔ DRIVER) */
+    .role-switcher-container {
+      padding: 12px 14px;
       background: var(--surface-subtle);
-      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .role-segmented-control {
+      display: flex;
+      background: var(--canvas);
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-hairline);
+    }
+
+    .role-segment-btn {
+      flex: 1;
+      padding: 7px 10px;
+      font-size: 11.5px;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      border-radius: 4px;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.18s var(--ease-snappy);
+      text-align: center;
+    }
+    .role-segment-btn.active {
+      background: var(--accent-oxblood);
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(122, 35, 32, 0.25);
     }
 
     /* NAV LINKS */
     .sidebar-nav {
       flex: 1;
-      padding: 16px 12px;
+      padding: 14px 12px;
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -218,7 +275,7 @@
     }
 
     .nav-section-title {
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -242,13 +299,14 @@
       text-align: left;
       cursor: pointer;
       position: relative;
-      transition: background 0.18s var(--ease-snappy), color 0.18s var(--ease-snappy), transform 0.18s var(--ease-snappy);
+      transition: background 0.18s, color 0.18s;
     }
 
-    .nav-item-btn:hover {
-      background: var(--surface-subtle);
-      color: var(--text-primary);
-      transform: translateX(2px);
+    @media (hover: hover) and (pointer: fine) {
+      .nav-item-btn:hover {
+        background: var(--surface-subtle);
+        color: var(--text-primary);
+      }
     }
 
     .nav-item-btn.active {
@@ -294,12 +352,13 @@
 
     /* SIDEBAR FOOTER & PROFILE */
     .sidebar-footer {
-      padding: 16px 14px;
+      padding: 14px;
       border-top: 1px solid var(--border-hairline);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       background: var(--surface-card);
+      padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
     }
 
     .carrier-profile-card {
@@ -372,12 +431,7 @@
       padding: 8px 10px;
       border-radius: var(--radius-sm);
       border: 1px dashed var(--border-hairline);
-      transition: all 0.2s var(--ease-snappy);
-    }
-    .passenger-site-link:hover {
-      background: var(--surface-subtle);
-      color: var(--accent-oxblood);
-      border-color: var(--accent-oxblood);
+      transition: all 0.2s;
     }
 
     /* MAIN APP WORKSPACE */
@@ -398,10 +452,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 28px;
+      padding: 0 24px;
       position: sticky;
       top: 0;
       z-index: 90;
+      padding-top: env(safe-area-inset-top, 0px);
     }
 
     .header-breadcrumb {
@@ -429,7 +484,7 @@
     .header-right-actions {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
     .telemetry-clock {
@@ -466,7 +521,7 @@
       background: var(--accent-oxblood);
       color: #FFFFFF;
       border: none;
-      padding: 9px 18px;
+      padding: 9px 16px;
       border-radius: var(--radius-md);
       font-size: 13.5px;
       font-weight: 600;
@@ -474,16 +529,11 @@
       box-shadow: 0 4px 12px rgba(122, 35, 32, 0.22);
       transition: all 0.2s var(--ease-snappy);
     }
-    .btn-create-trip-primary:hover {
-      background: var(--accent-oxblood-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(122, 35, 32, 0.28);
-    }
 
-    /* WORKSPACE SCREEN CONTENT CONTAINER */
+    /* SCREEN CONTENT AREA */
     .screen-content-area {
       flex: 1;
-      padding: 28px 32px 80px;
+      padding: 24px 28px 90px;
       max-width: 1380px;
       width: 100%;
       margin: 0 auto;
@@ -491,13 +541,13 @@
 
     .screen-pane {
       display: none;
-      animation: screenFadeIn 0.3s var(--ease-fluid) forwards;
+      animation: screenFadeIn 0.25s var(--ease-fluid) forwards;
     }
     .screen-pane.active-pane {
       display: block;
     }
     @keyframes screenFadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -508,12 +558,12 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 16px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
     .screen-title-group h1 {
       font-family: var(--font-display);
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 500;
       line-height: 1.15;
       letter-spacing: -0.02em;
@@ -529,55 +579,43 @@
       margin-top: 4px;
     }
 
-    .screen-controls-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
     /* 4-KPI TELEMETRY GRID */
     .kpi-metrics-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-bottom: 28px;
+      gap: 16px;
+      margin-bottom: 26px;
     }
 
     .kpi-card {
       background: var(--surface-card);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-lg);
-      padding: 18px 22px;
+      padding: 16px 20px;
       display: flex;
       flex-direction: column;
       position: relative;
       box-shadow: var(--shadow-subtle);
-      transition: transform 0.2s var(--ease-snappy), border-color 0.2s;
-    }
-    .kpi-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--border-strong);
     }
 
     .kpi-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .kpi-label {
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11.5px;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--text-muted);
     }
 
     .kpi-icon-pill {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 6px;
       background: var(--surface-subtle);
       color: var(--text-muted);
@@ -588,7 +626,7 @@
 
     .kpi-number {
       font-family: var(--font-mono);
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 700;
       line-height: 1.1;
       color: var(--text-primary);
@@ -596,8 +634,8 @@
     }
 
     .kpi-footer-note {
-      font-size: 11.5px;
-      margin-top: 8px;
+      font-size: 11px;
+      margin-top: 6px;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -620,23 +658,23 @@
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-subtle);
       overflow: hidden;
-      margin-bottom: 28px;
+      margin-bottom: 26px;
     }
 
     .panel-card-header {
-      padding: 18px 24px;
+      padding: 16px 20px;
       border-bottom: 1px solid var(--border-hairline);
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 12px;
       background: var(--surface-card);
     }
 
     .panel-title {
       font-family: var(--font-display);
-      font-size: 21px;
+      font-size: 20px;
       font-weight: 600;
       color: var(--text-primary);
       display: flex;
@@ -656,14 +694,14 @@
 
     /* FILTERS & SEARCH ROW */
     .filter-toolbar {
-      padding: 14px 24px;
+      padding: 12px 20px;
       background: var(--surface-subtle);
       border-bottom: 1px solid var(--border-hairline);
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
     }
 
     .filter-left-controls {
@@ -676,8 +714,8 @@
 
     .search-input-wrapper {
       position: relative;
-      min-width: 240px;
-      max-width: 340px;
+      min-width: 220px;
+      max-width: 320px;
       flex: 1;
     }
 
@@ -696,13 +734,11 @@
       width: 100%;
       padding: 8px 12px 8px 34px;
       font-family: var(--font-body);
-      font-size: 13px;
       color: var(--text-primary);
       background: var(--surface-card);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-sm);
       outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
     }
     .input-clean:focus {
       border-color: var(--border-focus);
@@ -712,16 +748,12 @@
     .filter-select {
       padding: 8px 12px;
       font-family: var(--font-body);
-      font-size: 13px;
       color: var(--text-primary);
       background: var(--surface-card);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-sm);
       outline: none;
       cursor: pointer;
-    }
-    .filter-select:focus {
-      border-color: var(--border-focus);
     }
 
     .filter-chip-tabs {
@@ -743,14 +775,13 @@
       background: transparent;
       border-radius: 4px;
       cursor: pointer;
-      transition: all 0.15s var(--ease-snappy);
     }
     .chip-tab-btn.active {
       background: var(--accent-oxblood);
       color: #FFFFFF;
     }
 
-    /* ERGONOMIC DATA TABLES */
+    /* DESKTOP DATA TABLES (HIDDEN ON MOBILE < 768px IN FAVOR OF CARDS) */
     .table-container {
       width: 100%;
       overflow-x: auto;
@@ -772,37 +803,34 @@
       font-size: 11.5px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      padding: 12px 18px;
+      padding: 12px 16px;
       border-bottom: 1px solid var(--border-hairline);
       position: sticky;
       top: 0;
       z-index: 10;
       white-space: nowrap;
-      user-select: none;
     }
 
     table.data-table thead th.sortable {
       cursor: pointer;
-      transition: color 0.15s;
-    }
-    table.data-table thead th.sortable:hover {
-      color: var(--accent-oxblood);
     }
 
     table.data-table tbody tr {
       border-bottom: 1px solid var(--border-hairline);
-      transition: background-color 0.15s var(--ease-snappy);
+      transition: background-color 0.15s;
       cursor: pointer;
     }
-    table.data-table tbody tr:hover {
-      background-color: var(--surface-hover);
+    @media (hover: hover) and (pointer: fine) {
+      table.data-table tbody tr:hover {
+        background-color: var(--surface-hover);
+      }
     }
     table.data-table tbody tr.row-selected {
       background-color: var(--canvas-alt);
     }
 
     table.data-table td {
-      padding: 13px 18px;
+      padding: 12px 16px;
       color: var(--text-primary);
       vertical-align: middle;
       white-space: nowrap;
@@ -814,21 +842,18 @@
     .col-right { text-align: right; }
     .col-center { text-align: center; }
 
-    /* CHECKBOX STYLING */
     input[type="checkbox"].table-checkbox {
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       accent-color: var(--accent-oxblood);
       cursor: pointer;
       border-radius: 4px;
     }
 
-    /* TYPOGRAPHY CELLS */
     .mono-cell {
       font-family: var(--font-mono);
       font-variant-numeric: tabular-nums;
       font-weight: 600;
-      letter-spacing: -0.01em;
     }
 
     .time-slot-badge {
@@ -865,7 +890,7 @@
       margin-left: 6px;
     }
 
-    /* LOAD OCCUPANCY BAR */
+    /* OCCUPANCY BAR */
     .occupancy-cell {
       display: flex;
       align-items: center;
@@ -883,7 +908,6 @@
       height: 100%;
       border-radius: 10px;
       background: var(--status-forest);
-      transition: width 0.3s ease;
     }
     .occupancy-bar-fill.high { background: var(--status-sand); }
     .occupancy-bar-fill.full { background: var(--accent-oxblood); }
@@ -944,48 +968,440 @@
     }
     .status-blue-pill::before { background: var(--status-blue); }
 
-    /* ACTION BUTTONS IN TABLE */
-    .table-actions-group {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 6px;
-    }
-
+    /* ACTION BUTTONS */
     .btn-action-icon {
       background: var(--surface-card);
       border: 1px solid var(--border-hairline);
       color: var(--text-muted);
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.15s var(--ease-snappy);
     }
-    .btn-action-icon:hover {
-      background: var(--accent-oxblood-subtle);
-      color: var(--accent-oxblood);
-      border-color: var(--accent-oxblood);
-      transform: translateY(-1px);
+
+    .btn-secondary {
+      padding: 8px 14px;
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       MOBILE TOUCH-CARD SYSTEM FOR PHONES (< 768px)
+       Replaces microscopic table rows with comfortable, thumb-friendly cards!
+       ========================================================================== */
+    .mobile-cards-feed {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .trip-mobile-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .trip-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .trip-card-time {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .trip-card-route {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 2px;
+    }
+
+    .trip-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .trip-card-actions {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-mobile-board {
+      height: 44px;
+      background: var(--accent-oxblood);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .btn-mobile-status {
+      height: 44px;
+      padding: 0 14px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       DRIVER ACTIVE TRIP HERO BANNER (FOR DRIVERS IN THE ROAD)
+       ========================================================================== */
+    .driver-active-trip-banner {
+      background: var(--surface-card);
+      border: 2px solid var(--accent-oxblood);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px -6px rgba(122, 35, 32, 0.16);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .driver-banner-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .driver-banner-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-oxblood);
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .driver-banner-controls {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-driver-hero {
+      height: 48px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-driver-hero.primary {
+      background: var(--status-forest);
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(46, 79, 62, 0.28);
+    }
+    .btn-driver-hero.secondary {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-hairline);
+      color: var(--text-primary);
+    }
+
+    /* SLIDE-OUT FLYOUT DRAWER & MOBILE BOTTOM SHEET */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 29, 28, 0.5);
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s var(--ease-fluid);
+    }
+    .drawer-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .flyout-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 520px;
+      max-width: 95vw;
+      height: 100dvh;
+      background: var(--surface-card);
+      border-left: 1px solid var(--border-hairline);
+      box-shadow: var(--shadow-floating);
+      z-index: 2010;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.28s var(--ease-fluid);
+    }
+    .drawer-overlay.open .flyout-drawer {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-subtle);
+      padding-top: env(safe-area-inset-top, 18px);
+    }
+
+    .drawer-title-group h2 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    .drawer-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-family: var(--font-mono);
+    }
+
+    .drawer-close-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border-hairline);
+      background: var(--surface-card);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* 20-SEAT BUS SCHEMATIC */
+    .bus-schematic-card {
+      background: var(--canvas);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .bus-cockpit-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px dashed var(--border-hairline);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+    }
+
+    .seats-grid-layout {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .seat-box {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      border: 1px solid var(--border-hairline);
+      background: var(--surface-card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .seat-box.occupied {
+      background: var(--surface-subtle);
+      color: var(--text-dim);
+    }
+    .seat-box.boarded {
+      background: var(--status-forest-bg);
+      border-color: var(--status-forest-border);
+      color: var(--status-forest);
+    }
+
+    .seat-legend-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .legend-box {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      border: 1px solid var(--border-hairline);
+    }
+
+    /* PASSENGER ROSTER WITH 1-TAP PHONE DIALER CALL */
+    .roster-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .roster-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      gap: 10px;
+    }
+
+    .roster-passenger-info {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+    }
+    .roster-name {
+      font-weight: 700;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .roster-phone {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .roster-actions-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn-call-passenger {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-hairline);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .btn-checkin-toggle {
+      height: 40px;
+      padding: 0 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border-hairline);
+      background: var(--surface-card);
+      color: var(--text-muted);
+    }
+    .btn-checkin-toggle.boarded {
+      background: var(--status-forest);
+      color: #FFFFFF;
+      border-color: var(--status-forest);
+    }
+
+    .drawer-footer {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-subtle);
+      padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
     }
 
     /* FLOATING BULK ACTIONS BAR */
     .bulk-floating-bar {
       position: fixed;
-      bottom: 24px;
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
       left: 50%;
       transform: translateX(-50%) translateY(120px);
       background: var(--text-primary);
       color: #FFFFFF;
-      padding: 10px 20px;
+      padding: 10px 18px;
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow-floating);
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       z-index: 1000;
       transition: transform 0.28s var(--ease-fluid);
       border: 1px solid rgba(255, 255, 255, 0.14);
@@ -1013,13 +1429,6 @@
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.15s;
-    }
-    .btn-bulk-action:hover {
-      background: rgba(255, 255, 255, 0.22);
     }
 
     .btn-bulk-clear {
@@ -1031,258 +1440,60 @@
       text-decoration: underline;
     }
 
-    /* SLIDE-OUT FLYOUT DRAWER (MANIFEST & TRIP DETAILS) */
-    .drawer-overlay {
+    /* MOBILE BOTTOM THUMB BAR (FOR PHONES) */
+    .mobile-bottom-nav-bar {
+      display: none;
       position: fixed;
-      inset: 0;
-      background: rgba(28, 29, 28, 0.45);
-      z-index: 2000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s var(--ease-fluid);
-    }
-    .drawer-overlay.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .flyout-drawer {
-      position: fixed;
-      top: 0;
+      bottom: 0;
+      left: 0;
       right: 0;
-      width: 520px;
-      max-width: 95vw;
-      height: 100vh;
+      height: calc(60px + env(safe-area-inset-bottom, 0px));
       background: var(--surface-card);
-      border-left: 1px solid var(--border-hairline);
-      box-shadow: var(--shadow-floating);
-      z-index: 2010;
-      display: flex;
-      flex-direction: column;
-      transform: translateX(100%);
-      transition: transform 0.28s var(--ease-fluid);
-    }
-    .drawer-overlay.open .flyout-drawer {
-      transform: translateX(0);
-    }
-
-    .drawer-header {
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--border-hairline);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--surface-subtle);
-    }
-
-    .drawer-title-group h2 {
-      font-family: var(--font-display);
-      font-size: 24px;
-      font-weight: 600;
-      line-height: 1.2;
-    }
-    .drawer-subtitle {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 2px;
-      font-family: var(--font-mono);
-    }
-
-    .drawer-close-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
-      border: 1px solid var(--border-hairline);
-      background: var(--surface-card);
-      color: var(--text-muted);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .drawer-close-btn:hover {
-      color: var(--text-primary);
-      background: var(--canvas);
-    }
-
-    .drawer-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 22px;
-    }
-
-    /* 20-SEAT BUS SCHEMATIC (QUIET LUXURY SPRINTER COCKPIT) */
-    .bus-schematic-card {
-      background: var(--canvas);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-md);
-      padding: 16px;
-    }
-
-    .bus-cockpit-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px dashed var(--border-hairline);
-      padding-bottom: 10px;
-      margin-bottom: 14px;
-      font-size: 11.5px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: 700;
-    }
-
-    .seats-grid-layout {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-    }
-
-    .seat-box {
-      aspect-ratio: 1;
-      border-radius: 6px;
-      border: 1px solid var(--border-hairline);
-      background: var(--surface-card);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-      position: relative;
-    }
-    .seat-box:hover {
-      border-color: var(--border-focus);
-      background: var(--surface-subtle);
-    }
-    .seat-box.occupied {
-      background: var(--surface-subtle);
-      color: var(--text-dim);
-      cursor: default;
-    }
-    .seat-box.boarded {
-      background: var(--status-forest-bg);
-      border-color: var(--status-forest-border);
-      color: var(--status-forest);
-    }
-    .seat-box.selected {
-      background: var(--accent-oxblood);
-      color: #FFFFFF;
-      border-color: var(--accent-oxblood);
-    }
-
-    .seat-legend-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-top: 12px;
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .legend-box {
-      width: 12px;
-      height: 12px;
-      border-radius: 3px;
-      border: 1px solid var(--border-hairline);
-    }
-
-    /* PASSENGER ROSTER LIST */
-    .roster-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .roster-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 14px;
-      background: var(--surface-card);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-sm);
-    }
-
-    .roster-passenger-info {
-      display: flex;
-      flex-direction: column;
-    }
-    .roster-name {
-      font-weight: 700;
-      font-size: 13px;
-    }
-    .roster-phone {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .btn-checkin-toggle {
-      padding: 5px 10px;
-      border-radius: 4px;
-      font-size: 11.5px;
-      font-weight: 700;
-      cursor: pointer;
-      border: 1px solid var(--border-hairline);
-      background: var(--surface-card);
-      color: var(--text-muted);
-      transition: all 0.15s;
-    }
-    .btn-checkin-toggle.boarded {
-      background: var(--status-forest);
-      color: #FFFFFF;
-      border-color: var(--status-forest);
-    }
-
-    .drawer-footer {
-      padding: 16px 24px;
       border-top: 1px solid var(--border-hairline);
+      z-index: 999;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .mobile-bottom-nav-grid {
       display: flex;
+      height: 60px;
       align-items: center;
-      justify-content: space-between;
-      background: var(--surface-subtle);
+      justify-content: space-around;
     }
 
-    .btn-print-manifest {
-      display: inline-flex;
+    .mobile-nav-btn {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 6px;
-      padding: 9px 16px;
-      background: var(--surface-card);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-sm);
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-primary);
+      justify-content: center;
+      gap: 4px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.15s;
     }
-    .btn-print-manifest:hover {
-      border-color: var(--text-primary);
+    .mobile-nav-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+    .mobile-nav-btn.active {
+      color: var(--accent-oxblood);
     }
 
-    /* MODAL WINDOWS (CREATE TRIP / MANUAL BOOKING) */
+    /* MODAL WINDOWS */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(28, 29, 28, 0.45);
+      background: rgba(28, 29, 28, 0.5);
       z-index: 3000;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 16px;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.25s var(--ease-fluid);
@@ -1297,18 +1508,21 @@
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-lg);
       width: 100%;
-      max-width: 580px;
+      max-width: 560px;
       box-shadow: var(--shadow-floating);
       overflow: hidden;
       transform: scale(0.96);
       transition: transform 0.25s var(--ease-fluid);
+      max-height: 90dvh;
+      display: flex;
+      flex-direction: column;
     }
     .modal-overlay.open .modal-window {
       transform: scale(1);
     }
 
     .modal-header {
-      padding: 20px 24px;
+      padding: 18px 22px;
       border-bottom: 1px solid var(--border-hairline);
       display: flex;
       align-items: center;
@@ -1318,12 +1532,14 @@
 
     .modal-title {
       font-family: var(--font-display);
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 600;
     }
 
     .modal-body {
-      padding: 24px;
+      padding: 20px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -1336,7 +1552,7 @@
     }
 
     .form-label {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -1347,13 +1563,11 @@
       width: 100%;
       padding: 10px 12px;
       font-family: var(--font-body);
-      font-size: 13.5px;
       color: var(--text-primary);
       background: var(--canvas);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-sm);
       outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
     }
     .form-input:focus, .form-select:focus {
       border-color: var(--border-focus);
@@ -1363,11 +1577,11 @@
     .form-row-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 12px;
     }
 
     .modal-footer {
-      padding: 18px 24px;
+      padding: 16px 20px;
       border-top: 1px solid var(--border-hairline);
       display: flex;
       align-items: center;
@@ -1376,22 +1590,14 @@
       background: var(--surface-subtle);
     }
 
-    .btn-secondary {
-      padding: 9px 16px;
-      background: var(--surface-card);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-sm);
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    /* TOAST NOTIFICATION CONTAINER */
+    /* TOAST NOTIFICATIONS */
     .toast-container {
       position: fixed;
-      top: 20px;
-      right: 24px;
+      top: calc(16px + env(safe-area-inset-top, 0px));
+      right: 16px;
+      left: 16px;
+      max-width: 400px;
+      margin-left: auto;
       z-index: 9999;
       display: flex;
       flex-direction: column;
@@ -1404,18 +1610,18 @@
       background: var(--surface-card);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-md);
-      padding: 12px 18px;
+      padding: 12px 16px;
       box-shadow: var(--shadow-elevated);
       display: flex;
       align-items: center;
       gap: 12px;
-      min-width: 280px;
-      max-width: 400px;
-      transform: translateX(120%);
-      transition: transform 0.28s var(--ease-fluid), opacity 0.28s;
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: all 0.25s var(--ease-fluid);
     }
     .toast-card.show {
-      transform: translateX(0);
+      transform: translateY(0);
+      opacity: 1;
     }
 
     .toast-icon {
@@ -1449,16 +1655,18 @@
       font-size: 14px;
     }
 
-    /* RESPONSIVE BREAKPOINTS */
-    @media (max-width: 1080px) {
+    /* ==========================================================================
+       RESPONSIVE ERGONOMICS BREAKPOINTS
+       ========================================================================== */
+    @media (max-width: 1024px) {
       .kpi-metrics-grid {
         grid-template-columns: repeat(2, 1fr);
       }
       aside.app-sidebar {
         width: var(--sidebar-collapsed-width);
       }
-      .brand-text, .nav-item-btn span, .nav-badge, .nav-section-title, .carrier-meta {
-        display: none;
+      .brand-text, .nav-item-btn span, .nav-badge, .nav-section-title, .carrier-meta, .role-switcher-container {
+        display: none !important;
       }
       .nav-item-btn {
         justify-content: center;
@@ -1471,30 +1679,53 @@
     }
 
     @media (max-width: 768px) {
-      .app-shell {
-        flex-direction: column;
-      }
+      /* Mobile Phone Mode: Hide sidebar, show bottom nav bar */
       aside.app-sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        border-right: none;
-        border-bottom: 1px solid var(--border-hairline);
+        display: none;
       }
-      .sidebar-nav {
-        flex-direction: row;
-        overflow-x: auto;
-        padding: 8px;
+      .mobile-bottom-nav-bar {
+        display: block;
+      }
+      .screen-content-area {
+        padding: 16px 14px calc(76px + env(safe-area-inset-bottom, 0px));
       }
       .kpi-metrics-grid {
         grid-template-columns: 1fr;
+        gap: 10px;
       }
-      .screen-content-area {
-        padding: 18px 16px 80px;
+      .table-container {
+        display: none; /* Hide microscopic table on phone */
+      }
+      .mobile-cards-feed {
+        display: flex; /* Show comfortable touch cards on phone */
+      }
+      .form-row-2 {
+        grid-template-columns: 1fr;
+      }
+      .flyout-drawer {
+        width: 100vw;
+        max-width: 100vw;
+        border-left: none;
+        border-radius: 18px 18px 0 0;
+        top: auto;
+        bottom: 0;
+        height: 92dvh;
+        transform: translateY(100%);
+      }
+      .drawer-overlay.open .flyout-drawer {
+        transform: translateY(0);
+      }
+      .driver-banner-controls {
+        grid-template-columns: 1fr;
+      }
+      .bulk-floating-bar {
+        width: 92%;
+        bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+        flex-wrap: wrap;
+        justify-content: center;
       }
     }
 
-    /* ACCESSIBILITY: REDUCED MOTION */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -1502,27 +1733,11 @@
         transition-duration: 0.01ms !important;
       }
     }
-
-    /* PRINT SHEET FOR MANIFEST */
-    @media print {
-      body * {
-        visibility: hidden;
-      }
-      #print-manifest-area, #print-manifest-area * {
-        visibility: visible;
-      }
-      #print-manifest-area {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-      }
-    }
   </style>
 </head>
 <body>
 
-  <!-- TACTILE PAPER GRAIN TEXTURE (3.5% OPACITY) -->
+  <!-- TACTILE PAPER GRAIN TEXTURE -->
   <div class="paper-noise-canvas" aria-hidden="true"></div>
 
   <!-- TOAST NOTIFICATIONS HUB -->
@@ -1531,27 +1746,32 @@
   <!-- APPLICATION SHELL -->
   <div class="app-shell">
 
-    <!-- SIDEBAR NAVIGATION -->
+    <!-- DESKTOP / TABLET SIDEBAR NAVIGATION -->
     <aside class="app-sidebar" id="appSidebar">
-      <!-- HEADER BRAND -->
       <div class="sidebar-header">
         <a href="#dashboard" class="brand-mark" onclick="switchScreen('dashboard')">
           <div class="brand-logo-icon">B</div>
           <div class="brand-text">
             <span class="brand-name">BusLiner</span>
-            <span class="brand-label">Партнеры • Кабинет</span>
+            <span class="brand-label" id="sidebarBrandRole">Кабинет перевозчика</span>
           </div>
         </a>
-        <button class="sidebar-toggle-btn" id="sidebarCollapseBtn" title="Свернуть меню" onclick="toggleSidebarCollapse()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-          </svg>
-        </button>
       </div>
 
-      <!-- MAIN NAVIGATION LINKS -->
+      <!-- ROLE SEGMENTED CONTROL -->
+      <div class="role-switcher-container">
+        <div class="role-segmented-control">
+          <button class="role-segment-btn active" id="btnRoleCarrier" onclick="setUserRole('carrier')">
+            Перевозчик
+          </button>
+          <button class="role-segment-btn" id="btnRoleDriver" onclick="setUserRole('driver')">
+            Водитель
+          </button>
+        </div>
+      </div>
+
       <nav class="sidebar-nav">
-        <div class="nav-section-title">Диспетчерская</div>
+        <div class="nav-section-title">Навигация</div>
 
         <button class="nav-item-btn active" data-screen="dashboard" onclick="switchScreen('dashboard')">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -1591,15 +1811,14 @@
             <polyline points="14 2 14 8 20 8" />
             <line x1="16" y1="13" x2="8" y2="13" />
             <line x1="16" y1="17" x2="8" y2="17" />
-            <polyline points="10 9 9 9 8 9" />
           </svg>
-          <span>Брони и билеты</span>
+          <span>Пассажиры и брони</span>
           <span class="nav-badge" id="badgeTotalBookings">92</span>
         </button>
 
-        <div class="nav-section-title" style="margin-top: 14px;">Управление</div>
+        <div class="nav-section-title" id="carrierSectionHeading" style="margin-top: 14px;">Учет и флот</div>
 
-        <button class="nav-item-btn" data-screen="finances" onclick="switchScreen('finances')">
+        <button class="nav-item-btn" id="navItemFinances" data-screen="finances" onclick="switchScreen('finances')">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="10" />
             <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
@@ -1608,7 +1827,7 @@
           <span>Финансы и выплаты</span>
         </button>
 
-        <button class="nav-item-btn" data-screen="settings" onclick="switchScreen('settings')">
+        <button class="nav-item-btn" id="navItemSettings" data-screen="settings" onclick="switchScreen('settings')">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <circle cx="12" cy="12" r="3" />
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -1617,15 +1836,14 @@
         </button>
       </nav>
 
-      <!-- FOOTER PROFILE & RETURN LINK -->
       <div class="sidebar-footer">
         <div class="carrier-profile-card">
-          <div class="carrier-avatar">АЛ</div>
+          <div class="carrier-avatar" id="profileAvatarMonogram">ПЕ</div>
           <div class="carrier-meta">
-            <span class="carrier-name">ИП Александр</span>
+            <span class="carrier-name" id="profileDisplayName">ИП Александр</span>
             <span class="carrier-subtext">
               <span class="carrier-status-dot"></span>
-              На линии • УНП 1934882
+              <span id="profileRoleBadgeText">Перевозчик • 3 авто</span>
             </span>
           </div>
         </div>
@@ -1639,29 +1857,34 @@
       </div>
     </aside>
 
-    <!-- MAIN APPLICATION WORKSPACE -->
+    <!-- MAIN APP WORKSPACE -->
     <main class="app-workspace">
 
-      <!-- TOP APP BAR -->
+      <!-- TOP APPLICATION BAR -->
       <header class="top-app-bar">
         <div class="header-breadcrumb">
-          <span class="crumb-root">Кабинет</span>
+          <span class="crumb-root" id="topBarRoleIndicator">Перевозчик</span>
           <span class="crumb-separator">/</span>
-          <span class="crumb-current" id="headerCrumbTitle">Обзор показателей</span>
+          <span class="crumb-current" id="headerCrumbTitle">Обзор</span>
         </div>
 
         <div class="header-right-actions">
+          <!-- Mobile Quick Role Switcher Button -->
+          <button class="btn-secondary" id="mobileRoleSwitchBtn" style="padding: 6px 10px; font-size: 12px; font-weight:700;" onclick="toggleMobileRole()">
+            Водитель ⇄ Перевозчик
+          </button>
+
           <div class="telemetry-clock">
             <span class="clock-pulse"></span>
-            <span id="liveTimeClock">15:58:20 MSK</span>
+            <span id="liveTimeClock">16:04:15 MSK</span>
           </div>
 
-          <button class="btn-create-trip-primary" onclick="openModalCreateTrip()">
+          <button class="btn-create-trip-primary" id="btnTopCreateTrip" onclick="openModalCreateTrip()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            Создать рейс
+            <span class="btn-create-trip-text">Новый рейс</span>
           </button>
         </div>
       </header>
@@ -1670,21 +1893,56 @@
       <div class="screen-content-area">
 
         <!-- ====================================================================
+             DRIVER ACTIVE TRIP HERO BANNER (SHOWN WHEN IN DRIVER MODE)
+             ==================================================================== -->
+        <div class="driver-active-trip-banner" id="driverHeroBanner" style="display:none;">
+          <div class="driver-banner-top">
+            <div>
+              <div class="driver-banner-badge">Ваш рейс прямо сейчас</div>
+              <h2 style="font-family: var(--font-display); font-size: 26px; font-weight:600; margin-top:6px;">
+                Минск ➔ Вильнюс • 18:45
+              </h2>
+              <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
+                Mercedes Sprinter <span class="vehicle-cell-plate">7TAX-8891</span> • Перрон 3, Центральный АВ
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-family: var(--font-mono); font-size: 22px; font-weight: 700; color: var(--status-forest);">
+                18 / 20 мест
+              </div>
+              <span class="status-pill status-forest-pill">Посадка открыта</span>
+            </div>
+          </div>
+
+          <div class="driver-banner-controls">
+            <button class="btn-driver-hero primary" onclick="openTripDetails('BL-5715')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <polyline points="16 11 18 13 22 9" />
+              </svg>
+              Открыть посадку пассажиров (Чек-ин)
+            </button>
+            <button class="btn-driver-hero secondary" onclick="changeHeroTripStatus('in_route')">
+              Выехать в рейс
+            </button>
+            <button class="btn-driver-hero secondary" onclick="showToast('Диспетчер предупрежден о задержке рейса на 15 минут', 'alert')">
+              Задержка
+            </button>
+          </div>
+        </div>
+
+        <!-- ====================================================================
              SCREEN 1: DASHBOARD (ОБЗОР)
              ==================================================================== -->
         <div class="screen-pane active-pane" id="screen-dashboard">
           <div class="screen-heading-row">
             <div class="screen-title-group">
-              <h1>Сводка <em>диспетчерской</em></h1>
-              <p>Оперативный контроль рейсов, загрузки флота и посадки пассажиров на сегодня</p>
+              <h1 id="dashScreenTitle">Обзор <em>рейсов</em></h1>
+              <p id="dashScreenSub">Оперативное управление отправлениями, загрузкой и посадкой</p>
             </div>
             <div class="screen-controls-group">
               <button class="btn-secondary" onclick="exportDailyManifestCSV()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block; vertical-align:middle; margin-right:4px;">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
                 Экспорт ведомости за день
               </button>
             </div>
@@ -1705,7 +1963,7 @@
               </div>
               <div class="kpi-number" id="dashKpiTrips">6</div>
               <div class="kpi-footer-note">
-                <span class="trend-up">3 завершено</span> • 2 в пути • 1 по расписанию
+                <span class="trend-up">3 завершено</span> • 2 в пути • 1 по графику
               </div>
             </div>
 
@@ -1717,56 +1975,46 @@
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                   </svg>
                 </div>
               </div>
               <div class="kpi-number" id="dashKpiLoad">89.4%</div>
               <div class="kpi-footer-note">
-                <span class="trend-up">↑ 4.2%</span> к прошлой субботе
+                <span class="trend-up">↑ 4.2%</span> к прошлой неделе
               </div>
             </div>
 
-            <div class="kpi-card">
+            <div class="kpi-card" id="kpiCardRevenue">
               <div class="kpi-card-header">
                 <span class="kpi-label">Выручка за сутки</span>
-                <div class="kpi-icon-pill">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
-                    <path d="M12 18V6" />
-                  </svg>
-                </div>
+                <div class="kpi-icon-pill">BYN</div>
               </div>
               <div class="kpi-number" id="dashKpiRevenue">1 840 BYN</div>
-              <div class="kpi-footer-note">
-                92 проданных билета по тарифам
-              </div>
+              <div class="kpi-footer-note">92 проданных билета</div>
             </div>
 
             <div class="kpi-card">
               <div class="kpi-card-header">
-                <span class="kpi-label">Требуют внимания</span>
-                <div class="kpi-icon-pill" style="color: var(--accent-oxblood); background: var(--status-alert-bg);">
+                <span class="kpi-label">Посадка</span>
+                <div class="kpi-icon-pill" style="color: var(--status-forest); background: var(--status-forest-bg);">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                    <polyline points="12 6 12 12 16 14" />
                   </svg>
                 </div>
               </div>
-              <div class="kpi-number" style="color: var(--accent-oxblood);" id="dashKpiAlerts">1</div>
+              <div class="kpi-number" style="color: var(--accent-oxblood);" id="dashKpiAlerts">BL-5715</div>
               <div class="kpi-footer-note">
-                <span class="trend-attention">Посадка через 25 мин</span> • 2 свободных места
+                <span class="trend-attention">Через 25 минут</span> • 2 свободных места
               </div>
             </div>
           </div>
 
-          <!-- UPCOMING DEPARTURES TABLE PANEL -->
+          <!-- UPCOMING DEPARTURES PANEL -->
           <div class="panel-card">
             <div class="panel-card-header">
               <h2 class="panel-title">
-                Ближайшие отправления
+                Ближайшие рейсы
                 <span class="panel-title-badge">Сегодня</span>
               </h2>
               <button class="btn-secondary" onclick="switchScreen('trips')">
@@ -1774,6 +2022,7 @@
               </button>
             </div>
 
+            <!-- Desktop Table View -->
             <div class="table-container">
               <table class="data-table">
                 <thead>
@@ -1787,11 +2036,12 @@
                     <th class="col-right">Действия</th>
                   </tr>
                 </thead>
-                <tbody id="dashboardUpcomingTableBody">
-                  <!-- Populated by JS -->
-                </tbody>
+                <tbody id="dashboardUpcomingTableBody"></tbody>
               </table>
             </div>
+
+            <!-- Mobile Touch-Cards Feed -->
+            <div class="mobile-cards-feed" id="dashboardUpcomingMobileCards"></div>
           </div>
         </div>
 
@@ -1801,8 +2051,8 @@
         <div class="screen-pane" id="screen-trips">
           <div class="screen-heading-row">
             <div class="screen-title-group">
-              <h1>Управление <em>рейсами</em></h1>
-              <p>Реестр запланированных, активных и архивных маршрутов перевозчика</p>
+              <h1>Список <em>рейсов</em></h1>
+              <p>Управление рейсами, статусами и посадочными ведомостями</p>
             </div>
             <div class="screen-controls-group">
               <button class="btn-create-trip-primary" onclick="openModalCreateTrip()">
@@ -1815,7 +2065,6 @@
             </div>
           </div>
 
-          <!-- TRIPS MASTER PANEL WITH FILTERS & DATA TABLE -->
           <div class="panel-card">
             <!-- FILTER TOOLBAR -->
             <div class="filter-toolbar">
@@ -1825,7 +2074,7 @@
                     <circle cx="11" cy="11" r="8" />
                     <line x1="21" y1="21" x2="16.65" y2="16.65" />
                   </svg>
-                  <input type="text" class="input-clean" id="tripSearchInput" placeholder="Поиск по маршруту, авто или водителю..." oninput="handleTripSearchDebounced(this.value)">
+                  <input type="text" class="input-clean" id="tripSearchInput" placeholder="Поиск по маршруту или авто..." oninput="handleTripSearchDebounced(this.value)">
                 </div>
 
                 <select class="filter-select" id="tripRouteFilter" onchange="applyTripFilters()">
@@ -1843,15 +2092,9 @@
                   <button class="chip-tab-btn" data-status="completed" onclick="setTripStatusTab('completed')">Завершен</button>
                 </div>
               </div>
-
-              <div class="filter-right-controls">
-                <button class="btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="resetTripFilters()">
-                  Сбросить фильтры
-                </button>
-              </div>
             </div>
 
-            <!-- TRIPS DATA TABLE -->
+            <!-- Desktop Master Table -->
             <div class="table-container">
               <table class="data-table" id="tripsMasterTable">
                 <thead>
@@ -1869,11 +2112,12 @@
                     <th class="col-right">Действия</th>
                   </tr>
                 </thead>
-                <tbody id="tripsTableBody">
-                  <!-- Populated by JS -->
-                </tbody>
+                <tbody id="tripsTableBody"></tbody>
               </table>
             </div>
+
+            <!-- Mobile Touch Cards Feed -->
+            <div class="mobile-cards-feed" id="tripsMobileFeed"></div>
           </div>
         </div>
 
@@ -1883,19 +2127,14 @@
         <div class="screen-pane" id="screen-schedule">
           <div class="screen-heading-row">
             <div class="screen-title-group">
-              <h1>Сетка <em>расписания</em></h1>
-              <p>Регулярные рейсы на неделю с шаблонами формирования интервалов</p>
-            </div>
-            <div class="screen-controls-group">
-              <button class="btn-secondary" onclick="showToast('Шаблон недели скопирован в буфер', 'forest')">
-                Дублировать на следующую неделю
-              </button>
+              <h1>График <em>расписания</em></h1>
+              <p>Регулярные еженедельные рейсы перевозчика</p>
             </div>
           </div>
 
           <div class="panel-card">
             <div class="panel-card-header">
-              <h2 class="panel-title">Регулярные отправления (Понедельник — Воскресенье)</h2>
+              <h2 class="panel-title">Регулярные рейсы (Понедельник — Воскресенье)</h2>
               <span class="panel-title-badge">14 рейсов в неделю</span>
             </div>
 
@@ -1912,26 +2151,26 @@
                     <th class="col-right">Управление</th>
                   </tr>
                 </thead>
-                <tbody id="scheduleTableBody">
-                  <!-- Populated by JS -->
-                </tbody>
+                <tbody id="scheduleTableBody"></tbody>
               </table>
             </div>
+
+            <div class="mobile-cards-feed" id="scheduleMobileFeed"></div>
           </div>
         </div>
 
         <!-- ====================================================================
-             SCREEN 4: BOOKINGS (БРОНИ И БИЛЕТЫ)
+             SCREEN 4: BOOKINGS (ПАССАЖИРЫ И БРОНИ)
              ==================================================================== -->
         <div class="screen-pane" id="screen-bookings">
           <div class="screen-heading-row">
             <div class="screen-title-group">
-              <h1>Реестр <em>пассажиров</em> и броней</h1>
-              <p>Поиск билетов по коду, номеру телефона пассажира и сверка оплаты</p>
+              <h1>Пассажиры и <em>билеты</em></h1>
+              <p>Быстрый поиск пассажира по билету, телефону и чек-ин в салон</p>
             </div>
             <div class="screen-controls-group">
               <button class="btn-create-trip-primary" onclick="openModalAddBooking()">
-                Добавить билет вручную
+                + Оформить билет
               </button>
             </div>
           </div>
@@ -1943,11 +2182,11 @@
                   <circle cx="11" cy="11" r="8" />
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
-                <input type="text" class="input-clean" id="bookingSearchInput" placeholder="Поиск по билету, ФИО или телефону..." oninput="filterBookingsList(this.value)">
+                <input type="text" class="input-clean" id="bookingSearchInput" placeholder="Поиск по билету, имени, телефону..." oninput="filterBookingsList(this.value)">
               </div>
 
               <select class="filter-select" id="bookingPaymentFilter" onchange="filterBookingsList(document.getElementById('bookingSearchInput').value)">
-                <option value="all">Все статусы оплаты</option>
+                <option value="all">Все оплаты</option>
                 <option value="paid">Оплачено онлайн</option>
                 <option value="cash">Оплата при посадке</option>
               </select>
@@ -1960,33 +2199,32 @@
                     <th class="col-left">Билет</th>
                     <th class="col-left">Пассажир</th>
                     <th class="col-left">Телефон</th>
-                    <th class="col-left">Маршрут и время</th>
+                    <th class="col-left">Рейс</th>
                     <th class="col-center">Место</th>
                     <th class="col-center">Оплата</th>
                     <th class="col-right">Сумма</th>
                     <th class="col-right">Чек-ин</th>
                   </tr>
                 </thead>
-                <tbody id="bookingsTableBody">
-                  <!-- Populated by JS -->
-                </tbody>
+                <tbody id="bookingsTableBody"></tbody>
               </table>
             </div>
+
+            <div class="mobile-cards-feed" id="bookingsMobileFeed"></div>
           </div>
         </div>
 
         <!-- ====================================================================
-             SCREEN 5: FINANCES (ФИНАНСЫ)
+             SCREEN 5: FINANCES (ФИНАНСЫ — ДЛЯ ПЕРЕВОЗЧИКА)
              ==================================================================== -->
         <div class="screen-pane" id="screen-finances">
           <div class="screen-heading-row">
             <div class="screen-title-group">
               <h1>Финансы и <em>выплаты</em></h1>
-              <p>Расчетная ведомость, чистый доход за вычетом комиссии платформы и реквизиты</p>
+              <p>Расчетная ведомость, чистый доход на р/с IBAN и средний чек</p>
             </div>
           </div>
 
-          <!-- FINANCIAL KPI CARDS -->
           <div class="kpi-metrics-grid">
             <div class="kpi-card">
               <div class="kpi-card-header">
@@ -1994,7 +2232,7 @@
                 <div class="kpi-icon-pill">BYN</div>
               </div>
               <div class="kpi-number">12 480 BYN</div>
-              <div class="kpi-footer-note">За текущий расчетный период (14 дней)</div>
+              <div class="kpi-footer-note">За текущий период</div>
             </div>
 
             <div class="kpi-card">
@@ -2003,7 +2241,7 @@
                 <div class="kpi-icon-pill">5%</div>
               </div>
               <div class="kpi-number" style="color: var(--text-dim);">- 624 BYN</div>
-              <div class="kpi-footer-note">Включает эквайринг и поддержку 24/7</div>
+              <div class="kpi-footer-note">Включает онлайн-эквайринг</div>
             </div>
 
             <div class="kpi-card">
@@ -2017,15 +2255,14 @@
 
             <div class="kpi-card">
               <div class="kpi-card-header">
-                <span class="kpi-label">Средний чек билета</span>
+                <span class="kpi-label">Средний чек</span>
                 <div class="kpi-icon-pill">avg</div>
               </div>
               <div class="kpi-number">36.5 BYN</div>
-              <div class="kpi-footer-note">342 перевезенных пассажира</div>
+              <div class="kpi-footer-note">342 пассажира за период</div>
             </div>
           </div>
 
-          <!-- ROUTE REVENUE BREAKDOWN PANEL -->
           <div class="panel-card">
             <div class="panel-card-header">
               <h2 class="panel-title">Доходность по маршрутам</h2>
@@ -2035,11 +2272,10 @@
                 <thead>
                   <tr>
                     <th class="col-left">Маршрут</th>
-                    <th class="col-left">Выполнено рейсов</th>
-                    <th class="col-left">Пассажиропоток</th>
-                    <th class="col-left">Средняя загрузка</th>
+                    <th class="col-left">Рейсов</th>
+                    <th class="col-left">Пассажиров</th>
+                    <th class="col-left">Загрузка</th>
                     <th class="col-right">Выручка BYN</th>
-                    <th class="col-right">Доля в обороте</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2049,7 +2285,6 @@
                     <td class="col-left mono-cell">268 чел.</td>
                     <td class="col-left mono-cell">95.7%</td>
                     <td class="col-right mono-cell" style="font-weight:700;">6 840 BYN</td>
-                    <td class="col-right mono-cell">54.8%</td>
                   </tr>
                   <tr>
                     <td class="col-left"><strong>Минск ➔ Гродно</strong></td>
@@ -2057,7 +2292,6 @@
                     <td class="col-left mono-cell">210 чел.</td>
                     <td class="col-left mono-cell">87.5%</td>
                     <td class="col-right mono-cell" style="font-weight:700;">3 150 BYN</td>
-                    <td class="col-right mono-cell">25.2%</td>
                   </tr>
                   <tr>
                     <td class="col-left"><strong>Минск ➔ Брест</strong></td>
@@ -2065,7 +2299,6 @@
                     <td class="col-left mono-cell">144 чел.</td>
                     <td class="col-left mono-cell">90.0%</td>
                     <td class="col-right mono-cell" style="font-weight:700;">2 490 BYN</td>
-                    <td class="col-right mono-cell">20.0%</td>
                   </tr>
                 </tbody>
               </table>
@@ -2074,60 +2307,51 @@
         </div>
 
         <!-- ====================================================================
-             SCREEN 6: SETTINGS & FLEET (АВТОПАРК И РЕКВИЗИТЫ)
+             SCREEN 6: SETTINGS (АВТОПАРК И РЕКВИЗИТЫ)
              ==================================================================== -->
         <div class="screen-pane" id="screen-settings">
           <div class="screen-heading-row">
             <div class="screen-title-group">
               <h1>Автопарк и <em>реквизиты</em></h1>
-              <p>Управление транспортными средствами, водительским составом и договором</p>
+              <p>Микроавтобусы перевозчика, закрепленные водители и договор</p>
             </div>
           </div>
 
-          <!-- VEHICLE FLEET PANEL -->
           <div class="panel-card">
             <div class="panel-card-header">
-              <h2 class="panel-title">Транспортные средства перевозчика</h2>
-              <button class="btn-secondary" onclick="showToast('Функция добавления ТС доступна менеджеру парка', 'forest')">
-                + Добавить автобус
-              </button>
+              <h2 class="panel-title">Транспортные средства парка</h2>
             </div>
-
             <div class="table-container">
               <table class="data-table">
                 <thead>
                   <tr>
-                    <th class="col-left">Модель автобуса</th>
+                    <th class="col-left">Модель микроавтобуса</th>
                     <th class="col-left">Госномер</th>
                     <th class="col-left">Вместимость</th>
-                    <th class="col-left">Класс комфорта</th>
                     <th class="col-center">Статус ТО</th>
                     <th class="col-right">Закрепленный водитель</th>
                   </tr>
                 </thead>
-                <tbody id="fleetTableBody">
+                <tbody>
                   <tr>
                     <td class="col-left"><strong>Mercedes-Benz Sprinter 519 CDI</strong></td>
                     <td class="col-left mono-cell"><span class="vehicle-cell-plate">7TAX-8891</span></td>
                     <td class="col-left mono-cell">20 мест</td>
-                    <td class="col-left">VIP Business Line (Wi-Fi, 220V)</td>
-                    <td class="col-center"><span class="status-pill status-forest-pill">Пройден до 12.2026</span></td>
+                    <td class="col-center"><span class="status-pill status-forest-pill">Пройден</span></td>
                     <td class="col-right">Александр (Смена 1)</td>
                   </tr>
                   <tr>
                     <td class="col-left"><strong>Volkswagen Crafter Grand Tour</strong></td>
                     <td class="col-left mono-cell"><span class="vehicle-cell-plate">5TAX-1204</span></td>
                     <td class="col-left mono-cell">19 мест</td>
-                    <td class="col-left">Executive Comfort</td>
-                    <td class="col-center"><span class="status-pill status-forest-pill">Пройден до 11.2026</span></td>
+                    <td class="col-center"><span class="status-pill status-forest-pill">Пройден</span></td>
                     <td class="col-right">Михаил К.</td>
                   </tr>
                   <tr>
                     <td class="col-left"><strong>Mercedes-Benz Tourismo</strong></td>
                     <td class="col-left mono-cell"><span class="vehicle-cell-plate">3TAX-7740</span></td>
                     <td class="col-left mono-cell">49 мест</td>
-                    <td class="col-left">Long Distance Tourist Edition</td>
-                    <td class="col-center"><span class="status-pill status-sand-pill">ТО через 14 дней</span></td>
+                    <td class="col-center"><span class="status-pill status-sand-pill">ТО скоро</span></td>
                     <td class="col-right">Сергей В.</td>
                   </tr>
                 </tbody>
@@ -2135,12 +2359,11 @@
             </div>
           </div>
 
-          <!-- CARRIER REQUISITES PANEL -->
           <div class="panel-card">
             <div class="panel-card-header">
-              <h2 class="panel-title">Юридические реквизиты</h2>
+              <h2 class="panel-title">Юридические данные перевозчика</h2>
             </div>
-            <div style="padding: 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;">
+            <div style="padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
               <div>
                 <span class="form-label">Перевозчик</span>
                 <p style="font-weight: 700; margin-top: 4px;">ИП Александр Александрович</p>
@@ -2162,32 +2385,58 @@
   </div>
 
   <!-- ==========================================================================
-       FLOATING BULK ACTIONS BAR (Appears when >= 1 trips selected)
+       MOBILE BOTTOM THUMB BAR (FOR SMARTPHONES)
        ========================================================================== -->
-  <div class="bulk-floating-bar" id="bulkFloatingBar">
-    <span class="bulk-count-badge" id="bulkSelectedCount">0</span>
-    <span style="font-size: 13px; font-weight: 600;">Выбрано рейсов</span>
+  <div class="mobile-bottom-nav-bar">
+    <div class="mobile-bottom-nav-grid">
+      <button class="mobile-nav-btn active" data-screen="dashboard" onclick="switchScreen('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="9" rx="1" />
+          <rect x="14" y="3" width="7" height="5" rx="1" />
+          <rect x="14" y="12" width="7" height="9" rx="1" />
+          <rect x="3" y="16" width="7" height="5" rx="1" />
+        </svg>
+        <span>Обзор</span>
+      </button>
 
-    <button class="btn-bulk-action" onclick="bulkChangeStatus('in_route')">
-      Статус: В пути
-    </button>
-    <button class="btn-bulk-action" onclick="bulkChangeStatus('completed')">
-      Статус: Завершить
-    </button>
-    <button class="btn-bulk-action" onclick="bulkExportCSV()">
-      Экспорт CSV
-    </button>
-    <button class="btn-bulk-action" style="color: #FFB3B0;" onclick="bulkCancelTrips()">
-      Отменить
-    </button>
+      <button class="mobile-nav-btn" data-screen="trips" onclick="switchScreen('trips')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="6" width="20" height="12" rx="2" />
+          <circle cx="7" cy="18" r="2" />
+          <circle cx="17" cy="18" r="2" />
+        </svg>
+        <span>Рейсы</span>
+      </button>
 
-    <button class="btn-bulk-clear" onclick="clearTripSelection()">
-      Сбросить выбор
-    </button>
+      <button class="mobile-nav-btn" onclick="openTripDetails('BL-5715')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <polyline points="16 11 18 13 22 9" />
+        </svg>
+        <span>Посадка</span>
+      </button>
+
+      <button class="mobile-nav-btn" data-screen="bookings" onclick="switchScreen('bookings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+        </svg>
+        <span>Пассажиры</span>
+      </button>
+
+      <button class="mobile-nav-btn" id="mobileNavFinances" data-screen="finances" onclick="switchScreen('finances')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
+        </svg>
+        <span>Финансы</span>
+      </button>
+    </div>
   </div>
 
   <!-- ==========================================================================
-       SLIDE-OUT FLYOUT DRAWER (TRIP DETAILS & MANIFEST INSPECTOR)
+       SLIDE-OUT FLYOUT DRAWER & MOBILE SHEET (BOARDING & MANIFEST)
        ========================================================================== -->
   <div class="drawer-overlay" id="tripDetailsOverlay" onclick="closeTripDetails(event)">
     <aside class="flyout-drawer" onclick="event.stopPropagation()">
@@ -2200,21 +2449,19 @@
       </div>
 
       <div class="drawer-body">
-        <!-- 20-SEAT BUS SEATING SCHEMATIC -->
+        <!-- 20-SEAT BUS SCHEMATIC -->
         <div class="bus-schematic-card">
           <div class="bus-cockpit-bar">
-            <span>Водитель • Кабина</span>
-            <span id="drawerOccupancyBadge">18 / 20 мест занято</span>
+            <span>Водитель • Салон 20 мест</span>
+            <span id="drawerOccupancyBadge">18 из 20 занято</span>
           </div>
 
-          <div class="seats-grid-layout" id="drawerSeatsGrid">
-            <!-- 20 seats generated dynamically -->
-          </div>
+          <div class="seats-grid-layout" id="drawerSeatsGrid"></div>
 
           <div class="seat-legend-row">
             <div class="legend-item">
               <div class="legend-box" style="background: var(--status-forest-bg); border-color: var(--status-forest-border);"></div>
-              <span>Посажен</span>
+              <span>В салоне</span>
             </div>
             <div class="legend-item">
               <div class="legend-box" style="background: var(--surface-subtle);"></div>
@@ -2227,29 +2474,22 @@
           </div>
         </div>
 
-        <!-- PASSENGER MANIFEST ROSTER -->
+        <!-- PASSENGER LIST WITH 1-TAP CALL -->
         <div>
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 12px;">
-            <h3 style="font-size: 15px; font-weight: 700;">Посадочная ведомость рейса</h3>
+            <h3 style="font-size: 15px; font-weight: 700;">Посадка пассажиров</h3>
             <span style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);" id="drawerBoardedCount">14 из 18 сели</span>
           </div>
 
-          <div class="roster-list" id="drawerRosterList">
-            <!-- Populated dynamically -->
-          </div>
+          <div class="roster-list" id="drawerRosterList"></div>
         </div>
       </div>
 
       <div class="drawer-footer">
-        <button class="btn-print-manifest" onclick="printPassengerManifest()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 6 2 18 2 18 9" />
-            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-            <rect x="6" y="14" width="12" height="8" />
-          </svg>
-          Печать манифеста
+        <button class="btn-secondary" onclick="printPassengerManifest()">
+          Печать ведомости
         </button>
-        <button class="btn-create-trip-primary" style="font-size: 12px; padding: 8px 14px;" onclick="closeTripDetails()">
+        <button class="btn-create-trip-primary" style="padding: 8px 16px;" onclick="closeTripDetails()">
           Готово
         </button>
       </div>
@@ -2257,7 +2497,20 @@
   </div>
 
   <!-- ==========================================================================
-       MODAL: CREATE TRIP (С СОХРАНЕНИЕМ ЧЕРНОВИКА В LOCALSTORAGE)
+       FLOATING BULK ACTIONS BAR
+       ========================================================================== -->
+  <div class="bulk-floating-bar" id="bulkFloatingBar">
+    <span class="bulk-count-badge" id="bulkSelectedCount">0</span>
+    <span style="font-size: 13px; font-weight: 600;">Рейсов</span>
+
+    <button class="btn-bulk-action" onclick="bulkChangeStatus('in_route')">В пути</button>
+    <button class="btn-bulk-action" onclick="bulkChangeStatus('completed')">Завершить</button>
+    <button class="btn-bulk-action" onclick="bulkExportCSV()">Экспорт CSV</button>
+    <button class="btn-bulk-clear" onclick="clearTripSelection()">Отмена</button>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: CREATE TRIP
        ========================================================================== -->
   <div class="modal-overlay" id="modalCreateTripOverlay" onclick="closeModalCreateTrip(event)">
     <div class="modal-window" onclick="event.stopPropagation()">
@@ -2269,7 +2522,7 @@
       <form id="createTripForm" onsubmit="handleCreateTripSubmit(event)">
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label" for="tripRouteSelect">Маршрут следования</label>
+            <label class="form-label" for="tripRouteSelect">Маршрут рейса</label>
             <select class="form-select" id="tripRouteSelect" required onblur="saveCreateTripDraft()">
               <option value="Минск — Вильнюс">Минск — Вильнюс (Центральный АВ ➔ Оро уостас)</option>
               <option value="Минск — Гродно">Минск — Гродно (АВ Восточный ➔ Автовокзал Гродно)</option>
@@ -2291,15 +2544,15 @@
 
           <div class="form-row-2">
             <div class="form-group">
-              <label class="form-label" for="tripVehicleSelect">Транспортное средство</label>
+              <label class="form-label" for="tripVehicleSelect">Микроавтобус</label>
               <select class="form-select" id="tripVehicleSelect" required onblur="saveCreateTripDraft()">
-                <option value="Mercedes-Benz Sprinter (7TAX-8891)">Mercedes-Benz Sprinter 519 (7TAX-8891) • 20 мест</option>
+                <option value="Mercedes-Benz Sprinter (7TAX-8891)">Mercedes Sprinter (7TAX-8891) • 20 мест</option>
                 <option value="Volkswagen Crafter (5TAX-1204)">Volkswagen Crafter (5TAX-1204) • 19 мест</option>
                 <option value="Mercedes-Benz Tourismo (3TAX-7740)">Mercedes Tourismo (3TAX-7740) • 49 мест</option>
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label" for="tripDriverSelect">Назначенный водитель</label>
+              <label class="form-label" for="tripDriverSelect">Водитель</label>
               <select class="form-select" id="tripDriverSelect" required onblur="saveCreateTripDraft()">
                 <option value="Александр (Смена 1)">Александр (Смена 1)</option>
                 <option value="Михаил К.">Михаил К.</option>
@@ -2310,8 +2563,8 @@
 
           <div class="form-row-2">
             <div class="form-group">
-              <label class="form-label" for="tripPriceInput">Базовый тариф (BYN)</label>
-              <input type="number" class="form-input mono-cell" id="tripPriceInput" min="10" max="300" step="5" value="45" required onblur="saveCreateTripDraft()">
+              <label class="form-label" for="tripPriceInput">Тариф (BYN)</label>
+              <input type="number" inputmode="decimal" class="form-input mono-cell" id="tripPriceInput" min="10" max="300" step="5" value="45" required onblur="saveCreateTripDraft()">
             </div>
             <div class="form-group">
               <label class="form-label" for="tripPlatformSelect">Перрон отправления</label>
@@ -2322,19 +2575,19 @@
 
         <div class="modal-footer">
           <button type="button" class="btn-secondary" onclick="closeModalCreateTrip()">Отмена</button>
-          <button type="submit" class="btn-create-trip-primary">Опубликовать рейс</button>
+          <button type="submit" class="btn-create-trip-primary">Опубликовать</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- ==========================================================================
-       MODAL: MANUAL BOOKING (ДОБАВИТЬ ПАССАЖИРА В РЕЙС)
+       MODAL: MANUAL BOOKING
        ========================================================================== -->
   <div class="modal-overlay" id="modalAddBookingOverlay" onclick="closeModalAddBooking(event)">
     <div class="modal-window" onclick="event.stopPropagation()">
       <div class="modal-header">
-        <h3 class="modal-title">Ручное бронирование билета</h3>
+        <h3 class="modal-title">Оформление билета</h3>
         <button class="drawer-close-btn" onclick="closeModalAddBooking()">✕</button>
       </div>
 
@@ -2342,18 +2595,16 @@
         <div class="modal-body">
           <div class="form-group">
             <label class="form-label" for="bookingTripSelect">Рейс</label>
-            <select class="form-select" id="bookingTripSelect" required>
-              <!-- Filled from active trips -->
-            </select>
+            <select class="form-select" id="bookingTripSelect" required></select>
           </div>
 
           <div class="form-row-2">
             <div class="form-group">
               <label class="form-label" for="bookingPassengerName">ФИО пассажира</label>
-              <input type="text" class="form-input" id="bookingPassengerName" placeholder="Иванов Иван Иванович" required>
+              <input type="text" class="form-input" id="bookingPassengerName" placeholder="Иванов Иван" required>
             </div>
             <div class="form-group">
-              <label class="form-label" for="bookingPassengerPhone">Номер телефона</label>
+              <label class="form-label" for="bookingPassengerPhone">Телефон</label>
               <input type="tel" class="form-input mono-cell" id="bookingPassengerPhone" placeholder="+375 29 123-45-67" required>
             </div>
           </div>
@@ -2361,12 +2612,12 @@
           <div class="form-row-2">
             <div class="form-group">
               <label class="form-label" for="bookingSeatNumber">Номер места (1–20)</label>
-              <input type="number" class="form-input mono-cell" id="bookingSeatNumber" min="1" max="20" value="7" required>
+              <input type="number" inputmode="numeric" class="form-input mono-cell" id="bookingSeatNumber" min="1" max="20" value="7" required>
             </div>
             <div class="form-group">
-              <label class="form-label" for="bookingPaymentMethod">Способ оплаты</label>
+              <label class="form-label" for="bookingPaymentMethod">Оплата</label>
               <select class="form-select" id="bookingPaymentMethod">
-                <option value="cash">Оплата водителю при посадке</option>
+                <option value="cash">Наличными водителю</option>
                 <option value="paid">Оплачено картой</option>
               </select>
             </div>
@@ -2381,30 +2632,9 @@
     </div>
   </div>
 
-  <!-- PRINT-ONLY PASSENGER MANIFEST AREA -->
-  <div id="print-manifest-area" style="display:none; padding: 40px; font-family: sans-serif;">
-    <h1 style="font-size: 24px; margin-bottom: 8px;">BusLiner — Посадочный манифест перевозчика</h1>
-    <p id="printManifestHeaderMeta" style="margin-bottom: 24px; color: #555;"></p>
-    <table style="width: 100%; border-collapse: collapse; text-align: left;" border="1" cellpadding="8">
-      <thead>
-        <tr>
-          <th>Место</th>
-          <th>ФИО Пассажира</th>
-          <th>Телефон</th>
-          <th>Билет</th>
-          <th>Оплата</th>
-          <th>Подпись о посадке</th>
-        </tr>
-      </thead>
-      <tbody id="printManifestTableBody"></tbody>
-    </table>
-  </div>
-
-  <!-- ==========================================================================
-       CLIENT-SIDE REACTIVE STORE & APPLICATION CONTROLLER
-       ========================================================================== -->
+  <!-- SCRIPT ENGINE -->
   <script>
-    /* INITIAL STATE SEED (SYNCHRONIZED WITH BUSLINER.DB) */
+    /* DATA SEED */
     const DEFAULT_TRIPS = [
       {
         id: "BL-5715",
@@ -2418,7 +2648,7 @@
         driver: "Александр (Смена 1)",
         capacity: 20,
         occupied: 18,
-        status: "in_route", // in_route, scheduled, completed, cancelled
+        status: "in_route",
         fare: 85.0
       },
       {
@@ -2499,15 +2729,15 @@
     ];
 
     const DEFAULT_BOOKINGS = [
-      { id: "TKT-8801", tripId: "BL-5715", name: "Сергей Володин", phone: "+375 29 412-88-01", seat: "04A", status: "boarded", payment: "paid", amount: 85.0 },
-      { id: "TKT-8802", tripId: "BL-5715", name: "Анна Смирнова", phone: "+375 29 301-44-12", seat: "04B", status: "boarded", payment: "paid", amount: 85.0 },
-      { id: "TKT-8803", tripId: "BL-5715", name: "Дмитрий Ковалев", phone: "+375 44 712-00-55", seat: "05A", status: "boarded", payment: "paid", amount: 85.0 },
-      { id: "TKT-8804", tripId: "BL-5715", name: "Ольга Малиновская", phone: "+375 33 618-92-31", seat: "05B", status: "pending", payment: "cash", amount: 85.0 },
-      { id: "TKT-8805", tripId: "BL-5715", name: "Виктор Баранов", phone: "+375 29 991-03-44", seat: "06A", status: "boarded", payment: "paid", amount: 85.0 },
-      { id: "TKT-8806", tripId: "BL-5715", name: "Елена Кузнецова", phone: "+375 44 554-11-22", seat: "06B", status: "boarded", payment: "paid", amount: 85.0 },
-      { id: "TKT-8807", tripId: "BL-5716", name: "Павел Громов", phone: "+375 29 881-22-33", seat: "02A", status: "pending", payment: "paid", amount: 25.0 },
-      { id: "TKT-8808", tripId: "BL-5716", name: "Наталья Рябова", phone: "+375 29 771-44-55", seat: "02B", status: "pending", payment: "cash", amount: 25.0 },
-      { id: "TKT-8809", tripId: "BL-5717", name: "Игорь Мельников", phone: "+375 44 112-99-88", seat: "01A", status: "pending", payment: "paid", amount: 32.0 }
+      { id: "TKT-8801", tripId: "BL-5715", name: "Сергей Володин", phone: "+375294128801", seat: "04A", status: "boarded", payment: "paid", amount: 85.0 },
+      { id: "TKT-8802", tripId: "BL-5715", name: "Анна Смирнова", phone: "+375293014412", seat: "04B", status: "boarded", payment: "paid", amount: 85.0 },
+      { id: "TKT-8803", tripId: "BL-5715", name: "Дмитрий Ковалев", phone: "+375447120055", seat: "05A", status: "boarded", payment: "paid", amount: 85.0 },
+      { id: "TKT-8804", tripId: "BL-5715", name: "Ольга Малиновская", phone: "+375336189231", seat: "05B", status: "pending", payment: "cash", amount: 85.0 },
+      { id: "TKT-8805", tripId: "BL-5715", name: "Виктор Баранов", phone: "+375299910344", seat: "06A", status: "boarded", payment: "paid", amount: 85.0 },
+      { id: "TKT-8806", tripId: "BL-5715", name: "Елена Кузнецова", phone: "+375445541122", seat: "06B", status: "boarded", payment: "paid", amount: 85.0 },
+      { id: "TKT-8807", tripId: "BL-5716", name: "Павел Громов", phone: "+375298812233", seat: "02A", status: "pending", payment: "paid", amount: 25.0 },
+      { id: "TKT-8808", tripId: "BL-5716", name: "Наталья Рябова", phone: "+375297714455", seat: "02B", status: "pending", payment: "cash", amount: 25.0 },
+      { id: "TKT-8809", tripId: "BL-5717", name: "Игорь Мельников", phone: "+375441129988", seat: "01A", status: "pending", payment: "paid", amount: 32.0 }
     ];
 
     const DEFAULT_SCHEDULE = [
@@ -2518,9 +2748,10 @@
       { time: "20:15", route: "Минск ➔ Брест", days: "Пт, Сб, Вс", vehicle: "Tourismo (3TAX-7740)", fare: "32 BYN", recurrence: "Сезонный" }
     ];
 
-    /* APP STORE INITIALIZATION */
+    /* APP STATE */
     let trips = JSON.parse(localStorage.getItem('busliner_trips') || JSON.stringify(DEFAULT_TRIPS));
     let bookings = JSON.parse(localStorage.getItem('busliner_bookings') || JSON.stringify(DEFAULT_BOOKINGS));
+    let userRole = localStorage.getItem('busliner_user_role') || 'carrier'; // 'carrier' or 'driver'
     let selectedTripIds = new Set();
     let currentFilterRoute = 'all';
     let currentFilterStatus = 'all';
@@ -2530,9 +2761,10 @@
     function saveStore() {
       localStorage.setItem('busliner_trips', JSON.stringify(trips));
       localStorage.setItem('busliner_bookings', JSON.stringify(bookings));
+      localStorage.setItem('busliner_user_role', userRole);
     }
 
-    /* TELEMETRY LIVE CLOCK */
+    /* TELEMETRY CLOCK */
     function updateClock() {
       const now = new Date();
       const h = String(now.getHours()).padStart(2, '0');
@@ -2544,61 +2776,85 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    /* SIDEBAR NAVIGATION & SCREEN ROUTING */
-    function switchScreen(screenId) {
-      document.querySelectorAll('.screen-pane').forEach(el => el.classList.remove('active-pane'));
-      document.querySelectorAll('.nav-item-btn').forEach(btn => btn.classList.remove('active'));
+    /* ROLE SWITCHER CONTROLLER (CARRIER ↔ DRIVER) */
+    function setUserRole(role) {
+      userRole = role;
+      saveStore();
 
-      const targetPane = document.getElementById(`screen-${screenId}`);
-      const targetNav = document.querySelector(`.nav-item-btn[data-screen="${screenId}"]`);
+      const btnCarrier = document.getElementById('btnRoleCarrier');
+      const btnDriver = document.getElementById('btnRoleDriver');
+      const sidebarBrandRole = document.getElementById('sidebarBrandRole');
+      const topBarRoleIndicator = document.getElementById('topBarRoleIndicator');
+      const mobileRoleBtn = document.getElementById('mobileRoleSwitchBtn');
+      const driverHeroBanner = document.getElementById('driverHeroBanner');
+      const profileAvatar = document.getElementById('profileAvatarMonogram');
+      const profileRoleBadge = document.getElementById('profileRoleBadgeText');
 
-      if (targetPane) targetPane.classList.add('active-pane');
-      if (targetNav) targetNav.classList.add('active');
-
-      const titleMap = {
-        dashboard: "Обзор показателей",
-        trips: "Управление рейсами",
-        schedule: "Сетка расписания",
-        bookings: "Реестр пассажиров и билетов",
-        finances: "Финансы и расчеты",
-        settings: "Автопарк и реквизиты"
-      };
-      document.getElementById('headerCrumbTitle').textContent = titleMap[screenId] || "Панель";
-      window.location.hash = screenId;
-    }
-
-    function toggleSidebarCollapse() {
-      const sidebar = document.getElementById('appSidebar');
-      const isCollapsed = sidebar.style.width === 'var(--sidebar-collapsed-width)';
-      sidebar.style.width = isCollapsed ? 'var(--sidebar-width)' : 'var(--sidebar-collapsed-width)';
-      document.querySelectorAll('.brand-text, .nav-item-btn span, .nav-badge, .nav-section-title, .carrier-meta').forEach(el => {
-        el.style.display = isCollapsed ? '' : 'none';
-      });
-    }
-
-    /* RENDER STATUS PILL HELPER */
-    function renderStatusPill(status) {
-      switch (status) {
-        case 'in_route':
-          return `<span class="status-pill status-forest-pill">В пути</span>`;
-        case 'scheduled':
-          return `<span class="status-pill status-sand-pill">Запланирован</span>`;
-        case 'completed':
-          return `<span class="status-pill status-blue-pill">Завершен</span>`;
-        case 'cancelled':
-          return `<span class="status-pill status-alert-pill">Отменен</span>`;
-        default:
-          return `<span class="status-pill status-sand-pill">${status}</span>`;
+      if (role === 'driver') {
+        if (btnCarrier) btnCarrier.classList.remove('active');
+        if (btnDriver) btnDriver.classList.add('active');
+        if (sidebarBrandRole) sidebarBrandRole.textContent = 'Пульт водителя';
+        if (topBarRoleIndicator) topBarRoleIndicator.textContent = 'Водитель на линии';
+        if (mobileRoleBtn) mobileRoleBtn.textContent = 'Режим: Водитель';
+        if (driverHeroBanner) driverHeroBanner.style.display = 'flex';
+        if (profileAvatar) profileAvatar.textContent = 'ВО';
+        if (profileRoleBadge) profileRoleBadge.textContent = 'Водитель • Рейс BL-5715';
+        showToast('Активирован мобильный пульт водителя', 'forest', 'Быстрая посадка и звонки пассажирам в 1 клик');
+      } else {
+        if (btnCarrier) btnCarrier.classList.add('active');
+        if (btnDriver) btnDriver.classList.remove('active');
+        if (sidebarBrandRole) sidebarBrandRole.textContent = 'Кабинет перевозчика';
+        if (topBarRoleIndicator) topBarRoleIndicator.textContent = 'Перевозчик';
+        if (mobileRoleBtn) mobileRoleBtn.textContent = 'Режим: Перевозчик';
+        if (driverHeroBanner) driverHeroBanner.style.display = 'none';
+        if (profileAvatar) profileAvatar.textContent = 'ПЕ';
+        if (profileRoleBadge) profileRoleBadge.textContent = 'Перевозчик • 3 микроавтобуса';
+        showToast('Активирован кабинет перевозчика', 'forest', 'Управление всеми рейсами, тарифами и финансами');
       }
     }
 
-    /* RENDER OCCUPANCY BAR HELPER */
+    function toggleMobileRole() {
+      setUserRole(userRole === 'carrier' ? 'driver' : 'carrier');
+    }
+
+    /* SCREEN SWITCHER */
+    function switchScreen(screenId) {
+      document.querySelectorAll('.screen-pane').forEach(el => el.classList.remove('active-pane'));
+      document.querySelectorAll('.nav-item-btn, .mobile-nav-btn').forEach(btn => btn.classList.remove('active'));
+
+      const targetPane = document.getElementById(`screen-${screenId}`);
+      if (targetPane) targetPane.classList.add('active-pane');
+
+      document.querySelectorAll(`[data-screen="${screenId}"]`).forEach(btn => btn.classList.add('active'));
+
+      const titleMap = {
+        dashboard: "Обзор",
+        trips: "Рейсы",
+        schedule: "Расписание",
+        bookings: "Пассажиры",
+        finances: "Финансы",
+        settings: "Автопарк"
+      };
+      document.getElementById('headerCrumbTitle').textContent = titleMap[screenId] || "Панель";
+      window.location.hash = screenId;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* STATUS PILL HELPER */
+    function renderStatusPill(status) {
+      switch (status) {
+        case 'in_route': return `<span class="status-pill status-forest-pill">В пути</span>`;
+        case 'scheduled': return `<span class="status-pill status-sand-pill">Запланирован</span>`;
+        case 'completed': return `<span class="status-pill status-blue-pill">Завершен</span>`;
+        case 'cancelled': return `<span class="status-pill status-alert-pill">Отменен</span>`;
+        default: return `<span class="status-pill status-sand-pill">${status}</span>`;
+      }
+    }
+
+    /* OCCUPANCY BAR HELPER */
     function renderOccupancy(occupied, capacity) {
       const pct = Math.round((occupied / capacity) * 100);
-      let fillClass = '';
-      if (pct >= 90) fillClass = 'full';
-      else if (pct >= 75) fillClass = 'high';
-
+      let fillClass = pct >= 90 ? 'full' : (pct >= 75 ? 'high' : '');
       return `
         <div class="occupancy-cell">
           <div class="occupancy-bar-bg">
@@ -2609,10 +2865,12 @@
       `;
     }
 
-    /* RENDER TRIPS TABLES */
+    /* RENDER TRIPS (TABLE FOR DESKTOP + TOUCH CARDS FOR MOBILE) */
     function renderTrips() {
       const tbody = document.getElementById('tripsTableBody');
+      const mobileFeed = document.getElementById('tripsMobileFeed');
       const upcomingTbody = document.getElementById('dashboardUpcomingTableBody');
+      const upcomingCards = document.getElementById('dashboardUpcomingMobileCards');
 
       let filtered = trips.filter(trip => {
         const matchesRoute = currentFilterRoute === 'all' || trip.route === currentFilterRoute;
@@ -2620,28 +2878,26 @@
         const matchesSearch = currentSearchTerm === '' ||
           trip.route.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
           trip.driver.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
-          trip.vehicle.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+          trip.plate.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
           trip.id.toLowerCase().includes(currentSearchTerm.toLowerCase());
         return matchesRoute && matchesStatus && matchesSearch;
       });
 
-      // Master Trips Table
+      // 1. Desktop Table
       tbody.innerHTML = filtered.map(trip => {
         const isSelected = selectedTripIds.has(trip.id);
         return `
           <tr class="${isSelected ? 'row-selected' : ''}" onclick="toggleTripSelect('${trip.id}', event)">
             <td class="col-check" onclick="event.stopPropagation()">
-              <input type="checkbox" class="table-checkbox trip-row-checkbox" data-id="${trip.id}" ${isSelected ? 'checked' : ''} onchange="handleTripCheckboxChange('${trip.id}', this.checked)">
+              <input type="checkbox" class="table-checkbox" ${isSelected ? 'checked' : ''} onchange="handleTripCheckboxChange('${trip.id}', this.checked)">
             </td>
             <td class="col-left mono-cell">
               <span class="time-slot-badge">${trip.time}</span>
               <span style="font-size:11px; color:var(--text-dim); margin-left:6px;">${trip.date}</span>
             </td>
             <td class="col-left">
-              <div class="route-cell-title">
-                ${trip.route.replace('—', '<span class="route-arrow">➔</span>')}
-              </div>
-              <div style="font-size: 11px; color: var(--text-muted);">${trip.id} • ${trip.origin}</div>
+              <div class="route-cell-title">${trip.route.replace('—', '<span class="route-arrow">➔</span>')}</div>
+              <div style="font-size:11px; color:var(--text-muted);">${trip.id} • ${trip.origin}</div>
             </td>
             <td class="col-left">
               <span>${trip.vehicle.split('(')[0].trim()}</span>
@@ -2652,28 +2908,53 @@
             <td class="col-center">${renderStatusPill(trip.status)}</td>
             <td class="col-right mono-cell" style="font-weight:700;">${trip.fare.toFixed(1)} BYN</td>
             <td class="col-right" onclick="event.stopPropagation()">
-              <div class="table-actions-group">
-                <button class="btn-action-icon" title="Открыть манифест и пассажиров" onclick="openTripDetails('${trip.id}')">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                </button>
-              </div>
+              <button class="btn-action-icon" title="Открыть посадку пассажиров" onclick="openTripDetails('${trip.id}')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
             </td>
           </tr>
         `;
       }).join('');
 
-      // Dashboard Upcoming departures table (top 4 upcoming/in_route)
+      // 2. Mobile Touch Cards
+      mobileFeed.innerHTML = filtered.map(trip => `
+        <div class="trip-mobile-card" onclick="openTripDetails('${trip.id}')">
+          <div class="trip-card-header">
+            <div>
+              <span class="trip-card-time">${trip.time}</span>
+              <span style="font-size:11px; color:var(--text-dim); margin-left:6px;">${trip.date}</span>
+              <div class="trip-card-route">${trip.route.replace('—', '➔')}</div>
+            </div>
+            <div>${renderStatusPill(trip.status)}</div>
+          </div>
+          <div class="trip-card-meta">
+            <span>${trip.vehicle.split('(')[0]}</span>
+            <span class="vehicle-cell-plate">${trip.plate}</span>
+            <span>•</span>
+            <span>${trip.driver}</span>
+          </div>
+          <div>${renderOccupancy(trip.occupied, trip.capacity)}</div>
+          <div class="trip-card-actions" onclick="event.stopPropagation()">
+            <button class="btn-mobile-board" onclick="openTripDetails('${trip.id}')">
+              Посадка (${trip.occupied}/${trip.capacity})
+            </button>
+            <button class="btn-mobile-status" onclick="cycleTripStatus('${trip.id}')">
+              Статус
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      // Dashboard Upcoming
       const upcoming = trips.filter(t => t.status === 'in_route' || t.status === 'scheduled').slice(0, 4);
       upcomingTbody.innerHTML = upcoming.map(trip => `
         <tr onclick="openTripDetails('${trip.id}')">
-          <td class="col-left mono-cell">
-            <span class="time-slot-badge">${trip.time}</span>
-          </td>
+          <td class="col-left mono-cell"><span class="time-slot-badge">${trip.time}</span></td>
           <td class="col-left">
-            <div class="route-cell-title">${trip.route.replace('—', '<span class="route-arrow">➔</span>')}</div>
+            <div class="route-cell-title">${trip.route.replace('—', '➔')}</div>
             <div style="font-size:11px; color:var(--text-muted);">${trip.origin}</div>
           </td>
           <td class="col-left">
@@ -2685,21 +2966,64 @@
           <td class="col-center">${renderStatusPill(trip.status)}</td>
           <td class="col-right" onclick="event.stopPropagation()">
             <button class="btn-secondary" style="font-size:12px; padding:5px 10px;" onclick="openTripDetails('${trip.id}')">
-              Манифест →
+              Посадка →
             </button>
           </td>
         </tr>
       `).join('');
 
-      // Update counters & badges
+      upcomingCards.innerHTML = upcoming.map(trip => `
+        <div class="trip-mobile-card" onclick="openTripDetails('${trip.id}')">
+          <div class="trip-card-header">
+            <div>
+              <span class="trip-card-time">${trip.time}</span>
+              <div class="trip-card-route">${trip.route.replace('—', '➔')}</div>
+            </div>
+            <div>${renderStatusPill(trip.status)}</div>
+          </div>
+          <div class="trip-card-meta">
+            <span>${trip.plate}</span> • <span>${trip.driver}</span>
+          </div>
+          <div>${renderOccupancy(trip.occupied, trip.capacity)}</div>
+          <div class="trip-card-actions" onclick="event.stopPropagation()">
+            <button class="btn-mobile-board" onclick="openTripDetails('${trip.id}')">
+              Посадка (${trip.occupied}/${trip.capacity})
+            </button>
+          </div>
+        </div>
+      `).join('');
+
       document.getElementById('badgeTripsToday').textContent = trips.length;
       document.getElementById('badgeActiveTrips').textContent = trips.filter(t => t.status === 'in_route' || t.status === 'scheduled').length;
       updateBulkFloatingBar();
     }
 
-    /* RENDER SCHEDULE TABLE */
+    function cycleTripStatus(tripId) {
+      const trip = trips.find(t => t.id === tripId);
+      if (!trip) return;
+      const order = ['scheduled', 'in_route', 'completed'];
+      const next = order[(order.indexOf(trip.status) + 1) % order.length];
+      trip.status = next;
+      saveStore();
+      renderTrips();
+      showToast(`Статус рейса ${trip.id} изменен на: ${next}`, 'forest');
+    }
+
+    function changeHeroTripStatus(status) {
+      const t = trips.find(x => x.id === 'BL-5715');
+      if (t) {
+        t.status = status;
+        saveStore();
+        renderTrips();
+        showToast('Статус текущего рейса обновлен', 'forest');
+      }
+    }
+
+    /* RENDER SCHEDULE */
     function renderSchedule() {
       const tbody = document.getElementById('scheduleTableBody');
+      const mobileFeed = document.getElementById('scheduleMobileFeed');
+
       tbody.innerHTML = DEFAULT_SCHEDULE.map(item => `
         <tr>
           <td class="col-left mono-cell"><span class="time-slot-badge">${item.time}</span></td>
@@ -2718,16 +3042,38 @@
           </td>
         </tr>
       `).join('');
+
+      mobileFeed.innerHTML = DEFAULT_SCHEDULE.map(item => `
+        <div class="trip-mobile-card">
+          <div class="trip-card-header">
+            <div>
+              <span class="trip-card-time">${item.time}</span>
+              <div class="trip-card-route">${item.route}</div>
+            </div>
+            <span class="status-pill status-forest-pill">${item.fare}</span>
+          </div>
+          <div class="trip-card-meta">
+            <span>${item.days}</span> • <span>${item.vehicle}</span>
+          </div>
+          <button class="btn-mobile-board" style="margin-top:4px;" onclick="cloneScheduleToTrip('${item.time}', '${item.route}')">
+            Добавить рейс на сегодня
+          </button>
+        </div>
+      `).join('');
     }
 
-    /* RENDER BOOKINGS TABLE */
+    /* RENDER BOOKINGS & PASSENGERS */
     function renderBookings(list = bookings) {
       const tbody = document.getElementById('bookingsTableBody');
+      const mobileFeed = document.getElementById('bookingsMobileFeed');
+
       tbody.innerHTML = list.map(b => `
         <tr>
           <td class="col-left mono-cell" style="font-weight:700; color:var(--accent-oxblood);">${b.id}</td>
           <td class="col-left"><strong>${b.name}</strong></td>
-          <td class="col-left mono-cell">${b.phone}</td>
+          <td class="col-left mono-cell">
+            <a href="tel:${b.phone}" style="color:inherit; text-decoration:none;">${b.phone}</a>
+          </td>
           <td class="col-left">Рейс ${b.tripId}</td>
           <td class="col-center mono-cell"><span class="vehicle-cell-plate" style="font-weight:700;">${b.seat}</span></td>
           <td class="col-center">
@@ -2736,11 +3082,39 @@
           <td class="col-right mono-cell" style="font-weight:700;">${b.amount.toFixed(1)} BYN</td>
           <td class="col-right">
             <button class="btn-checkin-toggle ${b.status === 'boarded' ? 'boarded' : ''}" onclick="toggleCheckin('${b.id}')">
-              ${b.status === 'boarded' ? '✓ Сел в салон' : 'Отметить посадку'}
+              ${b.status === 'boarded' ? '✓ В салоне' : 'Посадить'}
             </button>
           </td>
         </tr>
       `).join('');
+
+      mobileFeed.innerHTML = list.map(b => `
+        <div class="trip-mobile-card">
+          <div class="trip-card-header">
+            <div>
+              <div style="font-size: 15px; font-weight:700;">${b.name}</div>
+              <div style="font-size: 12px; color:var(--text-muted); font-family:var(--font-mono);">
+                Рейс ${b.tripId} • Место ${b.seat} • ${b.id}
+              </div>
+            </div>
+            <div>
+              ${b.payment === 'paid' ? '<span class="status-pill status-forest-pill">Оплачено</span>' : '<span class="status-pill status-sand-pill">Водителю</span>'}
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:4px;">
+            <a href="tel:${b.phone}" class="btn-mobile-status" style="display:inline-flex; align-items:center; gap:6px; text-decoration:none; padding: 0 12px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+              Позвонить
+            </a>
+            <button class="btn-mobile-board ${b.status === 'boarded' ? 'status-forest-pill' : ''}" style="flex:1; height:44px;" onclick="toggleCheckin('${b.id}')">
+              ${b.status === 'boarded' ? '✓ В салоне' : 'Отметить посадку'}
+            </button>
+          </div>
+        </div>
+      `).join('');
+
       document.getElementById('badgeTotalBookings').textContent = bookings.length;
     }
 
@@ -2755,7 +3129,7 @@
       renderBookings(filtered);
     }
 
-    /* FILTERING & SORTING LOGIC */
+    /* FILTERING & DEBOUNCED SEARCH */
     let tripSearchTimeout = null;
     function handleTripSearchDebounced(val) {
       clearTimeout(tripSearchTimeout);
@@ -2776,17 +3150,6 @@
         btn.classList.toggle('active', btn.getAttribute('data-status') === status);
       });
       renderTrips();
-    }
-
-    function resetTripFilters() {
-      currentFilterRoute = 'all';
-      currentFilterStatus = 'all';
-      currentSearchTerm = '';
-      document.getElementById('tripSearchInput').value = '';
-      document.getElementById('tripRouteFilter').value = 'all';
-      setTripStatusTab('all');
-      renderTrips();
-      showToast('Фильтры сброшены', 'forest');
     }
 
     let sortDirection = { time: 1, route: 1, occupancy: 1, fare: 1 };
@@ -2844,18 +3207,7 @@
       saveStore();
       renderTrips();
       clearTripSelection();
-      showToast(`Статус обновлен для выбранных рейсов`, 'forest');
-    }
-
-    function bulkCancelTrips() {
-      if (!confirm(`Вы действительно хотите отменить ${selectedTripIds.size} выбранных рейсов? Пассажиры получат уведомления об отмене.`)) return;
-      trips.forEach(t => {
-        if (selectedTripIds.has(t.id)) t.status = 'cancelled';
-      });
-      saveStore();
-      renderTrips();
-      clearTripSelection();
-      showToast('Выбранные рейсы отменены', 'alert');
+      showToast('Статус обновлен для выбранных рейсов', 'forest');
     }
 
     function bulkExportCSV() {
@@ -2872,7 +3224,7 @@
       const rows = [["ID", "Время", "Маршрут", "Водитель", "Автобус", "Занято", "Всего", "Статус"]];
       trips.forEach(t => rows.push([t.id, t.time, t.route, t.driver, t.plate, t.occupied, t.capacity, t.status]));
       downloadCSV("busliner_daily_manifest.csv", rows);
-      showToast('Дневной отчет выгружен в CSV', 'forest');
+      showToast('Ведомость дня выгружена в CSV', 'forest');
     }
 
     function downloadCSV(filename, rows) {
@@ -2886,7 +3238,7 @@
       document.body.removeChild(link);
     }
 
-    /* SLIDE-OUT FLYOUT DRAWER (TRIP DETAILS & 20-SEAT COCKPIT) */
+    /* SLIDE-OUT FLYOUT / MOBILE SHEET (BOARDING & MANIFEST) */
     function openTripDetails(tripId) {
       const trip = trips.find(t => t.id === tripId);
       if (!trip) return;
@@ -2894,9 +3246,9 @@
 
       document.getElementById('drawerTripRoute').innerHTML = trip.route.replace('—', '➔');
       document.getElementById('drawerTripSubtitle').textContent = `Рейс ${trip.id} • ${trip.time} • ${trip.vehicle} (${trip.plate})`;
-      document.getElementById('drawerOccupancyBadge').textContent = `${trip.occupied} из ${trip.capacity} мест занято`;
+      document.getElementById('drawerOccupancyBadge').textContent = `${trip.occupied} из ${trip.capacity} занято`;
 
-      // Render 20-seat cockpit layout
+      // 20-seat interactive cockpit
       const seatsGrid = document.getElementById('drawerSeatsGrid');
       const tripBookings = bookings.filter(b => b.tripId === trip.id);
       const bookedSeatNums = new Set(tripBookings.map(b => parseInt(b.seat.replace(/\D/g, '')) || 0));
@@ -2911,7 +3263,7 @@
       }
       seatsGrid.innerHTML = seatsHtml;
 
-      // Render passenger roster
+      // Passenger Roster with 1-tap call
       const rosterList = document.getElementById('drawerRosterList');
       const boardedCount = tripBookings.filter(b => b.status === 'boarded').length;
       document.getElementById('drawerBoardedCount').textContent = `${boardedCount} из ${tripBookings.length} сели`;
@@ -2925,9 +3277,16 @@
               <span class="roster-name">${b.name} <span class="vehicle-cell-plate">Место ${b.seat}</span></span>
               <span class="roster-phone">${b.phone} • Билет ${b.id}</span>
             </div>
-            <button class="btn-checkin-toggle ${b.status === 'boarded' ? 'boarded' : ''}" onclick="toggleCheckin('${b.id}')">
-              ${b.status === 'boarded' ? '✓ В салоне' : 'Посадить'}
-            </button>
+            <div class="roster-actions-box">
+              <a href="tel:${b.phone}" class="btn-call-passenger" title="Позвонить пассажиру">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+              </a>
+              <button class="btn-checkin-toggle ${b.status === 'boarded' ? 'boarded' : ''}" onclick="toggleCheckin('${b.id}')">
+                ${b.status === 'boarded' ? '✓ В салоне' : 'Посадить'}
+              </button>
+            </div>
           </div>
         `).join('');
       }
@@ -2948,34 +3307,16 @@
       saveStore();
       renderBookings();
       if (currentActiveTripForDrawer) openTripDetails(currentActiveTripForDrawer.id);
-      showToast(b.status === 'boarded' ? `Пассажир ${b.name} отмечен в салоне` : `Посадка пассажира ${b.name} отменена`, 'forest');
+      showToast(b.status === 'boarded' ? `Пассажир ${b.name} в салоне` : `Посадка пассажира ${b.name} отменена`, 'forest');
     }
 
     function printPassengerManifest() {
-      if (!currentActiveTripForDrawer) return;
-      const trip = currentActiveTripForDrawer;
-      const tripBookings = bookings.filter(b => b.tripId === trip.id);
-
-      document.getElementById('printManifestHeaderMeta').textContent = `Рейс ${trip.id} | ${trip.route} | Время: ${trip.time} | Автобус: ${trip.vehicle} (${trip.plate}) | Водитель: ${trip.driver}`;
-      const tbody = document.getElementById('printManifestTableBody');
-      tbody.innerHTML = tripBookings.map(b => `
-        <tr>
-          <td>${b.seat}</td>
-          <td>${b.name}</td>
-          <td>${b.phone}</td>
-          <td>${b.id}</td>
-          <td>${b.payment === 'paid' ? 'Оплачено' : 'При посадке'}</td>
-          <td>___________________</td>
-        </tr>
-      `).join('');
-
       window.print();
     }
 
-    /* MODAL WINDOWS: CREATE TRIP */
+    /* MODAL CREATE TRIP */
     function openModalCreateTrip() {
       loadCreateTripDraft();
-      // Set default tomorrow date if empty
       const dateInput = document.getElementById('tripDateInput');
       if (!dateInput.value) {
         const tomorrow = new Date();
@@ -2984,7 +3325,6 @@
       }
       const timeInput = document.getElementById('tripTimeInput');
       if (!timeInput.value) timeInput.value = "10:00";
-
       document.getElementById('modalCreateTripOverlay').classList.add('open');
     }
 
@@ -3074,10 +3414,10 @@
       saveStore();
       renderTrips();
       switchScreen('trips');
-      showToast(`Рейс ${newId} сформирован из шаблона расписания`, 'forest');
+      showToast(`Рейс ${newId} сформирован из расписания`, 'forest');
     }
 
-    /* MODAL WINDOWS: MANUAL BOOKING */
+    /* MODAL MANUAL BOOKING */
     function openModalAddBooking() {
       const sel = document.getElementById('bookingTripSelect');
       sel.innerHTML = trips.filter(t => t.status === 'scheduled' || t.status === 'in_route').map(t => `
@@ -3133,7 +3473,6 @@
         <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <circle cx="12" cy="12" r="10" />
           <line x1="12" y1="8" x2="12" y2="12" />
-          <line x1="12" y1="16" x2="12.01" y2="16" />
         </svg>
       `;
 
@@ -3151,7 +3490,7 @@
 
       setTimeout(() => {
         card.classList.remove('show');
-        setTimeout(() => card.remove(), 300);
+        setTimeout(() => card.remove(), 250);
       }, 3500);
     }
 
@@ -3165,11 +3504,12 @@
       }
     });
 
-    /* INITIAL BOOT */
+    /* BOOT */
     window.addEventListener('DOMContentLoaded', () => {
       renderTrips();
       renderSchedule();
       renderBookings();
+      setUserRole(userRole);
 
       const hash = window.location.hash.replace('#', '');
       if (hash && document.getElementById(`screen-${hash}`)) {
