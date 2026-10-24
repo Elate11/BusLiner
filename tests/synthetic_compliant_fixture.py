@@ -32,15 +32,12 @@ SYNTHETIC_COMPLIANT_HTML = """<!DOCTYPE html>
       /* Deep Prestige Accents */
       --color-forest: #23312A;
       --color-forest-surface: #2C3E35;
-      --color-oxblood: #5C2E2E;
-      --color-oxblood-surface: #4B2424;
       --color-graphite: #2B2A28;
       --color-graphite-dark: #1E1D1B;
 
       /* Semantic Status */
       --status-forest: #23312A;
       --status-forest-bg: #EAEFEA;
-      --accent-oxblood: #5C2E2E;
 
       /* Typography */
       --font-display: 'Cormorant Garamond', Garamond, Georgia, serif;
@@ -84,6 +81,11 @@ SYNTHETIC_COMPLIANT_HTML = """<!DOCTYPE html>
       -webkit-font-smoothing: antialiased;
     }
 
+    /* Driver Role Restrictions: Carrier-Only actions strictly hidden */
+    body.role-driver .carrier-only-action {
+      display: none !important;
+    }
+
     /* iOS Auto-Zoom Prevention */
     input, select, textarea {
       font-size: 16px !important;
@@ -105,7 +107,7 @@ SYNTHETIC_COMPLIANT_HTML = """<!DOCTYPE html>
       font-family: var(--font-display);
       font-style: italic;
       font-weight: 400;
-      color: var(--color-oxblood);
+      color: var(--color-forest);
     }
 
     /* Monospace Telemetry & Tracking */
@@ -550,6 +552,21 @@ SYNTHETIC_COMPLIANT_HTML = """<!DOCTYPE html>
       <input type="tel" id="bookingPhone" value="+375291112233">
     </div>
 
+    <!-- Carrier Only Ticket Actions (Hidden in Driver Mode) -->
+    <div class="carrier-only-action" id="carrierTicketActions" style="margin: 16px 0;">
+      <button class="btn-create-trip-primary carrier-only-action" id="btnAddBookingTrigger" onclick="openModalAddBooking()">
+        + Оформить билет
+      </button>
+      <button class="btn-create-trip-primary carrier-only-action" id="btnCreateTripTrigger" onclick="openModalCreateTrip()">
+        + Создать рейс
+      </button>
+    </div>
+
+    <!-- Ticket & Passenger Search Input (Driver & Carrier) -->
+    <div class="search-input-wrapper" style="margin: 16px 0;">
+      <input type="text" class="input-clean" id="bookingSearchInput" placeholder="Поиск по билету, имени, телефону..." oninput="filterBookingsList(this.value)">
+    </div>
+
     <!-- Manifest Bottom Sheet / Flyout Drawer -->
     <div class="flyout-drawer" id="tripDetailsDrawer" style="display: none;">
       <div class="drawer-sheet-grabber-bar">
@@ -661,7 +678,7 @@ SYNTHETIC_COMPLIANT_HTML = """<!DOCTYPE html>
                 </svg>
               </a>
               <button class="btn-checkin-toggle ${isBoarded ? 'boarded' : ''}" onclick="toggleCheckin('${b.id}')">
-                ${isBoarded ? '✓ В салоне' : 'Посадить'}
+                ${isBoarded ? '✓ В салоне • Билет принят' : 'Принять билет / Посадить'}
               </button>
             </div>
           </div>
@@ -705,6 +722,27 @@ SYNTHETIC_COMPLIANT_HTML = """<!DOCTYPE html>
       userRole = role;
       const banner = document.getElementById('driverHeroBanner');
       if (banner) banner.style.display = 'flex';
+      if (typeof document !== 'undefined' && document.body && document.body.classList) {
+        if (role === 'driver') {
+          document.body.classList.add('role-driver');
+          document.body.classList.remove('role-carrier');
+          if (typeof document.querySelectorAll === 'function') {
+            document.querySelectorAll('.carrier-only-action').forEach(el => { el.style.display = 'none'; });
+          }
+        } else {
+          document.body.classList.remove('role-driver');
+          document.body.classList.add('role-carrier');
+          if (typeof document.querySelectorAll === 'function') {
+            document.querySelectorAll('.carrier-only-action').forEach(el => { el.style.display = ''; });
+          }
+        }
+      }
+    }
+
+    function filterBookingsList(query) {
+      if (!query) return bookings;
+      const q = query.toLowerCase();
+      return bookings.filter(b => b.name.toLowerCase().includes(q) || b.id.toLowerCase().includes(q) || b.phone.includes(q));
     }
 
     function copyIbanToClipboard() {

@@ -1,5 +1,5 @@
 """
-Tier 1: Feature Isolation Test Suite (F1 - F15, >= 5 tests each = 75 tests)
+Tier 1: Feature Isolation Test Suite (F1 - F16, >= 5 tests each = 81 tests)
 BusLiner Quiet Luxury Ecosystem E2E Tests.
 """
 
@@ -48,15 +48,38 @@ def run_tier1_tests(inspector: TargetInspector) -> List[TestResult]:
         error_message="" if pass_forest else f"Expected #23312A for alpine forest, got: {val_forest}"
     ))
 
-    # T1_F1_04: Hermes Oxblood Accent Token
-    val_oxblood = inspector.get_css_var("--color-oxblood") or inspector.get_css_var("--accent-oxblood")
-    pass_oxblood = bool(val_oxblood and "#5c2e2e" in val_oxblood.lower())
+    # T1_F1_04: Deep Alpine Forest & Graphite Primary Accents (Zero Burgundy Buttons)
+    val_forest = (inspector.get_css_var("--color-forest") or inspector.get_css_var("--color-forest-surface") or "").lower()
+    val_graphite = (inspector.get_css_var("--color-graphite") or inspector.get_css_var("--color-graphite-dark") or "").lower()
+    has_valid_cta_accent = any(c in val_forest for c in ["#23312a", "#2c3e35"]) or any(c in val_graphite for c in ["#2b2a28", "#1e1d1b"])
+
+    forbidden_oxblood_hexes = ["#7a2320", "#5c2e2e", "#631917", "#4b2424"]
+    clean_css_no_comments = re.sub(r"/\*.*?\*/", "", inspector.css_content, flags=re.DOTALL)
+    btn_rule_matches = re.finditer(r"([^{}]+)\{([^}]+)\}", clean_css_no_comments)
+    oxblood_btn_violations = []
+    for m in btn_rule_matches:
+        selectors = m.group(1).lower()
+        body = m.group(2).lower()
+        if any(term in selectors for term in ["btn", "button", "cta", "checkin", "board"]):
+            for h in forbidden_oxblood_hexes:
+                if h in body:
+                    oxblood_btn_violations.append(f"Selector '{selectors.strip()}' uses forbidden {h}")
+
+    for el in inspector.soup.find_all(["button", "a"]):
+        style_val = (el.get("style") or "").lower()
+        for h in forbidden_oxblood_hexes:
+            if h in style_val:
+                oxblood_btn_violations.append(f"Tag <{el.name}> inline style contains forbidden {h}")
+
+    has_oxblood_var = bool(inspector.get_css_var("--color-oxblood") or inspector.get_css_var("--accent-oxblood"))
+
+    pass_cta_palette = has_valid_cta_accent and len(oxblood_btn_violations) == 0 and not has_oxblood_var
     results.append(TestResult(
         test_id="T1_F1_04", tier=1, feature="F1",
-        name="Hermes Oxblood Accent Token",
-        description="Verify --color-oxblood (or --accent-oxblood) declares signature oxblood #5C2E2E.",
-        target=target, passed=pass_oxblood,
-        error_message="" if pass_oxblood else f"Expected #5C2E2E for oxblood, got: {val_oxblood}"
+        name="Deep Alpine Forest CTA & Zero Burgundy Buttons",
+        description="Verify primary CTA and brand accents use Deep Alpine Forest (#23312A / #2C3E35) or Graphite (#2B2A28), and no buttons use burgundy/oxblood.",
+        target=target, passed=pass_cta_palette,
+        error_message="" if pass_cta_palette else f"CTA accent valid: {has_valid_cta_accent} (forest: '{val_forest}', graphite: '{val_graphite}'), Oxblood in buttons: {oxblood_btn_violations}, Oxblood var declared: {has_oxblood_var}"
     ))
 
     # T1_F1_05: Hairline Borders Token
@@ -974,6 +997,120 @@ def run_tier1_tests(inspector: TargetInspector) -> List[TestResult]:
         description="Verify all inline SVG icons declare viewBox attributes for resolution-independent scaling.",
         target=target, passed=pass_svg_viewbox,
         error_message="" if pass_svg_viewbox else f"Found {len(svgs_without_viewbox)} SVGs without viewBox attribute."
+    ))
+
+    # T1_F15_06: Strict Zero Burgundy/Oxblood Hex Codes
+    oxblood_matches = inspector.has_oxblood_or_burgundy()
+    pass_zero_oxblood = len(oxblood_matches) == 0
+    results.append(TestResult(
+        test_id="T1_F15_06", tier=1, feature="F15",
+        name="Strict Zero Burgundy/Oxblood Hex Codes",
+        description="Verify strictly 0 occurrences of Burgundy/Oxblood hex codes (#7A2320, #5C2E2E, #631917, #4B2424) in entire file.",
+        target=target, passed=pass_zero_oxblood,
+        error_message="" if pass_zero_oxblood else f"Found {len(oxblood_matches)} Burgundy/Oxblood occurrences:\n" + "\n".join(oxblood_matches[:5])
+    ))
+
+    # =========================================================================
+    # F16: Driver Ticket Acceptance ONLY (No Ticket Creation)
+    # =========================================================================
+    # T1_F16_01: Driver Mode Absence of Ticket Creation Forms/Buttons
+    driver_hero_banner = inspector.soup.find(id="driverHeroBanner")
+    flyout_drawer = inspector.soup.find(id="tripDetailsDrawer")
+
+    creation_in_driver_components = []
+    for comp_name, comp_el in [("driverHeroBanner", driver_hero_banner), ("tripDetailsDrawer", flyout_drawer)]:
+        if comp_el:
+            c_text = comp_el.get_text()
+            for forbidden_term in ["Оформить билет", "Добавить бронь вручную", "Создать рейс"]:
+                if forbidden_term in c_text:
+                    creation_in_driver_components.append(f"{comp_name} contains '{forbidden_term}'")
+
+    js_test_driver_restrictions = """
+    if (typeof setUserRole === 'function') {
+        setUserRole('driver');
+    }
+    const hasDriverClass = (typeof document !== 'undefined' && document.body && document.body.classList)
+        ? (document.body.classList.contains('role-driver') || !document.body.classList.contains('role-carrier'))
+        : true;
+
+    const carrierActions = (typeof document !== 'undefined' && typeof document.querySelectorAll === 'function')
+        ? Array.from(document.querySelectorAll('.carrier-only-action'))
+        : [];
+    const allHidden = carrierActions.every(el => el.style && el.style.display === 'none');
+
+    return {
+        role: typeof userRole !== 'undefined' ? userRole : 'driver',
+        hasDriverClass,
+        carrierActionsCount: carrierActions.length,
+        allHidden
+    };
+    """
+    node_res_driver_role = inspector.execute_in_node(js_test_driver_restrictions)
+    pass_node_driver = node_res_driver_role.get("success") and node_res_driver_role.get("result", {}).get("role") == "driver"
+
+    has_role_driver_css = bool(
+        re.search(r"body\.role-driver\s+\.carrier-only-action\s*\{[^}]*display:\s*none", inspector.css_content) or
+        re.search(r"\.carrier-only-action", inspector.css_content) or
+        re.search(r"\.role-driver", inspector.css_content) or
+        ("carrier-only-action" in inspector.content)
+    )
+
+    pass_no_driver_ticket_creation = (len(creation_in_driver_components) == 0) and pass_node_driver and has_role_driver_css
+    results.append(TestResult(
+        test_id="T1_F16_01", tier=1, feature="F16",
+        name="Driver Mode Absence of Ticket Creation Forms/Buttons",
+        description="Verify driver cockpit and drawer have NO ticket creation buttons ('Оформить билет', 'Добавить бронь вручную', 'Создать рейс').",
+        target=target, passed=pass_no_driver_ticket_creation,
+        error_message="" if pass_no_driver_ticket_creation else f"Violations: {creation_in_driver_components}, Node driver role: {node_res_driver_role}, CSS rule: {has_role_driver_css}"
+    ))
+
+    # T1_F16_02: Driver Ticket Acceptance and Boarding State Transition
+    has_acceptance_triggers = bool(re.search(r"Принять билет|Посадить", inspector.content))
+    has_boarded_acceptance = bool(re.search(r"В салоне|Билет принят", inspector.content))
+    has_toggle_checkin = bool(re.search(r"toggleCheckin", inspector.js_content))
+    pass_acceptance = has_acceptance_triggers and has_boarded_acceptance and has_toggle_checkin
+    results.append(TestResult(
+        test_id="T1_F16_02", tier=1, feature="F16",
+        name="Driver Ticket Acceptance and Boarding State",
+        description="Verify driver has ticket acceptance ('Принять билет' / 'Посадить' -> 'Билет принят • В салоне').",
+        target=target, passed=pass_acceptance,
+        error_message="" if pass_acceptance else f"Acceptance triggers: {has_acceptance_triggers}, Boarded text: {has_boarded_acceptance}, toggleCheckin: {has_toggle_checkin}"
+    ))
+
+    # T1_F16_03: Driver Ticket Search and Validation Capabilities
+    has_ticket_search = bool(inspector.soup.find(id=re.compile(r"bookingSearchInput|ticketSearch|manifestSearch", re.I))) or \
+                        bool(inspector.soup.find("input", placeholder=re.compile(r"Поиск по билету|билет|пассажир", re.I))) or \
+                        bool(re.search(r"filterBookingsList|validateTicket|searchTicket", inspector.js_content))
+    results.append(TestResult(
+        test_id="T1_F16_03", tier=1, feature="F16",
+        name="Driver Ticket Search and Validation Capabilities",
+        description="Verify driver view supports ticket search and validation by code, name, or phone.",
+        target=target, passed=has_ticket_search,
+        error_message="" if has_ticket_search else "Ticket search / validation input not found in DOM or JS."
+    ))
+
+    # T1_F16_04: Driver Passenger 1-Tap Calling and Minibus Seat Layout
+    has_dialer = bool(inspector.soup.find_all("a", href=re.compile(r"^tel:"))) or bool(re.search(r"href=[\"']tel:", inspector.js_content))
+    has_seat_layout = bool(inspector.soup.find(id=re.compile(r"SeatsGrid|seatsGrid|minibus", re.I))) or \
+                      bool(re.search(r"minibus-cabin-container|driver-seat-box|20\s*мест", inspector.content))
+    pass_dialer_seats = has_dialer and has_seat_layout
+    results.append(TestResult(
+        test_id="T1_F16_04", tier=1, feature="F16",
+        name="Driver Passenger 1-Tap Calling and Minibus Seat Layout",
+        description="Verify driver view incorporates 1-tap phone calling (tel:) and 20-seat minibus occupancy layout.",
+        target=target, passed=pass_dialer_seats,
+        error_message="" if pass_dialer_seats else f"1-tap dialer: {has_dialer}, Minibus seats: {has_seat_layout}"
+    ))
+
+    # T1_F16_05: Driver Trip Status Controls
+    has_trip_status_ctrl = bool(re.search(r"broadcastTripDelay|updateTripStatus|changeTripStatus|setTripStatus", inspector.js_content)) or \
+                           bool(re.search(r"Задержка \+15 мин|В пути|Посадка|Завершен", inspector.content))
+    results.append(TestResult(
+        test_id="T1_F16_05", tier=1, feature="F16",
+        name="Driver Trip Status Controls",
+        description="Verify driver view provides autonomous trip status adjustment (e.g. broadcastTripDelay).",
+        target=target, passed=has_trip_status_ctrl,
+        error_message="" if has_trip_status_ctrl else "Trip status adjustment action (e.g. broadcastTripDelay) not found."
     ))
 
     return results

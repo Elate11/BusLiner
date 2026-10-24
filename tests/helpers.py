@@ -182,6 +182,18 @@ class TargetInspector:
 
         return violations
 
+    def has_oxblood_or_burgundy(self) -> List[str]:
+        """Strict check for any occurrence of forbidden Burgundy/Oxblood hex codes."""
+        violations = []
+        forbidden_hexes = [r"#7a2320\b", r"#5c2e2e\b", r"#631917\b", r"#4b2424\b"]
+        for pattern in forbidden_hexes:
+            for m in re.finditer(pattern, self.content, re.IGNORECASE):
+                start = max(0, m.start() - 30)
+                end = min(len(self.content), m.end() + 30)
+                snippet = self.content[start:end].replace("\n", " ").strip()
+                violations.append(f"Forbidden oxblood hex '{m.group(0)}': ...{snippet}...")
+        return violations
+
     def has_square_brackets_in_ui(self) -> List[str]:
         """Check for square brackets [...] in visible UI copy."""
         violations = []
@@ -265,7 +277,16 @@ class TargetInspector:
                     appendChild: () => {{}},
                     setAttribute: () => {{}}
                 }}),
-                body: {{ appendChild: () => {{}}, style: {{}} }}
+                body: {{
+                    appendChild: () => {{}},
+                    style: {{}},
+                    classList: {{
+                        add: () => {{}},
+                        remove: () => {{}},
+                        contains: () => false,
+                        toggle: () => {{}}
+                    }}
+                }}
             }};
 
             global.setInterval = () => {{}};

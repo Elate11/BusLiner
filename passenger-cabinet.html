@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="theme-color" content="#F5F1EA">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Кабинет пассажира — BusLiner</title>
+
+  <!-- FONTS: Cormorant Garamond + Plus Jakarta Sans + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       BUSLINER PASSENGER CABINET // QUIET LUXURY TOKENS
+       Aesthetic: Loro Piana / Bottega Veneta / Apple level craft
+       Palette: Warm Ivory, Bone, Alpine Forest (#23312A), Graphite (#2B2A28)
+       Zero Burgundy, Zero <img> tags, Zero [...] brackets in visible UI
+       ========================================================================== */
+    :root {
+      --canvas-ivory: #F5F1EA;
+      --canvas-bone: #E8E2D6;
+      --canvas-sand: #D9CDB8;
+      --canvas-stone: #CEBEA5;
+
+      --color-forest: #23312A;
+      --color-forest-surface: #2C3E35;
+      --color-graphite: #2B2A28;
+      --color-graphite-dark: #1E1D1B;
+      --color-terracotta: #A8674F;
+      --color-dusty-blue: #6E8294;
+
+      --surface-card: #FBF9F5;
+      --surface-subtle: #E8E2D6;
+      --surface-elevated: #F5F1EA;
+
+      --border-hairline: rgba(184, 169, 154, 0.42);
+      --border-taupe: #B8A99A;
+      --border-dark: rgba(245, 241, 234, 0.16);
+
+      --text-primary: #2B2A28;
+      --text-muted: #5C5852;
+      --text-dim: #8A847C;
+      --text-light-primary: #F5F1EA;
+      --text-light-muted: #C8C2B7;
+
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 14px;
+      --radius-pill: 9999px;
+
+      --ease-drive: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-snappy: cubic-bezier(0.4, 0, 0.2, 1);
+
+      --font-display: 'Cormorant Garamond', Garamond, Georgia, serif;
+      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100dvh;
+      background: var(--canvas-ivory);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      overscroll-behavior: none;
+    }
+
+    button, a, [role="button"], .tappable {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+
+    /* TACTILE PAPER GRAIN TEXTURE */
+    .paper-noise-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 99999;
+      opacity: 0.038;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* TOP HEADER */
+    header.passenger-header {
+      height: 70px;
+      background: var(--surface-card);
+      border-bottom: 1px solid var(--border-hairline);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .brand-mark-box {
+      width: 36px;
+      height: 36px;
+      background: var(--color-forest);
+      color: #F5F1EA;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .brand-title-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+
+    .brand-sub {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-forest);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .passenger-miles-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      background: var(--canvas-bone);
+      border: 1px solid var(--border-taupe);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--color-forest);
+    }
+
+    .btn-return-showcase {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: var(--color-forest);
+      color: #F5F1EA;
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+    .btn-return-showcase:hover {
+      background: var(--color-forest-surface);
+    }
+
+    /* MAIN CONTAINER */
+    main.cabinet-main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 28px 20px calc(80px + env(safe-area-inset-bottom, 0px));
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* SCREEN TABS (DESKTOP) */
+    .cabinet-tabs-bar {
+      display: flex;
+      gap: 8px;
+      background: var(--canvas-bone);
+      padding: 4px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-hairline);
+      overflow-x: auto;
+    }
+
+    .cabinet-tab-btn {
+      padding: 10px 18px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: all 0.18s;
+    }
+    .cabinet-tab-btn.active {
+      background: var(--color-forest);
+      color: #F5F1EA;
+      box-shadow: 0 2px 8px rgba(35, 49, 42, 0.2);
+    }
+
+    /* PANES */
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.25s var(--ease-drive) forwards;
+    }
+    .tab-pane.active-pane {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ACTIVE JOURNEY CARD (EDITORIAL BOARDING PASS) */
+    .journey-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 30px -10px rgba(43, 42, 40, 0.06);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .journey-header {
+      background: var(--color-forest);
+      color: #F5F1EA;
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .journey-badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 11.5px;
+      font-family: var(--font-mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #76C893;
+      animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .journey-ticket-code {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    .journey-body {
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 28px;
+    }
+
+    .journey-route-block {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .route-points-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .point-box h3 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.1;
+    }
+    .point-station {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .point-time {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-forest);
+      margin-top: 2px;
+    }
+
+    .route-path-divider {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 0 10px;
+    }
+
+    .path-arrow-line {
+      width: 100%;
+      height: 1px;
+      background: var(--border-taupe);
+      position: relative;
+    }
+    .path-arrow-line::after {
+      content: '➔';
+      position: absolute;
+      right: -4px;
+      top: -8px;
+      color: var(--color-forest);
+      font-size: 12px;
+    }
+
+    .path-duration {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .journey-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      padding-top: 18px;
+      border-top: 1px dashed var(--border-hairline);
+    }
+
+    .meta-box span {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      font-weight: 700;
+    }
+    .meta-box p {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 2px;
+    }
+
+    /* QR PASS SIDE PANEL */
+    .journey-qr-side {
+      background: var(--canvas-ivory);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 12px;
+    }
+
+    .qr-svg-frame {
+      width: 140px;
+      height: 140px;
+      background: #FBF9F5;
+      padding: 8px;
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qr-label-note {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .journey-footer {
+      padding: 16px 28px;
+      background: var(--canvas-bone);
+      border-top: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .driver-contact-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .btn-driver-call {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: var(--surface-card);
+      border: 1px solid var(--border-taupe);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .btn-driver-call:hover {
+      background: var(--color-forest);
+      color: #F5F1EA;
+      border-color: var(--color-forest);
+    }
+
+    /* LOYALTY CARD (ALPINE FOREST CARD) */
+    .loyalty-banner-card {
+      background: var(--color-forest);
+      color: #F5F1EA;
+      border-radius: var(--radius-md);
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+      box-shadow: 0 12px 36px -10px rgba(35, 49, 42, 0.25);
+    }
+
+    .loyalty-info h2 {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 500;
+      line-height: 1.15;
+    }
+    .loyalty-info h2 em {
+      font-style: italic;
+      color: #D9CDB8;
+    }
+    .loyalty-info p {
+      font-size: 13.5px;
+      color: var(--text-light-muted);
+      margin-top: 6px;
+      max-width: 520px;
+    }
+
+    .loyalty-balance-box {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius-sm);
+      padding: 20px 28px;
+      text-align: center;
+      min-width: 200px;
+    }
+
+    .balance-number {
+      font-family: var(--font-mono);
+      font-size: 38px;
+      font-weight: 700;
+      color: #F5F1EA;
+      line-height: 1;
+    }
+    .balance-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #D9CDB8;
+      margin-top: 6px;
+      font-weight: 700;
+    }
+
+    /* HISTORY LIST */
+    .history-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .history-item {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-title {
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .history-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .btn-repeat-trip {
+      padding: 8px 14px;
+      background: var(--canvas-bone);
+      border: 1px solid var(--border-taupe);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn-repeat-trip:hover {
+      background: var(--color-forest);
+      color: #F5F1EA;
+    }
+
+    /* MOBILE BOTTOM THUMB BAR */
+    .mobile-bottom-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: calc(60px + env(safe-area-inset-bottom, 0px));
+      background: var(--surface-card);
+      border-top: 1px solid var(--border-hairline);
+      z-index: 1000;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .mobile-nav-grid {
+      display: flex;
+      height: 60px;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    .m-nav-btn {
+      flex: 1;
+      height: 100%;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .m-nav-btn.active {
+      color: var(--color-forest);
+    }
+    .m-nav-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .journey-body {
+        grid-template-columns: 1fr;
+      }
+      .cabinet-tabs-bar {
+        display: none;
+      }
+      .mobile-bottom-bar {
+        display: block;
+      }
+      header.passenger-header {
+        padding: 0 16px;
+      }
+      main.cabinet-main {
+        padding: 16px 14px calc(76px + env(safe-area-inset-bottom, 0px));
+      }
+      .journey-meta-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .point-box h3 {
+        font-size: 22px;
+      }
+      .loyalty-banner-card {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TACTILE PAPER GRAIN OVERLAY -->
+  <div class="paper-noise-canvas" aria-hidden="true"></div>
+
+  <!-- PASSENGER HEADER -->
+  <header class="passenger-header">
+    <a href="index.html" class="header-brand">
+      <div class="brand-mark-box">B</div>
+      <div class="brand-title-meta">
+        <span class="brand-title">BusLiner</span>
+        <span class="brand-sub">Личный кабинет</span>
+      </div>
+    </a>
+
+    <div class="header-right">
+      <div class="passenger-miles-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+        </svg>
+        <span>100 миль</span>
+      </div>
+
+      <a href="index.html" class="btn-return-showcase">
+        Поиск рейса
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN CABINET -->
+  <main class="cabinet-main">
+
+    <!-- DESKTOP TABS -->
+    <nav class="cabinet-tabs-bar">
+      <button class="cabinet-tab-btn active" data-tab="active-trip" onclick="switchCabinetTab('active-trip')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+        Мой рейс
+      </button>
+
+      <button class="cabinet-tab-btn" data-tab="loyalty" onclick="switchCabinetTab('loyalty')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <polygon points="12 6 13.5 10 18 10 14.5 13 16 17 12 14.5 8 17 9.5 13 6 10 10.5 10 12 6" />
+        </svg>
+        Бонусы (Miles)
+      </button>
+
+      <button class="cabinet-tab-btn" data-tab="history" onclick="switchCabinetTab('history')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 14 14" />
+        </svg>
+        История поездок
+      </button>
+
+      <button class="cabinet-tab-btn" data-tab="profile" onclick="switchCabinetTab('profile')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+        Профиль
+      </button>
+    </nav>
+
+    <!-- TAB 1: ACTIVE TRIP & BOARDING PASS -->
+    <div class="tab-pane active-pane" id="pane-active-trip">
+      <div class="journey-card">
+        <div class="journey-header">
+          <div class="journey-badge-live">
+            <span class="live-dot"></span>
+            <span>Автобус на перроне • Посадка открыта</span>
+          </div>
+          <div class="journey-ticket-code">Электронный билет: BL-5715</div>
+        </div>
+
+        <div class="journey-body">
+          <div class="journey-route-block">
+            <div class="route-points-row">
+              <div class="point-box">
+                <span style="font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:700;">Отправление</span>
+                <h3>Минск</h3>
+                <div class="point-station">Центральный АВ • Перрон 3</div>
+                <div class="point-time">18:45</div>
+              </div>
+
+              <div class="route-path-divider">
+                <span class="path-duration">3 ч 30 мин</span>
+                <div class="path-arrow-line"></div>
+                <span style="font-size:10px; color:var(--text-dim);">Прямой VIP</span>
+              </div>
+
+              <div class="point-box" style="text-align: right;">
+                <span style="font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:700;">Прибытие</span>
+                <h3>Вильнюс</h3>
+                <div class="point-station">Оро уостас (Аэропорт)</div>
+                <div class="point-time">22:15</div>
+              </div>
+            </div>
+
+            <div class="journey-meta-grid">
+              <div class="meta-box">
+                <span>Ваше место</span>
+                <p style="font-size: 16px; color: var(--color-forest);">04A (Окно)</p>
+              </div>
+              <div class="meta-box">
+                <span>Микроавтобус</span>
+                <p>Mercedes Sprinter</p>
+                <span style="font-family:var(--font-mono); font-size:11px;">7TAX-8891</span>
+              </div>
+              <div class="meta-box">
+                <span>Тариф & Оплата</span>
+                <p>85.0 BYN</p>
+                <span style="color:var(--color-forest); font-size:11px; font-weight:700;">Оплачено онлайн</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SVG BOARDING PASS QR CODE -->
+          <div class="journey-qr-side">
+            <div class="qr-svg-frame">
+              <svg width="124" height="124" viewBox="0 0 25 25" fill="none">
+                <!-- Procedural Clean SVG QR Matrix for Driver Scanning -->
+                <rect width="25" height="25" fill="#FBF9F5"/>
+                <!-- Position markers -->
+                <rect x="2" y="2" width="7" height="7" fill="#23312A"/>
+                <rect x="3" y="3" width="5" height="5" fill="#FBF9F5"/>
+                <rect x="4" y="4" width="3" height="3" fill="#23312A"/>
+
+                <rect x="16" y="2" width="7" height="7" fill="#23312A"/>
+                <rect x="17" y="3" width="5" height="5" fill="#FBF9F5"/>
+                <rect x="18" y="4" width="3" height="3" fill="#23312A"/>
+
+                <rect x="2" y="16" width="7" height="7" fill="#23312A"/>
+                <rect x="3" y="17" width="5" height="5" fill="#FBF9F5"/>
+                <rect x="4" y="18" width="3" height="3" fill="#23312A"/>
+
+                <!-- QR Data dots -->
+                <rect x="10" y="2" width="2" height="2" fill="#23312A"/>
+                <rect x="13" y="4" width="2" height="2" fill="#23312A"/>
+                <rect x="10" y="7" width="2" height="2" fill="#23312A"/>
+                <rect x="12" y="10" width="3" height="3" fill="#23312A"/>
+                <rect x="16" y="10" width="2" height="2" fill="#23312A"/>
+                <rect x="19" y="12" width="2" height="2" fill="#23312A"/>
+                <rect x="10" y="14" width="2" height="2" fill="#23312A"/>
+                <rect x="14" y="15" width="2" height="2" fill="#23312A"/>
+                <rect x="11" y="18" width="2" height="2" fill="#23312A"/>
+                <rect x="14" y="19" width="3" height="2" fill="#23312A"/>
+                <rect x="18" y="17" width="2" height="3" fill="#23312A"/>
+                <rect x="21" y="21" width="2" height="2" fill="#23312A"/>
+              </svg>
+            </div>
+            <span style="font-family:var(--font-mono); font-size:12px; font-weight:700;">BL-5715-04A</span>
+            <p class="qr-label-note">Покажите этот код водителю при входе в микроавтобус</p>
+          </div>
+        </div>
+
+        <div class="journey-footer">
+          <div class="driver-contact-pill">
+            <span>Водитель: Александр (Смена 1)</span>
+          </div>
+
+          <div style="display: flex; gap: 10px;">
+            <a href="tel:+375294128801" class="btn-driver-call">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              Позвонить водителю
+            </a>
+            <button class="btn-driver-call" onclick="window.print()">
+              Печать билета
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: BUSLINER MILES LOYALTY -->
+    <div class="tab-pane" id="pane-loyalty">
+      <div class="loyalty-banner-card">
+        <div class="loyalty-info">
+          <h2>BusLiner <em>Miles</em></h2>
+          <p>Накапливайте мили за каждый межгородской рейс и оплачивайте до 50% стоимости будущих поездок бизнес-классом.</p>
+        </div>
+        <div class="loyalty-balance-box">
+          <div class="balance-number">100</div>
+          <div class="balance-label">Активных миль</div>
+        </div>
+      </div>
+
+      <div class="history-card">
+        <div style="padding: 18px 24px; border-bottom: 1px solid var(--border-hairline); font-family: var(--font-display); font-size: 20px; font-weight: 600;">
+          История начислений
+        </div>
+        <div class="history-item">
+          <div>
+            <div class="history-title">+10 миль за регистрацию в Telegram-боте</div>
+            <div class="history-meta">18 октября 2026 • Приветственный бонус</div>
+          </div>
+          <span style="font-family:var(--font-mono); font-weight:700; color:var(--color-forest);">+10 миль</span>
+        </div>
+        <div class="history-item">
+          <div>
+            <div class="history-title">+90 миль за покупку билета Минск ➔ Вильнюс</div>
+            <div class="history-meta">23 октября 2026 • Рейс BL-5715</div>
+          </div>
+          <span style="font-family:var(--font-mono); font-weight:700; color:var(--color-forest);">+90 миль</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: PAST TRIPS HISTORY -->
+    <div class="tab-pane" id="pane-history">
+      <div class="history-card">
+        <div style="padding: 18px 24px; border-bottom: 1px solid var(--border-hairline); font-family: var(--font-display); font-size: 20px; font-weight: 600;">
+          Завершенные поездки
+        </div>
+        <div class="history-item">
+          <div>
+            <div class="history-title">Минск ➔ Гродно</div>
+            <div class="history-meta">14 октября 2026 • 20:00 • Место 02A • VW Crafter</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-family:var(--font-mono); font-weight:700;">25.0 BYN</span>
+            <a href="index.html" class="btn-repeat-trip">Повторить рейс</a>
+          </div>
+        </div>
+        <div class="history-item">
+          <div>
+            <div class="history-title">Минск ➔ Брест</div>
+            <div class="history-meta">02 октября 2026 • 15:30 • Место 05B • Tourismo</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-family:var(--font-mono); font-weight:700;">32.0 BYN</span>
+            <a href="index.html" class="btn-repeat-trip">Повторить рейс</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: PROFILE -->
+    <div class="tab-pane" id="pane-profile">
+      <div class="history-card" style="padding: 28px;">
+        <h2 style="font-family: var(--font-display); font-size: 26px; font-weight:600; margin-bottom: 20px;">
+          Данные <em>пассажира</em>
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+          <div>
+            <span style="font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:700;">Имя и Фамилия</span>
+            <p style="font-size:16px; font-weight:700; margin-top:4px;">Александр</p>
+          </div>
+          <div>
+            <span style="font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:700;">Телефон</span>
+            <p style="font-family:var(--font-mono); font-size:16px; font-weight:700; margin-top:4px;">+375 29 412-88-01</p>
+          </div>
+          <div>
+            <span style="font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:700;">Google аккаунт</span>
+            <p style="font-size:15px; font-weight:600; margin-top:4px;">alexander.travel@gmail.com</p>
+          </div>
+          <div>
+            <span style="font-size:11px; text-transform:uppercase; color:var(--text-dim); font-weight:700;">Telegram бот</span>
+            <p style="font-family:var(--font-mono); font-size:15px; font-weight:600; color:var(--color-forest); margin-top:4px;">@BusLinerPassBot (Подключен)</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border-hairline); display:flex; justify-content:space-between; align-items:center;">
+          <a href="index.html" style="font-size:13px; color:var(--text-muted); text-decoration:underline;">
+            Вернуться к витрине рейсов
+          </a>
+          <button class="btn-driver-call" onclick="alert('Сессия сохранена в локальном хранилище')">
+            Сохранить изменения
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MOBILE BOTTOM THUMB BAR -->
+  <div class="mobile-bottom-bar">
+    <div class="mobile-nav-grid">
+      <button class="m-nav-btn active" data-tab="active-trip" onclick="switchCabinetTab('active-trip')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+        <span>Мой билет</span>
+      </button>
+
+      <button class="m-nav-btn" data-tab="loyalty" onclick="switchCabinetTab('loyalty')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <polygon points="12 6 13.5 10 18 10 14.5 13 16 17 12 14.5 8 17 9.5 13 6 10 10.5 10 12 6" />
+        </svg>
+        <span>Бонусы</span>
+      </button>
+
+      <button class="m-nav-btn" data-tab="history" onclick="switchCabinetTab('history')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 14 14" />
+        </svg>
+        <span>История</span>
+      </button>
+
+      <button class="m-nav-btn" data-tab="profile" onclick="switchCabinetTab('profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+        <span>Профиль</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function switchCabinetTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active-pane'));
+      document.querySelectorAll('.cabinet-tab-btn, .m-nav-btn').forEach(b => b.classList.remove('active'));
+
+      const pane = document.getElementById(`pane-${tabId}`);
+      if (pane) pane.classList.add('active-pane');
+
+      document.querySelectorAll(`[data-tab="${tabId}"]`).forEach(b => b.classList.add('active'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

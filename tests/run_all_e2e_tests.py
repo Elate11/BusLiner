@@ -2,7 +2,7 @@
 """
 BusLiner Quiet Luxury Ecosystem - Comprehensive E2E Test Runner
 Requirement-driven, opaque-box test suite for Quiet Luxury transformation.
-Covers 15 features across 4 tiers (91 total tests).
+Covers 16 features across 4 tiers (97 total tests).
 
 Usage:
   python3 /Users/aleksandr/BusLiner/tests/run_all_e2e_tests.py
@@ -74,7 +74,7 @@ def print_formatted_report(target_name: str, results: List[TestResult], verbose:
         tiers[r.tier].append(r)
 
     tier_names = {
-        1: "TIER 1: FEATURE ISOLATION TESTS (F1 - F15, >= 5 each)",
+        1: "TIER 1: FEATURE ISOLATION TESTS (F1 - F16, >= 5 each)",
         2: "TIER 2: BOUNDARY & CORNER CASES",
         3: "TIER 3: PAIRWISE CROSS-FEATURE TESTS",
         4: "TIER 4: REAL-WORLD SCENARIOS"
@@ -133,10 +133,10 @@ def main():
 
     args = parser.parse_args()
 
-    # Self-test mode verifies the test runner and all 91 test assertions against the oracle
+    # Self-test mode verifies the test runner and all test assertions against the oracle
     if args.selftest:
         print("\n" + "=" * 80)
-        print(" RUNNING SELF-TEST: Validating 91 test cases against synthetic compliant fixture")
+        print(" RUNNING SELF-TEST: Validating E2E test suite against synthetic compliant fixture")
         print("=" * 80)
         inspector = TargetInspector(file_path="", raw_content=SYNTHETIC_COMPLIANT_HTML)
         results = run_tests_for_target(inspector, args.tier, args.feature)
@@ -150,7 +150,7 @@ def main():
         print(f" SELF-TEST SUMMARY: Total: {total} | Passed: {passed} | Failed: {failed}")
         print("=" * 80)
         if failed == 0:
-            print("\n>>> SELF-TEST SUCCESS: All 91 E2E tests verified 100% sound and passing! <<<\n")
+            print(f"\n>>> SELF-TEST SUCCESS: All {total} E2E tests verified 100% sound and passing! <<<\n")
             sys.exit(0)
         else:
             print(f"\n>>> SELF-TEST FAILED: {failed} tests failed on compliant fixture! <<<\n")
