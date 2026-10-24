@@ -7,38 +7,44 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Nunito:wght@700;800;900&family=Varela+Round&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     /* ==========================================================================
-       BUSLINER PARTNERS — AUTH & FLEET ONBOARDING
-       Strict adherence to Quiet Luxury / Freight Monolith design tokens
-       Warm Noble Canvas (#F7F6F2) + Crisp White Card (#FFFFFF) + Institutional Navy (#1E3A8A)
+       BUSLINER PARTNERS // AUTH & FLEET ONBOARDING QUIET LUXURY TOKENS
+       Aesthetic: Loro Piana / Bottega Veneta / Apple craft
+       Palette: Warm Ivory (#F5F1EA), Bone (#E8E2D6), Graphite (#1C1D1C), Oxblood (#7A2320), Forest (#2E4F3E)
+       Zero image tags. Zero square brackets in visible UI.
        ========================================================================== */
     :root {
-      --canvas: #F7F6F2;
-      --surface-card: #FFFFFF;
-      --surface-subtle: #F0EFEA;
-      --surface-elevated: #FAFAF8;
-      --border-hairline: #E2E2DC;
-      --border-focus: #1E3A8A;
+      --canvas: #F5F1EA;
+      --surface-card: #FBF9F5;
+      --surface-subtle: #E8E2D6;
+      --surface-elevated: #F5F1EA;
+      --border-hairline: rgba(184, 169, 154, 0.42);
+      --border-focus: #7A2320;
       
-      --text-primary: #141518;
-      --text-muted: #525660;
-      --text-dim: #8E929B;
+      --text-primary: #1C1D1C;
+      --text-muted: #5C5852;
+      --text-dim: #8A847C;
       
-      --accent-institutional: #1E3A8A;
-      --accent-hover: #152A68;
-      --accent-soft: #EEF4FF;
-      --accent-border: #BCD0FA;
-      --accent-sky: #93C5FD;
+      --accent-institutional: #7A2320; /* Hermès Oxblood */
+      --accent-hover: #611A18;
+      --accent-soft: #F9EBEA;
+      --accent-border: #D98880;
+      --accent-sky: #2E4F3E;
       
-      --status-available: #0E7048;
-      --status-available-bg: #EAF7EE;
-      
-      --font-display: 'Newsreader', Georgia, serif;
-      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --radius-card: 24px;
-      --radius-ctrl: 12px;
+      --status-available: #2E4F3E;
+      --status-available-bg: #EAEFEA;
+      --status-radar: #A8674F;
+      --status-radar-bg: #FBF4F1;
+      --status-soldout: #7A2320;
+      --status-soldout-bg: #F9EBEA;
+
+      --font-display: 'Cormorant Garamond', Garamond, Georgia, serif;
+      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
+      --radius-card: 14px;
+      --radius-ctrl: 8px;
     }
 
     *, *::before, *::after {
@@ -102,13 +108,13 @@
       color: var(--accent-institutional);
     }
     .font-onlyfans {
-      font-family: 'Nunito', 'Arial Rounded MT Bold', 'Varela Round', sans-serif !important;
+      font-family: var(--font-body);
       font-weight: 800 !important;
       letter-spacing: -0.02em !important;
       text-transform: lowercase !important;
     }
     .badge-b2b {
-      font-family: 'Nunito', 'Arial Rounded MT Bold', 'Varela Round', sans-serif;
+      font-family: var(--font-body);
       font-size: inherit;
       font-weight: 800;
       padding: 0 4px;
@@ -280,7 +286,7 @@
       position: relative;
     }
     .role-card-btn:hover {
-      border-color: #93C5FD;
+      border-color: #C29B38;
       background: rgba(147, 197, 253, 0.05);
       transform: translateY(-1px);
     }
@@ -903,17 +909,48 @@
       .wizard-steps { display: none; }
       .view-tabs-wrapper { padding: 16px 20px 0; }
     }
+  
+    .verified-avatar-badge {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7A2320, #611A18);
+      color: #F5F1EA;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      border: 1.5px solid var(--border-hairline);
+      box-shadow: 0 4px 14px rgba(122, 35, 32, 0.2);
+      flex-shrink: 0;
+    }
+
+
+    /* Artisanal Paper Grain Overlay */
+    .paper-grain-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.034;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
   </style>
 </head>
 <body>
+  <div class="paper-grain-overlay"></div>
 
   <!-- FIXED TOP NAVIGATION (MATCHES BUSLINER ON-LIGHT) -->
   <header class="app-nav">
     <a href="busliner-partners.html" class="brand-link" onclick="goBackToMain(event)">
       <svg width="26" height="26" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="28" height="28" rx="6" fill="#1E3A8A"/>
+        <rect width="28" height="28" rx="6" fill="#7A2320"/>
         <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M6 9H11.5M6 19H11.5" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
+        <path d="M6 9H11.5M6 19H11.5" stroke="#C29B38" stroke-width="2" stroke-linecap="round"/>
       </svg>
       <span class="brand-title">BUS<span class="brand-title-thin">LINER</span> <span class="badge-b2b font-onlyfans">partners</span></span>
     </a>
@@ -1080,7 +1117,7 @@
 
             <!-- TELEGRAM VERIFIED STATUS BADGE IN ONBOARDING -->
             <div id="onboard-telegram-badge" class="verified-profile-card" style="display: none;">
-              <img id="onboard-avatar" class="verified-avatar-img" src="" alt="Profile">
+              <div id="onboard-avatar" class="verified-avatar-badge">BL</div>
               <div class="verified-user-info">
                 <div class="verified-user-name">
                   <span id="onboard-name-display"></span>
@@ -1601,7 +1638,7 @@
         if (bic) {
           bicInput.style.transition = 'all 0.25s ease';
           bicInput.style.backgroundColor = '#EFF6FF';
-          bicInput.style.borderColor = '#1E3A8A';
+          bicInput.style.borderColor = '#7A2320';
           setTimeout(() => {
             bicInput.style.backgroundColor = '#FFFFFF';
             bicInput.style.borderColor = '#E2E2DC';
@@ -2018,7 +2055,11 @@
 
         const badge = document.getElementById('onboard-telegram-badge');
         if (badge) {
-          document.getElementById('onboard-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1E3A8A&color=fff&size=120`;
+          const avatarEl = document.getElementById('onboard-avatar');
+          if (avatarEl) {
+            const initials = name.split(' ').map(p => p[0]).filter(Boolean).slice(0, 2).join('').toUpperCase() || 'BL';
+            avatarEl.innerText = initials;
+          }
           document.getElementById('onboard-name-display').innerText = name;
           document.getElementById('onboard-email-display').innerText = isPhone ? `Телефон: ${val}` : `Telegram: ${val}`;
           badge.style.display = 'flex';
@@ -2393,7 +2434,11 @@
           const tgUser = JSON.parse(storedTg);
           const badge = document.getElementById('onboard-telegram-badge');
           if (badge) {
-            document.getElementById('onboard-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(tgUser.name)}&background=1E3A8A&color=fff&size=120`;
+            const avatarEl = document.getElementById('onboard-avatar');
+          if (avatarEl) {
+            const initials = name.split(' ').map(p => p[0]).filter(Boolean).slice(0, 2).join('').toUpperCase() || 'BL';
+            avatarEl.innerText = initials;
+          }
             document.getElementById('onboard-name-display').innerText = tgUser.name;
             document.getElementById('onboard-email-display').innerText = tgUser.identifier.startsWith('+') ? `Телефон: ${tgUser.identifier}` : `Telegram: ${tgUser.identifier}`;
             badge.style.display = 'flex';

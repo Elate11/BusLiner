@@ -7,43 +7,48 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Nunito:wght@700;800;900&family=Varela+Round&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
     /* ==========================================================================
-       BUSLINER PARTNERS — CARRIER DASHBOARD
-       Strict Quiet Luxury / Freight Monolith Design System
-       Tokens: Warm Noble Canvas (#F7F6F2) + Crisp White (#FFFFFF) + Institutional Navy (#1E3A8A)
+       BUSLINER PARTNERS // CARRIER DASHBOARD QUIET LUXURY TOKENS
+       Aesthetic: Loro Piana / Bottega Veneta / Apple level craft
+       Palette: Warm Ivory (#F5F1EA), Bone (#E8E2D6), Graphite (#1C1D1C), Oxblood (#7A2320), Forest (#2E4F3E)
+       Zero image tags. Zero square brackets in visible UI.
        ========================================================================== */
     :root {
-      --canvas: #F7F6F2;
-      --surface-card: #FFFFFF;
-      --surface-subtle: #F0EFEA;
-      --surface-elevated: #FAFAF8;
-      --border-hairline: #E2E2DC;
-      --border-focus: #1E3A8A;
+      --canvas: #F5F1EA;
+      --surface-card: #FBF9F5;
+      --surface-subtle: #E8E2D6;
+      --surface-elevated: #F5F1EA;
+      --border-hairline: rgba(184, 169, 154, 0.42);
+      --border-focus: #7A2320;
       
-      --text-primary: #141518;
-      --text-muted: #525660;
-      --text-dim: #8E929B;
+      --text-primary: #1C1D1C;
+      --text-muted: #5C5852;
+      --text-dim: #8A847C;
       
-      --accent-institutional: #1E3A8A;
-      --accent-hover: #152A68;
-      --accent-soft: #EEF4FF;
-      --accent-border: #BCD0FA;
-      --accent-sky: #93C5FD;
+      --accent-institutional: #7A2320; /* Hermès Oxblood */
+      --accent-hover: #611A18;
+      --accent-soft: #F9EBEA;
+      --accent-border: #D98880;
+      --accent-sky: #2E4F3E;
       
-      --status-available: #0E7048;
-      --status-available-bg: #EAF7EE;
-      --status-radar: #B45309;
-      --status-radar-bg: #FFFBEB;
-      --status-soldout: #B91C1C;
-      --status-soldout-bg: #FEF2F2;
+      --status-available: #2E4F3E;
+      --status-available-bg: #EAEFEA;
+      --status-available-border: #A3C9A8;
+      --status-radar: #A8674F;
+      --status-radar-bg: #FBF4F1;
+      --status-radar-border: #E8CFC6;
+      --status-soldout: #7A2320;
+      --status-soldout-bg: #F9EBEA;
+      --status-soldout-border: #D98880;
       
-      --font-display: 'Newsreader', Georgia, serif;
-      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --radius-card: 20px;
-      --radius-ctrl: 12px;
+      --font-display: 'Cormorant Garamond', Garamond, Georgia, serif;
+      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
+      --radius-card: 14px;
+      --radius-ctrl: 8px;
     }
 
     *, *::before, *::after {
@@ -100,13 +105,13 @@
       color: var(--accent-institutional);
     }
     .font-onlyfans {
-      font-family: 'Nunito', 'Arial Rounded MT Bold', 'Varela Round', sans-serif !important;
+      font-family: var(--font-body);
       font-weight: 800 !important;
       letter-spacing: -0.02em !important;
       text-transform: lowercase !important;
     }
     .badge-b2b {
-      font-family: 'Nunito', 'Arial Rounded MT Bold', 'Varela Round', sans-serif;
+      font-family: var(--font-body);
       font-size: inherit;
       font-weight: 800;
       padding: 0 4px;
@@ -569,7 +574,7 @@
 
     /* INVITATION LINK BOX */
     .invite-banner-card {
-      background: linear-gradient(135deg, #1E3A8A 0%, #0F172A 100%);
+      background: linear-gradient(135deg, #7A2320 0%, #101110 100%);
       color: #FFFFFF;
       border-radius: var(--radius-card);
       padding: 26px 32px;
@@ -680,16 +685,28 @@
       .console-header-card { padding: 20px; }
       .form-row { grid-template-columns: 1fr; }
     }
+  
+    /* Artisanal Paper Grain Overlay */
+    .paper-grain-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.034;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+    
   </style>
 </head>
 <body>
+  <div class="paper-grain-overlay"></div>
 
   <!-- TOP BAR -->
   <header class="dashboard-nav">
     <div style="display: flex; align-items: center; gap: 12px;">
       <a href="busliner-partners.html" class="brand-link" title="BusLiner Partners">
         <svg width="26" height="26" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="28" height="28" rx="6" fill="#1E3A8A"/>
+          <rect width="28" height="28" rx="6" fill="#7A2320"/>
           <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M6 9H11.5M6 19H11.5" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
         </svg>
@@ -1800,7 +1817,7 @@
         return `
           <tr>
             <td>
-              <strong style="font-family: monospace; font-size: 13.5px; background: #EEF2FF; color: #1E3A8A; padding: 4px 8px; border-radius: 6px; border: 1px solid #C7D2FE;">
+              <strong style="font-family: monospace; font-size: 13.5px; background: #F9EBEA; color: #7A2320; padding: 4px 8px; border-radius: 6px; border: 1px solid #C7D2FE;">
                 ${escapeHtml(v.plate)}
               </strong>
             </td>

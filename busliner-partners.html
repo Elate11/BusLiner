@@ -6,72 +6,51 @@
   <title>BusLiner для перевозчиков — Монетизация и автоматизация автопарков</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    .font-onlyfans {
-      font-family: 'Nunito', 'Arial Rounded MT Bold', 'Varela Round', sans-serif !important;
-      font-weight: 800 !important;
-      letter-spacing: -0.02em !important;
-      text-transform: lowercase !important;
-    }
-    .brand-badge-partners {
-      font-family: 'Nunito', 'Arial Rounded MT Bold', 'Varela Round', sans-serif !important;
-      font-size: inherit !important;
-      font-weight: 800 !important;
-      padding: 0 4px !important;
-      background: none !important;
-      border: none !important;
-      color: var(--accent-institutional, #1E3A8A) !important;
-      margin-left: 6px !important;
-      letter-spacing: -0.02em !important;
-      vertical-align: baseline !important;
-      display: inline-block !important;
-      text-transform: lowercase !important;
-    }
+    
+    
     nav.app-nav .brand-badge-partners,
-    nav.app-nav.on-dark .brand-badge-partners {
-      color: #93C5FD !important;
-    }
-    nav.app-nav.on-light .brand-badge-partners {
-      color: #1E3A8A !important;
-    }
+    nav.app-nav.on-dark 
+    nav.app-nav.on-light 
     /* ==========================================================================
        BOLD B2C FULLSCREEN SLIDES + FULL-BLEED FOOTER // FREIGHT MONOLITH
        ========================================================================== */
+    /* ==========================================================================
+       BUSLINER PARTNERS // B2B QUIET LUXURY TOKENS
+       Aesthetic: Loro Piana / Bottega Veneta / Apple Craft
+       Palette: Warm Ivory (#F5F1EA), Bone (#E8E2D6), Graphite (#1C1D1C), Oxblood (#7A2320), Forest (#2E4F3E)
+       Zero image tags. Zero square brackets in visible UI.
+       ========================================================================== */
     :root {
-      --canvas: #F7F6F2;
-      --surface-card: #FFFFFF;
-      --surface-subtle: #F0EFEA;
-      --surface-dark: #0D0E12;
-      --border-hairline: #E2E2DC;
-      --border-dark: rgba(255, 255, 255, 0.12);
+      --canvas: #F5F1EA;
+      --surface-card: #FBF9F5;
+      --surface-subtle: #E8E2D6;
+      --surface-dark: #101110;
+      --border-hairline: rgba(184, 169, 154, 0.42);
+      --border-dark: rgba(245, 241, 234, 0.15);
       
-      --text-primary: #141518;
-      --text-muted: #525660;
-      --text-dim: #8E929B;
+      --text-primary: #1C1D1C;
+      --text-muted: #5C5852;
+      --text-dim: #8A847C;
       
-      /* Sole Accent */
-      --accent-institutional: #1E3A8A;
-      --accent-soft: #EEF4FF;
-      --accent-border: #BCD0FA;
+      --accent-institutional: #7A2320; /* Hermès Oxblood */
+      --accent-hover: #611A18;
+      --accent-soft: #F9EBEA;
+      --accent-border: #D98880;
       
-      /* Status Colors */
-      --status-available: #0E7048;
-      --status-available-bg: #EAF7EE;
-      --status-radar: #B45309;
-      --status-radar-bg: #FFFBEB;
-      --status-soldout: #B91C1C;
-      --status-soldout-bg: #FEF2F2;
+      --status-available: #2E4F3E;
+      --status-available-bg: #EAEFEA;
+      --status-radar: #A8674F;
+      --status-radar-bg: #FBF4F1;
+      --status-soldout: #7A2320;
+      --status-soldout-bg: #F9EBEA;
 
-      /* Typography:
-         1. Newsreader - kept for editorial headlines ("Занимай кресло", etc.)
-         2. Inter - 1 single unified font for the entire rest of the site (body, tables, buttons, tags, prices)
-      */
-      --font-display: 'Newsreader', Georgia, serif;
-      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --font-mono: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-display: 'Cormorant Garamond', Garamond, Georgia, serif;
+      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
       
-      --container-width: 1140px;
+      --container-width: 1180px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -112,7 +91,7 @@
       transition: all 0.3s ease;
     }
     nav.app-nav .brand-title { color: #FFFFFF; }
-    nav.app-nav .brand-title-thin { color: #93C5FD; }
+    nav.app-nav .brand-title-thin { color: #C29B38; }
     nav.app-nav .nav-menu a {
       font-family: var(--font-body);
       font-size: 13px;
@@ -126,7 +105,7 @@
     }
     nav.app-nav .nav-menu a:hover,
     nav.app-nav .nav-menu a.active {
-      color: #93C5FD;
+      color: #C29B38;
       background: transparent;
       box-shadow: none;
     }
@@ -135,13 +114,13 @@
       border-bottom: none;
     }
     nav.app-nav.on-dark .brand-title { color: #FFFFFF; }
-    nav.app-nav.on-dark .brand-title-thin { color: #93C5FD; }
+    nav.app-nav.on-dark .brand-title-thin { color: #C29B38; }
     nav.app-nav.on-dark .nav-menu a {
       color: rgba(255, 255, 255, 0.85);
     }
     nav.app-nav.on-dark .nav-menu a:hover,
     nav.app-nav.on-dark .nav-menu a.active {
-      color: #93C5FD;
+      color: #C29B38;
       background: transparent;
       box-shadow: none;
     }
@@ -154,13 +133,13 @@
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
     }
     nav.app-nav.on-light .brand-title { color: #0F172A; }
-    nav.app-nav.on-light .brand-title-thin { color: #1E3A8A; }
+    nav.app-nav.on-light .brand-title-thin { color: #7A2320; }
     nav.app-nav.on-light .nav-menu a {
       color: #334155;
     }
     nav.app-nav.on-light .nav-menu a:hover,
     nav.app-nav.on-light .nav-menu a.active {
-      color: #1E3A8A;
+      color: #7A2320;
       background: transparent;
       box-shadow: none;
     }
@@ -203,7 +182,7 @@
       transition: color 0.2s;
     }
     nav.app-nav.on-dark .brand-title { color: #FFFFFF; }
-    nav.app-nav.on-dark .brand-title-thin { color: #93C5FD; }
+    nav.app-nav.on-dark .brand-title-thin { color: #C29B38; }
     .brand-tag {
       font-family: var(--font-mono);
       font-size: 10px;
@@ -311,7 +290,7 @@
       border: 1px solid var(--accent-institutional);
       border-radius: 12px;
     }
-    .btn-accent:hover { background: #152A68; }
+    .btn-accent:hover { background: #611A18; }
     .btn-secondary {
       background: transparent;
       color: var(--text-primary);
@@ -380,7 +359,7 @@
       margin-bottom: 12px;
     }
     #slide-hero .slide-headline em {
-      color: #93C5FD;
+      color: #C29B38;
       font-style: italic;
     }
     #slide-hero .slide-lead {
@@ -441,7 +420,7 @@
       pointer-events: none;
     }
     .cell-tag svg {
-      color: #93C5FD;
+      color: #C29B38;
       flex-shrink: 0;
     }
     .cell-val {
@@ -509,7 +488,7 @@
     .swap-trigger:hover {
       background: var(--accent-institutional);
       color: #FFFFFF;
-      border-color: #93C5FD;
+      border-color: #C29B38;
       transform: translateY(-50%) rotate(180deg);
       box-shadow: 0 4px 14px rgba(30, 58, 138, 0.5);
     }
@@ -552,7 +531,7 @@
       cursor: pointer;
     }
     .search-submit-btn:hover {
-      background: #152A68;
+      background: #611A18;
       filter: brightness(1.1);
     }
 
@@ -992,7 +971,7 @@
       color: #FFFFFF;
       max-width: 760px;
     }
-    .cta-title em { font-style: italic; color: #93C5FD; }
+    .cta-title em { font-style: italic; color: #C29B38; }
     .cta-lead {
       font-size: 17px;
       line-height: 26px;
@@ -1697,7 +1676,7 @@
     }
     .comp-item-good {
       background: #EFF6FF;
-      color: #1E3A8A;
+      color: #7A2320;
       border: 1px solid #BFDBFE;
       font-weight: 500;
     }
@@ -1740,13 +1719,13 @@
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .calc-pill-btn:hover {
-      border-color: #93C5FD;
+      border-color: #C29B38;
       background: #EFF6FF;
     }
     .calc-pill-btn.active {
-      background: #1E3A8A;
+      background: #7A2320;
       color: #FFFFFF;
-      border-color: #1E3A8A;
+      border-color: #7A2320;
       box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
     }
 
@@ -1795,7 +1774,7 @@
       border-radius: 10px;
       background: rgba(59, 130, 246, 0.16);
       border: 1px solid rgba(147, 197, 253, 0.35);
-      color: #93C5FD !important;
+      color: #C29B38 !important;
       font-weight: 600;
       font-size: 13px;
       text-decoration: none;
@@ -1803,7 +1782,7 @@
     }
     .nav-btn-passengers:hover {
       background: rgba(59, 130, 246, 0.3);
-      border-color: #93C5FD;
+      border-color: #C29B38;
       color: #FFFFFF !important;
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
@@ -1811,11 +1790,11 @@
     .app-nav.on-light .nav-btn-passengers {
       background: rgba(30, 58, 138, 0.08);
       border-color: rgba(30, 58, 138, 0.25);
-      color: #1E3A8A !important;
+      color: #7A2320 !important;
     }
     .app-nav.on-light .nav-btn-passengers:hover {
-      background: #1E3A8A;
-      border-color: #1E3A8A;
+      background: #7A2320;
+      border-color: #7A2320;
       color: #FFFFFF !important;
     }
 
@@ -1946,7 +1925,7 @@
     }
     .cta-title em {
       font-style: italic;
-      color: #93C5FD;
+      color: #C29B38;
     }
     .cta-lead {
       font-size: 16.5px;
@@ -2153,7 +2132,7 @@
 
     /* Step Connector Flow Line */
     .flow-connector-line {
-      background: linear-gradient(90deg, #1E3A8A, #60A5FA, #1E3A8A) !important;
+      background: linear-gradient(90deg, #7A2320, #60A5FA, #7A2320) !important;
       background-size: 200% 200% !important;
       animation: gradientFlowLine 3s linear infinite !important;
     }
@@ -2162,19 +2141,48 @@
       100% { background-position: 200% 50%; }
     }
 
+  
+    .review-avatar-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      border: 1.5px solid var(--border-hairline);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      flex-shrink: 0;
+    }
+
+
+    /* Artisanal Paper Grain Overlay */
+    .paper-grain-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.034;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
   </style>
 
 </head>
 <body>
+  <div class="paper-grain-overlay"></div>
 
   <!-- FIXED TOP NAVIGATION (B2B CARRIER EDITION) -->
   <nav class="app-nav on-dark" id="top-nav">
     <div class="nav-inner">
       <a href="#slide-hero" class="brand-mark">
         <svg class="brand-logo-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="28" height="28" rx="6" fill="#1E3A8A"/>
+          <rect width="28" height="28" rx="6" fill="#7A2320"/>
           <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M6 9H11.5M6 19H11.5" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
+          <path d="M6 9H11.5M6 19H11.5" stroke="#C29B38" stroke-width="2" stroke-linecap="round"/>
         </svg>
         <span class="brand-title">BUS<span class="brand-title-thin">LINER</span> <span class="brand-badge-partners font-onlyfans">partners</span></span>
       </a>
@@ -2293,7 +2301,7 @@
           <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
             <span><strong style="color: var(--text-primary);">В рейсе:</strong> 18 активных бортов</span>
             <span><strong style="color: #059669;">Загрузка:</strong> 99.1%</span>
-            <span><strong style="color: #1E3A8A;">Выручка за сутки:</strong> 8 460 BYN</span>
+            <span><strong style="color: #7A2320;">Выручка за сутки:</strong> 8 460 BYN</span>
           </div>
         </div>
         <table class="dispatch-table">
@@ -2328,7 +2336,7 @@
                 <div style="font-size: 11px; color: #059669; font-weight: 500; margin-top: 2px;">100% выкуп мест</div>
               </td>
               <td>
-                <div class="mono" style="font-size: 17px; font-weight: 700; color: #1E3A8A;">444.00 BYN</div>
+                <div class="mono" style="font-size: 17px; font-weight: 700; color: #7A2320;">444.00 BYN</div>
                 <div class="mono" style="font-size: 10px; color: #059669; font-weight: 600;">выплата T+1</div>
               </td>
               <td style="text-align: right;">
@@ -2338,7 +2346,7 @@
 
             <tr>
               <td>
-                <div class="mono" style="font-size: 16px; font-weight: 700; color: #1E3A8A;">18:15 &mdash; 21:40</div>
+                <div class="mono" style="font-size: 16px; font-weight: 700; color: #7A2320;">18:15 &mdash; 21:40</div>
                 <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Борт 02-45 ВЕ-3 &bull; Гомель</div>
               </td>
               <td>
@@ -2356,7 +2364,7 @@
                 <div style="font-size: 11px; color: #D97706; font-weight: 500; margin-top: 2px;">Снайпер закрыл 2 кресла</div>
               </td>
               <td>
-                <div class="mono" style="font-size: 17px; font-weight: 700; color: #1E3A8A;">458.00 BYN</div>
+                <div class="mono" style="font-size: 17px; font-weight: 700; color: #7A2320;">458.00 BYN</div>
                 <div class="mono" style="font-size: 10px; color: #059669; font-weight: 600;">выплата T+1</div>
               </td>
               <td style="text-align: right;">
@@ -2384,7 +2392,7 @@
                 <div style="font-size: 11px; color: #2563EB; font-weight: 500; margin-top: 2px;">Осталось 1 место</div>
               </td>
               <td>
-                <div class="mono" style="font-size: 17px; font-weight: 700; color: #1E3A8A;">401.00 BYN</div>
+                <div class="mono" style="font-size: 17px; font-weight: 700; color: #7A2320;">401.00 BYN</div>
                 <div class="mono" style="font-size: 10px; color: #059669; font-weight: 600;">выплата T+1</div>
               </td>
               <td style="text-align: right;">
@@ -2511,7 +2519,7 @@
           <div style="background: rgba(30, 58, 138, 0.05); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 12px; padding: 14px 18px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between;">
             <div>
               <div class="mono" style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Экономия на 1 машину</div>
-              <div class="mono" style="font-size: 19px; font-weight: 700; color: #1E3A8A; margin-top: 2px;">+2 400 BYN / мес</div>
+              <div class="mono" style="font-size: 19px; font-weight: 700; color: #7A2320; margin-top: 2px;">+2 400 BYN / мес</div>
             </div>
             <div style="text-align: right;">
               <div class="mono" style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Флот из 6 машин</div>
@@ -2689,7 +2697,7 @@
               </div>
               <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--border-hairline); padding-bottom: 10px;">
                 <span style="font-size: 13.5px; color: var(--text-muted);">Монетизация Smart Cargo:</span>
-                <strong class="mono" id="calc-cargo" style="color: #1E3A8A; font-size: 16px; font-weight: 700;">+22 440 BYN / мес</strong>
+                <strong class="mono" id="calc-cargo" style="color: #7A2320; font-size: 16px; font-weight: 700;">+22 440 BYN / мес</strong>
               </div>
               <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--border-hairline); padding-bottom: 10px;">
                 <span style="font-size: 13.5px; color: var(--text-muted);">Экономия на колл-центре:</span>
@@ -2698,9 +2706,9 @@
             </div>
           </div>
 
-          <div style="margin-top: 24px; padding: 18px 20px; background: #EEF4FF; border: 1px solid #BCD0FA; border-radius: 14px;">
-            <div class="mono" style="font-size: 11.5px; color: #1E3A8A; text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em;">Итого доп. прибыль парка:</div>
-            <div class="mono" id="calc-total" style="font-size: 30px; font-weight: 800; color: #1E3A8A; margin: 4px 0 16px 0;">+91 267 BYN / мес</div>
+          <div style="margin-top: 24px; padding: 18px 20px; background: #F9EBEA; border: 1px solid #D98880; border-radius: 14px;">
+            <div class="mono" style="font-size: 11.5px; color: #7A2320; text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em;">Итого доп. прибыль парка:</div>
+            <div class="mono" id="calc-total" style="font-size: 30px; font-weight: 800; color: #7A2320; margin: 4px 0 16px 0;">+91 267 BYN / мес</div>
             <a href="#slide-start" class="btn btn-accent" style="width: 100%; justify-content: center; padding: 14px; font-size: 14px; border-radius: 12px;">
               Зафиксировать условия и стать партнером &rarr;
             </a>
@@ -2724,7 +2732,7 @@
       <div class="reviews-grid">
         <div class="review-card">
           <div class="review-author-line">
-            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=160&h=160&q=80" alt="Сергей Мельников" class="review-avatar-img">
+            <div class="review-avatar-badge" style="background: linear-gradient(135deg, #7A2320, #611A18); color: #F5F1EA;">СМ</div>
             <div>
               <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">Сергей Мельников</div>
               <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Директор ОДО «Бурлаки-Авто» &bull; 14 машин в парке</div>
@@ -2744,7 +2752,7 @@
 
         <div class="review-card">
           <div class="review-author-line">
-            <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=160&h=160&q=80" alt="Виталий Ковалев" class="review-avatar-img">
+            <div class="review-avatar-badge" style="background: linear-gradient(135deg, #2E4F3E, #243E31); color: #F5F1EA;">ВК</div>
             <div>
               <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">Виталий Ковалев</div>
               <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">ИП Ковалев В.Н. &bull; Линия Брест — Минск, 4 машины</div>
@@ -2764,7 +2772,7 @@
 
         <div class="review-card">
           <div class="review-author-line">
-            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=160&h=160&q=80" alt="Олег Дробышевский" class="review-avatar-img">
+            <div class="review-avatar-badge" style="background: linear-gradient(135deg, #1C1D1C, #2B2A28); color: #D9CDB8;">ОД</div>
             <div>
               <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">Олег Дробышевский</div>
               <div class="mono" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Начальник автоколонны &bull; 26 микроавтобусов</div>
@@ -2829,7 +2837,7 @@
         <!-- High-detail Mercedes Sprinter SVG Microbus -->
         <svg width="72" height="26" viewBox="0 0 72 26" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- Bus Body Main Hull -->
-          <path d="M4 21H68C69.6569 21 71 19.6569 71 18V9C71 6 68 4 64 3.5L52 2.5C48 2 20 2 12 2C8 2 5 3.5 4 6L1.5 12C1.2 13 1 14.5 1 16V18C1 19.6569 2.34315 21 4 21Z" fill="#1E3A8A"/>
+          <path d="M4 21H68C69.6569 21 71 19.6569 71 18V9C71 6 68 4 64 3.5L52 2.5C48 2 20 2 12 2C8 2 5 3.5 4 6L1.5 12C1.2 13 1 14.5 1 16V18C1 19.6569 2.34315 21 4 21Z" fill="#7A2320"/>
           <!-- Gloss highlight along top roof -->
           <path d="M12 3H52C58 3 64 4 67 6.5C65 5 60 4 52 3.8H12C8 3.8 5 4.8 3.5 6.5C4.5 4.5 8 3 12 3Z" fill="rgba(255,255,255,0.45)"/>
           <!-- Aerodynamic Tinted Window Strip -->
@@ -2843,7 +2851,7 @@
           <!-- Front Windshield -->
           <path d="M59.5 6.8H64.2C65.5 7.5 66.2 8.5 66.5 10H59.5V6.8Z" fill="#7DD3FC" fill-opacity="0.95"/>
           <!-- BusLiner Brand Decal along side panel -->
-          <rect x="14" y="13.5" width="26" height="1.8" rx="0.9" fill="#93C5FD" fill-opacity="0.9"/>
+          <rect x="14" y="13.5" width="26" height="1.8" rx="0.9" fill="#C29B38" fill-opacity="0.9"/>
           <!-- Taillight (Red LED) -->
           <rect x="1" y="13.5" width="2" height="4.5" rx="1" fill="#EF4444"/>
           <!-- Front Headlight (Bright Xenon White) -->
@@ -2878,7 +2886,7 @@
     <section class="section-container" style="padding: 70px 24px; background: #FFFFFF; border-top: 1px solid #E2E2DC; border-bottom: 1px solid #E2E2DC;">
       <div style="max-width: 1040px; margin: 0 auto;">
         <div style="text-align: center; margin-bottom: 40px;">
-          <div style="font-family: var(--font-mono, monospace); font-size: 11px; font-weight: 700; color: #1E3A8A; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">
+          <div style="font-family: var(--font-mono, monospace); font-size: 11px; font-weight: 700; color: #7A2320; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">
             Калькулятор окупаемости автопарка
           </div>
           <h2 style="font-family: var(--font-display, Georgia, serif); font-size: 32px; font-weight: 400; color: #141518; margin: 0;">
@@ -2895,25 +2903,25 @@
             <div>
               <div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 600; margin-bottom: 8px;">
                 <span>Количество микроавтобусов:</span>
-                <span style="font-family: monospace; color: #1E3A8A;" id="calc-buses-val">5 бортов</span>
+                <span style="font-family: monospace; color: #7A2320;" id="calc-buses-val">5 бортов</span>
               </div>
-              <input type="range" id="calc-buses" min="1" max="30" value="5" style="width: 100%; accent-color: #1E3A8A;" oninput="updateFleetYieldCalc()">
+              <input type="range" id="calc-buses" min="1" max="30" value="5" style="width: 100%; accent-color: #7A2320;" oninput="updateFleetYieldCalc()">
             </div>
 
             <div>
               <div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 600; margin-bottom: 8px;">
                 <span>Рейсов в сутки на один борт:</span>
-                <span style="font-family: monospace; color: #1E3A8A;" id="calc-trips-val">4 рейса</span>
+                <span style="font-family: monospace; color: #7A2320;" id="calc-trips-val">4 рейса</span>
               </div>
-              <input type="range" id="calc-trips" min="1" max="8" value="4" style="width: 100%; accent-color: #1E3A8A;" oninput="updateFleetYieldCalc()">
+              <input type="range" id="calc-trips" min="1" max="8" value="4" style="width: 100%; accent-color: #7A2320;" oninput="updateFleetYieldCalc()">
             </div>
 
             <div>
               <div style="display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 600; margin-bottom: 8px;">
                 <span>Средняя стоимость билета:</span>
-                <span style="font-family: monospace; color: #1E3A8A;" id="calc-price-val">28 BYN</span>
+                <span style="font-family: monospace; color: #7A2320;" id="calc-price-val">28 BYN</span>
               </div>
-              <input type="range" id="calc-price" min="15" max="60" value="28" style="width: 100%; accent-color: #1E3A8A;" oninput="updateFleetYieldCalc()">
+              <input type="range" id="calc-price" min="15" max="60" value="28" style="width: 100%; accent-color: #7A2320;" oninput="updateFleetYieldCalc()">
             </div>
           </div>
 
@@ -2934,9 +2942,9 @@
             <div style="border-top: 1px solid #E2E2DC; padding-top: 18px; margin-top: 18px; display: flex; justify-content: space-between; align-items: center;">
               <div>
                 <div style="font-size: 11px; color: #8E929B;">Подключение и интеграция</div>
-                <div style="font-size: 13px; font-weight: 700; color: #1E3A8A;">Бесплатно за 1 день</div>
+                <div style="font-size: 13px; font-weight: 700; color: #7A2320;">Бесплатно за 1 день</div>
               </div>
-              <a href="partner-auth.html" style="display: inline-flex; align-items: center; justify-content: center; height: 42px; padding: 0 20px; background: #1E3A8A; color: #FFFFFF; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 700;">
+              <a href="partner-auth.html" style="display: inline-flex; align-items: center; justify-content: center; height: 42px; padding: 0 20px; background: #7A2320; color: #FFFFFF; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 700;">
                 Подключить автопарк
               </a>
             </div>
@@ -2970,11 +2978,11 @@
           <div>
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
               <svg class="brand-logo-icon" width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="28" height="28" rx="6" fill="#1E3A8A"/>
+                <rect width="28" height="28" rx="6" fill="#7A2320"/>
                 <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M6 9H11.5M6 19H11.5" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
+                <path d="M6 9H11.5M6 19H11.5" stroke="#C29B38" stroke-width="2" stroke-linecap="round"/>
               </svg>
-              <span style="font-family: var(--font-body); font-weight: 800; color: #FFFFFF; font-size: 16px; letter-spacing: -0.01em;">BUS<span style="font-weight: 500; color: #93C5FD; letter-spacing: 0.04em;">LINER</span> <span class="brand-badge-partners font-onlyfans">partners</span></span>
+              <span style="font-family: var(--font-body); font-weight: 800; color: #FFFFFF; font-size: 16px; letter-spacing: -0.01em;">BUS<span style="font-weight: 500; color: #C29B38; letter-spacing: 0.04em;">LINER</span> <span class="brand-badge-partners font-onlyfans">partners</span></span>
             </div>
             <p style="font-size: 12px; line-height: 18px; color: #9CA3AF; margin-bottom: 12px;">
               Единая цифровая B2B-платформа монетизации и автоматизации регулярных автопарков. Полный выкуп кресел, ежедневный клиринг T+1 и Smart Cargo.
@@ -2993,7 +3001,7 @@
               <li><a href="#slide-sniper">Снайпер</a></li>
               <li><a href="#slide-calculator">Калькулятор прибыли</a></li>
               <li><a href="#slide-reviews">Кейсы автопарков</a></li>
-              <li><a href="index.html" style="color: #93C5FD; font-weight: 600;">Перейти на пассажирский сайт &rarr;</a></li>
+              <li><a href="index.html" style="color: #C29B38; font-weight: 600;">Перейти на пассажирский сайт &rarr;</a></li>
             </ul>
           </div>
 
@@ -3017,8 +3025,8 @@
             <div class="mono" style="font-size: 13px; font-weight: 600; color: #FFFFFF; margin-bottom: 4px;">
               b2b@busliner.by
             </div>
-            <div class="mono" style="font-size: 11px; color: #93C5FD; margin-bottom: 12px;">
-              Telegram: @BusLiner<span class="font-onlyfans" style="color: #93C5FD;">partners</span>
+            <div class="mono" style="font-size: 11px; color: #C29B38; margin-bottom: 12px;">
+              Telegram: @BusLinerFleetBot
             </div>
             
             <div class="pay-icons-row">
@@ -3061,7 +3069,7 @@
         <div class="footer-subrow">
           <div>&copy; 2026 BUSLINER TECH B2B LTD. ВСЕ ПРАВА ЗАЩИЩЕНЫ. СТБ 1389-2003.</div>
           <div>
-            <a href="index.html" style="color: #93C5FD; font-weight: 600; margin-right: 14px;">Пассажирский сайт &rarr;</a>
+            <a href="index.html" style="color: #C29B38; font-weight: 600; margin-right: 14px;">Пассажирский сайт &rarr;</a>
             <a href="#">Публичная оферта</a>
             <a href="#">Политика конфиденциальности</a>
             <a href="#">Регламент выплат T+1</a>
@@ -3771,7 +3779,7 @@
           Отправить заявку менеджеру подключений &rarr;
         </button>
         <div style="margin-top: 14px; text-align: center; font-size: 12.5px; color: #94A3B8;">
-          Или <a href="partner-auth.html#onboard" style="color: #93C5FD; font-weight: 500; text-decoration: underline;">станьте партнером онлайн в кабинете перевозчика &rarr;</a>
+          Или <a href="partner-auth.html#onboard" style="color: #C29B38; font-weight: 500; text-decoration: underline;">станьте партнером онлайн в кабинете перевозчика &rarr;</a>
         </div>
       </form>
     </div>

@@ -3,185 +3,271 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BusLiner 3D &bull; Mercedes-Benz Sprinter 170" High Roof (19 мест)</title>
+  <title>BusLiner 3D &bull; Интерактивный выбор места в салоне</title>
 
+  <!-- FONTS: Cormorant Garamond (Editorial Serif) + Plus Jakarta Sans + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Three.js + OrbitControls -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
   <style>
+    /* ==========================================================================
+       BUSLINER 3D // QUIET LUXURY SEAT ARCHITECTURE
+       Aesthetic: Loro Piana / Bottega Veneta / Apple level craft
+       Palette: Warm Ivory (#F5F1EA), Bone (#E8E2D6), Graphite (#1C1D1C), Oxblood (#7A2320), Forest (#2E4F3E)
+       Zero image tags. Zero square brackets in visible UI.
+       ========================================================================== */
+
     :root {
-      --sp-canvas: #F1F5F9;
-      --sp-surface: #FFFFFF;
-      --sp-border: #CBD5E1;
-      --sp-border-dark: #0F172A;
-      --sp-text-main: #0F172A;
-      --sp-text-muted: #475569;
-      --sp-brand-primary: #0F172A;
-      --sp-brand-hover: #1E293B;
-      --sp-accent-cyan: #0284C7;
-      --sp-status-green: #10B981;
-      --sp-status-orange: #F97316;
+      --sp-canvas: #F5F1EA;
+      --sp-surface: #FBF9F5;
+      --sp-surface-subtle: #E8E2D6;
+      --sp-surface-muted: #E2DBD0;
+      --sp-border: rgba(184, 169, 154, 0.42);
+      --sp-border-subtle: rgba(184, 169, 154, 0.22);
+      --sp-border-dark: rgba(28, 29, 28, 0.12);
+
+      --sp-text-main: #1C1D1C;
+      --sp-text-muted: #5C5852;
+      --sp-text-faint: #8A847C;
+
+      --sp-brand-primary: #7A2320; /* Hermès Oxblood */
+      --sp-brand-hover: #611A18;
+      --sp-brand-forest: #2E4F3E;  /* Forest Emerald */
+      --sp-brand-champagne: #C29B38;
+
+      --sp-seat-avail: #FFFFFF;
+      --sp-seat-avail-border: #D9CDB8;
+      --sp-seat-selected: #7A2320;
+      --sp-seat-occupied: #B8B0A4;
+      --sp-seat-vip: #C29B38;
+      --sp-seat-disabled: #2E4F3E;
+
+      --font-display: 'Cormorant Garamond', Garamond, Georgia, serif;
+      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
+
+      --ease-drive: cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
+    html, body {
+      width: 100%;
+      height: 100%;
       background: var(--sp-canvas);
       color: var(--sp-text-main);
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      padding: 16px 20px 80px;
+      font-family: var(--font-body);
       line-height: 1.5;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
-    .demo-wrapper {
-      max-width: 1180px;
-      margin: 0 auto;
+    /* Artisanal Paper Grain Overlay */
+    .paper-grain-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.034;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
+    .demo-wrapper {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 18px 20px 60px;
+    }
+
+    /* Top Navigation Bar */
     .demo-header-nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
-      padding: 12px 18px;
-      background: #FFFFFF;
-      border: 1.5px solid var(--sp-border);
-      border-radius: 8px;
+      margin-bottom: 16px;
+      padding: 14px 22px;
+      background: var(--sp-surface);
+      border: 1px solid var(--sp-border);
+      border-radius: 12px;
       gap: 16px;
       flex-wrap: wrap;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     }
 
     .brand-mark {
       display: flex;
       align-items: center;
       gap: 12px;
-      font-weight: 800;
-      font-size: 18px;
-      color: #0F172A;
+      font-weight: 700;
+      font-size: 19px;
+      letter-spacing: -0.01em;
+      color: var(--sp-text-main);
       text-decoration: none;
-      letter-spacing: -0.02em;
+    }
+    .brand-mark em {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-style: italic;
+      font-size: 21px;
+      color: var(--sp-brand-primary);
+      margin-left: 2px;
     }
 
     .brand-badge {
       width: 34px;
       height: 34px;
-      background: #0F172A;
-      border-radius: 6px;
+      background: var(--sp-brand-primary);
+      color: #F5F1EA;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #FFFFFF;
+    }
+
+    /* Fleet Vehicle Switcher Tabs */
+    .fleet-switcher-container {
+      display: flex;
+      background: var(--sp-surface-subtle);
+      padding: 4px;
+      border-radius: 10px;
+      gap: 4px;
+      border: 1px solid var(--sp-border-subtle);
+    }
+
+    .fleet-tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: transparent;
+      border: none;
+      border-radius: 7px;
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--sp-text-muted);
+      cursor: pointer;
+      transition: all 0.2s var(--ease-drive);
+    }
+    .fleet-tab-btn:hover:not(.active) {
+      color: var(--sp-text-main);
+      background: rgba(255, 255, 255, 0.5);
+    }
+    .fleet-tab-btn.active {
+      background: var(--sp-surface);
+      color: var(--sp-brand-primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+    .fleet-tab-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #B8A99A;
+      transition: background 0.2s;
+    }
+    .fleet-tab-btn.active .fleet-tab-dot {
+      background: var(--sp-brand-primary);
     }
 
     .nav-links-cluster {
       display: flex;
       align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .nav-quick-link {
-      font-size: 12px;
-      font-weight: 700;
-      color: #334155;
-      text-decoration: none;
-      padding: 6px 12px;
-      border: 1px solid #CBD5E1;
-      border-radius: 6px;
-      background: #F8FAFC;
-      transition: all 0.15s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .nav-quick-link:hover {
-      background: #0F172A;
-      color: #FFFFFF;
-      border-color: #0F172A;
+      gap: 10px;
     }
 
-    .meta-tag {
-      font-size: 11.5px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: #0F172A;
-      background: #E2E8F0;
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: 1px solid #CBD5E1;
+    .nav-quick-link {
       display: flex;
       align-items: center;
       gap: 6px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--sp-text-muted);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .nav-quick-link:hover {
+      color: var(--sp-text-main);
+      background: var(--sp-surface-subtle);
+      border-color: var(--sp-border-subtle);
     }
 
-    /* 3D Viewport Card - Crisp, Sharp, High-Contrast */
+    /* 3D Viewport Card */
     .viewport-card {
       position: relative;
-      width: 100%;
-      height: 680px;
-      background: #E2E8F0;
-      border-radius: 8px;
-      border: 2px solid var(--sp-border-dark);
+      background: #E8E2D6;
+      border: 1px solid var(--sp-border);
+      border-radius: 14px;
       overflow: hidden;
-      user-select: none;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+      height: 640px;
     }
 
     #three-canvas-container {
       width: 100%;
       height: 100%;
+      display: block;
       cursor: grab;
     }
-    #three-canvas-container:active { cursor: grabbing; }
+    #three-canvas-container:active {
+      cursor: grabbing;
+    }
 
-    /* UI Overlay */
+    /* HUD Overlay */
     .hud-overlay {
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+      inset: 0;
       pointer-events: none;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 16px;
-      z-index: 10;
+      padding: 20px;
     }
-    .hud-overlay * { pointer-events: auto; }
+    .hud-header, .compact-legend, .sticky-bar, .floating-tooltip {
+      pointer-events: auto;
+    }
 
     .hud-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 12px;
+      gap: 16px;
+      flex-wrap: wrap;
     }
 
     .vehicle-badge-card {
-      background: #FFFFFF;
-      border: 1.5px solid var(--sp-border);
-      border-radius: 8px;
-      padding: 12px 16px;
+      background: rgba(251, 249, 245, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--sp-border);
+      border-radius: 10px;
+      padding: 12px 18px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
     }
     .veh-carrier {
-      font-size: 10.5px;
-      font-weight: 800;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #0F172A;
-      margin-bottom: 2px;
+      color: var(--sp-brand-primary);
+      font-weight: 600;
     }
     .veh-model {
-      font-size: 15px;
-      font-weight: 800;
-      color: #0F172A;
+      font-family: var(--font-display);
+      font-size: 21px;
+      font-weight: 600;
+      color: var(--sp-text-main);
+      margin: 2px 0;
+      line-height: 1.2;
     }
     .veh-specs {
-      font-size: 12px;
-      color: #475569;
-      margin-top: 2px;
+      font-size: 12.5px;
+      color: var(--sp-text-muted);
     }
 
     .hud-right-controls {
@@ -193,206 +279,342 @@
 
     .control-pill {
       display: flex;
-      background: #FFFFFF;
+      background: rgba(251, 249, 245, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       padding: 4px;
-      border-radius: 6px;
-      border: 1.5px solid var(--sp-border);
-      gap: 4px;
+      border-radius: 8px;
+      border: 1px solid var(--sp-border);
+      gap: 3px;
     }
 
     .pill-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      border-radius: 4px;
       padding: 6px 12px;
-      font-size: 11.5px;
-      font-weight: 700;
-      color: #475569;
+      font-size: 12.5px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--sp-text-muted);
       cursor: pointer;
-      font-family: inherit;
-      transition: all 0.15s ease;
-    }
-    .pill-btn:hover { color: #0F172A; background: #F1F5F9; border-color: #CBD5E1; }
-    .pill-btn.active {
-      background: #0F172A;
-      color: #FFFFFF;
-      border-color: #0F172A;
-    }
-
-    /* Floating Tooltip - Sharp & Direct */
-    .floating-tooltip {
-      position: absolute;
-      top: 0; left: 0;
-      width: 230px;
-      background: #0F172A;
-      color: #FFFFFF;
       border-radius: 6px;
-      padding: 10px 14px;
-      border: 1.5px solid #334155;
-      pointer-events: none;
-      font-size: 12px;
-      z-index: 50;
-      display: none;
-      transform: translate(-50%, -120%);
+      transition: all 0.18s;
+      font-family: var(--font-body);
     }
-    .tt-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-      border-bottom: 1px solid #334155;
-      padding-bottom: 4px;
+    .pill-btn:hover:not(.active) {
+      color: var(--sp-text-main);
+      background: rgba(0, 0, 0, 0.04);
     }
-    .tt-num { font-size: 13px; font-weight: 800; color: #FFFFFF; }
-    .tt-price { font-size: 14px; font-weight: 800; color: #38BDF8; font-family: 'JetBrains Mono', monospace; }
-    .tt-type { font-size: 11px; color: #94A3B8; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; }
-    .tt-features { font-size: 11px; color: #CBD5E1; margin: 0; padding-left: 14px; line-height: 1.4; }
+    .pill-btn.active {
+      background: var(--sp-brand-primary);
+      color: #F5F1EA;
+    }
 
-    /* Compact Legend - Sharp & Direct */
+    /* Compact Legend */
     .compact-legend {
       align-self: flex-start;
-      margin-top: 10px;
-      background: #FFFFFF;
-      border: 1.5px solid var(--sp-border);
-      border-radius: 6px;
-      padding: 10px 14px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 6px 14px;
-      font-size: 11.5px;
-      color: #0F172A;
-      font-weight: 600;
-    }
-    .leg-item { display: flex; align-items: center; gap: 8px; }
-    .leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.15); }
-    .dot-avail { background: #FFFFFF; border-color: #64748B; }
-    .dot-sel { background: #10B981; border-color: #059669; }
-    .dot-occ { background: #94A3B8; border-color: #64748B; }
-    .dot-vip { background: #0F172A; border-color: #000; }
-    .dot-dis { background: #2563EB; border-color: #1D4ED8; }
-    .dot-blocked { background: #CBD5E1; border-color: #94A3B8; }
-
-    /* Sticky Bottom Bar - Sharp & Solid */
-    .sticky-bar {
-      background: #FFFFFF;
-      border: 2px solid var(--sp-border-dark);
+      background: rgba(251, 249, 245, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--sp-border);
       border-radius: 8px;
-      padding: 14px 20px;
-      margin-top: auto;
+      padding: 8px 14px;
+      display: flex;
+      gap: 14px;
+      font-size: 12px;
+      color: var(--sp-text-muted);
+      flex-wrap: wrap;
+    }
+    .leg-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .leg-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+    .dot-avail { background: #FFFFFF; border: 1.5px solid #A89F91; }
+    .dot-sel { background: var(--sp-brand-primary); }
+    .dot-occ { background: #8A847C; }
+    .dot-vip { background: var(--sp-brand-champagne); }
+    .dot-dis { background: var(--sp-brand-forest); }
+    .dot-emerg { background: #7A2320; }
+
+    /* Sticky Bottom Summary */
+    .sticky-bar {
+      background: rgba(251, 249, 245, 0.96);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--sp-border);
+      border-radius: 12px;
+      padding: 14px 22px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
     }
     .bar-content {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 20px;
+      gap: 16px;
+      flex-wrap: wrap;
     }
-    .summary-left { display: flex; flex-direction: column; }
-    .prompt-main { font-size: 14px; font-weight: 800; color: #0F172A; }
-    .prompt-sub { font-size: 12px; color: #475569; margin-top: 2px; }
+    .prompt-main {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--sp-text-main);
+    }
+    .prompt-sub {
+      font-size: 13px;
+      color: var(--sp-text-muted);
+      margin-top: 2px;
+    }
+
+    .chip-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--sp-surface-subtle);
+      border: 1px solid var(--sp-border);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--sp-text-main);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .chip-tag:hover {
+      background: #D9CDB8;
+    }
+    .chip-close-icon {
+      font-size: 15px;
+      line-height: 1;
+      color: var(--sp-text-muted);
+    }
 
     .proceed-btn {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      background: #0F172A;
-      color: #FFFFFF;
-      border: 1.5px solid #0F172A;
-      border-radius: 6px;
-      padding: 12px 24px;
-      font-size: 13px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      gap: 8px;
+      background: var(--sp-brand-primary);
+      color: #F5F1EA;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 22px;
+      font-family: var(--font-body);
+      font-size: 14.5px;
+      font-weight: 600;
       cursor: pointer;
-      font-family: inherit;
-      transition: all 0.15s ease;
+      transition: all 0.2s var(--ease-drive);
     }
     .proceed-btn:hover:not(:disabled) {
-      background: #1E293B;
-      border-color: #1E293B;
+      background: var(--sp-brand-hover);
+      transform: translateY(-1px);
     }
     .proceed-btn:disabled {
-      background: #E2E8F0;
-      border-color: #CBD5E1;
-      color: #94A3B8;
+      opacity: 0.45;
       cursor: not-allowed;
+      transform: none;
     }
 
-    .chip-tag {
-      background: #F1F5F9;
-      color: #0F172A;
-      border: 1.5px solid #CBD5E1;
-      padding: 4px 10px;
-      border-radius: 4px;
+    /* Floating Tooltip */
+    .floating-tooltip {
+      position: absolute;
+      z-index: 100;
+      pointer-events: none;
+      display: none;
+      transform: translate(-50%, -125%);
+      background: rgba(28, 29, 28, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #F5F1EA;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(245, 241, 234, 0.18);
       font-size: 12px;
-      font-weight: 800;
-      display: inline-flex;
+      min-width: 170px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    }
+    .tt-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid rgba(245, 241, 234, 0.12);
+      padding-bottom: 4px;
+    }
+    .tt-num {
+      font-weight: 700;
+      font-size: 13.5px;
+      color: #F5F1EA;
+    }
+    .tt-price {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: #D9CDB8;
+    }
+    .tt-type {
+      font-size: 11.5px;
+      color: #A8A29E;
+      margin-bottom: 6px;
+    }
+    .tt-features {
+      list-style: none;
+      font-size: 11px;
+      color: #D6D3D1;
+      line-height: 1.4;
+    }
+    .tt-features li::before {
+      content: "• ";
+      color: var(--sp-brand-champagne);
+    }
+
+    /* Booking Confirmation Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 29, 28, 0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: none;
       align-items: center;
-      gap: 6px;
-      transition: all 0.15s ease;
-      cursor: pointer;
-      user-select: none;
-      font-family: 'JetBrains Mono', monospace;
+      justify-content: center;
+      padding: 20px;
     }
-
-    .chip-tag:hover {
-      background: #FEE2E2 !important;
-      color: #DC2626 !important;
-      border-color: #DC2626 !important;
+    .modal-card {
+      background: var(--sp-surface);
+      border: 1px solid var(--sp-border);
+      border-radius: 16px;
+      max-width: 480px;
+      width: 100%;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+      animation: modalFadeIn 0.28s var(--ease-drive);
     }
-
-    .chip-close-icon {
-      font-size: 14px;
-      font-weight: 800;
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--sp-text-main);
+      line-height: 1.2;
+    }
+    .modal-close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
       line-height: 1;
-      opacity: 0.75;
+      color: var(--sp-text-muted);
+      cursor: pointer;
+      padding: 4px;
     }
-
-    .chip-tag:hover .chip-close-icon {
-      opacity: 1;
+    .modal-summary-box {
+      background: var(--sp-surface-subtle);
+      border: 1px solid var(--sp-border-subtle);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .modal-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13.5px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(184, 169, 154, 0.2);
+    }
+    .modal-row:last-child {
+      border-bottom: none;
+      padding-top: 10px;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .modal-telegram-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 20px;
+      background: var(--sp-brand-primary);
+      color: #F5F1EA;
+      border-radius: 10px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .modal-telegram-cta:hover {
+      background: var(--sp-brand-hover);
+      transform: translateY(-1px);
     }
 
     @media (max-width: 768px) {
-      .viewport-card { height: 560px; }
+      .demo-wrapper { padding: 10px 12px 40px; }
+      .viewport-card { height: 520px; }
+      .hud-header { flex-direction: column; align-items: stretch; }
+      .hud-right-controls { align-items: flex-start; }
       .compact-legend { display: none; }
-      .bar-content { flex-direction: column; align-items: stretch; gap: 12px; }
-      .proceed-btn { justify-content: center; }
     }
   </style>
 </head>
 <body>
 
+  <div class="paper-grain-overlay"></div>
+
   <div class="demo-wrapper">
-    <div class="demo-header-nav">
+    <!-- Top Navigation Bar -->
+    <header class="demo-header-nav">
       <a href="index.html" class="brand-mark">
         <div class="brand-badge">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         </div>
-        <span>BusLiner Fleet 3D</span>
+        <span>BusLiner<em>3D</em></span>
       </a>
 
-      <div class="nav-links-cluster">
+      <!-- Vehicle Switcher Tabs -->
+      <div class="fleet-switcher-container">
+        <button type="button" class="fleet-tab-btn active" id="tab-veh-sprinter" onclick="switchVehicle('sprinter')">
+          <span class="fleet-tab-dot"></span>
+          <span>Mercedes Sprinter (19 мест)</span>
+        </button>
+        <button type="button" class="fleet-tab-btn" id="tab-veh-grandliner" onclick="switchVehicle('grandliner')">
+          <span class="fleet-tab-dot"></span>
+          <span>Grand Liner (53 места)</span>
+        </button>
+      </div>
+
+      <nav class="nav-links-cluster">
         <a href="driver-terminal.html#manifest" class="nav-quick-link">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
-          Терминал посадки
+          Терминал экипажа
         </a>
         <a href="carrier-dashboard.html" class="nav-quick-link">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          Кабинет парка
+          Диспетчерская
         </a>
         <a href="index.html" class="nav-quick-link">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           Главная
         </a>
-      </div>
-
-      <div class="meta-tag">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
-        Mercedes-Benz Sprinter Extra Long &bull; 19 мест (2+1)
-      </div>
-    </div>
+      </nav>
+    </header>
 
     <!-- 3D Card -->
     <div class="viewport-card">
@@ -414,17 +636,18 @@
       <div class="hud-overlay">
         <header class="hud-header">
           <div class="vehicle-badge-card">
-            <div class="veh-carrier">BusLiner Express Premium</div>
-            <div class="veh-model">Mercedes-Benz Sprinter 170" Extra Long (L4 7.36m)</div>
-            <div class="veh-specs">Удлиненный кузов Sprinter Extra Long &bull; Салон 2+1 &bull; 19 мест &bull; Багажное отделение</div>
+            <div class="veh-carrier">BusLiner Express Private Line</div>
+            <div class="veh-model" id="veh-model-title">Mercedes-Benz Sprinter 170" Extra Long</div>
+            <div class="veh-specs" id="veh-specs-line">Салон 2+1 &bull; 19 мест &bull; Климат-контроль Thermoking &bull; Багажное отделение</div>
           </div>
 
           <div class="hud-right-controls">
             <!-- Camera Presets -->
             <div class="control-pill">
               <button type="button" class="pill-btn active" id="btn-cam-all" onclick="resetToOverview()">Весь салон</button>
-              <button type="button" class="pill-btn" id="btn-cam-front" onclick="setPreset('front')">Носовая зона</button>
+              <button type="button" class="pill-btn" id="btn-cam-front" onclick="setPreset('front')">VIP Нос</button>
               <button type="button" class="pill-btn" id="btn-cam-rear" onclick="setPreset('rear')">Корма</button>
+              <button type="button" class="pill-btn" id="btn-cam-cockpit" onclick="setPreset('cockpit')">Кокпит</button>
             </div>
             <!-- Roof / Cutaway Toggle -->
             <div class="control-pill">
@@ -434,14 +657,14 @@
           </div>
         </header>
 
-        <!-- Legend -->
+        <!-- Compact Legend -->
         <aside class="compact-legend">
           <div class="leg-item"><span class="leg-dot dot-avail"></span><span>Свободно</span></div>
           <div class="leg-item"><span class="leg-dot dot-sel"></span><span>Выбрано</span></div>
           <div class="leg-item"><span class="leg-dot dot-occ"></span><span>Занято</span></div>
           <div class="leg-item"><span class="leg-dot dot-vip"></span><span>Одиночное VIP</span></div>
           <div class="leg-item"><span class="leg-dot dot-dis"></span><span>Для ОВЗ</span></div>
-          <div class="leg-item"><span class="leg-dot dot-blocked"></span><span>Служебное</span></div>
+          <div class="leg-item"><span class="leg-dot dot-emerg"></span><span>Аварийный выход</span></div>
         </aside>
 
         <!-- Sticky Summary -->
@@ -449,20 +672,20 @@
           <div class="bar-content">
             <div class="summary-left">
               <div id="empty-prompt">
-                <span class="prompt-main">Выберите место в салоне Mercedes Sprinter</span>
-                <span class="prompt-sub">Максимум 3 места на заказ &bull; Нажмите на кресло для выбора</span>
+                <span class="prompt-main">Выберите кресло в салоне</span>
+                <span class="prompt-sub">Нажмите на место для выбора &bull; До 3 мест на один заказ</span>
               </div>
               <div id="selection-stats" style="display:none;">
                 <div style="display:flex; align-items:baseline; gap:10px;">
-                  <span style="font-size:13px; font-weight:600; color:#475569;" id="seats-count-label">Выбрано:</span>
-                  <span style="font-size:18px; font-weight:800; color:#1E3A8A;" id="total-price-label">0 ₽</span>
+                  <span style="font-size:13.5px; font-weight:600; color:var(--sp-text-muted);" id="seats-count-label">Выбрано:</span>
+                  <span style="font-size:20px; font-weight:700; font-family:var(--font-mono); color:var(--sp-brand-primary);" id="total-price-label">0 ₽</span>
                 </div>
-                <div style="display:flex; gap:6px; margin-top:4px;" id="chips-container"></div>
+                <div style="display:flex; gap:6px; margin-top:5px; flex-wrap:wrap;" id="chips-container"></div>
               </div>
             </div>
 
             <div>
-              <button type="button" class="proceed-btn" id="btn-proceed" disabled onclick="onProceedClick()">
+              <button type="button" class="proceed-btn" id="btn-proceed" disabled onclick="openBookingModal()">
                 <span>Продолжить бронирование</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                   <path d="M5 12h14M12 5l7 7-7 7" />
@@ -475,11 +698,55 @@
     </div>
   </div>
 
+  <!-- Booking Confirmation Modal -->
+  <div class="modal-overlay" id="booking-modal" onclick="if(event.target===this) closeBookingModal()">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h2 class="modal-title">Оформление <em>бронирования</em></h2>
+          <div style="font-size: 13px; color: var(--sp-text-muted); margin-top: 3px;">Межгородской экспресс первого класса</div>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeBookingModal()">&times;</button>
+      </div>
+
+      <div class="modal-summary-box">
+        <div class="modal-row">
+          <span style="color: var(--sp-text-muted);">Маршрут:</span>
+          <span style="font-weight: 600;">Москва &rarr; Санкт-Петербург</span>
+        </div>
+        <div class="modal-row">
+          <span style="color: var(--sp-text-muted);">Рейс и время:</span>
+          <span style="font-family: var(--font-mono); font-weight: 600;">BL-702 &bull; 07:30</span>
+        </div>
+        <div class="modal-row">
+          <span style="color: var(--sp-text-muted);">Лайнер:</span>
+          <span id="modal-vehicle-val" style="font-weight: 600;">Mercedes Sprinter</span>
+        </div>
+        <div class="modal-row">
+          <span style="color: var(--sp-text-muted);">Выбранные места:</span>
+          <span id="modal-seats-val" style="font-family: var(--font-mono); font-weight: 700; color: var(--sp-brand-primary);"></span>
+        </div>
+        <div class="modal-row">
+          <span style="color: var(--sp-text-muted);">Багаж и сервисный сбор:</span>
+          <span style="color: var(--sp-brand-forest); font-weight: 600;">Бесплатно (0 ₽)</span>
+        </div>
+        <div class="modal-row">
+          <span>Итого к оплате:</span>
+          <span id="modal-total-val" style="font-family: var(--font-mono); color: var(--sp-brand-primary);"></span>
+        </div>
+      </div>
+
+      <a id="btn-telegram-order" href="https://t.me/BusLinerPassBot" target="_blank" class="modal-telegram-cta">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/>
+        </svg>
+        <span>Оформить в @BusLinerPassBot &rarr;</span>
+      </a>
+    </div>
+  </div>
+
   <script>
-    // ══════════════════════════════════════════════════════════════════════════════
-    // ТОЧНАЯ МАТЕМАТИЧЕСКАЯ МОДЕЛЬ КУЗОВА MERCEDES-BENZ SPRINTER 170" HIGH ROOF
-    // ══════════════════════════════════════════════════════════════════════════════
-    const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra Long L4 (7.36 м)
+const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra Long L4 (7.36 м)
     const XF = 5.24;  // передняя кромка носа Sprinter
     const YB = 0.55;  // порог кузова
     const RN = 0.45;  // скругление носа в плане
@@ -603,7 +870,8 @@
     // ══════════════════════════════════════════════════════════════════════════════
     // ДАННЫЕ 19 МЕСТ В САЛОНЕ SPRINTER 170" (КОМПОНОВКА 2+1, ВСЕ ЛИЦОМ ВПЕРЕД)
     // ══════════════════════════════════════════════════════════════════════════════
-    const SPRINTER_SEATS = [
+    
+const SPRINTER_SEATS = [
       // Ряд 1: Напротив сдвижной двери
       { id: '1', num: '1', row: 1, col: 3, cat: 'vip', price: 650, status: 'available', pos: [2.5, 0.62, 0.58], feats: ['Панорамный обзор', 'Быстрая посадка', 'USB-C быстрая зарядка'] },
 
@@ -758,7 +1026,224 @@
     }
 
     // --- ПОСТРОЕНИЕ ОРИГИНАЛЬНОГО КУЗОВА И САЛОНА SPRINTER 170" ---
-    function buildRealSprinter() {
+    
+
+    // ══════════════════════════════════════════════════════════════════════════════
+    // ДАННЫЕ 53 МЕСТ В САЛОНЕ GRAND LINER (КОМПОНОВКА 2+2)
+    // ══════════════════════════════════════════════════════════════════════════════
+    const GRAND_LINER_SEATS = [
+      // Ряд 1 (Панорамный VIP)
+      { id: 'gl-1', num: '1', row: 1, col: 1, cat: 'vip', price: 1450, status: 'available', pos: [3.8, 0.88, -0.85], feats: ['Панорамный обзор 180°', 'Премиум кожа Nappa', 'USB-C 65W + 220В', 'Подставка для ног'] },
+      { id: 'gl-2', num: '2', row: 1, col: 2, cat: 'vip', price: 1450, status: 'available', pos: [3.8, 0.88, -0.42], feats: ['Панорамный обзор', 'Увеличенный шаг (+20 см)', 'Розетка 220В'] },
+      { id: 'gl-3', num: '3', row: 1, col: 3, cat: 'vip', price: 1450, status: 'available', pos: [3.8, 0.88, 0.42], feats: ['Панорамный обзор', 'Широкое кресло', 'USB-C 65W'] },
+      { id: 'gl-4', num: '4', row: 1, col: 4, cat: 'vip', price: 1450, status: 'occupied', pos: [3.8, 0.88, 0.85], feats: ['Панорамный обзор 180°', 'Премиум кожа', 'Подставка для ног'] },
+
+      // Ряд 2 (ОВЗ / Приоритетный)
+      { id: 'gl-5', num: '5', row: 2, col: 1, cat: 'disabled', price: 1100, status: 'disabled', pos: [3.1, 0.88, -0.85], feats: ['Приоритет для пассажиров с ОВЗ', 'Шаг кресел +15 см', 'Розетка 220В'] },
+      { id: 'gl-6', num: '6', row: 2, col: 2, cat: 'aisle', price: 1050, status: 'available', pos: [3.1, 0.88, -0.42], feats: ['Место у прохода', 'Откидной столик'] },
+      { id: 'gl-7', num: '7', row: 2, col: 3, cat: 'aisle', price: 1050, status: 'available', pos: [3.1, 0.88, 0.42], feats: ['Место у прохода', 'USB-C быстрая зарядка'] },
+      { id: 'gl-8', num: '8', row: 2, col: 4, cat: 'window', price: 1150, status: 'available', pos: [3.1, 0.88, 0.85], feats: ['Место у окна', 'Индивидуальный обдув'] },
+
+      // Ряд 3
+      { id: 'gl-9', num: '9', row: 3, col: 1, cat: 'window', price: 1200, status: 'available', pos: [2.4, 0.88, -0.85], feats: ['Панорамное окно', 'Подголовник с поддержкой шеи'] },
+      { id: 'gl-10', num: '10', row: 3, col: 2, cat: 'aisle', price: 1050, status: 'available', pos: [2.4, 0.88, -0.42], feats: ['Место у прохода', 'Откидной столик'] },
+      { id: 'gl-11', num: '11', row: 3, col: 3, cat: 'aisle', price: 1050, status: 'occupied', pos: [2.4, 0.88, 0.42], feats: ['Место у прохода'] },
+      { id: 'gl-12', num: '12', row: 3, col: 4, cat: 'window', price: 1200, status: 'available', pos: [2.4, 0.88, 0.85], feats: ['Место у окна', 'USB-C порт'] },
+
+      // Ряд 4
+      { id: 'gl-13', num: '13', row: 4, col: 1, cat: 'window', price: 1150, status: 'available', pos: [1.7, 0.88, -0.85], feats: ['Место у окна'] },
+      { id: 'gl-14', num: '14', row: 4, col: 2, cat: 'aisle', price: 1000, status: 'available', pos: [1.7, 0.88, -0.42], feats: ['Место у прохода'] },
+      { id: 'gl-15', num: '15', row: 4, col: 3, cat: 'aisle', price: 1000, status: 'available', pos: [1.7, 0.88, 0.42], feats: ['Место у прохода'] },
+      { id: 'gl-16', num: '16', row: 4, col: 4, cat: 'window', price: 1150, status: 'available', pos: [1.7, 0.88, 0.85], feats: ['Место у окна'] },
+
+      // Ряд 5
+      { id: 'gl-17', num: '17', row: 5, col: 1, cat: 'window', price: 1150, status: 'available', pos: [1.0, 0.88, -0.85], feats: ['Место у окна'] },
+      { id: 'gl-18', num: '18', row: 5, col: 2, cat: 'aisle', price: 1000, status: 'occupied', pos: [1.0, 0.88, -0.42], feats: ['Место у прохода'] },
+      { id: 'gl-19', num: '19', row: 5, col: 3, cat: 'aisle', price: 1000, status: 'available', pos: [1.0, 0.88, 0.42], feats: ['Место у прохода'] },
+      { id: 'gl-20', num: '20', row: 5, col: 4, cat: 'window', price: 1150, status: 'available', pos: [1.0, 0.88, 0.85], feats: ['Место у окна'] },
+
+      // Ряд 6
+      { id: 'gl-21', num: '21', row: 6, col: 1, cat: 'window', price: 1100, status: 'available', pos: [0.3, 0.88, -0.85], feats: ['Место у окна'] },
+      { id: 'gl-22', num: '22', row: 6, col: 2, cat: 'aisle', price: 950, status: 'available', pos: [0.3, 0.88, -0.42], feats: ['Место у прохода'] },
+      { id: 'gl-23', num: '23', row: 6, col: 3, cat: 'aisle', price: 950, status: 'available', pos: [0.3, 0.88, 0.42], feats: ['Место у прохода'] },
+      { id: 'gl-24', num: '24', row: 6, col: 4, cat: 'window', price: 1100, status: 'available', pos: [0.3, 0.88, 0.85], feats: ['Место у окна'] },
+
+      // Ряд 7 (Перед средней дверью и WC)
+      { id: 'gl-25', num: '25', row: 7, col: 1, cat: 'emergency', price: 1250, status: 'available', pos: [-0.4, 0.88, -0.85], feats: ['Увеличенный шаг (+18 см)', 'Близко к выходу'] },
+      { id: 'gl-26', num: '26', row: 7, col: 2, cat: 'emergency', price: 1200, status: 'available', pos: [-0.4, 0.88, -0.42], feats: ['Свободный выход в проход'] },
+      { id: 'gl-27', num: '27', row: 7, col: 3, cat: 'emergency', price: 1200, status: 'available', pos: [-0.4, 0.88, 0.42], feats: ['У аварийного выхода', 'Розетка 220В'] },
+      { id: 'gl-28', num: '28', row: 7, col: 4, cat: 'emergency', price: 1250, status: 'occupied', pos: [-0.4, 0.88, 0.85], feats: ['Просторная зона для ног'] },
+
+      // Ряд 8
+      { id: 'gl-29', num: '29', row: 8, col: 1, cat: 'window', price: 1050, status: 'available', pos: [-1.1, 0.88, -0.85], feats: ['Место у окна'] },
+      { id: 'gl-30', num: '30', row: 8, col: 2, cat: 'aisle', price: 950, status: 'available', pos: [-1.1, 0.88, -0.42], feats: ['Место у прохода'] },
+      { id: 'gl-31', num: '31', row: 8, col: 3, cat: 'aisle', price: 950, status: 'available', pos: [-1.1, 0.88, 0.42], feats: ['Место у прохода'] },
+      { id: 'gl-32', num: '32', row: 8, col: 4, cat: 'window', price: 1050, status: 'available', pos: [-1.1, 0.88, 0.85], feats: ['Место у окна'] },
+
+      // Ряд 9
+      { id: 'gl-33', num: '33', row: 9, col: 1, cat: 'window', price: 1050, status: 'available', pos: [-1.8, 0.88, -0.85], feats: ['Место у окна'] },
+      { id: 'gl-34', num: '34', row: 9, col: 2, cat: 'aisle', price: 950, status: 'available', pos: [-1.8, 0.88, -0.42], feats: ['Место у прохода'] },
+      { id: 'gl-35', num: '35', row: 9, col: 3, cat: 'aisle', price: 950, status: 'available', pos: [-1.8, 0.88, 0.42], feats: ['Место у прохода'] },
+      { id: 'gl-36', num: '36', row: 9, col: 4, cat: 'window', price: 1050, status: 'available', pos: [-1.8, 0.88, 0.85], feats: ['Место у окна'] },
+
+      // Ряд 10
+      { id: 'gl-37', num: '37', row: 10, col: 1, cat: 'window', price: 1000, status: 'available', pos: [-2.5, 0.88, -0.85], feats: ['Место у окна'] },
+      { id: 'gl-38', num: '38', row: 10, col: 2, cat: 'aisle', price: 900, status: 'occupied', pos: [-2.5, 0.88, -0.42], feats: ['Место у прохода'] },
+      { id: 'gl-39', num: '39', row: 10, col: 3, cat: 'aisle', price: 900, status: 'available', pos: [-2.5, 0.88, 0.42], feats: ['Место у прохода'] },
+      { id: 'gl-40', num: '40', row: 10, col: 4, cat: 'window', price: 1000, status: 'available', pos: [-2.5, 0.88, 0.85], feats: ['Место у окна'] },
+
+      // Ряд 11
+      { id: 'gl-41', num: '41', row: 11, col: 1, cat: 'window', price: 1000, status: 'available', pos: [-3.2, 0.88, -0.85], feats: ['Место у окна'] },
+      { id: 'gl-42', num: '42', row: 11, col: 2, cat: 'aisle', price: 900, status: 'available', pos: [-3.2, 0.88, -0.42], feats: ['Место у прохода'] },
+      { id: 'gl-43', num: '43', row: 11, col: 3, cat: 'aisle', price: 900, status: 'available', pos: [-3.2, 0.88, 0.42], feats: ['Место у прохода'] },
+      { id: 'gl-44', num: '44', row: 11, col: 4, cat: 'window', price: 1000, status: 'available', pos: [-3.2, 0.88, 0.85], feats: ['Место у окна'] },
+
+      // Ряд 12
+      { id: 'gl-45', num: '45', row: 12, col: 1, cat: 'window', price: 950, status: 'available', pos: [-3.9, 0.88, -0.85], feats: ['Место у окна'] },
+      { id: 'gl-46', num: '46', row: 12, col: 2, cat: 'aisle', price: 880, status: 'available', pos: [-3.9, 0.88, -0.42], feats: ['Место у прохода'] },
+      { id: 'gl-47', num: '47', row: 12, col: 3, cat: 'aisle', price: 880, status: 'available', pos: [-3.9, 0.88, 0.42], feats: ['Место у прохода'] },
+      { id: 'gl-48', num: '48', row: 12, col: 4, cat: 'window', price: 950, status: 'available', pos: [-3.9, 0.88, 0.85], feats: ['Место у окна'] },
+
+      // Ряд 13 (Задний диван - 5 мест)
+      { id: 'gl-49', num: '49', row: 13, col: 1, cat: 'limited', price: 850, status: 'available', pos: [-4.6, 0.88, -0.85], feats: ['Экономичный тариф', 'USB-C порт'] },
+      { id: 'gl-50', num: '50', row: 13, col: 2, cat: 'limited', price: 850, status: 'available', pos: [-4.6, 0.88, -0.42], feats: ['Экономичный тариф'] },
+      { id: 'gl-51', num: '51', row: 13, col: 3, cat: 'limited', price: 850, status: 'available', pos: [-4.6, 0.88, 0.0], feats: ['Центральное место заднего дивана'] },
+      { id: 'gl-52', num: '52', row: 13, col: 4, cat: 'limited', price: 850, status: 'available', pos: [-4.6, 0.88, 0.42], feats: ['Экономичный тариф'] },
+      { id: 'gl-53', num: '53', row: 13, col: 5, cat: 'limited', price: 850, status: 'available', pos: [-4.6, 0.88, 0.85], feats: ['Экономичный тариф', 'USB-C порт'] }
+    ];
+
+
+    let currentVehicle = 'sprinter';
+    let activeSeats = SPRINTER_SEATS;
+    let selectedSeatIds = [];
+    let selectedRow = null;
+    let hoveredSeatId = null;
+
+    let scene, camera, renderer, controls;
+    let sprinterGroup = null;
+    let grandLinerGroup = null;
+    let roofMeshGroup = null;
+    let saloonBodyMesh = null;
+    let solidArcticWhitePaint, semiTransparentCabinPaint;
+
+    const seatMeshMap = new Map();
+    const container = document.getElementById('three-canvas-container');
+
+    // Камеры для Sprinter
+    const SPRINTER_CAM_PRESETS = {
+      overview: { pos: [1.2, 7.5, -0.05], target: [1.2, 0.6, 0] },
+      front:    { pos: [2.8, 5.2, -0.05], target: [2.6, 0.6, 0] },
+      rear:     { pos: [-0.9, 5.2, -0.05], target: [-0.8, 0.6, 0] },
+      cockpit:  { pos: [4.6, 2.0, 0],     target: [3.5, 1.1, 0] }
+    };
+
+    // Камеры для Grand Liner
+    const GRAND_LINER_CAM_PRESETS = {
+      overview: { pos: [0.0, 13.5, -0.05], target: [0.0, 0.8, 0] },
+      front:    { pos: [3.2, 7.5, -0.05],  target: [3.2, 0.8, 0] },
+      rear:     { pos: [-3.2, 7.5, -0.05], target: [-3.2, 0.8, 0] },
+      cockpit:  { pos: [5.6, 2.6, 0],     target: [4.2, 1.2, 0] }
+    };
+
+    let CAM_PRESETS = SPRINTER_CAM_PRESETS;
+    let CAM_OVERVIEW = SPRINTER_CAM_PRESETS.overview;
+
+    let isAnimatingCam = false;
+    let targetCamPos = [...CAM_OVERVIEW.pos];
+    let targetCamLook = [...CAM_OVERVIEW.target];
+    let showFullRoof = false;
+
+    function initThree() {
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xF5F1EA); // Warm Ivory Quiet Luxury
+
+      camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 60);
+      camera.up.set(0, 0, -1);
+      camera.position.set(...CAM_OVERVIEW.pos);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.target.set(...CAM_OVERVIEW.target);
+      controls.enableRotate = true; // Свободный осмотр включен
+      controls.enablePan = true;
+      controls.enableZoom = true;
+      controls.minDistance = 2.0;
+      controls.maxDistance = 20.0;
+
+      controls.addEventListener('start', () => {
+        isAnimatingCam = false;
+      });
+
+      // Studio Environment Map
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      pmremGenerator.compileEquirectangularShader();
+
+      const envCanvas = document.createElement('canvas');
+      envCanvas.width = 1024; envCanvas.height = 512;
+      const eCtx = envCanvas.getContext('2d');
+      const grad = eCtx.createLinearGradient(0, 0, 0, 512);
+      grad.addColorStop(0.0, '#F5F1EA');
+      grad.addColorStop(0.35, '#E8E2D6');
+      grad.addColorStop(0.5, '#FBF9F5');
+      grad.addColorStop(0.52, '#D9CDB8');
+      grad.addColorStop(1.0, '#3E3832');
+      eCtx.fillStyle = grad;
+      eCtx.fillRect(0, 0, 1024, 512);
+
+      eCtx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      eCtx.beginPath();
+      eCtx.ellipse(320, 140, 160, 70, -0.2, 0, Math.PI * 2);
+      eCtx.fill();
+      eCtx.beginPath();
+      eCtx.ellipse(780, 160, 140, 60, 0.2, 0, Math.PI * 2);
+      eCtx.fill();
+
+      const envTexture = new THREE.CanvasTexture(envCanvas);
+      envTexture.mapping = THREE.EquirectangularReflectionMapping;
+      scene.environment = pmremGenerator.fromEquirectangular(envTexture).texture;
+
+      // Lights
+      const ambient = new THREE.AmbientLight(0xFFFFFF, 0.7);
+      scene.add(ambient);
+
+      const hemi = new THREE.HemisphereLight(0xFBF9F5, 0xD9CDB8, 0.55);
+      scene.add(hemi);
+
+      const sun = new THREE.DirectionalLight(0xFFFFFF, 1.35);
+      sun.position.set(8, 14, 6);
+      sun.castShadow = true;
+      sun.shadow.mapSize.width = 2048;
+      sun.shadow.mapSize.height = 2048;
+      sun.shadow.bias = -0.00005;
+      scene.add(sun);
+
+      // Contact Shadow Ground
+      const groundGeo = new THREE.PlaneGeometry(30, 30);
+      const groundMat = new THREE.ShadowMaterial({ opacity: 0.25 });
+      const ground = new THREE.Mesh(groundGeo, groundMat);
+      ground.rotation.x = -Math.PI / 2;
+      ground.position.y = 0.0;
+      ground.receiveShadow = true;
+      scene.add(ground);
+
+      // Build initial Sprinter
+      buildRealSprinter();
+
+      setupRaycaster();
+      window.addEventListener('resize', onResize);
+      animate();
+    }
+function buildRealSprinter() {
       sprinterGroup = new THREE.Group();
       roofMeshGroup = new THREE.Group();
 
@@ -3054,7 +3539,8 @@
       return seatGeometries;
     }
 
-    function createSprinterSeat(seatData) {
+    
+function createSprinterSeat(seatData) {
       const geos = initSeatGeometries();
       const group = new THREE.Group();
       // Выравниваем базовую точку ровно по уровню пола салона (0.565)
@@ -3320,7 +3806,203 @@
       return group;
     }
 
-    // --- ИНТЕРАКТИВ И RAYCASTING ---
+    
+
+    // ══════════════════════════════════════════════════════════════════════════════
+    // ПОСТРОЕНИЕ 3D МОДЕЛИ GRAND LINER SKYLINER (53 МЕСТА)
+    // ══════════════════════════════════════════════════════════════════════════════
+    let grandLinerGroup = null;
+    let linerRoofGroup = null;
+    let linerBodyMesh = null;
+
+    function buildGrandLiner() {
+      grandLinerGroup = new THREE.Group();
+      linerRoofGroup = new THREE.Group();
+
+      const coachLength = 12.8;
+      const coachWidth = 2.55;
+      const coachHeight = 3.6;
+      const floorY = 0.88;
+
+      // 1. Материалы кузова
+      const linerPaintMat = new THREE.MeshPhysicalMaterial({
+        color: 0x1C1D1C,
+        metalness: 0.65,
+        roughness: 0.28,
+        clearcoat: 0.9,
+        clearcoatRoughness: 0.1
+      });
+
+      const semiTransparentLinerPaint = new THREE.MeshPhysicalMaterial({
+        color: 0x242624,
+        metalness: 0.4,
+        roughness: 0.35,
+        transparent: true,
+        opacity: 0.42
+      });
+
+      const linerGlassMat = new THREE.MeshPhysicalMaterial({
+        color: 0x1A202C,
+        metalness: 0.85,
+        roughness: 0.08,
+        transmission: 0.72,
+        transparent: true,
+        opacity: 0.68,
+        ior: 1.52
+      });
+
+      const chromeMat = new THREE.MeshStandardMaterial({
+        color: 0xE8E2D6,
+        metalness: 0.95,
+        roughness: 0.12
+      });
+
+      const goldTrimMat = new THREE.MeshStandardMaterial({
+        color: 0xC29B38,
+        metalness: 0.9,
+        roughness: 0.25
+      });
+
+      // 2. Шасси и нижняя часть кузова
+      const lowerHullGeo = new THREE.BoxGeometry(coachLength, 0.85, coachWidth);
+      const lowerHull = new THREE.Mesh(lowerHullGeo, linerPaintMat);
+      lowerHull.position.set(0, 0.48, 0);
+      lowerHull.castShadow = true;
+      lowerHull.receiveShadow = true;
+      grandLinerGroup.add(lowerHull);
+
+      // Хромированный молдинг по периметру
+      const trimGeo = new THREE.BoxGeometry(coachLength + 0.05, 0.04, coachWidth + 0.05);
+      const trimMesh = new THREE.Mesh(trimGeo, goldTrimMat);
+      trimMesh.position.set(0, 0.91, 0);
+      grandLinerGroup.add(trimMesh);
+
+      // 3. Пол пассажирского салона
+      const floorGeo = new THREE.BoxGeometry(coachLength - 0.4, 0.06, coachWidth - 0.2);
+      const floorMat = new THREE.MeshStandardMaterial({ color: 0x242524, roughness: 0.85 });
+      const floorMesh = new THREE.Mesh(floorGeo, floorMat);
+      floorMesh.position.set(0, floorY, 0);
+      grandLinerGroup.add(floorMesh);
+
+      // Центральная ковровая дорожка
+      const carpetGeo = new THREE.PlaneGeometry(10.5, 0.46);
+      const carpetMat = new THREE.MeshStandardMaterial({ color: 0x3E3832, roughness: 0.95 });
+      const carpetMesh = new THREE.Mesh(carpetGeo, carpetMat);
+      carpetMesh.rotation.x = -Math.PI / 2;
+      carpetMesh.position.set(-0.2, floorY + 0.032, 0);
+      grandLinerGroup.add(carpetMesh);
+
+      // 4. Панорамное остекление бортов
+      const glassSideGeo = new THREE.BoxGeometry(coachLength - 1.2, 1.45, 0.04);
+      const leftGlass = new THREE.Mesh(glassSideGeo, linerGlassMat);
+      leftGlass.position.set(-0.2, floorY + 0.95, -(coachWidth / 2 - 0.02));
+      grandLinerGroup.add(leftGlass);
+
+      const rightGlass = new THREE.Mesh(glassSideGeo, linerGlassMat);
+      rightGlass.position.set(-0.2, floorY + 0.95, (coachWidth / 2 - 0.02));
+      grandLinerGroup.add(rightGlass);
+
+      // 5. Аэродинамический нос
+      const noseGeo = new THREE.CylinderGeometry(coachWidth / 2, coachWidth / 2, 2.4, 16, 1, false, -Math.PI / 2, Math.PI);
+      const noseMesh = new THREE.Mesh(noseGeo, linerPaintMat);
+      noseMesh.position.set(coachLength / 2 - 0.2, 1.4, 0);
+      noseMesh.rotation.z = Math.PI / 2;
+      grandLinerGroup.add(noseMesh);
+
+      // Лобовое стекло
+      const wsGeo = new THREE.PlaneGeometry(coachWidth - 0.2, 1.5);
+      const wsMesh = new THREE.Mesh(wsGeo, linerGlassMat);
+      wsMesh.rotation.y = -Math.PI / 2;
+      wsMesh.rotation.x = -0.32;
+      wsMesh.position.set(coachLength / 2 + 0.35, floorY + 1.15, 0);
+      grandLinerGroup.add(wsMesh);
+
+      // 6. Съемная крыша Grand Liner
+      const roofGeo = new THREE.BoxGeometry(coachLength, 0.25, coachWidth);
+      linerBodyMesh = new THREE.Mesh(roofGeo, linerPaintMat);
+      linerBodyMesh.position.set(0, floorY + 1.82, 0);
+      linerRoofGroup.add(linerBodyMesh);
+
+      // Кондиционерные блоки на крыше
+      const acGeo = new THREE.BoxGeometry(2.4, 0.22, 1.2);
+      const acMat = new THREE.MeshStandardMaterial({ color: 0x1A1B1A, roughness: 0.5 });
+      const acMesh1 = new THREE.Mesh(acGeo, acMat);
+      acMesh1.position.set(1.2, floorY + 1.98, 0);
+      linerRoofGroup.add(acMesh1);
+
+      const acMesh2 = new THREE.Mesh(acGeo, acMat);
+      acMesh2.position.set(-2.2, floorY + 1.98, 0);
+      linerRoofGroup.add(acMesh2);
+
+      grandLinerGroup.add(linerRoofGroup);
+
+      // 7. Колесные узлы
+      const createLinerWheel = (x, z) => {
+        const wGeo = new THREE.CylinderGeometry(0.52, 0.52, 0.32, 24);
+        const wMat = new THREE.MeshStandardMaterial({ color: 0x1C1C1C, roughness: 0.75 });
+        const wheel = new THREE.Mesh(wGeo, wMat);
+        wheel.rotation.x = Math.PI / 2;
+        wheel.position.set(x, 0.52, z);
+        wheel.castShadow = true;
+
+        const rimGeo = new THREE.CylinderGeometry(0.34, 0.34, 0.34, 16);
+        const rim = new THREE.Mesh(rimGeo, chromeMat);
+        rim.rotation.x = Math.PI / 2;
+        rim.position.set(x, 0.52, z);
+        grandLinerGroup.add(rim);
+
+        return wheel;
+      };
+
+      grandLinerGroup.add(createLinerWheel(4.2, -(coachWidth / 2 - 0.05)));
+      grandLinerGroup.add(createLinerWheel(4.2, (coachWidth / 2 - 0.05)));
+      grandLinerGroup.add(createLinerWheel(-2.6, -(coachWidth / 2 - 0.05)));
+      grandLinerGroup.add(createLinerWheel(-2.6, (coachWidth / 2 - 0.05)));
+      grandLinerGroup.add(createLinerWheel(-3.9, -(coachWidth / 2 - 0.05)));
+      grandLinerGroup.add(createLinerWheel(-3.9, (coachWidth / 2 - 0.05)));
+
+      // 8. Кокпит водителя
+      const dashGeo = new THREE.BoxGeometry(0.85, 0.55, 1.8);
+      const dashMat = new THREE.MeshStandardMaterial({ color: 0x161716, roughness: 0.6 });
+      const dash = new THREE.Mesh(dashGeo, dashMat);
+      dash.position.set(coachLength / 2 - 0.8, floorY + 0.22, 0);
+      grandLinerGroup.add(dash);
+
+      const steerGeo = new THREE.TorusGeometry(0.22, 0.03, 8, 24);
+      const steer = new THREE.Mesh(steerGeo, dashMat);
+      steer.rotation.y = -Math.PI / 2;
+      steer.rotation.x = 0.5;
+      steer.position.set(coachLength / 2 - 1.1, floorY + 0.52, -0.6);
+      grandLinerGroup.add(steer);
+
+      // Кресло водителя
+      const driverSeatGeo = new THREE.BoxGeometry(0.55, 0.9, 0.55);
+      const driverSeatMat = new THREE.MeshStandardMaterial({ color: 0x2E4F3E, roughness: 0.5 });
+      const driverSeat = new THREE.Mesh(driverSeatGeo, driverSeatMat);
+      driverSeat.position.set(coachLength / 2 - 1.6, floorY + 0.45, -0.6);
+      grandLinerGroup.add(driverSeat);
+
+      // Перегородка санузла
+      const wcGeo = new THREE.BoxGeometry(0.9, 1.5, 0.85);
+      const wcMat = new THREE.MeshStandardMaterial({ color: 0x242524, roughness: 0.7 });
+      const wcMesh = new THREE.Mesh(wcGeo, wcMat);
+      wcMesh.position.set(-0.7, floorY + 0.75, -(coachWidth / 2 - 0.45));
+      grandLinerGroup.add(wcMesh);
+
+      // 9. Создание всех 53 анатомических кресел
+      GRAND_LINER_SEATS.forEach(seatData => {
+        const seatMesh = createSprinterSeat(seatData);
+        grandLinerGroup.add(seatMesh);
+        seatMeshMap.set(seatData.id, seatMesh);
+      });
+
+      return grandLinerGroup;
+    }
+
+
+    // ══════════════════════════════════════════════════════════════════════════════
+    // ИНТЕРАКТИВ, ПЕРЕКЛЮЧЕНИЕ ТРАНСПОРТА И БРОНИРОВАНИЕ
+    // ══════════════════════════════════════════════════════════════════════════════
     function setupRaycaster() {
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
@@ -3331,155 +4013,99 @@
         mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
         raycaster.setFromCamera(mouse, camera);
-        const seatMeshes = Array.from(seatMeshMap.values());
-        const intersects = raycaster.intersectObjects(seatMeshes, true);
 
-        if (intersects.length > 0) {
-          let curr = intersects[0].object;
-          while (curr && curr.parent && !curr.userData.seat) {
-            curr = curr.parent;
-          }
-          if (curr && curr.userData.seat) {
-            return { seat: curr.userData.seat, point: intersects[0].point };
+        const currentGroup = currentVehicle === 'sprinter' ? sprinterGroup : grandLinerGroup;
+        if (!currentGroup) return null;
+
+        const intersects = raycaster.intersectObjects(currentGroup.children, true);
+
+        for (let hit of intersects) {
+          let cur = hit.object;
+          while (cur && cur !== currentGroup) {
+            if (cur.userData && cur.userData.seat) {
+              return cur.userData.seat;
+            }
+            cur = cur.parent;
           }
         }
         return null;
       }
 
+      const tooltip = document.getElementById('tooltip-3d');
+      const ttNum = document.getElementById('tt-num');
+      const ttPrice = document.getElementById('tt-price');
+      const ttType = document.getElementById('tt-type');
+      const ttFeats = document.getElementById('tt-features');
+
       renderer.domElement.addEventListener('mousemove', (e) => {
-        const hit = getIntersectedSeat(e);
-        if (hit) {
-          const seat = hit.seat;
-          hoveredSeat = seat;
-          container.style.cursor = (seat.status === 'available') ? 'pointer' : 'not-allowed';
+        const seat = getIntersectedSeat(e);
+        if (seat) {
+          renderer.domElement.style.cursor = seat.status === 'occupied' ? 'not-allowed' : 'pointer';
+          hoveredSeatId = seat.id;
 
           const rect = renderer.domElement.getBoundingClientRect();
-          tooltipEl.style.display = 'block';
-          tooltipEl.style.left = `${e.clientX - rect.left}px`;
-          tooltipEl.style.top = `${e.clientY - rect.top}px`;
+          tooltip.style.left = `${e.clientX - rect.left}px`;
+          tooltip.style.top = `${e.clientY - rect.top}px`;
+          tooltip.style.display = 'block';
 
-          document.getElementById('tt-num').innerText = `Место ${seat.num}`;
-          document.getElementById('tt-price').innerText = `${seat.price} ₽`;
+          ttNum.innerText = `Место ${seat.num}`;
+          ttPrice.innerText = `${seat.price} ₽`;
 
-          let catName = 'Стандартное место';
-          if (seat.cat === 'vip') catName = 'VIP Одиночное';
-          if (seat.cat === 'emergency') catName = 'Аварийный выход (+12 см)';
-          if (seat.cat === 'disabled') catName = 'Для пассажиров с ОВЗ';
-          if (seat.cat === 'limited') catName = 'Неоткидная спинка (Эконом)';
-          if (seat.cat === 'window') catName = 'Место у окна';
-          if (seat.cat === 'aisle') catName = 'Место у прохода';
-          document.getElementById('tt-type').innerText = catName;
-
-          const featsUl = document.getElementById('tt-features');
-          featsUl.innerHTML = seat.feats.map(f => `<li>${f}</li>`).join('');
+          const catTitles = {
+            vip: 'Одиночное VIP',
+            disabled: 'Приоритет ОВЗ / Дети',
+            emergency: 'Аварийный выход (+15 см)',
+            window: 'Место у окна',
+            aisle: 'Место у прохода',
+            limited: 'Стандартный тариф'
+          };
+          ttType.innerText = catTitles[seat.cat] || 'Стандарт';
+          ttFeats.innerHTML = seat.feats ? seat.feats.map(f => `<li>${f}</li>`).join('') : '';
         } else {
-          hoveredSeat = null;
-          container.style.cursor = 'grab';
-          tooltipEl.style.display = 'none';
+          renderer.domElement.style.cursor = 'grab';
+          hoveredSeatId = null;
+          tooltip.style.display = 'none';
         }
       });
 
       renderer.domElement.addEventListener('click', (e) => {
-        const hit = getIntersectedSeat(e);
-        if (hit && hit.seat.status === 'available') {
-          onSeatClick(hit.seat);
-        } else if (!hit) {
-          // Клик в пустое / рандомное место на фоне или полу — сброс выбора и плавное отдаление камеры к общему виду
-          resetToOverview();
-        }
+        const seat = getIntersectedSeat(e);
+        if (seat) onSeatClick(seat);
       });
     }
 
     function onSeatClick(seat) {
+      if (seat.status === 'occupied' || seat.status === 'blocked') return;
+
       const idx = selectedSeatIds.indexOf(seat.id);
-      if (idx > -1) {
+      if (idx !== -1) {
         selectedSeatIds.splice(idx, 1);
-        if (selectedSeatIds.length === 0) {
-          selectedRow = null;
-          // Все места отменены — отдаляем камеру назад к общему плану
-          targetCamPos = [...CAM_OVERVIEW.pos];
-          targetCamLook = [...CAM_OVERVIEW.target];
-          isAnimatingCam = true;
-          highlightPresetBtn('all');
-        } else {
-          // Приближаем к последнему оставшемуся выбранному месту
-          const lastSeat = SPRINTER_SEATS.find(s => s.id === selectedSeatIds[selectedSeatIds.length - 1]);
-          if (lastSeat) {
-            targetCamPos = [lastSeat.pos[0], 3.2, lastSeat.pos[2]];
-            targetCamLook = [lastSeat.pos[0], 0.65, lastSeat.pos[2]];
-            isAnimatingCam = true;
-          }
-        }
+        if (selectedSeatIds.length === 0) selectedRow = null;
       } else {
         if (selectedSeatIds.length >= 3) {
-          alert('Максимум 3 места на заказ');
+          // максимум 3 места
           return;
         }
         selectedSeatIds.push(seat.id);
         selectedRow = seat.row;
-
-        // Плавное приближение камеры строго к выбранному креслу
-        targetCamPos = [seat.pos[0], 3.2, seat.pos[2]];
-        targetCamLook = [seat.pos[0], 0.65, seat.pos[2]];
-        isAnimatingCam = true;
-        clearPresetButtons();
       }
 
-      updateUI();
       rebuildSeatsAppearance();
+      updateUI();
     }
 
-    // Удаление выбранного места по клику на бейдж в нижней строке
-    window.removeSeat = function(seatId) {
+    function removeSeat(seatId) {
       const idx = selectedSeatIds.indexOf(seatId);
-      if (idx > -1) {
+      if (idx !== -1) {
         selectedSeatIds.splice(idx, 1);
-        if (selectedSeatIds.length === 0) {
-          selectedRow = null;
-          targetCamPos = [...CAM_OVERVIEW.pos];
-          targetCamLook = [...CAM_OVERVIEW.target];
-          isAnimatingCam = true;
-          highlightPresetBtn('all');
-        } else {
-          const lastSeat = SPRINTER_SEATS.find(s => s.id === selectedSeatIds[selectedSeatIds.length - 1]);
-          if (lastSeat) {
-            targetCamPos = [lastSeat.pos[0], 3.2, lastSeat.pos[2]];
-            targetCamLook = [lastSeat.pos[0], 0.65, lastSeat.pos[2]];
-            isAnimatingCam = true;
-          }
-        }
-        updateUI();
+        if (selectedSeatIds.length === 0) selectedRow = null;
         rebuildSeatsAppearance();
+        updateUI();
       }
-    };
-
-    window.resetToOverview = function() {
-      selectedSeatIds = [];
-      selectedRow = null;
-      targetCamPos = [...CAM_OVERVIEW.pos];
-      targetCamLook = [...CAM_OVERVIEW.target];
-      isAnimatingCam = true;
-      highlightPresetBtn('all');
-      updateUI();
-      rebuildSeatsAppearance();
-    };
-
-    function highlightPresetBtn(name) {
-      document.querySelectorAll('.hud-right-controls .pill-btn').forEach(b => {
-        if (b.id.startsWith('btn-cam-')) b.classList.remove('active');
-      });
-      const activeBtn = document.getElementById(`btn-cam-${name}`);
-      if (activeBtn) activeBtn.classList.add('active');
-    }
-
-    function clearPresetButtons() {
-      document.querySelectorAll('.hud-right-controls .pill-btn').forEach(b => {
-        if (b.id.startsWith('btn-cam-')) b.classList.remove('active');
-      });
     }
 
     function rebuildSeatsAppearance() {
-      SPRINTER_SEATS.forEach(seat => {
+      activeSeats.forEach(seat => {
         const meshGroup = seatMeshMap.get(seat.id);
         if (!meshGroup) return;
 
@@ -3489,7 +4115,7 @@
         meshGroup.traverse(child => {
           if (child.isMesh && child.material) {
             if (isSelected && child.material.isMeshPhysicalMaterial) {
-              child.material.color.setHex(0x1E3A8A);
+              child.material.color.setHex(0x7A2320); // Hermès Oxblood highlight
             }
             child.material.transparent = true;
             child.material.opacity = isDimmed ? 0.35 : 1.0;
@@ -3514,12 +4140,12 @@
         selectionStats.style.display = 'block';
         proceedBtn.disabled = false;
 
-        const selectedSeats = SPRINTER_SEATS.filter(s => selectedSeatIds.includes(s.id));
+        const selectedSeats = activeSeats.filter(s => selectedSeatIds.includes(s.id));
         const total = selectedSeats.reduce((acc, s) => acc + s.price, 0);
 
         totalPriceLabel.innerText = `${total.toLocaleString('ru-RU')} ₽`;
         chipsContainer.innerHTML = selectedSeats.map(s => `
-          <span class="chip-tag" onclick="removeSeat('${s.id}')" title="Нажмите, чтобы удалить место ${s.num}">
+          <span class="chip-tag" onclick="removeSeat('${s.id}')" title="Удалить место ${s.num}">
             Место ${s.num} &bull; ${s.price} ₽
             <span class="chip-close-icon">&times;</span>
           </span>
@@ -3527,29 +4153,103 @@
       }
     }
 
+    function switchVehicle(type) {
+      if (type === currentVehicle) return;
+
+      currentVehicle = type;
+      selectedSeatIds = [];
+      selectedRow = null;
+
+      document.getElementById('tab-veh-sprinter').classList.toggle('active', type === 'sprinter');
+      document.getElementById('tab-veh-grandliner').classList.toggle('active', type === 'grandliner');
+
+      const modelTitle = document.getElementById('veh-model-title');
+      const specsLine = document.getElementById('veh-specs-line');
+
+      if (type === 'sprinter') {
+        activeSeats = SPRINTER_SEATS;
+        CAM_PRESETS = SPRINTER_CAM_PRESETS;
+        CAM_OVERVIEW = SPRINTER_CAM_PRESETS.overview;
+
+        modelTitle.innerText = 'Mercedes-Benz Sprinter 170" Extra Long';
+        specsLine.innerHTML = 'Салон 2+1 &bull; 19 мест &bull; Климат-контроль Thermoking &bull; Багажное отделение';
+
+        if (grandLinerGroup) scene.remove(grandLinerGroup);
+        if (!sprinterGroup) buildRealSprinter();
+        scene.add(sprinterGroup);
+      } else {
+        activeSeats = GRAND_LINER_SEATS;
+        CAM_PRESETS = GRAND_LINER_CAM_PRESETS;
+        CAM_OVERVIEW = GRAND_LINER_CAM_PRESETS.overview;
+
+        modelTitle.innerText = 'Grand Liner Skyliner First Class';
+        specsLine.innerHTML = 'Салон 2+2 &bull; 53 места &bull; Панорамная крыша &bull; Санузел &bull; Кофейная зона';
+
+        if (sprinterGroup) scene.remove(sprinterGroup);
+        if (!grandLinerGroup) buildGrandLiner();
+        scene.add(grandLinerGroup);
+      }
+
+      resetToOverview();
+      updateUI();
+    }
+
     function setPreset(name) {
-      highlightPresetBtn(name);
       const preset = CAM_PRESETS[name];
       if (preset) {
         targetCamPos = [...preset.pos];
         targetCamLook = [...preset.target];
         isAnimatingCam = true;
       }
+      document.querySelectorAll('.hud-right-controls .pill-btn').forEach(b => b.classList.remove('active'));
+      const btn = document.getElementById(`btn-cam-${name}`);
+      if (btn) btn.classList.add('active');
+    }
+
+    function resetToOverview() {
+      setPreset('all');
+      targetCamPos = [...CAM_OVERVIEW.pos];
+      targetCamLook = [...CAM_OVERVIEW.target];
+      isAnimatingCam = true;
+      document.getElementById('btn-cam-all').classList.add('active');
     }
 
     function toggleRoof(full) {
       showFullRoof = full;
-      if (roofMeshGroup) roofMeshGroup.visible = showFullRoof;
-      if (saloonBodyMesh) {
-        saloonBodyMesh.material = showFullRoof ? solidArcticWhitePaint : semiTransparentCabinPaint;
+      if (currentVehicle === 'sprinter') {
+        if (roofMeshGroup) roofMeshGroup.visible = showFullRoof;
+        if (saloonBodyMesh) {
+          saloonBodyMesh.material = showFullRoof ? solidArcticWhitePaint : semiTransparentCabinPaint;
+        }
+      } else {
+        if (linerRoofGroup) linerRoofGroup.visible = showFullRoof;
       }
       document.getElementById('btn-roof-cutaway').classList.toggle('active', !full);
       document.getElementById('btn-roof-full').classList.toggle('active', full);
     }
 
-    function onProceedClick() {
-      const selectedNums = SPRINTER_SEATS.filter(s => selectedSeatIds.includes(s.id)).map(s => s.num).join(', ');
-      alert(`Успешно! Выбраны места в Sprinter: [${selectedNums}]. Переход к оплате.`);
+    function openBookingModal() {
+      const selectedSeats = activeSeats.filter(s => selectedSeatIds.includes(s.id));
+      if (selectedSeats.length === 0) return;
+
+      const total = selectedSeats.reduce((acc, s) => acc + s.price, 0);
+      const numsStr = selectedSeats.map(s => s.num).join(', ');
+
+      document.getElementById('modal-vehicle-val').innerText = currentVehicle === 'sprinter' 
+        ? 'Mercedes-Benz Sprinter (19 мест)' 
+        : 'Grand Liner Skyliner (53 места)';
+
+      document.getElementById('modal-seats-val').innerText = `Места: ${numsStr}`;
+      document.getElementById('modal-total-val').innerText = `${total.toLocaleString('ru-RU')} ₽`;
+
+      const botUrl = `https://t.me/BusLinerPassBot?start=booking_${currentVehicle}_${selectedSeatIds.join('_')}`;
+      document.getElementById('btn-telegram-order').href = botUrl;
+
+      document.getElementById('booking-modal').style.display = 'flex';
+    }
+
+    function closeBookingModal() {
+      document.getElementById('booking-modal').style.display = 'none';
     }
 
     function onResize() {
@@ -3561,7 +4261,6 @@
     function animate() {
       requestAnimationFrame(animate);
 
-      // Плавная анимация пресетов и облета только когда активен переход; при ручном вращении controls свободен на 100%
       if (isAnimatingCam) {
         camera.position.lerp(new THREE.Vector3(...targetCamPos), 0.08);
         controls.target.lerp(new THREE.Vector3(...targetCamLook), 0.08);
@@ -3571,18 +4270,18 @@
       }
       controls.update();
 
-      SPRINTER_SEATS.forEach(seat => {
+      activeSeats.forEach(seat => {
         const meshGroup = seatMeshMap.get(seat.id);
         if (!meshGroup) return;
         const isSelected = selectedSeatIds.includes(seat.id);
-        const targetY = isSelected ? 0.565 + 0.035 : 0.565;
+        const baseY = currentVehicle === 'sprinter' ? 0.565 : 0.88;
+        const targetY = isSelected ? baseY + 0.035 : baseY;
         meshGroup.position.y = THREE.MathUtils.lerp(meshGroup.position.y, targetY, 0.1);
       });
 
       renderer.render(scene, camera);
     }
 
-    // Запуск инициализации сцены после полной загрузки всех функций и геометрий
     initThree();
   </script>
 </body>

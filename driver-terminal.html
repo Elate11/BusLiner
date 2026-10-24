@@ -7,7 +7,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Nunito:wght@700;800;900&family=Varela+Round&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Three.js + OrbitControls for 3D Minibus Cabin -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
@@ -96,7 +96,7 @@
     /* ==========================================================================
        BUSLINER FLEET — STRICT DRIVER DASHBOARD WORKSPACE
        Quiet Luxury & Freight Monolith Design System Compliant
-       Tokens: Warm Noble Canvas (#F7F6F2) + Crisp White (#FFFFFF) + Institutional Navy (#1E3A8A)
+       Tokens: Warm Noble Canvas (#F7F6F2) + Crisp White (#FFFFFF) + Institutional Navy (#7A2320)
        Hairline 1px Borders (#E2E2DC), Tabular Monospace Data, Zero Decoration
        ========================================================================== */
     :root {
@@ -105,16 +105,16 @@
       --surface-subtle: #F0EFEA;
       --surface-elevated: #FAFAF8;
       --border-hairline: #E2E2DC;
-      --border-focus: #1E3A8A;
+      --border-focus: #7A2320;
       
       --text-primary: #141518;
       --text-muted: #525660;
       --text-dim: #8E929B;
       
-      --accent-institutional: #1E3A8A;
-      --accent-hover: #152A68;
-      --accent-soft: #EEF4FF;
-      --accent-border: #BCD0FA;
+      --accent-institutional: #7A2320;
+      --accent-hover: #611A18;
+      --accent-soft: #F9EBEA;
+      --accent-border: #D98880;
       --accent-sky: #93C5FD;
       
       /* Serious, understated status tokens (no neon, no playful bubbles) */
@@ -128,8 +128,8 @@
       --status-soldout-bg: #FEF2F2;
       --status-soldout-border: #FECACA;
       
-      --font-display: 'Newsreader', Georgia, serif;
-      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-display: var(--font-display);
+      --font-body: var(--font-body);
       --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
       --radius-card: 20px;
       --radius-ctrl: 10px;
@@ -192,13 +192,13 @@
       color: var(--accent-institutional);
     }
     .font-onlyfans {
-      font-family: 'Nunito', 'Arial Rounded MT Bold', 'Varela Round', sans-serif !important;
+      font-family: var(--font-body);
       font-weight: 800 !important;
       letter-spacing: -0.02em !important;
       text-transform: lowercase !important;
     }
     .badge-b2b {
-      font-family: 'Nunito', 'Arial Rounded MT Bold', 'Varela Round', sans-serif;
+      font-family: var(--font-body);
       font-size: inherit;
       font-weight: 800;
       padding: 0 4px;
@@ -861,7 +861,7 @@
       width: 86px;
       height: 86px;
       border-radius: 50%;
-      background: #1E3A8A;
+      background: #7A2320;
       color: #FFFFFF;
       border: 4px solid #FFFFFF;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
@@ -1491,7 +1491,7 @@
       color: #D1D5DB;
     }
     body.cockpit-night-mode .btn-action-board {
-      background: #1E3A8A;
+      background: #7A2320;
       border-color: #2563EB;
       color: #FFFFFF;
     }
@@ -1532,17 +1532,29 @@
       border-color: var(--text-dim);
     }
 
+  
+    /* Artisanal Paper Grain Overlay */
+    .paper-grain-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.034;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+    
   </style>
 </head>
 
 <body>
+  <div class="paper-grain-overlay"></div>
 
   <!-- TOP GLOBAL NAVIGATION -->
   <header class="dashboard-nav">
     <div style="display: flex; align-items: center; gap: 14px;">
       <a href="carrier-dashboard.html" class="brand-link" title="BusLiner Driver">
         <svg width="26" height="26" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="28" height="28" rx="6" fill="#1E3A8A"/>
+          <rect width="28" height="28" rx="6" fill="#7A2320"/>
           <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M6 9H11.5M6 19H11.5" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
         </svg>
@@ -2052,7 +2064,7 @@
             </svg>
           </div>
           <div class="profile-handle-row">
-            <span class="profile-handle" id="modal-driver-handle">@voronov_busliner</span>
+            <span class="profile-handle" id="modal-driver-handle">@BusLinerFleetBot</span>
             <span class="profile-dot-sep">&bull;</span>
             <span class="profile-id-tag" id="modal-driver-id">ID: 804290</span>
             <span class="profile-dot-sep">&bull;</span>
@@ -2209,7 +2221,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
               <div class="form-group-strict">
                 <label class="form-label-strict">Никнейм / Handle (@)</label>
-                <input type="text" id="inp-driver-handle" class="form-input-strict" required value="@voronov_busliner">
+                <input type="text" id="inp-driver-handle" class="form-input-strict" required value="@BusLinerFleetBot">
               </div>
               <div class="form-group-strict">
                 <label class="form-label-strict">Табельный номер</label>
@@ -2364,7 +2376,7 @@
     // DRIVER PROFILE DATA (TWITTER/VK STYLE WITH LOCALSTORAGE PERSISTENCE)
     let driverProfile = {
       name: "Дмитрий Воронов",
-      handle: "@voronov_busliner",
+      handle: "@BusLinerFleetBot",
       initials: "ДВ",
       tabNum: "DRV-08",
       idNum: "804290",
@@ -3854,7 +3866,7 @@
       pCtx.strokeStyle = '#0F172A';
       pCtx.lineWidth = 4;
       pCtx.strokeRect(3, 3, 250, 58);
-      pCtx.fillStyle = '#1E3A8A';
+      pCtx.fillStyle = '#7A2320';
       pCtx.fillRect(4, 4, 32, 56);
       pCtx.fillStyle = '#FFFFFF';
       pCtx.font = 'bold 16px sans-serif';
@@ -5539,7 +5551,7 @@
       let insertColor = 0x334155;  // Тканевая текстурированная вставка
 
       if (isSelected) {
-        primaryColor = 0x1E3A8A; // Фирменный deep navy
+        primaryColor = 0x7A2320; // Фирменный deep navy
         insertColor = 0x2563EB;
       } else if (isBlocked) {
         primaryColor = 0x94A3B8;
@@ -5552,7 +5564,7 @@
         insertColor = 0x3B82F6;
       } else if (seatData.cat === 'vip') {
         primaryColor = 0x0F172A;
-        insertColor = 0x1E3A8A;
+        insertColor = 0x7A2320;
       } else if (seatData.cat === 'emergency') {
         primaryColor = 0x0369A1;
         insertColor = 0x0284C7;
@@ -5740,7 +5752,7 @@
       const numCanvas = document.createElement('canvas');
       numCanvas.width = 128; numCanvas.height = 128;
       const ctx = numCanvas.getContext('2d');
-      ctx.fillStyle = isSelected ? '#1E3A8A' : '#0F172A';
+      ctx.fillStyle = isSelected ? '#7A2320' : '#0F172A';
       ctx.fillRect(0, 0, 128, 128);
       ctx.strokeStyle = isSelected ? '#93C5FD' : '#FFFFFF';
       ctx.lineWidth = 6;
@@ -5983,7 +5995,7 @@
             if (child.material.isMeshPhysicalMaterial) {
               child.material.color.setHex(seatColor);
               if (isSelected) {
-                child.material.emissive.setHex(0x1E3A8A);
+                child.material.emissive.setHex(0x7A2320);
                 child.material.emissiveIntensity = 0.55;
               } else {
                 child.material.emissive.setHex(0x000000);
