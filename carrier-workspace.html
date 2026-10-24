@@ -1,0 +1,3181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>Рабочий кабинет перевозчика — BusLiner Workspace</title>
+
+  <!-- TYPOGRAPHY FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       BUSLINER WORKSPACE // QUIET LUXURY OPERATIONAL DESIGN TOKENS
+       Aesthetic: Hermès / Loro Piana / High-Craft Telemetry Console
+       Ergonomics Priority: FUNCTION > ERGONOMICS > AESTHETICS > MOTION
+       Rules: Exactly 0 image tags, Exactly 0 square brackets in visible copy
+       ========================================================================== */
+    :root {
+      --canvas: #F5F1EA;              /* Warm Ivory Canvas */
+      --canvas-alt: #EFE9DE;          /* Subtle Sand Canvas */
+      --surface-card: #FBF9F5;        /* Fine Linen Card */
+      --surface-subtle: #E8E2D6;      /* Bone Neutral */
+      --surface-hover: #ECE5D8;       /* Subtle row hover */
+      --surface-elevated: #FFFFFF;    /* Clean contrast sheet */
+      --surface-glass: rgba(251, 249, 245, 0.94);
+
+      --border-hairline: rgba(184, 169, 154, 0.42);
+      --border-focus: #7A2320;
+      --border-strong: #C4B5A3;
+
+      --text-primary: #1C1D1C;        /* Deep Graphite */
+      --text-muted: #5C5852;          /* Warm Muted Gray */
+      --text-dim: #8A847C;            /* Dim Telemetry Gray */
+      --text-inverted: #FBF9F5;
+
+      /* SEMANTIC PALETTE */
+      --accent-oxblood: #7A2320;      /* Signature Hermès Oxblood */
+      --accent-oxblood-hover: #631917;
+      --accent-oxblood-subtle: rgba(122, 35, 32, 0.08);
+
+      --status-forest: #2E4F3E;       /* In-Route / Confirmed / Healthy */
+      --status-forest-bg: #EAEFEA;
+      --status-forest-border: #A3C9A8;
+
+      --status-sand: #A8674F;         /* Scheduled / Boarding / Radar */
+      --status-sand-bg: #FBF4F1;
+      --status-sand-border: #E8CFC6;
+
+      --status-alert: #7A2320;        /* Delayed / Attention / Cancelled */
+      --status-alert-bg: #F9EBEA;
+      --status-alert-border: #D98880;
+
+      --status-blue: #3E5A70;         /* Completed / Archived */
+      --status-blue-bg: #EDF3F7;
+      --status-blue-border: #B6C8D6;
+
+      --font-display: 'Cormorant Garamond', Garamond, Georgia, serif;
+      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
+
+      --sidebar-width: 256px;
+      --sidebar-collapsed-width: 68px;
+      --header-height: 64px;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 18px;
+
+      --shadow-subtle: 0 4px 20px -6px rgba(28, 29, 28, 0.06);
+      --shadow-elevated: 0 16px 36px -10px rgba(28, 29, 28, 0.12);
+      --shadow-floating: 0 20px 48px -12px rgba(28, 29, 28, 0.2);
+
+      --ease-fluid: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-snappy: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* GLOBAL RESET & BASE */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: var(--canvas);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* TACTILE PAPER NOISE OVERLAY */
+    .paper-noise-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 99999;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* APP SHELL GRID */
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+      position: relative;
+    }
+
+    /* SIDEBAR NAVIGATION */
+    aside.app-sidebar {
+      width: var(--sidebar-width);
+      background: var(--surface-card);
+      border-right: 1px solid var(--border-hairline);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      flex-shrink: 0;
+      z-index: 100;
+      transition: width 0.25s var(--ease-fluid);
+    }
+
+    .sidebar-header {
+      height: var(--header-height);
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .brand-logo-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--accent-oxblood);
+      color: #FFFFFF;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(122, 35, 32, 0.25);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-name {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      color: var(--text-primary);
+    }
+
+    .brand-label {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-oxblood);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .sidebar-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--border-hairline);
+      color: var(--text-muted);
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s var(--ease-snappy);
+    }
+    .sidebar-toggle-btn:hover {
+      background: var(--surface-subtle);
+      color: var(--text-primary);
+    }
+
+    /* NAV LINKS */
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+    }
+
+    .nav-section-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      padding: 8px 12px 4px;
+    }
+
+    .nav-item-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 600;
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.18s var(--ease-snappy), color 0.18s var(--ease-snappy), transform 0.18s var(--ease-snappy);
+    }
+
+    .nav-item-btn:hover {
+      background: var(--surface-subtle);
+      color: var(--text-primary);
+      transform: translateX(2px);
+    }
+
+    .nav-item-btn.active {
+      background: var(--canvas);
+      color: var(--accent-oxblood);
+      font-weight: 700;
+      box-shadow: inset 0 0 0 1px var(--border-hairline);
+    }
+
+    .nav-item-btn.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 3.5px;
+      background: var(--accent-oxblood);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .nav-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      stroke-width: 2;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+      background: var(--surface-subtle);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+    .nav-item-btn.active .nav-badge {
+      background: var(--accent-oxblood-subtle);
+      color: var(--accent-oxblood);
+    }
+
+    /* SIDEBAR FOOTER & PROFILE */
+    .sidebar-footer {
+      padding: 16px 14px;
+      border-top: 1px solid var(--border-hairline);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: var(--surface-card);
+    }
+
+    .carrier-profile-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      background: var(--canvas);
+      border: 1px solid var(--border-hairline);
+    }
+
+    .carrier-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--surface-subtle);
+      color: var(--accent-oxblood);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      font-family: var(--font-mono);
+      border: 1px solid var(--border-hairline);
+      flex-shrink: 0;
+    }
+
+    .carrier-meta {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .carrier-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .carrier-subtext {
+      font-size: 11px;
+      color: var(--status-forest);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+    }
+
+    .carrier-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--status-forest);
+      box-shadow: 0 0 0 2px rgba(46, 79, 62, 0.2);
+    }
+
+    .passenger-site-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px dashed var(--border-hairline);
+      transition: all 0.2s var(--ease-snappy);
+    }
+    .passenger-site-link:hover {
+      background: var(--surface-subtle);
+      color: var(--accent-oxblood);
+      border-color: var(--accent-oxblood);
+    }
+
+    /* MAIN APP WORKSPACE */
+    main.app-workspace {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: var(--canvas);
+      position: relative;
+    }
+
+    /* TOP APPLICATION BAR */
+    header.top-app-bar {
+      height: var(--header-height);
+      background: var(--surface-card);
+      border-bottom: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .header-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+    }
+
+    .crumb-root {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .crumb-separator {
+      color: var(--text-dim);
+      font-size: 11px;
+    }
+
+    .crumb-current {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .header-right-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .telemetry-clock {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--canvas);
+      border: 1px solid var(--border-hairline);
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      font-variant-numeric: tabular-nums;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .clock-pulse {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--status-forest);
+      animation: clockBlink 2s infinite ease-in-out;
+    }
+    @keyframes clockBlink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .btn-create-trip-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-oxblood);
+      color: #FFFFFF;
+      border: none;
+      padding: 9px 18px;
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(122, 35, 32, 0.22);
+      transition: all 0.2s var(--ease-snappy);
+    }
+    .btn-create-trip-primary:hover {
+      background: var(--accent-oxblood-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(122, 35, 32, 0.28);
+    }
+
+    /* WORKSPACE SCREEN CONTENT CONTAINER */
+    .screen-content-area {
+      flex: 1;
+      padding: 28px 32px 80px;
+      max-width: 1380px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .screen-pane {
+      display: none;
+      animation: screenFadeIn 0.3s var(--ease-fluid) forwards;
+    }
+    .screen-pane.active-pane {
+      display: block;
+    }
+    @keyframes screenFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* SCREEN HERO HEADLINE */
+    .screen-heading-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .screen-title-group h1 {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    .screen-title-group h1 em {
+      font-style: italic;
+      color: var(--accent-oxblood);
+    }
+    .screen-title-group p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .screen-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* 4-KPI TELEMETRY GRID */
+    .kpi-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .kpi-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 18px 22px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: var(--shadow-subtle);
+      transition: transform 0.2s var(--ease-snappy), border-color 0.2s;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-strong);
+    }
+
+    .kpi-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .kpi-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .kpi-icon-pill {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--surface-subtle);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .kpi-number {
+      font-family: var(--font-mono);
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .kpi-footer-note {
+      font-size: 11.5px;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-dim);
+    }
+
+    .trend-up {
+      color: var(--status-forest);
+      font-weight: 700;
+    }
+    .trend-attention {
+      color: var(--accent-oxblood);
+      font-weight: 700;
+    }
+
+    /* OPERATIONAL SECTION BOXES */
+    .panel-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-subtle);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .panel-card-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      background: var(--surface-card);
+    }
+
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: 21px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-title-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: var(--surface-subtle);
+      color: var(--text-muted);
+    }
+
+    /* FILTERS & SEARCH ROW */
+    .filter-toolbar {
+      padding: 14px 24px;
+      background: var(--surface-subtle);
+      border-bottom: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .filter-left-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      min-width: 240px;
+      max-width: 340px;
+      flex: 1;
+    }
+
+    .search-input-wrapper svg {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 15px;
+      height: 15px;
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    .input-clean {
+      width: 100%;
+      padding: 8px 12px 8px 34px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text-primary);
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .input-clean:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(122, 35, 32, 0.1);
+    }
+
+    .filter-select {
+      padding: 8px 12px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text-primary);
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      outline: none;
+      cursor: pointer;
+    }
+    .filter-select:focus {
+      border-color: var(--border-focus);
+    }
+
+    .filter-chip-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--surface-card);
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-hairline);
+    }
+
+    .chip-tab-btn {
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s var(--ease-snappy);
+    }
+    .chip-tab-btn.active {
+      background: var(--accent-oxblood);
+      color: #FFFFFF;
+    }
+
+    /* ERGONOMIC DATA TABLES */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      background: var(--surface-card);
+      position: relative;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    table.data-table thead th {
+      background: var(--surface-subtle);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border-hairline);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    table.data-table thead th.sortable {
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    table.data-table thead th.sortable:hover {
+      color: var(--accent-oxblood);
+    }
+
+    table.data-table tbody tr {
+      border-bottom: 1px solid var(--border-hairline);
+      transition: background-color 0.15s var(--ease-snappy);
+      cursor: pointer;
+    }
+    table.data-table tbody tr:hover {
+      background-color: var(--surface-hover);
+    }
+    table.data-table tbody tr.row-selected {
+      background-color: var(--canvas-alt);
+    }
+
+    table.data-table td {
+      padding: 13px 18px;
+      color: var(--text-primary);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    /* COLUMN ALIGNMENTS */
+    .col-check { width: 44px; text-align: center; }
+    .col-left { text-align: left; }
+    .col-right { text-align: right; }
+    .col-center { text-align: center; }
+
+    /* CHECKBOX STYLING */
+    input[type="checkbox"].table-checkbox {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent-oxblood);
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    /* TYPOGRAPHY CELLS */
+    .mono-cell {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .time-slot-badge {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text-primary);
+      background: var(--surface-subtle);
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      display: inline-block;
+    }
+
+    .route-cell-title {
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .route-arrow {
+      color: var(--accent-oxblood);
+      font-weight: 700;
+    }
+
+    .vehicle-cell-plate {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      background: var(--canvas);
+      border: 1px solid var(--border-hairline);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--text-muted);
+      margin-left: 6px;
+    }
+
+    /* LOAD OCCUPANCY BAR */
+    .occupancy-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 130px;
+    }
+    .occupancy-bar-bg {
+      flex: 1;
+      height: 6px;
+      background: var(--surface-subtle);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .occupancy-bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: var(--status-forest);
+      transition: width 0.3s ease;
+    }
+    .occupancy-bar-fill.high { background: var(--status-sand); }
+    .occupancy-bar-fill.full { background: var(--accent-oxblood); }
+
+    .occupancy-text {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+      width: 46px;
+      text-align: right;
+    }
+
+    /* STATUS PILL BADGES */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 14px;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .status-pill::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .status-forest-pill {
+      background: var(--status-forest-bg);
+      color: var(--status-forest);
+      border: 1px solid var(--status-forest-border);
+    }
+    .status-forest-pill::before { background: var(--status-forest); }
+
+    .status-sand-pill {
+      background: var(--status-sand-bg);
+      color: var(--status-sand);
+      border: 1px solid var(--status-sand-border);
+    }
+    .status-sand-pill::before { background: var(--status-sand); }
+
+    .status-alert-pill {
+      background: var(--status-alert-bg);
+      color: var(--status-alert);
+      border: 1px solid var(--status-alert-border);
+    }
+    .status-alert-pill::before { background: var(--status-alert); }
+
+    .status-blue-pill {
+      background: var(--status-blue-bg);
+      color: var(--status-blue);
+      border: 1px solid var(--status-blue-border);
+    }
+    .status-blue-pill::before { background: var(--status-blue); }
+
+    /* ACTION BUTTONS IN TABLE */
+    .table-actions-group {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .btn-action-icon {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s var(--ease-snappy);
+    }
+    .btn-action-icon:hover {
+      background: var(--accent-oxblood-subtle);
+      color: var(--accent-oxblood);
+      border-color: var(--accent-oxblood);
+      transform: translateY(-1px);
+    }
+
+    /* FLOATING BULK ACTIONS BAR */
+    .bulk-floating-bar {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120px);
+      background: var(--text-primary);
+      color: #FFFFFF;
+      padding: 10px 20px;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-floating);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 1000;
+      transition: transform 0.28s var(--ease-fluid);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .bulk-floating-bar.active {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .bulk-count-badge {
+      background: var(--accent-oxblood);
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 12px;
+      padding: 3px 9px;
+      border-radius: 12px;
+    }
+
+    .btn-bulk-action {
+      background: rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-bulk-action:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    .btn-bulk-clear {
+      background: transparent;
+      border: none;
+      color: #A8A096;
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* SLIDE-OUT FLYOUT DRAWER (MANIFEST & TRIP DETAILS) */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 29, 28, 0.45);
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s var(--ease-fluid);
+    }
+    .drawer-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .flyout-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 520px;
+      max-width: 95vw;
+      height: 100vh;
+      background: var(--surface-card);
+      border-left: 1px solid var(--border-hairline);
+      box-shadow: var(--shadow-floating);
+      z-index: 2010;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.28s var(--ease-fluid);
+    }
+    .drawer-overlay.open .flyout-drawer {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-subtle);
+    }
+
+    .drawer-title-group h2 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    .drawer-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-family: var(--font-mono);
+    }
+
+    .drawer-close-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid var(--border-hairline);
+      background: var(--surface-card);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .drawer-close-btn:hover {
+      color: var(--text-primary);
+      background: var(--canvas);
+    }
+
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    /* 20-SEAT BUS SCHEMATIC (QUIET LUXURY SPRINTER COCKPIT) */
+    .bus-schematic-card {
+      background: var(--canvas);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .bus-cockpit-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px dashed var(--border-hairline);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+    }
+
+    .seats-grid-layout {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .seat-box {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      border: 1px solid var(--border-hairline);
+      background: var(--surface-card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+    .seat-box:hover {
+      border-color: var(--border-focus);
+      background: var(--surface-subtle);
+    }
+    .seat-box.occupied {
+      background: var(--surface-subtle);
+      color: var(--text-dim);
+      cursor: default;
+    }
+    .seat-box.boarded {
+      background: var(--status-forest-bg);
+      border-color: var(--status-forest-border);
+      color: var(--status-forest);
+    }
+    .seat-box.selected {
+      background: var(--accent-oxblood);
+      color: #FFFFFF;
+      border-color: var(--accent-oxblood);
+    }
+
+    .seat-legend-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .legend-box {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      border: 1px solid var(--border-hairline);
+    }
+
+    /* PASSENGER ROSTER LIST */
+    .roster-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .roster-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+    }
+
+    .roster-passenger-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .roster-name {
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .roster-phone {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .btn-checkin-toggle {
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border-hairline);
+      background: var(--surface-card);
+      color: var(--text-muted);
+      transition: all 0.15s;
+    }
+    .btn-checkin-toggle.boarded {
+      background: var(--status-forest);
+      color: #FFFFFF;
+      border-color: var(--status-forest);
+    }
+
+    .drawer-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-subtle);
+    }
+
+    .btn-print-manifest {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-print-manifest:hover {
+      border-color: var(--text-primary);
+    }
+
+    /* MODAL WINDOWS (CREATE TRIP / MANUAL BOOKING) */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 29, 28, 0.45);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s var(--ease-fluid);
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-window {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 580px;
+      box-shadow: var(--shadow-floating);
+      overflow: hidden;
+      transform: scale(0.96);
+      transition: transform 0.25s var(--ease-fluid);
+    }
+    .modal-overlay.open .modal-window {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-subtle);
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .modal-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 10px 12px;
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      color: var(--text-primary);
+      background: var(--canvas);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(122, 35, 32, 0.1);
+    }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .modal-footer {
+      padding: 18px 24px;
+      border-top: 1px solid var(--border-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      background: var(--surface-subtle);
+    }
+
+    .btn-secondary {
+      padding: 9px 16px;
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    /* TOAST NOTIFICATION CONTAINER */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast-card {
+      pointer-events: auto;
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      box-shadow: var(--shadow-elevated);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 280px;
+      max-width: 400px;
+      transform: translateX(120%);
+      transition: transform 0.28s var(--ease-fluid), opacity 0.28s;
+    }
+    .toast-card.show {
+      transform: translateX(0);
+    }
+
+    .toast-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .toast-forest .toast-icon { color: var(--status-forest); }
+    .toast-alert .toast-icon { color: var(--accent-oxblood); }
+
+    .toast-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .toast-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .toast-desc {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .toast-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    /* RESPONSIVE BREAKPOINTS */
+    @media (max-width: 1080px) {
+      .kpi-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      aside.app-sidebar {
+        width: var(--sidebar-collapsed-width);
+      }
+      .brand-text, .nav-item-btn span, .nav-badge, .nav-section-title, .carrier-meta {
+        display: none;
+      }
+      .nav-item-btn {
+        justify-content: center;
+        padding: 12px 0;
+      }
+      .carrier-profile-card {
+        justify-content: center;
+        padding: 8px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .app-shell {
+        flex-direction: column;
+      }
+      aside.app-sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border-hairline);
+      }
+      .sidebar-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 8px;
+      }
+      .kpi-metrics-grid {
+        grid-template-columns: 1fr;
+      }
+      .screen-content-area {
+        padding: 18px 16px 80px;
+      }
+    }
+
+    /* ACCESSIBILITY: REDUCED MOTION */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* PRINT SHEET FOR MANIFEST */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #print-manifest-area, #print-manifest-area * {
+        visibility: visible;
+      }
+      #print-manifest-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TACTILE PAPER GRAIN TEXTURE (3.5% OPACITY) -->
+  <div class="paper-noise-canvas" aria-hidden="true"></div>
+
+  <!-- TOAST NOTIFICATIONS HUB -->
+  <div class="toast-container" id="toastHub" role="status" aria-live="polite"></div>
+
+  <!-- APPLICATION SHELL -->
+  <div class="app-shell">
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="app-sidebar" id="appSidebar">
+      <!-- HEADER BRAND -->
+      <div class="sidebar-header">
+        <a href="#dashboard" class="brand-mark" onclick="switchScreen('dashboard')">
+          <div class="brand-logo-icon">B</div>
+          <div class="brand-text">
+            <span class="brand-name">BusLiner</span>
+            <span class="brand-label">Партнеры • Кабинет</span>
+          </div>
+        </a>
+        <button class="sidebar-toggle-btn" id="sidebarCollapseBtn" title="Свернуть меню" onclick="toggleSidebarCollapse()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- MAIN NAVIGATION LINKS -->
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Диспетчерская</div>
+
+        <button class="nav-item-btn active" data-screen="dashboard" onclick="switchScreen('dashboard')">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="3" y="3" width="7" height="9" rx="1" />
+            <rect x="14" y="3" width="7" height="5" rx="1" />
+            <rect x="14" y="12" width="7" height="9" rx="1" />
+            <rect x="3" y="16" width="7" height="5" rx="1" />
+          </svg>
+          <span>Обзор</span>
+          <span class="nav-badge" id="badgeTripsToday">6</span>
+        </button>
+
+        <button class="nav-item-btn" data-screen="trips" onclick="switchScreen('trips')">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="2" y="6" width="20" height="12" rx="2" />
+            <circle cx="7" cy="18" r="2" />
+            <circle cx="17" cy="18" r="2" />
+            <path d="M2 11h20" />
+          </svg>
+          <span>Рейсы</span>
+          <span class="nav-badge" id="badgeActiveTrips">8</span>
+        </button>
+
+        <button class="nav-item-btn" data-screen="schedule" onclick="switchScreen('schedule')">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          <span>Расписание</span>
+        </button>
+
+        <button class="nav-item-btn" data-screen="bookings" onclick="switchScreen('bookings')">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+            <polyline points="10 9 9 9 8 9" />
+          </svg>
+          <span>Брони и билеты</span>
+          <span class="nav-badge" id="badgeTotalBookings">92</span>
+        </button>
+
+        <div class="nav-section-title" style="margin-top: 14px;">Управление</div>
+
+        <button class="nav-item-btn" data-screen="finances" onclick="switchScreen('finances')">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
+            <path d="M12 18V6" />
+          </svg>
+          <span>Финансы и выплаты</span>
+        </button>
+
+        <button class="nav-item-btn" data-screen="settings" onclick="switchScreen('settings')">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+          <span>Автопарк и реквизиты</span>
+        </button>
+      </nav>
+
+      <!-- FOOTER PROFILE & RETURN LINK -->
+      <div class="sidebar-footer">
+        <div class="carrier-profile-card">
+          <div class="carrier-avatar">АЛ</div>
+          <div class="carrier-meta">
+            <span class="carrier-name">ИП Александр</span>
+            <span class="carrier-subtext">
+              <span class="carrier-status-dot"></span>
+              На линии • УНП 1934882
+            </span>
+          </div>
+        </div>
+
+        <a href="index.html" class="passenger-site-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          Пассажирский сайт
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN APPLICATION WORKSPACE -->
+    <main class="app-workspace">
+
+      <!-- TOP APP BAR -->
+      <header class="top-app-bar">
+        <div class="header-breadcrumb">
+          <span class="crumb-root">Кабинет</span>
+          <span class="crumb-separator">/</span>
+          <span class="crumb-current" id="headerCrumbTitle">Обзор показателей</span>
+        </div>
+
+        <div class="header-right-actions">
+          <div class="telemetry-clock">
+            <span class="clock-pulse"></span>
+            <span id="liveTimeClock">15:58:20 MSK</span>
+          </div>
+
+          <button class="btn-create-trip-primary" onclick="openModalCreateTrip()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Создать рейс
+          </button>
+        </div>
+      </header>
+
+      <!-- SCREEN CONTENT AREA -->
+      <div class="screen-content-area">
+
+        <!-- ====================================================================
+             SCREEN 1: DASHBOARD (ОБЗОР)
+             ==================================================================== -->
+        <div class="screen-pane active-pane" id="screen-dashboard">
+          <div class="screen-heading-row">
+            <div class="screen-title-group">
+              <h1>Сводка <em>диспетчерской</em></h1>
+              <p>Оперативный контроль рейсов, загрузки флота и посадки пассажиров на сегодня</p>
+            </div>
+            <div class="screen-controls-group">
+              <button class="btn-secondary" onclick="exportDailyManifestCSV()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block; vertical-align:middle; margin-right:4px;">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Экспорт ведомости за день
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 KPI TILES -->
+          <div class="kpi-metrics-grid">
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Рейсы сегодня</span>
+                <div class="kpi-icon-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="6" width="20" height="12" rx="2" />
+                    <circle cx="7" cy="18" r="2" />
+                    <circle cx="17" cy="18" r="2" />
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-number" id="dashKpiTrips">6</div>
+              <div class="kpi-footer-note">
+                <span class="trend-up">3 завершено</span> • 2 в пути • 1 по расписанию
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Средняя загрузка</span>
+                <div class="kpi-icon-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-number" id="dashKpiLoad">89.4%</div>
+              <div class="kpi-footer-note">
+                <span class="trend-up">↑ 4.2%</span> к прошлой субботе
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Выручка за сутки</span>
+                <div class="kpi-icon-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
+                    <path d="M12 18V6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-number" id="dashKpiRevenue">1 840 BYN</div>
+              <div class="kpi-footer-note">
+                92 проданных билета по тарифам
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Требуют внимания</span>
+                <div class="kpi-icon-pill" style="color: var(--accent-oxblood); background: var(--status-alert-bg);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-number" style="color: var(--accent-oxblood);" id="dashKpiAlerts">1</div>
+              <div class="kpi-footer-note">
+                <span class="trend-attention">Посадка через 25 мин</span> • 2 свободных места
+              </div>
+            </div>
+          </div>
+
+          <!-- UPCOMING DEPARTURES TABLE PANEL -->
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <h2 class="panel-title">
+                Ближайшие отправления
+                <span class="panel-title-badge">Сегодня</span>
+              </h2>
+              <button class="btn-secondary" onclick="switchScreen('trips')">
+                Все рейсы →
+              </button>
+            </div>
+
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th class="col-left">Время</th>
+                    <th class="col-left">Маршрут</th>
+                    <th class="col-left">Автобус и госномер</th>
+                    <th class="col-left">Водитель</th>
+                    <th class="col-left">Загрузка</th>
+                    <th class="col-center">Статус</th>
+                    <th class="col-right">Действия</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboardUpcomingTableBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             SCREEN 2: TRIPS (РЕЙСЫ)
+             ==================================================================== -->
+        <div class="screen-pane" id="screen-trips">
+          <div class="screen-heading-row">
+            <div class="screen-title-group">
+              <h1>Управление <em>рейсами</em></h1>
+              <p>Реестр запланированных, активных и архивных маршрутов перевозчика</p>
+            </div>
+            <div class="screen-controls-group">
+              <button class="btn-create-trip-primary" onclick="openModalCreateTrip()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Добавить рейс
+              </button>
+            </div>
+          </div>
+
+          <!-- TRIPS MASTER PANEL WITH FILTERS & DATA TABLE -->
+          <div class="panel-card">
+            <!-- FILTER TOOLBAR -->
+            <div class="filter-toolbar">
+              <div class="filter-left-controls">
+                <div class="search-input-wrapper">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                  <input type="text" class="input-clean" id="tripSearchInput" placeholder="Поиск по маршруту, авто или водителю..." oninput="handleTripSearchDebounced(this.value)">
+                </div>
+
+                <select class="filter-select" id="tripRouteFilter" onchange="applyTripFilters()">
+                  <option value="all">Все направления</option>
+                  <option value="Минск — Вильнюс">Минск — Вильнюс</option>
+                  <option value="Минск — Гродно">Минск — Гродно</option>
+                  <option value="Минск — Брест">Минск — Брест</option>
+                  <option value="Минск — Могилев">Минск — Могилев</option>
+                </select>
+
+                <div class="filter-chip-tabs" id="tripStatusTabs">
+                  <button class="chip-tab-btn active" data-status="all" onclick="setTripStatusTab('all')">Все</button>
+                  <button class="chip-tab-btn" data-status="in_route" onclick="setTripStatusTab('in_route')">В пути</button>
+                  <button class="chip-tab-btn" data-status="scheduled" onclick="setTripStatusTab('scheduled')">Запланирован</button>
+                  <button class="chip-tab-btn" data-status="completed" onclick="setTripStatusTab('completed')">Завершен</button>
+                </div>
+              </div>
+
+              <div class="filter-right-controls">
+                <button class="btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="resetTripFilters()">
+                  Сбросить фильтры
+                </button>
+              </div>
+            </div>
+
+            <!-- TRIPS DATA TABLE -->
+            <div class="table-container">
+              <table class="data-table" id="tripsMasterTable">
+                <thead>
+                  <tr>
+                    <th class="col-check">
+                      <input type="checkbox" class="table-checkbox" id="masterTripCheckbox" onchange="toggleSelectAllTrips(this.checked)">
+                    </th>
+                    <th class="col-left sortable" onclick="sortTrips('time')">Время & Дата</th>
+                    <th class="col-left sortable" onclick="sortTrips('route')">Маршрут</th>
+                    <th class="col-left">Транспорт</th>
+                    <th class="col-left">Водитель</th>
+                    <th class="col-left sortable" onclick="sortTrips('occupancy')">Загрузка</th>
+                    <th class="col-center">Статус</th>
+                    <th class="col-right sortable" onclick="sortTrips('fare')">Тариф</th>
+                    <th class="col-right">Действия</th>
+                  </tr>
+                </thead>
+                <tbody id="tripsTableBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             SCREEN 3: SCHEDULE (РАСПИСАНИЕ)
+             ==================================================================== -->
+        <div class="screen-pane" id="screen-schedule">
+          <div class="screen-heading-row">
+            <div class="screen-title-group">
+              <h1>Сетка <em>расписания</em></h1>
+              <p>Регулярные рейсы на неделю с шаблонами формирования интервалов</p>
+            </div>
+            <div class="screen-controls-group">
+              <button class="btn-secondary" onclick="showToast('Шаблон недели скопирован в буфер', 'forest')">
+                Дублировать на следующую неделю
+              </button>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <h2 class="panel-title">Регулярные отправления (Понедельник — Воскресенье)</h2>
+              <span class="panel-title-badge">14 рейсов в неделю</span>
+            </div>
+
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th class="col-left">Время</th>
+                    <th class="col-left">Маршрут</th>
+                    <th class="col-left">Дни недели</th>
+                    <th class="col-left">Автобус</th>
+                    <th class="col-right">Тариф</th>
+                    <th class="col-center">Регулярность</th>
+                    <th class="col-right">Управление</th>
+                  </tr>
+                </thead>
+                <tbody id="scheduleTableBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             SCREEN 4: BOOKINGS (БРОНИ И БИЛЕТЫ)
+             ==================================================================== -->
+        <div class="screen-pane" id="screen-bookings">
+          <div class="screen-heading-row">
+            <div class="screen-title-group">
+              <h1>Реестр <em>пассажиров</em> и броней</h1>
+              <p>Поиск билетов по коду, номеру телефона пассажира и сверка оплаты</p>
+            </div>
+            <div class="screen-controls-group">
+              <button class="btn-create-trip-primary" onclick="openModalAddBooking()">
+                Добавить билет вручную
+              </button>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="filter-toolbar">
+              <div class="search-input-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input type="text" class="input-clean" id="bookingSearchInput" placeholder="Поиск по билету, ФИО или телефону..." oninput="filterBookingsList(this.value)">
+              </div>
+
+              <select class="filter-select" id="bookingPaymentFilter" onchange="filterBookingsList(document.getElementById('bookingSearchInput').value)">
+                <option value="all">Все статусы оплаты</option>
+                <option value="paid">Оплачено онлайн</option>
+                <option value="cash">Оплата при посадке</option>
+              </select>
+            </div>
+
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th class="col-left">Билет</th>
+                    <th class="col-left">Пассажир</th>
+                    <th class="col-left">Телефон</th>
+                    <th class="col-left">Маршрут и время</th>
+                    <th class="col-center">Место</th>
+                    <th class="col-center">Оплата</th>
+                    <th class="col-right">Сумма</th>
+                    <th class="col-right">Чек-ин</th>
+                  </tr>
+                </thead>
+                <tbody id="bookingsTableBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             SCREEN 5: FINANCES (ФИНАНСЫ)
+             ==================================================================== -->
+        <div class="screen-pane" id="screen-finances">
+          <div class="screen-heading-row">
+            <div class="screen-title-group">
+              <h1>Финансы и <em>выплаты</em></h1>
+              <p>Расчетная ведомость, чистый доход за вычетом комиссии платформы и реквизиты</p>
+            </div>
+          </div>
+
+          <!-- FINANCIAL KPI CARDS -->
+          <div class="kpi-metrics-grid">
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Валовая выручка (Gross)</span>
+                <div class="kpi-icon-pill">BYN</div>
+              </div>
+              <div class="kpi-number">12 480 BYN</div>
+              <div class="kpi-footer-note">За текущий расчетный период (14 дней)</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Комиссия сервиса</span>
+                <div class="kpi-icon-pill">5%</div>
+              </div>
+              <div class="kpi-number" style="color: var(--text-dim);">- 624 BYN</div>
+              <div class="kpi-footer-note">Включает эквайринг и поддержку 24/7</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">К выплате на р/с</span>
+                <div class="kpi-icon-pill" style="color: var(--status-forest); background: var(--status-forest-bg);">✓</div>
+              </div>
+              <div class="kpi-number" style="color: var(--status-forest);">11 856 BYN</div>
+              <div class="kpi-footer-note">Выплата каждый вторник на IBAN</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Средний чек билета</span>
+                <div class="kpi-icon-pill">avg</div>
+              </div>
+              <div class="kpi-number">36.5 BYN</div>
+              <div class="kpi-footer-note">342 перевезенных пассажира</div>
+            </div>
+          </div>
+
+          <!-- ROUTE REVENUE BREAKDOWN PANEL -->
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <h2 class="panel-title">Доходность по маршрутам</h2>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th class="col-left">Маршрут</th>
+                    <th class="col-left">Выполнено рейсов</th>
+                    <th class="col-left">Пассажиропоток</th>
+                    <th class="col-left">Средняя загрузка</th>
+                    <th class="col-right">Выручка BYN</th>
+                    <th class="col-right">Доля в обороте</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="col-left"><strong>Минск ➔ Вильнюс</strong></td>
+                    <td class="col-left mono-cell">14</td>
+                    <td class="col-left mono-cell">268 чел.</td>
+                    <td class="col-left mono-cell">95.7%</td>
+                    <td class="col-right mono-cell" style="font-weight:700;">6 840 BYN</td>
+                    <td class="col-right mono-cell">54.8%</td>
+                  </tr>
+                  <tr>
+                    <td class="col-left"><strong>Минск ➔ Гродно</strong></td>
+                    <td class="col-left mono-cell">12</td>
+                    <td class="col-left mono-cell">210 чел.</td>
+                    <td class="col-left mono-cell">87.5%</td>
+                    <td class="col-right mono-cell" style="font-weight:700;">3 150 BYN</td>
+                    <td class="col-right mono-cell">25.2%</td>
+                  </tr>
+                  <tr>
+                    <td class="col-left"><strong>Минск ➔ Брест</strong></td>
+                    <td class="col-left mono-cell">8</td>
+                    <td class="col-left mono-cell">144 чел.</td>
+                    <td class="col-left mono-cell">90.0%</td>
+                    <td class="col-right mono-cell" style="font-weight:700;">2 490 BYN</td>
+                    <td class="col-right mono-cell">20.0%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             SCREEN 6: SETTINGS & FLEET (АВТОПАРК И РЕКВИЗИТЫ)
+             ==================================================================== -->
+        <div class="screen-pane" id="screen-settings">
+          <div class="screen-heading-row">
+            <div class="screen-title-group">
+              <h1>Автопарк и <em>реквизиты</em></h1>
+              <p>Управление транспортными средствами, водительским составом и договором</p>
+            </div>
+          </div>
+
+          <!-- VEHICLE FLEET PANEL -->
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <h2 class="panel-title">Транспортные средства перевозчика</h2>
+              <button class="btn-secondary" onclick="showToast('Функция добавления ТС доступна менеджеру парка', 'forest')">
+                + Добавить автобус
+              </button>
+            </div>
+
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th class="col-left">Модель автобуса</th>
+                    <th class="col-left">Госномер</th>
+                    <th class="col-left">Вместимость</th>
+                    <th class="col-left">Класс комфорта</th>
+                    <th class="col-center">Статус ТО</th>
+                    <th class="col-right">Закрепленный водитель</th>
+                  </tr>
+                </thead>
+                <tbody id="fleetTableBody">
+                  <tr>
+                    <td class="col-left"><strong>Mercedes-Benz Sprinter 519 CDI</strong></td>
+                    <td class="col-left mono-cell"><span class="vehicle-cell-plate">7TAX-8891</span></td>
+                    <td class="col-left mono-cell">20 мест</td>
+                    <td class="col-left">VIP Business Line (Wi-Fi, 220V)</td>
+                    <td class="col-center"><span class="status-pill status-forest-pill">Пройден до 12.2026</span></td>
+                    <td class="col-right">Александр (Смена 1)</td>
+                  </tr>
+                  <tr>
+                    <td class="col-left"><strong>Volkswagen Crafter Grand Tour</strong></td>
+                    <td class="col-left mono-cell"><span class="vehicle-cell-plate">5TAX-1204</span></td>
+                    <td class="col-left mono-cell">19 мест</td>
+                    <td class="col-left">Executive Comfort</td>
+                    <td class="col-center"><span class="status-pill status-forest-pill">Пройден до 11.2026</span></td>
+                    <td class="col-right">Михаил К.</td>
+                  </tr>
+                  <tr>
+                    <td class="col-left"><strong>Mercedes-Benz Tourismo</strong></td>
+                    <td class="col-left mono-cell"><span class="vehicle-cell-plate">3TAX-7740</span></td>
+                    <td class="col-left mono-cell">49 мест</td>
+                    <td class="col-left">Long Distance Tourist Edition</td>
+                    <td class="col-center"><span class="status-pill status-sand-pill">ТО через 14 дней</span></td>
+                    <td class="col-right">Сергей В.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- CARRIER REQUISITES PANEL -->
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <h2 class="panel-title">Юридические реквизиты</h2>
+            </div>
+            <div style="padding: 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;">
+              <div>
+                <span class="form-label">Перевозчик</span>
+                <p style="font-weight: 700; margin-top: 4px;">ИП Александр Александрович</p>
+              </div>
+              <div>
+                <span class="form-label">УНП</span>
+                <p class="mono-cell" style="margin-top: 4px;">193488210</p>
+              </div>
+              <div>
+                <span class="form-label">Расчетный счет IBAN</span>
+                <p class="mono-cell" style="margin-top: 4px;">BY22ALFA30130000001234567890</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ==========================================================================
+       FLOATING BULK ACTIONS BAR (Appears when >= 1 trips selected)
+       ========================================================================== -->
+  <div class="bulk-floating-bar" id="bulkFloatingBar">
+    <span class="bulk-count-badge" id="bulkSelectedCount">0</span>
+    <span style="font-size: 13px; font-weight: 600;">Выбрано рейсов</span>
+
+    <button class="btn-bulk-action" onclick="bulkChangeStatus('in_route')">
+      Статус: В пути
+    </button>
+    <button class="btn-bulk-action" onclick="bulkChangeStatus('completed')">
+      Статус: Завершить
+    </button>
+    <button class="btn-bulk-action" onclick="bulkExportCSV()">
+      Экспорт CSV
+    </button>
+    <button class="btn-bulk-action" style="color: #FFB3B0;" onclick="bulkCancelTrips()">
+      Отменить
+    </button>
+
+    <button class="btn-bulk-clear" onclick="clearTripSelection()">
+      Сбросить выбор
+    </button>
+  </div>
+
+  <!-- ==========================================================================
+       SLIDE-OUT FLYOUT DRAWER (TRIP DETAILS & MANIFEST INSPECTOR)
+       ========================================================================== -->
+  <div class="drawer-overlay" id="tripDetailsOverlay" onclick="closeTripDetails(event)">
+    <aside class="flyout-drawer" onclick="event.stopPropagation()">
+      <div class="drawer-header">
+        <div class="drawer-title-group">
+          <h2 id="drawerTripRoute">Минск ➔ Вильнюс</h2>
+          <div class="drawer-subtitle" id="drawerTripSubtitle">Рейс BL-5715 • 18:45 • Sprinter 7TAX-8891</div>
+        </div>
+        <button class="drawer-close-btn" onclick="closeTripDetails()">✕</button>
+      </div>
+
+      <div class="drawer-body">
+        <!-- 20-SEAT BUS SEATING SCHEMATIC -->
+        <div class="bus-schematic-card">
+          <div class="bus-cockpit-bar">
+            <span>Водитель • Кабина</span>
+            <span id="drawerOccupancyBadge">18 / 20 мест занято</span>
+          </div>
+
+          <div class="seats-grid-layout" id="drawerSeatsGrid">
+            <!-- 20 seats generated dynamically -->
+          </div>
+
+          <div class="seat-legend-row">
+            <div class="legend-item">
+              <div class="legend-box" style="background: var(--status-forest-bg); border-color: var(--status-forest-border);"></div>
+              <span>Посажен</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-box" style="background: var(--surface-subtle);"></div>
+              <span>Куплен</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-box" style="background: var(--surface-card);"></div>
+              <span>Свободно</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASSENGER MANIFEST ROSTER -->
+        <div>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 12px;">
+            <h3 style="font-size: 15px; font-weight: 700;">Посадочная ведомость рейса</h3>
+            <span style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);" id="drawerBoardedCount">14 из 18 сели</span>
+          </div>
+
+          <div class="roster-list" id="drawerRosterList">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <div class="drawer-footer">
+        <button class="btn-print-manifest" onclick="printPassengerManifest()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 6 2 18 2 18 9" />
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+            <rect x="6" y="14" width="12" height="8" />
+          </svg>
+          Печать манифеста
+        </button>
+        <button class="btn-create-trip-primary" style="font-size: 12px; padding: 8px 14px;" onclick="closeTripDetails()">
+          Готово
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: CREATE TRIP (С СОХРАНЕНИЕМ ЧЕРНОВИКА В LOCALSTORAGE)
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalCreateTripOverlay" onclick="closeModalCreateTrip(event)">
+    <div class="modal-window" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">Создание нового рейса</h3>
+        <button class="drawer-close-btn" onclick="closeModalCreateTrip()">✕</button>
+      </div>
+
+      <form id="createTripForm" onsubmit="handleCreateTripSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="tripRouteSelect">Маршрут следования</label>
+            <select class="form-select" id="tripRouteSelect" required onblur="saveCreateTripDraft()">
+              <option value="Минск — Вильнюс">Минск — Вильнюс (Центральный АВ ➔ Оро уостас)</option>
+              <option value="Минск — Гродно">Минск — Гродно (АВ Восточный ➔ Автовокзал Гродно)</option>
+              <option value="Минск — Брест">Минск — Брест (Центральный АВ ➔ АВ Брест)</option>
+              <option value="Минск — Могилев">Минск — Могилев (Институт Культуры ➔ АВ Могилев)</option>
+            </select>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="tripDateInput">Дата отправления</label>
+              <input type="date" class="form-input" id="tripDateInput" required onblur="saveCreateTripDraft()">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="tripTimeInput">Время отправления</label>
+              <input type="time" class="form-input" id="tripTimeInput" required onblur="saveCreateTripDraft()">
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="tripVehicleSelect">Транспортное средство</label>
+              <select class="form-select" id="tripVehicleSelect" required onblur="saveCreateTripDraft()">
+                <option value="Mercedes-Benz Sprinter (7TAX-8891)">Mercedes-Benz Sprinter 519 (7TAX-8891) • 20 мест</option>
+                <option value="Volkswagen Crafter (5TAX-1204)">Volkswagen Crafter (5TAX-1204) • 19 мест</option>
+                <option value="Mercedes-Benz Tourismo (3TAX-7740)">Mercedes Tourismo (3TAX-7740) • 49 мест</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="tripDriverSelect">Назначенный водитель</label>
+              <select class="form-select" id="tripDriverSelect" required onblur="saveCreateTripDraft()">
+                <option value="Александр (Смена 1)">Александр (Смена 1)</option>
+                <option value="Михаил К.">Михаил К.</option>
+                <option value="Сергей В.">Сергей В.</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="tripPriceInput">Базовый тариф (BYN)</label>
+              <input type="number" class="form-input mono-cell" id="tripPriceInput" min="10" max="300" step="5" value="45" required onblur="saveCreateTripDraft()">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="tripPlatformSelect">Перрон отправления</label>
+              <input type="text" class="form-input" id="tripPlatformSelect" value="Центральный АВ, перрон 3" onblur="saveCreateTripDraft()">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="closeModalCreateTrip()">Отмена</button>
+          <button type="submit" class="btn-create-trip-primary">Опубликовать рейс</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL: MANUAL BOOKING (ДОБАВИТЬ ПАССАЖИРА В РЕЙС)
+       ========================================================================== -->
+  <div class="modal-overlay" id="modalAddBookingOverlay" onclick="closeModalAddBooking(event)">
+    <div class="modal-window" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">Ручное бронирование билета</h3>
+        <button class="drawer-close-btn" onclick="closeModalAddBooking()">✕</button>
+      </div>
+
+      <form id="addBookingForm" onsubmit="handleAddBookingSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="bookingTripSelect">Рейс</label>
+            <select class="form-select" id="bookingTripSelect" required>
+              <!-- Filled from active trips -->
+            </select>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="bookingPassengerName">ФИО пассажира</label>
+              <input type="text" class="form-input" id="bookingPassengerName" placeholder="Иванов Иван Иванович" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="bookingPassengerPhone">Номер телефона</label>
+              <input type="tel" class="form-input mono-cell" id="bookingPassengerPhone" placeholder="+375 29 123-45-67" required>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="bookingSeatNumber">Номер места (1–20)</label>
+              <input type="number" class="form-input mono-cell" id="bookingSeatNumber" min="1" max="20" value="7" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="bookingPaymentMethod">Способ оплаты</label>
+              <select class="form-select" id="bookingPaymentMethod">
+                <option value="cash">Оплата водителю при посадке</option>
+                <option value="paid">Оплачено картой</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="closeModalAddBooking()">Отмена</button>
+          <button type="submit" class="btn-create-trip-primary">Выдать билет</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- PRINT-ONLY PASSENGER MANIFEST AREA -->
+  <div id="print-manifest-area" style="display:none; padding: 40px; font-family: sans-serif;">
+    <h1 style="font-size: 24px; margin-bottom: 8px;">BusLiner — Посадочный манифест перевозчика</h1>
+    <p id="printManifestHeaderMeta" style="margin-bottom: 24px; color: #555;"></p>
+    <table style="width: 100%; border-collapse: collapse; text-align: left;" border="1" cellpadding="8">
+      <thead>
+        <tr>
+          <th>Место</th>
+          <th>ФИО Пассажира</th>
+          <th>Телефон</th>
+          <th>Билет</th>
+          <th>Оплата</th>
+          <th>Подпись о посадке</th>
+        </tr>
+      </thead>
+      <tbody id="printManifestTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- ==========================================================================
+       CLIENT-SIDE REACTIVE STORE & APPLICATION CONTROLLER
+       ========================================================================== -->
+  <script>
+    /* INITIAL STATE SEED (SYNCHRONIZED WITH BUSLINER.DB) */
+    const DEFAULT_TRIPS = [
+      {
+        id: "BL-5715",
+        time: "18:45",
+        date: "Сегодня",
+        route: "Минск — Вильнюс",
+        origin: "Центральный АВ",
+        destination: "Оро уостас (Аэропорт)",
+        vehicle: "Mercedes Sprinter (7TAX-8891)",
+        plate: "7TAX-8891",
+        driver: "Александр (Смена 1)",
+        capacity: 20,
+        occupied: 18,
+        status: "in_route", // in_route, scheduled, completed, cancelled
+        fare: 85.0
+      },
+      {
+        id: "BL-5716",
+        time: "19:30",
+        date: "Сегодня",
+        route: "Минск — Гродно",
+        origin: "АВ Восточный",
+        destination: "Автовокзал Гродно",
+        vehicle: "Volkswagen Crafter (5TAX-1204)",
+        plate: "5TAX-1204",
+        driver: "Михаил К.",
+        capacity: 19,
+        occupied: 17,
+        status: "scheduled",
+        fare: 25.0
+      },
+      {
+        id: "BL-5717",
+        time: "20:15",
+        date: "Сегодня",
+        route: "Минск — Брест",
+        origin: "Центральный АВ",
+        destination: "АВ Брест",
+        vehicle: "Mercedes Sprinter (7TAX-8891)",
+        plate: "7TAX-8891",
+        driver: "Александр (Смена 1)",
+        capacity: 20,
+        occupied: 15,
+        status: "scheduled",
+        fare: 32.0
+      },
+      {
+        id: "BL-5712",
+        time: "12:00",
+        date: "Сегодня",
+        route: "Минск — Могилев",
+        origin: "Институт Культуры",
+        destination: "АВ Могилев",
+        vehicle: "Mercedes Tourismo (3TAX-7740)",
+        plate: "3TAX-7740",
+        driver: "Сергей В.",
+        capacity: 49,
+        occupied: 46,
+        status: "completed",
+        fare: 22.0
+      },
+      {
+        id: "BL-5713",
+        time: "14:30",
+        date: "Сегодня",
+        route: "Минск — Вильнюс",
+        origin: "Центральный АВ",
+        destination: "Оро уостас (Аэропорт)",
+        vehicle: "Mercedes Sprinter (7TAX-8891)",
+        plate: "7TAX-8891",
+        driver: "Александр (Смена 1)",
+        capacity: 20,
+        occupied: 20,
+        status: "completed",
+        fare: 85.0
+      },
+      {
+        id: "BL-5714",
+        time: "16:15",
+        date: "Сегодня",
+        route: "Минск — Гродно",
+        origin: "АВ Восточный",
+        destination: "Автовокзал Гродно",
+        vehicle: "Volkswagen Crafter (5TAX-1204)",
+        plate: "5TAX-1204",
+        driver: "Михаил К.",
+        capacity: 19,
+        occupied: 19,
+        status: "completed",
+        fare: 25.0
+      }
+    ];
+
+    const DEFAULT_BOOKINGS = [
+      { id: "TKT-8801", tripId: "BL-5715", name: "Сергей Володин", phone: "+375 29 412-88-01", seat: "04A", status: "boarded", payment: "paid", amount: 85.0 },
+      { id: "TKT-8802", tripId: "BL-5715", name: "Анна Смирнова", phone: "+375 29 301-44-12", seat: "04B", status: "boarded", payment: "paid", amount: 85.0 },
+      { id: "TKT-8803", tripId: "BL-5715", name: "Дмитрий Ковалев", phone: "+375 44 712-00-55", seat: "05A", status: "boarded", payment: "paid", amount: 85.0 },
+      { id: "TKT-8804", tripId: "BL-5715", name: "Ольга Малиновская", phone: "+375 33 618-92-31", seat: "05B", status: "pending", payment: "cash", amount: 85.0 },
+      { id: "TKT-8805", tripId: "BL-5715", name: "Виктор Баранов", phone: "+375 29 991-03-44", seat: "06A", status: "boarded", payment: "paid", amount: 85.0 },
+      { id: "TKT-8806", tripId: "BL-5715", name: "Елена Кузнецова", phone: "+375 44 554-11-22", seat: "06B", status: "boarded", payment: "paid", amount: 85.0 },
+      { id: "TKT-8807", tripId: "BL-5716", name: "Павел Громов", phone: "+375 29 881-22-33", seat: "02A", status: "pending", payment: "paid", amount: 25.0 },
+      { id: "TKT-8808", tripId: "BL-5716", name: "Наталья Рябова", phone: "+375 29 771-44-55", seat: "02B", status: "pending", payment: "cash", amount: 25.0 },
+      { id: "TKT-8809", tripId: "BL-5717", name: "Игорь Мельников", phone: "+375 44 112-99-88", seat: "01A", status: "pending", payment: "paid", amount: 32.0 }
+    ];
+
+    const DEFAULT_SCHEDULE = [
+      { time: "07:00", route: "Минск ➔ Вильнюс", days: "Ежедневно", vehicle: "Sprinter (7TAX-8891)", fare: "85 BYN", recurrence: "Активно" },
+      { time: "09:30", route: "Минск ➔ Гродно", days: "Пн, Ср, Пт, Сб", vehicle: "Crafter (5TAX-1204)", fare: "25 BYN", recurrence: "Активно" },
+      { time: "14:30", route: "Минск ➔ Вильнюс", days: "Ежедневно", vehicle: "Sprinter (7TAX-8891)", fare: "85 BYN", recurrence: "Активно" },
+      { time: "18:45", route: "Минск ➔ Вильнюс", days: "Ежедневно", vehicle: "Sprinter (7TAX-8891)", fare: "85 BYN", recurrence: "Активно" },
+      { time: "20:15", route: "Минск ➔ Брест", days: "Пт, Сб, Вс", vehicle: "Tourismo (3TAX-7740)", fare: "32 BYN", recurrence: "Сезонный" }
+    ];
+
+    /* APP STORE INITIALIZATION */
+    let trips = JSON.parse(localStorage.getItem('busliner_trips') || JSON.stringify(DEFAULT_TRIPS));
+    let bookings = JSON.parse(localStorage.getItem('busliner_bookings') || JSON.stringify(DEFAULT_BOOKINGS));
+    let selectedTripIds = new Set();
+    let currentFilterRoute = 'all';
+    let currentFilterStatus = 'all';
+    let currentSearchTerm = '';
+    let currentActiveTripForDrawer = null;
+
+    function saveStore() {
+      localStorage.setItem('busliner_trips', JSON.stringify(trips));
+      localStorage.setItem('busliner_bookings', JSON.stringify(bookings));
+    }
+
+    /* TELEMETRY LIVE CLOCK */
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      const clockEl = document.getElementById('liveTimeClock');
+      if (clockEl) clockEl.textContent = `${h}:${m}:${s} MSK`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    /* SIDEBAR NAVIGATION & SCREEN ROUTING */
+    function switchScreen(screenId) {
+      document.querySelectorAll('.screen-pane').forEach(el => el.classList.remove('active-pane'));
+      document.querySelectorAll('.nav-item-btn').forEach(btn => btn.classList.remove('active'));
+
+      const targetPane = document.getElementById(`screen-${screenId}`);
+      const targetNav = document.querySelector(`.nav-item-btn[data-screen="${screenId}"]`);
+
+      if (targetPane) targetPane.classList.add('active-pane');
+      if (targetNav) targetNav.classList.add('active');
+
+      const titleMap = {
+        dashboard: "Обзор показателей",
+        trips: "Управление рейсами",
+        schedule: "Сетка расписания",
+        bookings: "Реестр пассажиров и билетов",
+        finances: "Финансы и расчеты",
+        settings: "Автопарк и реквизиты"
+      };
+      document.getElementById('headerCrumbTitle').textContent = titleMap[screenId] || "Панель";
+      window.location.hash = screenId;
+    }
+
+    function toggleSidebarCollapse() {
+      const sidebar = document.getElementById('appSidebar');
+      const isCollapsed = sidebar.style.width === 'var(--sidebar-collapsed-width)';
+      sidebar.style.width = isCollapsed ? 'var(--sidebar-width)' : 'var(--sidebar-collapsed-width)';
+      document.querySelectorAll('.brand-text, .nav-item-btn span, .nav-badge, .nav-section-title, .carrier-meta').forEach(el => {
+        el.style.display = isCollapsed ? '' : 'none';
+      });
+    }
+
+    /* RENDER STATUS PILL HELPER */
+    function renderStatusPill(status) {
+      switch (status) {
+        case 'in_route':
+          return `<span class="status-pill status-forest-pill">В пути</span>`;
+        case 'scheduled':
+          return `<span class="status-pill status-sand-pill">Запланирован</span>`;
+        case 'completed':
+          return `<span class="status-pill status-blue-pill">Завершен</span>`;
+        case 'cancelled':
+          return `<span class="status-pill status-alert-pill">Отменен</span>`;
+        default:
+          return `<span class="status-pill status-sand-pill">${status}</span>`;
+      }
+    }
+
+    /* RENDER OCCUPANCY BAR HELPER */
+    function renderOccupancy(occupied, capacity) {
+      const pct = Math.round((occupied / capacity) * 100);
+      let fillClass = '';
+      if (pct >= 90) fillClass = 'full';
+      else if (pct >= 75) fillClass = 'high';
+
+      return `
+        <div class="occupancy-cell">
+          <div class="occupancy-bar-bg">
+            <div class="occupancy-bar-fill ${fillClass}" style="width: ${pct}%;"></div>
+          </div>
+          <span class="occupancy-text">${occupied}/${capacity}</span>
+        </div>
+      `;
+    }
+
+    /* RENDER TRIPS TABLES */
+    function renderTrips() {
+      const tbody = document.getElementById('tripsTableBody');
+      const upcomingTbody = document.getElementById('dashboardUpcomingTableBody');
+
+      let filtered = trips.filter(trip => {
+        const matchesRoute = currentFilterRoute === 'all' || trip.route === currentFilterRoute;
+        const matchesStatus = currentFilterStatus === 'all' || trip.status === currentFilterStatus;
+        const matchesSearch = currentSearchTerm === '' ||
+          trip.route.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+          trip.driver.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+          trip.vehicle.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+          trip.id.toLowerCase().includes(currentSearchTerm.toLowerCase());
+        return matchesRoute && matchesStatus && matchesSearch;
+      });
+
+      // Master Trips Table
+      tbody.innerHTML = filtered.map(trip => {
+        const isSelected = selectedTripIds.has(trip.id);
+        return `
+          <tr class="${isSelected ? 'row-selected' : ''}" onclick="toggleTripSelect('${trip.id}', event)">
+            <td class="col-check" onclick="event.stopPropagation()">
+              <input type="checkbox" class="table-checkbox trip-row-checkbox" data-id="${trip.id}" ${isSelected ? 'checked' : ''} onchange="handleTripCheckboxChange('${trip.id}', this.checked)">
+            </td>
+            <td class="col-left mono-cell">
+              <span class="time-slot-badge">${trip.time}</span>
+              <span style="font-size:11px; color:var(--text-dim); margin-left:6px;">${trip.date}</span>
+            </td>
+            <td class="col-left">
+              <div class="route-cell-title">
+                ${trip.route.replace('—', '<span class="route-arrow">➔</span>')}
+              </div>
+              <div style="font-size: 11px; color: var(--text-muted);">${trip.id} • ${trip.origin}</div>
+            </td>
+            <td class="col-left">
+              <span>${trip.vehicle.split('(')[0].trim()}</span>
+              <span class="vehicle-cell-plate">${trip.plate}</span>
+            </td>
+            <td class="col-left">${trip.driver}</td>
+            <td class="col-left">${renderOccupancy(trip.occupied, trip.capacity)}</td>
+            <td class="col-center">${renderStatusPill(trip.status)}</td>
+            <td class="col-right mono-cell" style="font-weight:700;">${trip.fare.toFixed(1)} BYN</td>
+            <td class="col-right" onclick="event.stopPropagation()">
+              <div class="table-actions-group">
+                <button class="btn-action-icon" title="Открыть манифест и пассажиров" onclick="openTripDetails('${trip.id}')">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Dashboard Upcoming departures table (top 4 upcoming/in_route)
+      const upcoming = trips.filter(t => t.status === 'in_route' || t.status === 'scheduled').slice(0, 4);
+      upcomingTbody.innerHTML = upcoming.map(trip => `
+        <tr onclick="openTripDetails('${trip.id}')">
+          <td class="col-left mono-cell">
+            <span class="time-slot-badge">${trip.time}</span>
+          </td>
+          <td class="col-left">
+            <div class="route-cell-title">${trip.route.replace('—', '<span class="route-arrow">➔</span>')}</div>
+            <div style="font-size:11px; color:var(--text-muted);">${trip.origin}</div>
+          </td>
+          <td class="col-left">
+            <span>${trip.vehicle.split('(')[0]}</span>
+            <span class="vehicle-cell-plate">${trip.plate}</span>
+          </td>
+          <td class="col-left">${trip.driver}</td>
+          <td class="col-left">${renderOccupancy(trip.occupied, trip.capacity)}</td>
+          <td class="col-center">${renderStatusPill(trip.status)}</td>
+          <td class="col-right" onclick="event.stopPropagation()">
+            <button class="btn-secondary" style="font-size:12px; padding:5px 10px;" onclick="openTripDetails('${trip.id}')">
+              Манифест →
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Update counters & badges
+      document.getElementById('badgeTripsToday').textContent = trips.length;
+      document.getElementById('badgeActiveTrips').textContent = trips.filter(t => t.status === 'in_route' || t.status === 'scheduled').length;
+      updateBulkFloatingBar();
+    }
+
+    /* RENDER SCHEDULE TABLE */
+    function renderSchedule() {
+      const tbody = document.getElementById('scheduleTableBody');
+      tbody.innerHTML = DEFAULT_SCHEDULE.map(item => `
+        <tr>
+          <td class="col-left mono-cell"><span class="time-slot-badge">${item.time}</span></td>
+          <td class="col-left"><strong>${item.route}</strong></td>
+          <td class="col-left">${item.days}</td>
+          <td class="col-left">${item.vehicle}</td>
+          <td class="col-right mono-cell" style="font-weight:700;">${item.fare}</td>
+          <td class="col-center"><span class="status-pill status-forest-pill">${item.recurrence}</span></td>
+          <td class="col-right">
+            <button class="btn-action-icon" title="Клонировать рейс на сегодня" onclick="cloneScheduleToTrip('${item.time}', '${item.route}')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    /* RENDER BOOKINGS TABLE */
+    function renderBookings(list = bookings) {
+      const tbody = document.getElementById('bookingsTableBody');
+      tbody.innerHTML = list.map(b => `
+        <tr>
+          <td class="col-left mono-cell" style="font-weight:700; color:var(--accent-oxblood);">${b.id}</td>
+          <td class="col-left"><strong>${b.name}</strong></td>
+          <td class="col-left mono-cell">${b.phone}</td>
+          <td class="col-left">Рейс ${b.tripId}</td>
+          <td class="col-center mono-cell"><span class="vehicle-cell-plate" style="font-weight:700;">${b.seat}</span></td>
+          <td class="col-center">
+            ${b.payment === 'paid' ? '<span class="status-pill status-forest-pill">Оплачено</span>' : '<span class="status-pill status-sand-pill">При посадке</span>'}
+          </td>
+          <td class="col-right mono-cell" style="font-weight:700;">${b.amount.toFixed(1)} BYN</td>
+          <td class="col-right">
+            <button class="btn-checkin-toggle ${b.status === 'boarded' ? 'boarded' : ''}" onclick="toggleCheckin('${b.id}')">
+              ${b.status === 'boarded' ? '✓ Сел в салон' : 'Отметить посадку'}
+            </button>
+          </td>
+        </tr>
+      `).join('');
+      document.getElementById('badgeTotalBookings').textContent = bookings.length;
+    }
+
+    function filterBookingsList(query) {
+      const paymentFilter = document.getElementById('bookingPaymentFilter').value;
+      const q = (query || '').toLowerCase().trim();
+      const filtered = bookings.filter(b => {
+        const matchesQ = q === '' || b.name.toLowerCase().includes(q) || b.phone.includes(q) || b.id.toLowerCase().includes(q);
+        const matchesPay = paymentFilter === 'all' || b.payment === paymentFilter;
+        return matchesQ && matchesPay;
+      });
+      renderBookings(filtered);
+    }
+
+    /* FILTERING & SORTING LOGIC */
+    let tripSearchTimeout = null;
+    function handleTripSearchDebounced(val) {
+      clearTimeout(tripSearchTimeout);
+      tripSearchTimeout = setTimeout(() => {
+        currentSearchTerm = val.trim();
+        renderTrips();
+      }, 180);
+    }
+
+    function applyTripFilters() {
+      currentFilterRoute = document.getElementById('tripRouteFilter').value;
+      renderTrips();
+    }
+
+    function setTripStatusTab(status) {
+      currentFilterStatus = status;
+      document.querySelectorAll('#tripStatusTabs .chip-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-status') === status);
+      });
+      renderTrips();
+    }
+
+    function resetTripFilters() {
+      currentFilterRoute = 'all';
+      currentFilterStatus = 'all';
+      currentSearchTerm = '';
+      document.getElementById('tripSearchInput').value = '';
+      document.getElementById('tripRouteFilter').value = 'all';
+      setTripStatusTab('all');
+      renderTrips();
+      showToast('Фильтры сброшены', 'forest');
+    }
+
+    let sortDirection = { time: 1, route: 1, occupancy: 1, fare: 1 };
+    function sortTrips(field) {
+      sortDirection[field] = -sortDirection[field];
+      trips.sort((a, b) => {
+        if (field === 'time') return a.time.localeCompare(b.time) * sortDirection[field];
+        if (field === 'route') return a.route.localeCompare(b.route) * sortDirection[field];
+        if (field === 'occupancy') return (a.occupied / a.capacity - b.occupied / b.capacity) * sortDirection[field];
+        if (field === 'fare') return (a.fare - b.fare) * sortDirection[field];
+        return 0;
+      });
+      renderTrips();
+    }
+
+    /* BULK ACTIONS CONTROLLER */
+    function toggleTripSelect(id, event) {
+      if (selectedTripIds.has(id)) selectedTripIds.delete(id);
+      else selectedTripIds.add(id);
+      renderTrips();
+    }
+
+    function handleTripCheckboxChange(id, checked) {
+      if (checked) selectedTripIds.add(id);
+      else selectedTripIds.delete(id);
+      updateBulkFloatingBar();
+    }
+
+    function toggleSelectAllTrips(checked) {
+      if (checked) trips.forEach(t => selectedTripIds.add(t.id));
+      else selectedTripIds.clear();
+      renderTrips();
+    }
+
+    function updateBulkFloatingBar() {
+      const bar = document.getElementById('bulkFloatingBar');
+      const countEl = document.getElementById('bulkSelectedCount');
+      const count = selectedTripIds.size;
+      countEl.textContent = count;
+      if (count > 0) bar.classList.add('active');
+      else bar.classList.remove('active');
+    }
+
+    function clearTripSelection() {
+      selectedTripIds.clear();
+      const master = document.getElementById('masterTripCheckbox');
+      if (master) master.checked = false;
+      renderTrips();
+    }
+
+    function bulkChangeStatus(newStatus) {
+      trips.forEach(t => {
+        if (selectedTripIds.has(t.id)) t.status = newStatus;
+      });
+      saveStore();
+      renderTrips();
+      clearTripSelection();
+      showToast(`Статус обновлен для выбранных рейсов`, 'forest');
+    }
+
+    function bulkCancelTrips() {
+      if (!confirm(`Вы действительно хотите отменить ${selectedTripIds.size} выбранных рейсов? Пассажиры получат уведомления об отмене.`)) return;
+      trips.forEach(t => {
+        if (selectedTripIds.has(t.id)) t.status = 'cancelled';
+      });
+      saveStore();
+      renderTrips();
+      clearTripSelection();
+      showToast('Выбранные рейсы отменены', 'alert');
+    }
+
+    function bulkExportCSV() {
+      const rows = [["ID", "Время", "Маршрут", "Автобус", "Водитель", "Загрузка", "Статус", "Тариф"]];
+      trips.filter(t => selectedTripIds.has(t.id)).forEach(t => {
+        rows.push([t.id, t.time, t.route, t.plate, t.driver, `${t.occupied}/${t.capacity}`, t.status, `${t.fare} BYN`]);
+      });
+      downloadCSV("busliner_trips_export.csv", rows);
+      clearTripSelection();
+      showToast('Экспорт CSV сформирован', 'forest');
+    }
+
+    function exportDailyManifestCSV() {
+      const rows = [["ID", "Время", "Маршрут", "Водитель", "Автобус", "Занято", "Всего", "Статус"]];
+      trips.forEach(t => rows.push([t.id, t.time, t.route, t.driver, t.plate, t.occupied, t.capacity, t.status]));
+      downloadCSV("busliner_daily_manifest.csv", rows);
+      showToast('Дневной отчет выгружен в CSV', 'forest');
+    }
+
+    function downloadCSV(filename, rows) {
+      const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(";")).join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    /* SLIDE-OUT FLYOUT DRAWER (TRIP DETAILS & 20-SEAT COCKPIT) */
+    function openTripDetails(tripId) {
+      const trip = trips.find(t => t.id === tripId);
+      if (!trip) return;
+      currentActiveTripForDrawer = trip;
+
+      document.getElementById('drawerTripRoute').innerHTML = trip.route.replace('—', '➔');
+      document.getElementById('drawerTripSubtitle').textContent = `Рейс ${trip.id} • ${trip.time} • ${trip.vehicle} (${trip.plate})`;
+      document.getElementById('drawerOccupancyBadge').textContent = `${trip.occupied} из ${trip.capacity} мест занято`;
+
+      // Render 20-seat cockpit layout
+      const seatsGrid = document.getElementById('drawerSeatsGrid');
+      const tripBookings = bookings.filter(b => b.tripId === trip.id);
+      const bookedSeatNums = new Set(tripBookings.map(b => parseInt(b.seat.replace(/\D/g, '')) || 0));
+
+      let seatsHtml = '';
+      for (let i = 1; i <= 20; i++) {
+        const isOccupied = bookedSeatNums.has(i) || i <= trip.occupied;
+        const b = tripBookings.find(x => parseInt(x.seat) === i);
+        const isBoarded = b && b.status === 'boarded';
+        let cls = isOccupied ? (isBoarded ? 'seat-box boarded' : 'seat-box occupied') : 'seat-box';
+        seatsHtml += `<div class="${cls}" title="Место ${i}">${i}</div>`;
+      }
+      seatsGrid.innerHTML = seatsHtml;
+
+      // Render passenger roster
+      const rosterList = document.getElementById('drawerRosterList');
+      const boardedCount = tripBookings.filter(b => b.status === 'boarded').length;
+      document.getElementById('drawerBoardedCount').textContent = `${boardedCount} из ${tripBookings.length} сели`;
+
+      if (tripBookings.length === 0) {
+        rosterList.innerHTML = `<div style="padding:16px; text-align:center; color:var(--text-muted);">Пассажиры на этот рейс еще не добавлены</div>`;
+      } else {
+        rosterList.innerHTML = tripBookings.map(b => `
+          <div class="roster-item">
+            <div class="roster-passenger-info">
+              <span class="roster-name">${b.name} <span class="vehicle-cell-plate">Место ${b.seat}</span></span>
+              <span class="roster-phone">${b.phone} • Билет ${b.id}</span>
+            </div>
+            <button class="btn-checkin-toggle ${b.status === 'boarded' ? 'boarded' : ''}" onclick="toggleCheckin('${b.id}')">
+              ${b.status === 'boarded' ? '✓ В салоне' : 'Посадить'}
+            </button>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('tripDetailsOverlay').classList.add('open');
+    }
+
+    function closeTripDetails(event) {
+      if (event && event.target !== document.getElementById('tripDetailsOverlay')) return;
+      document.getElementById('tripDetailsOverlay').classList.remove('open');
+      currentActiveTripForDrawer = null;
+    }
+
+    function toggleCheckin(bookingId) {
+      const b = bookings.find(x => x.id === bookingId);
+      if (!b) return;
+      b.status = b.status === 'boarded' ? 'pending' : 'boarded';
+      saveStore();
+      renderBookings();
+      if (currentActiveTripForDrawer) openTripDetails(currentActiveTripForDrawer.id);
+      showToast(b.status === 'boarded' ? `Пассажир ${b.name} отмечен в салоне` : `Посадка пассажира ${b.name} отменена`, 'forest');
+    }
+
+    function printPassengerManifest() {
+      if (!currentActiveTripForDrawer) return;
+      const trip = currentActiveTripForDrawer;
+      const tripBookings = bookings.filter(b => b.tripId === trip.id);
+
+      document.getElementById('printManifestHeaderMeta').textContent = `Рейс ${trip.id} | ${trip.route} | Время: ${trip.time} | Автобус: ${trip.vehicle} (${trip.plate}) | Водитель: ${trip.driver}`;
+      const tbody = document.getElementById('printManifestTableBody');
+      tbody.innerHTML = tripBookings.map(b => `
+        <tr>
+          <td>${b.seat}</td>
+          <td>${b.name}</td>
+          <td>${b.phone}</td>
+          <td>${b.id}</td>
+          <td>${b.payment === 'paid' ? 'Оплачено' : 'При посадке'}</td>
+          <td>___________________</td>
+        </tr>
+      `).join('');
+
+      window.print();
+    }
+
+    /* MODAL WINDOWS: CREATE TRIP */
+    function openModalCreateTrip() {
+      loadCreateTripDraft();
+      // Set default tomorrow date if empty
+      const dateInput = document.getElementById('tripDateInput');
+      if (!dateInput.value) {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        dateInput.value = tomorrow.toISOString().split('T')[0];
+      }
+      const timeInput = document.getElementById('tripTimeInput');
+      if (!timeInput.value) timeInput.value = "10:00";
+
+      document.getElementById('modalCreateTripOverlay').classList.add('open');
+    }
+
+    function closeModalCreateTrip(event) {
+      if (event && event.target !== document.getElementById('modalCreateTripOverlay')) return;
+      document.getElementById('modalCreateTripOverlay').classList.remove('open');
+    }
+
+    function saveCreateTripDraft() {
+      const draft = {
+        route: document.getElementById('tripRouteSelect').value,
+        date: document.getElementById('tripDateInput').value,
+        time: document.getElementById('tripTimeInput').value,
+        vehicle: document.getElementById('tripVehicleSelect').value,
+        driver: document.getElementById('tripDriverSelect').value,
+        fare: document.getElementById('tripPriceInput').value,
+        platform: document.getElementById('tripPlatformSelect').value
+      };
+      localStorage.setItem('busliner_draft_new_trip', JSON.stringify(draft));
+    }
+
+    function loadCreateTripDraft() {
+      const draftStr = localStorage.getItem('busliner_draft_new_trip');
+      if (!draftStr) return;
+      try {
+        const d = JSON.parse(draftStr);
+        if (d.route) document.getElementById('tripRouteSelect').value = d.route;
+        if (d.date) document.getElementById('tripDateInput').value = d.date;
+        if (d.time) document.getElementById('tripTimeInput').value = d.time;
+        if (d.vehicle) document.getElementById('tripVehicleSelect').value = d.vehicle;
+        if (d.driver) document.getElementById('tripDriverSelect').value = d.driver;
+        if (d.fare) document.getElementById('tripPriceInput').value = d.fare;
+        if (d.platform) document.getElementById('tripPlatformSelect').value = d.platform;
+      } catch (e) {}
+    }
+
+    function handleCreateTripSubmit(event) {
+      event.preventDefault();
+      const newId = `BL-${Math.floor(1000 + Math.random() * 9000)}`;
+      const route = document.getElementById('tripRouteSelect').value;
+      const vehicle = document.getElementById('tripVehicleSelect').value;
+      const plateMatch = vehicle.match(/\((.*?)\)/);
+      const plate = plateMatch ? plateMatch[1] : "7TAX-0000";
+
+      const newTrip = {
+        id: newId,
+        time: document.getElementById('tripTimeInput').value,
+        date: document.getElementById('tripDateInput').value,
+        route: route,
+        origin: document.getElementById('tripPlatformSelect').value.split(',')[0],
+        destination: route.split('—')[1].trim(),
+        vehicle: vehicle,
+        plate: plate,
+        driver: document.getElementById('tripDriverSelect').value,
+        capacity: 20,
+        occupied: 0,
+        status: "scheduled",
+        fare: parseFloat(document.getElementById('tripPriceInput').value) || 35.0
+      };
+
+      trips.unshift(newTrip);
+      saveStore();
+      localStorage.removeItem('busliner_draft_new_trip');
+      renderTrips();
+      closeModalCreateTrip();
+      showToast(`Рейс ${newId} (${route}) успешно опубликован`, 'forest');
+    }
+
+    function cloneScheduleToTrip(time, route) {
+      const newId = `BL-${Math.floor(1000 + Math.random() * 9000)}`;
+      const newTrip = {
+        id: newId,
+        time: time,
+        date: "Сегодня",
+        route: route.replace('➔', '—'),
+        origin: "Центральный АВ",
+        destination: route.split('➔')[1].trim(),
+        vehicle: "Mercedes Sprinter (7TAX-8891)",
+        plate: "7TAX-8891",
+        driver: "Александр (Смена 1)",
+        capacity: 20,
+        occupied: 0,
+        status: "scheduled",
+        fare: 45.0
+      };
+      trips.unshift(newTrip);
+      saveStore();
+      renderTrips();
+      switchScreen('trips');
+      showToast(`Рейс ${newId} сформирован из шаблона расписания`, 'forest');
+    }
+
+    /* MODAL WINDOWS: MANUAL BOOKING */
+    function openModalAddBooking() {
+      const sel = document.getElementById('bookingTripSelect');
+      sel.innerHTML = trips.filter(t => t.status === 'scheduled' || t.status === 'in_route').map(t => `
+        <option value="${t.id}">${t.id} • ${t.route} (${t.time}) — свободно ${t.capacity - t.occupied} мест</option>
+      `).join('');
+      document.getElementById('modalAddBookingOverlay').classList.add('open');
+    }
+
+    function closeModalAddBooking(event) {
+      if (event && event.target !== document.getElementById('modalAddBookingOverlay')) return;
+      document.getElementById('modalAddBookingOverlay').classList.remove('open');
+    }
+
+    function handleAddBookingSubmit(event) {
+      event.preventDefault();
+      const tripId = document.getElementById('bookingTripSelect').value;
+      const trip = trips.find(t => t.id === tripId);
+      const seatNum = document.getElementById('bookingSeatNumber').value;
+      const seatCode = String(seatNum).padStart(2, '0') + "A";
+
+      const newBooking = {
+        id: `TKT-${Math.floor(8000 + Math.random() * 1999)}`,
+        tripId: tripId,
+        name: document.getElementById('bookingPassengerName').value.trim(),
+        phone: document.getElementById('bookingPassengerPhone').value.trim(),
+        seat: seatCode,
+        status: "pending",
+        payment: document.getElementById('bookingPaymentMethod').value,
+        amount: trip ? trip.fare : 45.0
+      };
+
+      bookings.unshift(newBooking);
+      if (trip && trip.occupied < trip.capacity) trip.occupied++;
+      saveStore();
+      renderBookings();
+      renderTrips();
+      closeModalAddBooking();
+      showToast(`Билет ${newBooking.id} оформлен для ${newBooking.name}`, 'forest');
+    }
+
+    /* TOAST NOTIFICATION ENGINE */
+    function showToast(message, type = 'forest', desc = '') {
+      const hub = document.getElementById('toastHub');
+      const card = document.createElement('div');
+      card.className = `toast-card toast-${type}`;
+
+      const iconSvg = type === 'forest' ? `
+        <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+          <polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+      ` : `
+        <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+      `;
+
+      card.innerHTML = `
+        ${iconSvg}
+        <div class="toast-content">
+          <span class="toast-title">${message}</span>
+          ${desc ? `<span class="toast-desc">${desc}</span>` : ''}
+        </div>
+        <button class="toast-close-btn" onclick="this.parentElement.remove()">✕</button>
+      `;
+
+      hub.appendChild(card);
+      requestAnimationFrame(() => card.classList.add('show'));
+
+      setTimeout(() => {
+        card.classList.remove('show');
+        setTimeout(() => card.remove(), 300);
+      }, 3500);
+    }
+
+    /* KEYBOARD ESCAPE LISTENER */
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeTripDetails();
+        closeModalCreateTrip();
+        closeModalAddBooking();
+        clearTripSelection();
+      }
+    });
+
+    /* INITIAL BOOT */
+    window.addEventListener('DOMContentLoaded', () => {
+      renderTrips();
+      renderSchedule();
+      renderBookings();
+
+      const hash = window.location.hash.replace('#', '');
+      if (hash && document.getElementById(`screen-${hash}`)) {
+        switchScreen(hash);
+      }
+    });
+  </script>
+</body>
+</html>
