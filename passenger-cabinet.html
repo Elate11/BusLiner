@@ -1554,6 +1554,27 @@
       cursor: not-allowed;
     }
 
+  
+    .brand-mark-group {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+    .brand-wordmark {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      transition: color 0.3s ease;
+    }
+    .brand-wordmark:hover {
+      color: var(--color-forest);
+    }
+
   </style>
 </head>
 <body>
@@ -1577,12 +1598,8 @@
 
     <!-- HEADER -->
     <header class="cabinet-header">
-      <a href="index.html" class="header-brand-group">
-        <div class="brand-crest">BL</div>
-        <div class="brand-title-wrap">
-          <span class="brand-main-title">BusLiner</span>
-          <span class="brand-sub-badge">Кабинет пассажира</span>
-        </div>
+      <a href="aura-b2c-masterpiece.html" class="brand-mark-group" title="BusLiner • Главная">
+        <span class="brand-wordmark">BusLiner</span>
       </a>
 
       <!-- 3 PRIMARY PASSENGER TABS -->
@@ -2584,10 +2601,10 @@
       let statusDotColor = 'var(--accent-primary)';
 
       if (trip.status === 'in_route') {
-        statusText = '🚌 Рейс в пути • Автобус следует по маршруту';
+        statusText = 'Рейс в пути • Автобус следует по маршруту';
         statusDotColor = 'var(--status-forest)';
       } else if (trip.status === 'delayed') {
-        statusText = `⏱ Отправление задержано (+${trip.delay || 15} мин)`;
+        statusText = `Отправление задержано (+${trip.delay || 15} мин)`;
         statusDotColor = 'var(--color-terracotta)';
       } else if (trip.status === 'completed') {
         statusText = '✓ Рейс завершён • Вы прибыли в пункт назначения';
