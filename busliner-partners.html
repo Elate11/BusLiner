@@ -1216,8 +1216,8 @@
         height: auto;
         min-height: 100dvh;
         min-height: -webkit-fill-available;
-        padding-top: 96px !important;
-        padding-bottom: 36px !important;
+        padding-top: max(96px, calc(72px + env(safe-area-inset-top, 0px))) !important;
+        padding-bottom: max(36px, env(safe-area-inset-bottom, 24px)) !important;
         justify-content: flex-start;
         scroll-snap-stop: normal;
         box-sizing: border-box;
