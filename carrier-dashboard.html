@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Кабинет перевозчика — BusLiner Partners</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -679,11 +679,22 @@
       .kpi-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 640px) {
-      header.dashboard-nav { padding: 0 20px; }
-      main.console-main { padding: 20px 16px 48px; }
+      header.dashboard-nav {
+        padding: max(10px, env(safe-area-inset-top)) 16px 10px;
+        height: auto;
+        flex-direction: column;
+        gap: 10px;
+      }
+      main.console-main {
+        padding: 16px 12px max(48px, env(safe-area-inset-bottom));
+      }
       .kpi-grid { grid-template-columns: 1fr; }
-      .console-header-card { padding: 20px; }
+      .console-header-card { padding: 18px 14px; }
       .form-row { grid-template-columns: 1fr; }
+      .manifest-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
     }
   
     /* Artisanal Paper Grain Overlay */

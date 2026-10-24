@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Вход и регистрация перевозчика (ИП / Юрлицо) — BusLiner Partners</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -904,10 +904,13 @@
 
 
     @media (max-width: 640px) {
-      .panel-body { padding: 24px 20px; }
+      .auth-container {
+        padding: max(16px, env(safe-area-inset-top)) 12px max(32px, env(safe-area-inset-bottom));
+      }
+      .panel-body { padding: 22px 16px; }
       .form-row, .oauth-grid { grid-template-columns: 1fr; }
       .wizard-steps { display: none; }
-      .view-tabs-wrapper { padding: 16px 20px 0; }
+      .view-tabs-wrapper { padding: 16px 16px 0; }
     }
   
     .verified-avatar-badge {

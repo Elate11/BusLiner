@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>BusLiner &bull; Выбор места в салоне (Production Demo)</title>
   
   <!-- Fonts -->
@@ -584,11 +584,34 @@
     .summaryProceedBtn:disabled { background: #E2E8F0; color: #94A3B8; cursor: not-allowed; }
 
     @media (max-width: 640px) {
-      body { padding: 0 0 70px; }
-      .seatPickerCard { border-radius: 0; border: none; padding: 16px; }
-      .summaryStickyBar { margin: 16px -16px -16px -16px; padding: 14px 16px; }
-      .summaryProceedBtn { width: 100%; justify-content: center; }
-      .summaryAction { width: 100%; }
+      body {
+        padding: 10px 10px calc(80px + env(safe-area-inset-bottom));
+      }
+      .demo-container {
+        padding: 0;
+      }
+      .seatPickerCard {
+        border-radius: 12px;
+        padding: 16px 12px;
+      }
+      .summaryStickyBar {
+        margin: 16px -12px -12px -12px;
+        padding: 14px 16px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .summaryProceedBtn {
+        width: 100%;
+        justify-content: center;
+        min-height: 48px;
+      }
+      .summaryAction {
+        width: 100%;
+      }
+      .pickerHeader {
+        flex-direction: column;
+        gap: 12px;
+      }
     }
   
     /* Artisanal Paper Grain Overlay */

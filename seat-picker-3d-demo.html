@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>BusLiner 3D &bull; Интерактивный выбор места в салоне</title>
 
   <!-- FONTS: Cormorant Garamond (Editorial Serif) + Plus Jakarta Sans + JetBrains Mono -->
@@ -563,12 +563,77 @@
       transform: translateY(-1px);
     }
 
+    @media (max-width: 900px) {
+      .demo-header-nav {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .fleet-switcher-container {
+        justify-content: center;
+        width: 100%;
+      }
+      .nav-links-cluster {
+        justify-content: center;
+      }
+    }
+
     @media (max-width: 768px) {
-      .demo-wrapper { padding: 10px 12px 40px; }
-      .viewport-card { height: 520px; }
-      .hud-header { flex-direction: column; align-items: stretch; }
-      .hud-right-controls { align-items: flex-start; }
-      .compact-legend { display: none; }
+      .demo-wrapper {
+        padding: 8px 8px 30px;
+        padding-top: max(8px, env(safe-area-inset-top));
+        padding-bottom: max(30px, env(safe-area-inset-bottom));
+      }
+      .viewport-card {
+        height: 540px;
+        border-radius: 12px;
+      }
+      .hud-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+      .vehicle-badge-card {
+        padding: 10px 14px;
+      }
+      .hud-right-controls {
+        align-items: flex-start;
+      }
+      .compact-legend {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .viewport-card {
+        height: 480px;
+      }
+      .hud-overlay {
+        padding: 12px 10px;
+      }
+      .fleet-tab-btn {
+        padding: 7px 10px;
+        font-size: 12px;
+      }
+      .bar-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .proceed-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 18px;
+        min-height: 48px;
+      }
+      .cam-view-btn {
+        padding: 6px 10px;
+        font-size: 11.5px;
+      }
+      .modal-card {
+        padding: 20px 16px;
+        border-radius: 14px;
+      }
     }
   </style>
 </head>

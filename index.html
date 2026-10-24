@@ -2,7 +2,7 @@
 <html lang="ru" class="no-js">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>BusLiner &mdash; Динамический люкс межгородской мобильности</title>
   
   <meta name="description" content="BusLiner — Полноэкранная интерактивная презентация межгородских поездок первого класса. Эстетика Loro Piana, кинематика и векторный драйв Lando Norris.">
@@ -1897,25 +1897,134 @@
     }
 
     /* Responsive */
+    /* ==========================================================================
+       RESPONSIVE ADAPTATION: PHONES & TABLETS (360px - 1024px)
+       ========================================================================== */
     @media (max-width: 1024px) {
       .hero-slide-grid, .sanctuary-deck-split, .concierge-deck-split {
         grid-template-columns: 1fr;
+        gap: 36px;
       }
       .collection-deck-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
       }
       .presentation-side-rail {
         display: none;
       }
+      .footer-routes-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 28px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .container {
+        padding: 0 20px;
+      }
+      .deck-slide {
+        padding: calc(env(safe-area-inset-top, 0px) + 74px) 0 calc(env(safe-area-inset-bottom, 0px) + 68px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        justify-content: flex-start;
+      }
+      .triad-deck-columns {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .deck-bottom-bar {
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+        right: 18px;
+      }
+      .deck-arrow-btn {
+        width: 44px;
+        height: 44px;
+      }
     }
 
     @media (max-width: 768px) {
-      .container { padding: 0 24px; }
+      .container { padding: 0 18px; }
       .deck-nav-menu { display: none; }
-      .triad-deck-columns { grid-template-columns: 1fr; }
+      .header-right-actions { gap: 8px; }
+      .btn-header-terminal { display: none; }
+      .btn-header-client { padding: 8px 14px; font-size: 12px; min-height: 44px; }
       .collection-deck-grid { grid-template-columns: 1fr; }
-      .search-row-grid { grid-template-columns: 1fr; }
+      .search-row-grid { grid-template-columns: 1fr; gap: 14px; }
+      .route-switch-divider { display: none; }
       .custom-cursor-follower { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .container { padding: 0 14px; }
+      .hero-deck-badge { font-size: 11px; margin-bottom: 12px; }
+      .hero-deck-title { font-size: clamp(26px, 7.5vw, 36px) !important; margin-bottom: 12px; }
+      .hero-deck-lead { font-size: 14.5px !important; line-height: 1.55; margin-bottom: 18px; }
+      
+      .search-monograph-capsule {
+        padding: 18px 14px;
+        gap: 14px;
+      }
+      .search-btn-box .btn-action-deck {
+        width: 100%;
+        justify-content: center;
+        min-height: 48px;
+      }
+
+      .luxury-dropdown-menu {
+        min-width: unset;
+        width: 100%;
+        left: 0;
+        right: 0;
+      }
+
+      .luxury-calendar-popover {
+        width: 100%;
+        max-width: calc(100vw - 28px);
+        right: auto;
+        left: 50%;
+        transform: translate(-50%, 8px);
+      }
+      .luxury-calendar-popover.active {
+        transform: translate(-50%, 0);
+      }
+
+      /* Mobile Bottom Sheet for Client Modal */
+      .client-auth-backdrop {
+        padding: 0;
+        align-items: flex-end;
+      }
+      .client-auth-modal {
+        max-width: 100%;
+        border-radius: 16px 16px 0 0;
+        max-height: 90vh;
+        max-height: 90dvh;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: env(safe-area-inset-bottom, 16px);
+      }
+      .client-auth-body {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        flex: 1;
+        padding: 18px 16px;
+      }
+
+      .footer-routes-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .footer-copyright-bar {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .container { padding: 0 10px; }
+      .hero-deck-title { font-size: 24px !important; }
+      .hero-deck-lead { font-size: 13.5px !important; }
+      .client-auth-head { padding: 20px 16px 14px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -3191,11 +3300,27 @@
       updateDeckState(currentSlide - 1);
     };
 
-    // Responsive Kinetic Wheel Controller (Zero Input Latency, Instant Snap)
+    // Responsive Kinetic Wheel Controller (Zero Input Latency, Boundary Aware)
     let lastWheelTime = 0;
     const WHEEL_LOCK_MS = 480;
 
     window.addEventListener('wheel', (e) => {
+      // Don't intercept scroll inside modals or popovers
+      if (e.target.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay')) {
+        return;
+      }
+
+      // Check if active slide has its own scrollable overflow (e.g. on small laptops/tablets)
+      const activeSlide = slides[currentSlide];
+      if (activeSlide && activeSlide.scrollHeight > activeSlide.clientHeight + 10) {
+        if (e.deltaY > 0 && activeSlide.scrollTop + activeSlide.clientHeight < activeSlide.scrollHeight - 10) {
+          return; // Allow standard slide content scroll down
+        }
+        if (e.deltaY < 0 && activeSlide.scrollTop > 10) {
+          return; // Allow standard slide content scroll up
+        }
+      }
+
       e.preventDefault();
       const now = performance.now();
       if (isTransitioning || (now - lastWheelTime < WHEEL_LOCK_MS)) return;
@@ -3221,20 +3346,53 @@
       }
     });
 
-    // Touch Swipes (Ultra-responsive 34px threshold)
+    // Touch Swipes with scroll-boundary awareness & modal protection
     let touchStartY = 0;
+    let touchStartX = 0;
+    let touchTarget = null;
+
     window.addEventListener('touchstart', (e) => {
-      touchStartY = e.touches[0].clientY;
+      if (e.touches.length > 0) {
+        touchStartY = e.touches[0].clientY;
+        touchStartX = e.touches[0].clientX;
+        touchTarget = e.target;
+      }
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
       if (isTransitioning) return;
+      if (!touchTarget) return;
+
+      // Ignore swipes inside modals, dropdowns, popovers, or datepicker
+      if (touchTarget.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay, input, select, textarea, button')) {
+        return;
+      }
+
       const touchEndY = e.changedTouches[0].clientY;
+      const touchEndX = e.changedTouches[0].clientX;
       const diffY = touchStartY - touchEndY;
-      if (diffY > 34) {
-        nextSlide();
-      } else if (diffY < -34) {
-        prevSlide();
+      const diffX = touchStartX - touchEndX;
+
+      // Must be a predominantly vertical swipe of at least 48px
+      if (Math.abs(diffY) > 48 && Math.abs(diffY) > Math.abs(diffX) * 1.3) {
+        const activeSlide = slides[currentSlide];
+        if (activeSlide) {
+          const isScrollable = activeSlide.scrollHeight > activeSlide.clientHeight + 10;
+          if (diffY > 0) {
+            // Swiping up -> nextSlide
+            if (!isScrollable || (activeSlide.scrollTop + activeSlide.clientHeight >= activeSlide.scrollHeight - 14)) {
+              nextSlide();
+            }
+          } else {
+            // Swiping down -> prevSlide
+            if (!isScrollable || (activeSlide.scrollTop <= 14)) {
+              prevSlide();
+            }
+          }
+        } else {
+          if (diffY > 0) nextSlide();
+          else prevSlide();
+        }
       }
     }, { passive: true });
 

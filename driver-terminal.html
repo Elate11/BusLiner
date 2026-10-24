@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Терминал посадки водителя — BusLiner Driver</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1456,6 +1456,25 @@
       .console-headline { font-size: 24px; }
       .profile-unp { display: none; }
       .stats-tiles-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 580px) {
+      header.dashboard-nav {
+        padding: max(12px, env(safe-area-inset-top)) 12px 12px;
+        height: auto;
+        flex-direction: column;
+        gap: 12px;
+      }
+      main.console-main {
+        padding: 12px;
+        padding-bottom: max(32px, env(safe-area-inset-bottom));
+      }
+      .actions-bar {
+        flex-direction: column;
+      }
+      .manifest-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
     }
   
     /* OLED HIGHWAY NIGHT COCKPIT MODE */
