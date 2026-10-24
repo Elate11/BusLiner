@@ -1151,6 +1151,409 @@
         transition: none !important;
       }
     }
+  
+    /* ==========================================================================
+       TAB 1: BZD-STYLE TRIP SEARCH WIDGET (ПОИСК БИЛЕТОВ И РЕЙСОВ БЖД)
+       ========================================================================== */
+    .bzd-search-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .bzd-search-header {
+      margin-bottom: 18px;
+    }
+    .bzd-search-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .bzd-search-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .bzd-search-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .bzd-inputs-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr 1.3fr auto;
+      gap: 10px;
+      align-items: flex-end;
+    }
+    @media (max-width: 900px) {
+      .bzd-inputs-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .bzd-field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .bzd-field-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+    .bzd-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .bzd-input-icon {
+      position: absolute;
+      left: 14px;
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .bzd-search-input {
+      width: 100%;
+      height: 48px;
+      min-height: 48px;
+      padding: 10px 14px 10px 40px;
+      font-family: var(--font-body);
+      font-size: 16px; /* iOS anti-zoom >= 16px */
+      color: var(--text-primary);
+      background: var(--canvas-ivory);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+    }
+    .bzd-search-input:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(35, 49, 42, 0.12);
+    }
+
+    /* SWAP BUTTON */
+    .bzd-swap-btn {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--canvas-bone);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      margin-bottom: 0;
+    }
+    .bzd-swap-btn:hover {
+      background: var(--canvas-sand);
+      transform: rotate(180deg);
+    }
+
+    /* DATE PICKER & QUICK BUTTONS */
+    .bzd-date-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .bzd-quick-dates {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+    .bzd-date-pill {
+      padding: 4px 10px;
+      min-height: 28px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-hairline);
+      background: var(--canvas-bone);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .bzd-date-pill:hover, .bzd-date-pill.active {
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+      border-color: var(--color-forest);
+    }
+
+    /* SEARCH SUBMIT BUTTON */
+    .btn-bzd-search {
+      height: 48px;
+      min-height: 48px;
+      padding: 0 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+      border: 1px solid var(--color-forest);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-bzd-search:hover {
+      background: #1B2620;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(35, 49, 42, 0.25);
+    }
+
+    /* POPULAR ROUTES CHIPS */
+    .bzd-popular-routes {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-hairline);
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .popular-route-pill {
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      background: var(--canvas-bone);
+      border: 1px solid var(--border-hairline);
+      color: var(--text-primary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .popular-route-pill:hover {
+      background: var(--canvas-sand);
+    }
+
+    /* RESULTS BAR */
+    .bzd-results-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .bzd-results-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* BZD SCHEDULE CARDS */
+    .bzd-trip-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bzd-trip-card:hover {
+      border-color: var(--border-focus);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+    .bzd-trip-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-hairline);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .bzd-trip-train-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .train-num {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--color-forest);
+      background: var(--status-forest-bg);
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+    }
+    .train-type {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .bzd-schedule-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr 1fr;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 640px) {
+      .bzd-schedule-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+    }
+
+    .bzd-time-col {
+      display: flex;
+      flex-direction: column;
+    }
+    .bzd-time-col.arrival {
+      text-align: right;
+      align-items: flex-end;
+    }
+    @media (max-width: 640px) {
+      .bzd-time-col.arrival {
+        text-align: left;
+        align-items: flex-start;
+      }
+    }
+    .bzd-time {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .bzd-date {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .bzd-station {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 2px;
+    }
+
+    .bzd-duration-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .bzd-duration-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .bzd-route-line {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 160px;
+      color: var(--color-forest);
+      font-weight: 700;
+      font-size: 14px;
+      justify-content: center;
+      gap: 6px;
+    }
+    .bzd-line-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-forest);
+    }
+    .bzd-route-class {
+      font-size: 11px;
+      color: var(--color-forest);
+      font-weight: 600;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .bzd-trip-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-hairline);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .bzd-seats-pricing {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .bzd-seats-avail {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-primary);
+    }
+    .seats-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .seats-dot.available { background: var(--status-forest); }
+    .seats-dot.full { background: var(--color-terracotta); }
+    .bzd-fare {
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+    .bzd-fare strong {
+      font-family: var(--font-mono);
+      font-size: 17px;
+      color: var(--color-forest);
+    }
+
+    .btn-bzd-select-seat {
+      height: 44px;
+      min-height: 44px;
+      padding: 0 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+      border: 1px solid var(--color-forest);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-bzd-select-seat:hover {
+      background: #1B2620;
+    }
+    .btn-bzd-select-seat:disabled {
+      background: var(--canvas-sand);
+      color: var(--text-muted);
+      border-color: var(--border-hairline);
+      cursor: not-allowed;
+    }
+
   </style>
 </head>
 <body>
@@ -1235,22 +1638,109 @@
            FUNCTION 1: ДОСТУПНЫЕ РЕЙСЫ (ПРОСМОТР ВСЕХ РЕЙСОВ И ЗАПИСЬ)
            ==================================================================== -->
       <section class="tab-pane active-pane" id="pane-trips">
-        <div class="pane-header-row">
-          <div>
-            <h1 class="pane-title">Доступные рейсы <em>для записи</em></h1>
-            <p class="pane-subtitle">Выберите регулярный рейс комфортабельного микроавтобуса и забронируйте место</p>
+        <!-- BZD STYLE SEARCH CARD (ОТКУДА, КУДА, ДАТА) -->
+        <div class="bzd-search-card">
+          <div class="bzd-search-header">
+            <h1 class="bzd-search-title">Поиск билетов <em>и расписание рейсов</em></h1>
+            <p class="bzd-search-subtitle">Система подбора маршрутов BusLiner: выберите станции отправления и прибытия</p>
           </div>
-          <div class="trips-filter-bar">
-            <button type="button" class="filter-chip-btn active" onclick="filterTripsFeed('all', this)">Все маршруты</button>
-            <button type="button" class="filter-chip-btn" onclick="filterTripsFeed('Вильнюс', this)">Минск ➔ Вильнюс</button>
-            <button type="button" class="filter-chip-btn" onclick="filterTripsFeed('Варшава', this)">Минск ➔ Варшава</button>
-            <button type="button" class="filter-chip-btn" onclick="filterTripsFeed('Гродно', this)">Минск ➔ Гродно</button>
+
+          <form class="bzd-search-form" onsubmit="handleBzdSearchSubmit(event)">
+            <div class="bzd-inputs-row">
+              <!-- FROM -->
+              <div class="bzd-field-group">
+                <label class="bzd-field-label" for="bzdFromInput">Откуда</label>
+                <div class="bzd-input-wrap">
+                  <svg class="bzd-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  <input type="text" id="bzdFromInput" class="bzd-search-input" value="Минск" placeholder="Город или станция" autocomplete="off" required>
+                </div>
+              </div>
+
+              <!-- SWAP BUTTON -->
+              <div class="bzd-field-group" style="justify-content: flex-end;">
+                <button type="button" class="bzd-swap-btn" onclick="swapBzdStations()" title="Поменять станции местами">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="17 1 21 5 17 9"/>
+                    <path d="M3 5h18"/>
+                    <polyline points="7 23 3 19 7 15"/>
+                    <path d="M21 19H3"/>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- TO -->
+              <div class="bzd-field-group">
+                <label class="bzd-field-label" for="bzdToInput">Куда</label>
+                <div class="bzd-input-wrap">
+                  <svg class="bzd-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  <input type="text" id="bzdToInput" class="bzd-search-input" value="Вильнюс" placeholder="Город назначения" autocomplete="off" required>
+                </div>
+              </div>
+
+              <!-- DATE -->
+              <div class="bzd-field-group bzd-date-wrap">
+                <label class="bzd-field-label" for="bzdDateInput">Дата поездки</label>
+                <div class="bzd-input-wrap">
+                  <svg class="bzd-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                  <input type="date" id="bzdDateInput" class="bzd-search-input" required>
+                </div>
+                <div class="bzd-quick-dates">
+                  <button type="button" class="bzd-date-pill active" id="pillDateToday" onclick="setQuickDate('today')">Сегодня</button>
+                  <button type="button" class="bzd-date-pill" id="pillDateTomorrow" onclick="setQuickDate('tomorrow')">Завтра</button>
+                  <button type="button" class="bzd-date-pill" onclick="shiftQuickDate(1)">+1 день</button>
+                  <button type="button" class="bzd-date-pill" onclick="shiftQuickDate(-1)">-1 день</button>
+                </div>
+              </div>
+
+              <!-- SUBMIT BUTTON -->
+              <div class="bzd-field-group" style="justify-content: flex-end;">
+                <button type="submit" class="btn-bzd-search">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  </svg>
+                  <span>Найти рейсы</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- POPULAR ROUTES QUICK CHIPS -->
+            <div class="bzd-popular-routes">
+              <span>Популярные:</span>
+              <button type="button" class="popular-route-pill" onclick="applyPopularRoute('Минск', 'Вильнюс')">Минск ➔ Вильнюс</button>
+              <button type="button" class="popular-route-pill" onclick="applyPopularRoute('Минск', 'Варшава')">Минск ➔ Варшава</button>
+              <button type="button" class="popular-route-pill" onclick="applyPopularRoute('Гродно', 'Белосток')">Гродно ➔ Белосток</button>
+              <button type="button" class="popular-route-pill" onclick="applyPopularRoute('Минск', 'Брест')">Минск ➔ Брест</button>
+              <button type="button" class="popular-route-pill" onclick="applyPopularRoute('Минск', 'Гродно')">Минск ➔ Гродно</button>
+              <button type="button" class="popular-route-pill" onclick="applyPopularRoute('', '')">Все рейсы</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- SEARCH RESULTS HEADER -->
+        <div class="bzd-results-header-bar">
+          <div>
+            <h2 class="bzd-results-title" id="bzdResultsRouteTitle">Рейсы: Минск ➔ Вильнюс</h2>
+            <div style="font-size: 13px; color: var(--text-muted); margin-top: 2px;" id="bzdResultsMetaNote">
+              Найдено рейсов: <span id="badgeTripsCount">4</span> • Прямое сообщение
+            </div>
           </div>
         </div>
 
-        <!-- DYNAMIC TRIPS FEED -->
-        <div class="trips-card-grid" id="tripsFeedGrid">
-          <!-- Dynamically populated from real data store -->
+        <!-- BZD SCHEDULE LIST -->
+        <div id="tripsFeedGrid">
+          <!-- Dynamically populated by renderTripsFeed -->
         </div>
       </section>
 
@@ -1470,12 +1960,18 @@
        ========================================================================== */
 
     // SHARED REPOSITORIES WITH CARRIER WORKSPACE
+        // RICH SCHEDULE REPOSITORY IN THE STYLE OF BELARUSIAN RAILWAY (БЖД / PASS.RW.BY)
     const DEFAULT_TRIPS = [
       {
         id: "BL-5715",
         time: "18:45",
+        arrivalTime: "22:30",
+        duration: "3 ч 45 мин",
         date: "Сегодня",
+        dateIso: "2026-10-24",
         route: "Минск ➔ Вильнюс",
+        originCity: "Минск",
+        destinationCity: "Вильнюс",
         origin: "Центральный автовокзал • Перрон 3",
         destination: "Автовокзал Вильнюс • Платформа 1",
         vehicle: "Mercedes Sprinter (7TAX-8891)",
@@ -1487,25 +1983,75 @@
         fare: 85.0
       },
       {
-        id: "BL-5716",
-        time: "20:30",
+        id: "BL-5721",
+        time: "08:30",
+        arrivalTime: "12:15",
+        duration: "3 ч 45 мин",
         date: "Сегодня",
-        route: "Минск ➔ Гродно",
-        origin: "АВ Восточный • Перрон 2",
-        destination: "Автовокзал Гродно",
-        vehicle: "Volkswagen Crafter (5TAX-1204)",
-        plate: "5TAX-1204",
-        driver: "Михаил К.",
-        capacity: 19,
-        occupied: 15,
+        dateIso: "2026-10-24",
+        route: "Минск ➔ Вильнюс",
+        originCity: "Минск",
+        destinationCity: "Вильнюс",
+        origin: "Центральный автовокзал • Перрон 3",
+        destination: "Автовокзал Вильнюс • Платформа 2",
+        vehicle: "Mercedes Sprinter (4TAX-3310)",
+        plate: "4TAX-3310",
+        driver: "Дмитрий В.",
+        capacity: 20,
+        occupied: 11,
         status: "scheduled",
-        fare: 25.0
+        fare: 85.0
+      },
+      {
+        id: "BL-5722",
+        time: "14:00",
+        arrivalTime: "17:45",
+        duration: "3 ч 45 мин",
+        date: "Сегодня",
+        dateIso: "2026-10-24",
+        route: "Минск ➔ Вильнюс",
+        originCity: "Минск",
+        destinationCity: "Вильнюс",
+        origin: "Центральный автовокзал • Перрон 3",
+        destination: "Автовокзал Вильнюс",
+        vehicle: "Mercedes Sprinter (7TAX-8891)",
+        plate: "7TAX-8891",
+        driver: "Александр (Смена 2)",
+        capacity: 20,
+        occupied: 14,
+        status: "scheduled",
+        fare: 85.0
+      },
+      {
+        id: "BL-5830",
+        time: "09:00",
+        arrivalTime: "12:45",
+        duration: "3 ч 45 мин",
+        date: "Сегодня",
+        dateIso: "2026-10-24",
+        route: "Вильнюс ➔ Минск",
+        originCity: "Вильнюс",
+        destinationCity: "Минск",
+        origin: "Автовокзал Вильнюс • Платформа 1",
+        destination: "Центральный автовокзал Минск",
+        vehicle: "Mercedes Sprinter (7TAX-8891)",
+        plate: "7TAX-8891",
+        driver: "Сергей Н.",
+        capacity: 20,
+        occupied: 9,
+        status: "scheduled",
+        fare: 85.0
       },
       {
         id: "BL-5717",
         time: "22:00",
+        arrivalTime: "07:30",
+        duration: "9 ч 30 мин",
         date: "Сегодня",
+        dateIso: "2026-10-24",
         route: "Минск ➔ Варшава",
+        originCity: "Минск",
+        destinationCity: "Варшава",
         origin: "Центральный автовокзал • Перрон 1",
         destination: "Warszawa Zachodnia",
         vehicle: "Mercedes Tourismo (3TAX-7740)",
@@ -1517,11 +2063,56 @@
         fare: 120.0
       },
       {
+        id: "BL-5840",
+        time: "08:00",
+        arrivalTime: "17:30",
+        duration: "9 ч 30 мин",
+        date: "Сегодня",
+        dateIso: "2026-10-24",
+        route: "Варшава ➔ Минск",
+        originCity: "Варшава",
+        destinationCity: "Минск",
+        origin: "Warszawa Zachodnia • Stanowisko 8",
+        destination: "Центральный автовокзал Минск",
+        vehicle: "Mercedes Tourismo (3TAX-7740)",
+        plate: "3TAX-7740",
+        driver: "Виктор П.",
+        capacity: 20,
+        occupied: 15,
+        status: "scheduled",
+        fare: 120.0
+      },
+      {
+        id: "BL-5716",
+        time: "20:30",
+        arrivalTime: "23:45",
+        duration: "3 ч 15 мин",
+        date: "Сегодня",
+        dateIso: "2026-10-24",
+        route: "Минск ➔ Гродно",
+        originCity: "Минск",
+        destinationCity: "Гродно",
+        origin: "АВ Восточный • Перрон 2",
+        destination: "Автовокзал Гродно",
+        vehicle: "Volkswagen Crafter (5TAX-1204)",
+        plate: "5TAX-1204",
+        driver: "Михаил К.",
+        capacity: 19,
+        occupied: 15,
+        status: "scheduled",
+        fare: 25.0
+      },
+      {
         id: "BL-5718",
         time: "07:30",
+        arrivalTime: "11:45",
+        duration: "4 ч 15 мин",
         date: "Завтра",
+        dateIso: "2026-10-25",
         route: "Минск ➔ Брест",
-        origin: "АВ Центральный",
+        originCity: "Минск",
+        destinationCity: "Брест",
+        origin: "АВ Центральный • Перрон 4",
         destination: "Автовокзал Брест",
         vehicle: "Mercedes Sprinter (7TAX-8891)",
         plate: "7TAX-8891",
@@ -1530,6 +2121,26 @@
         occupied: 8,
         status: "scheduled",
         fare: 32.0
+      },
+      {
+        id: "BL-5725",
+        time: "07:00",
+        arrivalTime: "09:30",
+        duration: "2 ч 30 мин",
+        date: "Сегодня",
+        dateIso: "2026-10-24",
+        route: "Гродно ➔ Белосток",
+        originCity: "Гродно",
+        destinationCity: "Белосток",
+        origin: "Автовокзал Гродно • Перрон 1",
+        destination: "Białystok Dworzec PKS",
+        vehicle: "Mercedes Sprinter (2TAX-9011)",
+        plate: "2TAX-9011",
+        driver: "Павел Ш.",
+        capacity: 20,
+        occupied: 16,
+        status: "scheduled",
+        fare: 45.0
       }
     ];
 
@@ -1543,21 +2154,44 @@
       }
     }
 
+    const DEFAULT_BOOKINGS = [
+      {
+        id: "BL-5715-05A",
+        tripId: "BL-5715",
+        name: "Александр Нестеров",
+        phone: "+375 29 142-88-91",
+        seat: "05A",
+        payment: "paid",
+        amount: 85.0,
+        status: "confirmed",
+        bookedAt: "Сегодня, 14:20"
+      }
+    ];
+
     function getStoredBookings() {
       try {
         const raw = localStorage.getItem('busliner_bookings');
-        return raw ? JSON.parse(raw) : [];
+        if (!raw) {
+          localStorage.setItem('busliner_bookings', JSON.stringify(DEFAULT_BOOKINGS));
+          return DEFAULT_BOOKINGS;
+        }
+        return JSON.parse(raw);
       } catch (e) {
-        return [];
+        return DEFAULT_BOOKINGS;
       }
     }
 
     function getStoredProfile() {
       try {
         const raw = localStorage.getItem('busliner_passenger_profile');
-        return raw ? JSON.parse(raw) : { name: "", phone: "", email: "" };
+        if (!raw) {
+          const def = { name: "Александр Нестеров", phone: "+375 29 142-88-91", email: "nesterov@busliner.by", miles: 1450 };
+          localStorage.setItem('busliner_passenger_profile', JSON.stringify(def));
+          return def;
+        }
+        return JSON.parse(raw);
       } catch (e) {
-        return { name: "", phone: "", email: "" };
+        return { name: "Александр Нестеров", phone: "+375 29 142-88-91", email: "nesterov@busliner.by", miles: 1450 };
       }
     }
 
@@ -1602,7 +2236,8 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
       if (tabId === 'order') renderOrderTab();
-      if (tabId === 'trips') renderTripsFeed();
+      if (tabId === 'trips') initBzdSearchWidget();
+      renderTripsFeed();
       if (tabId === 'profile') renderProfileTab();
     }
 
@@ -1646,81 +2281,244 @@
       </svg>`;
     }
 
-    // FUNCTION 1: RENDER TRIPS FEED (ДОСТУПНЫЕ РЕЙСЫ)
+    
+    /* ==========================================================================
+       BZD-STYLE TRIP SEARCH ENGINE (СИСТЕМА ПОИСКА ПО СТАНЦИЯМ И ДАТАМ)
+       ========================================================================== */
+    let bzdSearchFrom = "Минск";
+    let bzdSearchTo = "Вильнюс";
+    let bzdSearchDate = "";
+
+    function initBzdSearchWidget() {
+      const dateInput = document.getElementById('bzdDateInput');
+      if (dateInput && !dateInput.value) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        dateInput.value = `${yyyy}-${mm}-${dd}`;
+        bzdSearchDate = dateInput.value;
+      }
+    }
+
+    function swapBzdStations() {
+      const fromEl = document.getElementById('bzdFromInput');
+      const toEl = document.getElementById('bzdToInput');
+      if (!fromEl || !toEl) return;
+
+      const tmp = fromEl.value;
+      fromEl.value = toEl.value;
+      toEl.value = tmp;
+
+      bzdSearchFrom = fromEl.value;
+      bzdSearchTo = toEl.value;
+
+      performBzdSearch();
+      showToast('Направление поездки изменено');
+    }
+
+    function setQuickDate(type) {
+      const dateInput = document.getElementById('bzdDateInput');
+      if (!dateInput) return;
+
+      const d = new Date();
+      if (type === 'tomorrow') d.setDate(d.getDate() + 1);
+
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      dateInput.value = `${yyyy}-${mm}-${dd}`;
+      bzdSearchDate = dateInput.value;
+
+      const btnToday = document.getElementById('pillDateToday');
+      const btnTomorrow = document.getElementById('pillDateTomorrow');
+      if (btnToday) btnToday.classList.toggle('active', type === 'today');
+      if (btnTomorrow) btnTomorrow.classList.toggle('active', type === 'tomorrow');
+
+      performBzdSearch();
+    }
+
+    function shiftQuickDate(days) {
+      const dateInput = document.getElementById('bzdDateInput');
+      if (!dateInput) return;
+
+      const cur = dateInput.value ? new Date(dateInput.value) : new Date();
+      cur.setDate(cur.getDate() + days);
+
+      const yyyy = cur.getFullYear();
+      const mm = String(cur.getMonth() + 1).padStart(2, '0');
+      const dd = String(cur.getDate()).padStart(2, '0');
+      dateInput.value = `${yyyy}-${mm}-${dd}`;
+      bzdSearchDate = dateInput.value;
+
+      const btnToday = document.getElementById('pillDateToday');
+      const btnTomorrow = document.getElementById('pillDateTomorrow');
+      if (btnToday) btnToday.classList.remove('active');
+      if (btnTomorrow) btnTomorrow.classList.remove('active');
+
+      performBzdSearch();
+    }
+
+    function applyPopularRoute(fromCity, toCity) {
+      const fromEl = document.getElementById('bzdFromInput');
+      const toEl = document.getElementById('bzdToInput');
+      if (fromEl) fromEl.value = fromCity;
+      if (toEl) toEl.value = toCity;
+
+      bzdSearchFrom = fromCity;
+      bzdSearchTo = toCity;
+
+      performBzdSearch();
+    }
+
+    function handleBzdSearchSubmit(e) {
+      if (e) e.preventDefault();
+      const fromEl = document.getElementById('bzdFromInput');
+      const toEl = document.getElementById('bzdToInput');
+      const dateEl = document.getElementById('bzdDateInput');
+
+      bzdSearchFrom = fromEl ? fromEl.value.trim() : "";
+      bzdSearchTo = toEl ? toEl.value.trim() : "";
+      bzdSearchDate = dateEl ? dateEl.value : "";
+
+      performBzdSearch();
+    }
+
+    function performBzdSearch() {
+      initBzdSearchWidget();
+      renderTripsFeed();
+    }
+
     function renderTripsFeed() {
       const grid = document.getElementById('tripsFeedGrid');
+      if (!grid) return;
+
       allTrips = getStoredTrips();
-      document.getElementById('badgeTripsCount').textContent = allTrips.length;
 
-      const filtered = currentFilterRoute === 'all'
-        ? allTrips
-        : allTrips.filter(t => t.route.includes(currentFilterRoute));
+      const fromVal = bzdSearchFrom.trim().toLowerCase();
+      const toVal = bzdSearchTo.trim().toLowerCase();
 
-      if (filtered.length === 0) {
+      // Update route title
+      const routeTitleEl = document.getElementById('bzdResultsRouteTitle');
+      const metaNoteEl = document.getElementById('bzdResultsMetaNote');
+
+      const routeDisplay = (bzdSearchFrom && bzdSearchTo)
+        ? `${bzdSearchFrom} ➔ ${bzdSearchTo}`
+        : (bzdSearchFrom ? `Из: ${bzdSearchFrom}` : (bzdSearchTo ? `В: ${bzdSearchTo}` : "Все направления"));
+
+      if (routeTitleEl) routeTitleEl.textContent = `Рейсы: ${routeDisplay}`;
+
+      // Filter logic (BZD railway style)
+      let matched = allTrips.filter(t => {
+        const tOrigin = (t.originCity || t.origin || "").toLowerCase();
+        const tDest = (t.destinationCity || t.destination || "").toLowerCase();
+        const tRoute = (t.route || "").toLowerCase();
+
+        const matchFrom = !fromVal || tOrigin.includes(fromVal) || tRoute.split('➔')[0].includes(fromVal);
+        const matchTo = !toVal || tDest.includes(toVal) || (tRoute.split('➔')[1] && tRoute.split('➔')[1].includes(toVal));
+
+        return matchFrom && matchTo;
+      });
+
+      const badgeTrips = document.getElementById('badgeTripsCount');
+      if (badgeTrips) badgeTrips.textContent = matched.length;
+      if (metaNoteEl) {
+        metaNoteEl.textContent = `Найдено рейсов: ${matched.length} • Регулярное комфортабельное сообщение`;
+      }
+
+      if (matched.length === 0) {
+        // BZD FRIENDLY EMPTY STATE WITH ALTERNATIVES
         grid.innerHTML = `
-          <div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-muted); background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-hairline);">
-            По выбранному направлению на сегодня нет активных рейсов
+          <div style="padding: 36px 24px; text-align: center; background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-hairline); margin-bottom: 24px;">
+            <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--canvas-bone); display: inline-flex; align-items: center; justify-content: center; color: var(--color-terracotta); margin-bottom: 14px;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </div>
+            <h3 style="font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px;">
+              Прямых рейсов по запросу «${routeDisplay}» на выбранную дату не найдено
+            </h3>
+            <p style="font-size: 13.5px; color: var(--text-muted); max-width: 520px; margin: 0 auto 18px;">
+              Попробуйте изменить станции отправления/прибытия или посмотрите доступные рейсы на другие направления сети BusLiner.
+            </p>
+            <button type="button" class="btn-book-trip-cta" style="width: auto; margin: 0 auto;" onclick="applyPopularRoute('', '')">
+              <span>Показать все доступные рейсы сети</span>
+            </button>
           </div>
         `;
         return;
       }
 
-      grid.innerHTML = filtered.map(t => {
+      // RENDER BZD STYLE TRIP CARDS
+      grid.innerHTML = matched.map(t => {
         const freeSeats = Math.max(0, t.capacity - t.occupied);
         const isFull = freeSeats === 0;
-        const occPercent = Math.round((t.occupied / t.capacity) * 100);
+
+        let statusBadge = '<span class="status-pill status-forest-pill">Посадка открыта</span>';
+        if (t.status === 'in_route') {
+          statusBadge = '<span class="status-pill status-forest-pill">В пути</span>';
+        } else if (t.status === 'delayed') {
+          statusBadge = `<span class="status-pill status-alert-pill">Задержка +${t.delay || 15}м</span>`;
+        } else if (t.status === 'completed') {
+          statusBadge = '<span class="status-pill">Завершён</span>';
+        }
 
         return `
-          <div class="trip-booking-card">
-            <div>
-              <div class="trip-card-top">
-                <div>
-                  <div class="trip-time-node">${t.time}</div>
-                  <div class="trip-date-label">${t.date}</div>
-                </div>
-                <div class="trip-fare-badge">${t.fare} BYN</div>
+          <div class="bzd-trip-card">
+            <div class="bzd-trip-header">
+              <div class="bzd-trip-train-badge">
+                <span class="train-num">Рейс ${t.id}</span>
+                <span class="train-type">${t.vehicle ? t.vehicle.split('(')[0] : 'Mercedes Sprinter'}</span>
               </div>
-
-              <div style="margin-top: 14px;">
-                <h3 class="trip-route-title">${t.route}</h3>
-                <div class="trip-stations-row">
-                  <span>Отправление: <strong>${t.origin}</strong></span>
-                  <span>Прибытие: <strong>${t.destination}</strong></span>
-                </div>
-              </div>
-
-              <div class="trip-meta-tags" style="margin-top: 12px;">
-                <span>Микроавтобус: <strong>${t.vehicle}</strong></span>
-              </div>
-
-              <div style="margin-top: 14px;">
-                <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
-                  <span style="color:var(--text-muted);">Заполняемость</span>
-                  <span style="font-weight:700; color:var(--color-forest);">${freeSeats > 0 ? `Свободно ${freeSeats} мест` : 'Все места заняты'}</span>
-                </div>
-                <div class="trip-seats-progress">
-                  <div class="trip-seats-fill" style="width: ${occPercent}%;"></div>
-                </div>
+              <div class="bzd-trip-status">
+                ${statusBadge}
               </div>
             </div>
 
-            <button type="button" class="btn-book-trip-cta" ${isFull ? 'disabled' : ''} onclick="openBookingModal('${t.id}')">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
-              </svg>
-              <span>${isFull ? 'Все места заняты' : 'Записаться на рейс'}</span>
-            </button>
+            <div class="bzd-schedule-grid">
+              <!-- DEPARTURE -->
+              <div class="bzd-time-col departure">
+                <div class="bzd-time">${t.time}</div>
+                <div class="bzd-date">${t.date}</div>
+                <div class="bzd-station">${t.origin}</div>
+              </div>
+
+              <!-- DURATION ARROW -->
+              <div class="bzd-duration-col">
+                <span class="bzd-duration-text">~${t.duration || '3 ч 45 мин'}</span>
+                <div class="bzd-route-line">
+                  <span class="bzd-line-dot"></span>
+                  <span class="bzd-line-arrow">➔</span>
+                  <span class="bzd-line-dot"></span>
+                </div>
+                <span class="bzd-route-class">Прямой рейс VIP</span>
+              </div>
+
+              <!-- ARRIVAL -->
+              <div class="bzd-time-col arrival">
+                <div class="bzd-time">${t.arrivalTime || 'По графику'}</div>
+                <div class="bzd-date">${t.date}</div>
+                <div class="bzd-station">${t.destination}</div>
+              </div>
+            </div>
+
+            <div class="bzd-trip-footer">
+              <div class="bzd-seats-pricing">
+                <div class="bzd-seats-avail">
+                  <span class="seats-dot ${freeSeats > 0 ? 'available' : 'full'}"></span>
+                  <span>Свободно: <strong>${freeSeats} мест</strong> из ${t.capacity}</span>
+                </div>
+                <div class="bzd-fare">Тариф: от <strong>${t.fare} BYN</strong></div>
+              </div>
+
+              <button type="button" class="btn-bzd-select-seat" onclick="openBookingModal('${t.id}')" ${isFull ? 'disabled' : ''}>
+                <span>${isFull ? 'Все места заняты' : 'Выбрать места →'}</span>
+              </button>
+            </div>
           </div>
         `;
       }).join('');
-    }
-
-    function filterTripsFeed(routeFilter, btn) {
-      currentFilterRoute = routeFilter;
-      document.querySelectorAll('.filter-chip-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      renderTripsFeed();
     }
 
     // FUNCTION 2: RENDER ORDER TAB (МОЙ ЗАКАЗ И БИЛЕТ С РАБОЧИМ QR)
@@ -1782,7 +2580,23 @@
       };
 
       const isBoarded = ticket.status === 'boarded';
-      const statusText = isBoarded ? '✓ Вы в салоне • Билет принят экипажем' : 'Посадочный талон активен • Ожидает посадки';
+      let statusText = 'Посадочный талон активен • Ожидает посадки';
+      let statusDotColor = 'var(--accent-primary)';
+
+      if (trip.status === 'in_route') {
+        statusText = '🚌 Рейс в пути • Автобус следует по маршруту';
+        statusDotColor = 'var(--status-forest)';
+      } else if (trip.status === 'delayed') {
+        statusText = `⏱ Отправление задержано (+${trip.delay || 15} мин)`;
+        statusDotColor = 'var(--color-terracotta)';
+      } else if (trip.status === 'completed') {
+        statusText = '✓ Рейс завершён • Вы прибыли в пункт назначения';
+        statusDotColor = 'var(--status-forest)';
+      } else if (isBoarded) {
+        statusText = '✓ Вы в салоне • Билет принят экипажем';
+        statusDotColor = 'var(--status-forest)';
+      }
+
       const paymentText = ticket.payment === 'paid' ? 'Оплачено картой онлайн' : `К оплате водителю: ${ticket.amount || trip.fare} BYN наличными`;
 
       // GENERATE GENUINE WORKING QR CODE SVG
@@ -1794,7 +2608,7 @@
           <!-- TOP BANNER -->
           <div class="ticket-top-banner">
             <div class="ticket-status-pill">
-              <span class="pulse-indicator-dot" style="${isBoarded ? 'background:#23312A; box-shadow:none;' : ''}"></span>
+              <span class="pulse-indicator-dot" style="background:${statusDotColor};"></span>
               <span>${statusText}</span>
             </div>
             <div class="mono" style="font-size:12.5px; color:var(--text-muted); font-weight:700;">
@@ -2197,19 +3011,33 @@
         allTrips = getStoredTrips();
         allBookings = getStoredBookings();
         renderOrderTab();
-        renderTripsFeed();
+        initBzdSearchWidget();
+      renderTripsFeed();
         renderProfileTab();
       }
     });
 
     if (window.BroadcastChannel) {
       const syncChannel = new BroadcastChannel('busliner_sync');
-      syncChannel.onmessage = () => {
+      syncChannel.onmessage = (event) => {
         allTrips = getStoredTrips();
         allBookings = getStoredBookings();
+        passengerProfile = getStoredProfile();
+
         renderOrderTab();
-        renderTripsFeed();
+        initBzdSearchWidget();
+      renderTripsFeed();
         renderProfileTab();
+
+        if (event && event.data && event.data.type === 'TRIP_STATUS_UPDATED') {
+          const statusLabels = {
+            scheduled: 'Посадка открыта',
+            in_route: 'Рейс в пути',
+            delayed: `Задержка отправления (+${event.data.delay || 15} мин)`,
+            completed: 'Рейс завершён'
+          };
+          showToast(`Статус рейса обновлен экипажем: ${statusLabels[event.data.status] || event.data.status}`);
+        }
       };
     }
 
@@ -2245,6 +3073,7 @@
       allBookings = getStoredBookings();
       passengerProfile = getStoredProfile();
 
+      initBzdSearchWidget();
       renderTripsFeed();
       renderOrderTab();
       renderProfileTab();
