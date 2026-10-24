@@ -1703,7 +1703,7 @@
     }
     .form-input:focus, .form-select:focus {
       border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(122, 35, 32, 0.1);
+      box-shadow: 0 0 0 3px rgba(35, 49, 42, 0.12);
     }
 
     .form-row-2 {
@@ -1884,31 +1884,30 @@
     <!-- DESKTOP / TABLET SIDEBAR NAVIGATION -->
     <aside class="app-sidebar" id="appSidebar">
       <div class="sidebar-header">
-        <a href="#dashboard" class="brand-mark" onclick="switchScreen('dashboard')">
+        <a href="#cockpit" class="brand-mark" onclick="navTo('cockpit')">
           <div class="brand-logo-icon">B</div>
           <div class="brand-text">
             <span class="brand-name">BusLiner</span>
-            <span class="brand-label" id="sidebarBrandRole">Кабинет перевозчика</span>
+            <span class="brand-label" id="sidebarBrandRole">Пульт водителя</span>
           </div>
         </a>
-      </div>
-
-      <!-- ROLE SEGMENTED CONTROL (HIDDEN: SEPARATE DEDICATED WORKSPACES) -->
-      <div class="role-switcher-container" style="display:none !important;">
-        <div class="role-segmented-control">
-          <button class="role-segment-btn active" id="btnRoleCarrier" onclick="setUserRole('carrier')">
-            Перевозчик
-          </button>
-          <button class="role-segment-btn" id="btnRoleDriver" onclick="setUserRole('driver')">
-            Водитель
-          </button>
-        </div>
       </div>
 
       <nav class="sidebar-nav">
         <div class="nav-section-title">Навигация</div>
 
-        <button class="nav-item-btn active" data-screen="dashboard" onclick="switchScreen('dashboard')">
+        <button class="nav-item-btn active" data-screen="cockpit" onclick="navTo('cockpit')">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="6" width="20" height="12" rx="2" />
+            <circle cx="7" cy="18" r="2" />
+            <circle cx="17" cy="18" r="2" />
+            <path d="M15 11l2 2 4-4" />
+          </svg>
+          <span>Пульт рейса</span>
+          <span class="nav-badge" id="badgeCockpitAlert">Live</span>
+        </button>
+
+        <button class="nav-item-btn" data-screen="dashboard" onclick="switchScreen('dashboard')">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <rect x="3" y="3" width="7" height="9" rx="1" />
             <rect x="14" y="3" width="7" height="5" rx="1" />
@@ -1973,24 +1972,15 @@
 
       <div class="sidebar-footer">
         <div class="carrier-profile-card">
-          <div class="carrier-avatar" id="profileAvatarMonogram">ПЕ</div>
+          <div class="carrier-avatar" id="profileAvatarMonogram">ВО</div>
           <div class="carrier-meta">
-            <span class="carrier-name" id="profileDisplayName">ИП Александр</span>
+            <span class="carrier-name" id="profileDisplayName">Водитель Александр</span>
             <span class="carrier-subtext">
               <span class="carrier-status-dot"></span>
-              <span id="profileRoleBadgeText">Перевозчик • 3 авто</span>
+              <span id="profileRoleBadgeText">Водитель • Рейс BL-5715</span>
             </span>
           </div>
         </div>
-
-        <a href="driver-terminal.html" class="passenger-site-link">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="6" width="20" height="12" rx="2" />
-            <circle cx="7" cy="18" r="2" />
-            <circle cx="17" cy="18" r="2" />
-          </svg>
-          Пульт водителя
-        </a>
 
         <a href="passenger-cabinet.html" class="passenger-site-link">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2015,16 +2005,12 @@
       <!-- TOP APPLICATION BAR -->
       <header class="top-app-bar">
         <div class="header-breadcrumb">
-          <span class="crumb-root" id="topBarRoleIndicator">Перевозчик</span>
+          <span class="crumb-root" id="topBarRoleIndicator">Водитель на линии</span>
           <span class="crumb-separator">/</span>
-          <span class="crumb-current" id="headerCrumbTitle">Обзор</span>
+          <span class="crumb-current" id="headerCrumbTitle">Пульт рейса</span>
         </div>
 
         <div class="header-right-actions">
-          <!-- Mobile Quick Switcher (Hidden: Separate dedicated URLs) -->
-          <button class="btn-secondary" id="mobileRoleSwitchBtn" style="display:none !important; padding: 6px 10px; font-size: 12px; font-weight:700;" onclick="toggleMobileRole()">
-            Водитель ⇄ Перевозчик
-          </button>
 
           <div class="telemetry-clock">
             <span class="clock-pulse"></span>
@@ -2047,7 +2033,7 @@
         <!-- ====================================================================
              DRIVER ACTIVE TRIP HERO BANNER (SHOWN WHEN IN DRIVER MODE)
              ==================================================================== -->
-        <div class="driver-active-trip-banner" id="driverHeroBanner" style="display:none;">
+        <div class="driver-active-trip-banner" id="driverHeroBanner" style="display:flex;">
           <div class="driver-banner-top">
             <div>
               <div class="driver-banner-badge">Ваш рейс прямо сейчас</div>
@@ -2068,27 +2054,188 @@
           </div>
 
           <div class="driver-banner-controls">
-            <button class="btn-driver-hero primary btn-magnetic" onclick="openTripDetails('BL-5715')">
+            <button class="btn-driver-hero primary btn-magnetic" onclick="openTripDetails('BL-5715'); navTo('cockpit');">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
                 <polyline points="16 11 18 13 22 9" />
               </svg>
-              Открыть посадку пассажиров (Чек-ин)
+              Начать посадку
             </button>
             <button class="btn-driver-hero secondary btn-magnetic" onclick="changeHeroTripStatus('in_route')">
-              Выехать в рейс
+              Выехать по маршруту
             </button>
             <button class="btn-driver-hero secondary btn-magnetic" onclick="broadcastTripDelay('BL-5715', 15)">
-              Задержка 15 мин
+              Задержка +15 мин
+            </button>
+            <button class="btn-driver-hero secondary btn-magnetic" onclick="changeHeroTripStatus('completed')">
+              Завершить рейс
             </button>
           </div>
         </div>
 
         <!-- ====================================================================
+             SCREEN COCKPIT: DEDICATED EMBEDDED DRIVER COCKPIT (ПУЛЬТ РЕЙСА)
+             ==================================================================== -->
+        <section id="screen-cockpit" class="screen-pane workspace-screen active-pane">
+          <div class="screen-heading-row">
+            <div class="screen-title-group">
+              <h1>Пульт рейса <em>и мобильная посадка</em></h1>
+              <p>Оперативный пульт экипажа: чек-ин пассажиров, схема салона 20 мест и выезд</p>
+            </div>
+            <div class="screen-controls-group">
+              <button class="btn-secondary" onclick="exportDailyManifestCSV()">
+                Экспорт ведомости
+              </button>
+            </div>
+          </div>
+
+          <!-- COCKPIT 4 KPI TILES -->
+          <div class="kpi-metrics-grid" style="margin-bottom: 20px;">
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Статус рейса</span>
+                <div class="kpi-icon-pill" style="color: var(--status-forest); background: var(--status-forest-bg);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-number" id="cockpitKpiStatus" style="font-size: 20px;">Посадка открыта</div>
+              <div class="kpi-footer-note">Перрон 3 • Отправление 18:45</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Следующая точка</span>
+                <div class="kpi-icon-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-number" id="cockpitKpiWaypoint" style="font-size: 20px;">КПП Каменный Лог</div>
+              <div class="kpi-footer-note">Дистанция ~142 км • Расчет 20:30</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Посадка пассажиров</span>
+                <div class="kpi-icon-pill" style="color: var(--status-forest); background: var(--status-forest-bg);">✓</div>
+              </div>
+              <div class="kpi-number" id="cockpitKpiBoarded" style="color: var(--color-forest);">14 / 18</div>
+              <div class="kpi-footer-note" id="cockpitKpiRemaining">Осталось посадить: 4 человека</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">К сбору водителю</span>
+                <div class="kpi-icon-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
+                    <path d="M12 18V6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="kpi-number" id="cockpitKpiCash">85 BYN</div>
+              <div class="kpi-footer-note">1 пассажир • Оплата наличными</div>
+            </div>
+          </div>
+
+          <!-- QUICK ACTION CONTROLS -->
+          <div class="cockpit-quick-actions-bar" style="display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap;">
+            <button class="btn-primary link-subtle-cta btn-magnetic" style="min-height: 48px; padding: 10px 18px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;" onclick="boardAllPresent()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Посадить всех явившихся
+            </button>
+            <button class="btn-secondary link-subtle-cta btn-magnetic" style="min-height: 48px; padding: 10px 18px; font-weight: 600;" onclick="changeHeroTripStatus('in_route')">
+              Выехать по маршруту
+            </button>
+            <button class="btn-secondary link-subtle-cta btn-magnetic" style="min-height: 48px; padding: 10px 18px; font-weight: 600;" onclick="broadcastTripDelay('BL-5715', 15)">
+              Задержка +15 мин
+            </button>
+            <button class="btn-secondary link-subtle-cta btn-magnetic" style="min-height: 48px; padding: 10px 18px; font-weight: 600;" onclick="changeHeroTripStatus('completed')">
+              Завершить рейс
+            </button>
+          </div>
+
+          <!-- 20-SEAT MERCEDES SPRINTER CABIN LAYOUT -->
+          <div class="panel-card cockpit-cabin-card" style="margin-bottom: 24px;">
+            <div class="panel-card-header">
+              <div>
+                <h2 class="panel-title">Интерактивный салон <em>Mercedes-Benz Sprinter 519 CDI (7TAX-8891)</em></h2>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                  Нажмите на место пассажира для мгновенного чек-ина в салон с тактильным откликом
+                </p>
+              </div>
+              <span class="panel-title-badge" id="cockpitCabinBadge">20 мест • Схема микроавтобуса</span>
+            </div>
+            <div style="padding: 20px;">
+              <div class="bus-schematic-card" style="margin-bottom: 0;">
+                <div class="bus-cockpit-bar">
+                  <span class="driver-seat-box">Водитель • Салон 20 мест</span>
+                  <span class="cabin-aisle">Проход</span>
+                  <span id="cockpitOccupancyBadge" style="font-family: var(--font-mono); font-weight: 700; color: var(--color-forest);">18 из 20 занято</span>
+                </div>
+                <div class="seats-grid-layout" id="cockpitSeatsGrid"></div>
+                <div class="seat-legend-row" style="margin-top: 14px;">
+                  <div class="legend-item">
+                    <div class="legend-box" style="background: var(--status-forest-bg); border-color: var(--status-forest-border);"></div>
+                    <span>В салоне (чек-ин)</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-box" style="background: var(--surface-subtle); border-color: var(--border-hairline);"></div>
+                    <span>Ожидает посадку</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-box" style="background: var(--canvas-ivory); border-color: var(--border-subtle);"></div>
+                    <span>Свободно</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASSENGER BOARDING MANIFEST -->
+          <div class="panel-card cockpit-manifest-card" style="margin-bottom: 30px;">
+            <div class="panel-card-header">
+              <div>
+                <h2 class="panel-title">Ведомость посадки <em>пассажиров рейса BL-5715</em></h2>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                  Посадка по билетам, проверка оплаты и экстренный вызов неявившихся в 1 клик
+                </p>
+              </div>
+              <span class="panel-title-badge" id="cockpitRosterCountBadge">18 пассажиров</span>
+            </div>
+
+            <div style="padding: 16px 20px; border-bottom: 1px solid var(--border-hairline); background: var(--canvas-bone);">
+              <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 260px; position: relative;">
+                  <input type="text" id="cockpitPassengerSearch" class="form-input" style="font-size: 16px; min-height: 48px; width: 100%; padding-left: 38px;" placeholder="Поиск по билету, имени или телефону пассажира..." oninput="filterCockpitRoster()">
+                  <svg style="position: absolute; left: 12px; top: 15px; color: var(--text-dim);" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                </div>
+                <button class="btn-secondary link-subtle-cta btn-magnetic" style="min-height: 48px; padding: 10px 16px;" onclick="document.getElementById('cockpitPassengerSearch').value=''; filterCockpitRoster();">
+                  Сброс
+                </button>
+              </div>
+            </div>
+
+            <div class="roster-list" id="cockpitRosterList" style="padding: 12px 20px;"></div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
              SCREEN 1: DASHBOARD (ОБЗОР)
              ==================================================================== -->
-        <div class="screen-pane active-pane" id="screen-dashboard">
+        <div class="screen-pane" id="screen-dashboard">
           <div class="screen-heading-row">
             <div class="screen-title-group">
               <h1 id="dashScreenTitle">Обзор <em>рейсов</em></h1>
@@ -2560,7 +2707,17 @@
        ========================================================================== -->
   <div class="mobile-bottom-nav-bar">
     <div class="mobile-bottom-nav-grid">
-      <button class="mobile-nav-btn nav-tab-btn active" data-screen="dashboard" onclick="switchScreen('dashboard')">
+      <button class="mobile-nav-btn nav-tab-btn active" data-screen="cockpit" onclick="navTo('cockpit')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="6" width="20" height="12" rx="2" />
+          <circle cx="7" cy="18" r="2" />
+          <circle cx="17" cy="18" r="2" />
+          <path d="M15 11l2 2 4-4" />
+        </svg>
+        <span>Пульт</span>
+      </button>
+
+      <button class="mobile-nav-btn nav-tab-btn" data-screen="dashboard" onclick="switchScreen('dashboard')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="3" y="3" width="7" height="9" rx="1" />
           <rect x="14" y="3" width="7" height="5" rx="1" />
@@ -2935,7 +3092,7 @@
     /* APP STATE */
     let trips = JSON.parse(localStorage.getItem('busliner_trips') || JSON.stringify(DEFAULT_TRIPS));
     let bookings = JSON.parse(localStorage.getItem('busliner_bookings') || JSON.stringify(DEFAULT_BOOKINGS));
-    let userRole = localStorage.getItem('busliner_user_role') || 'carrier'; // 'carrier' or 'driver'
+    let userRole = localStorage.getItem('busliner_user_role') || 'driver'; // 'carrier' or 'driver'
     let selectedTripIds = new Set();
     let currentFilterRoute = 'all';
     let currentFilterStatus = 'all';
@@ -3131,74 +3288,78 @@
       `).join('');
     }
 
-    /* ROLE SWITCHER CONTROLLER (CARRIER ↔ DRIVER) */
+    /* ROLE CONTROLLER */
     function setUserRole(role) {
       userRole = role;
       saveStore();
 
-      const btnCarrier = document.getElementById('btnRoleCarrier');
-      const btnDriver = document.getElementById('btnRoleDriver');
       const sidebarBrandRole = document.getElementById('sidebarBrandRole');
       const topBarRoleIndicator = document.getElementById('topBarRoleIndicator');
-      const mobileRoleBtn = document.getElementById('mobileRoleSwitchBtn');
       const driverHeroBanner = document.getElementById('driverHeroBanner');
       const profileAvatar = document.getElementById('profileAvatarMonogram');
       const profileRoleBadge = document.getElementById('profileRoleBadgeText');
 
-      if (role === 'driver') {
-        if (btnCarrier) btnCarrier.classList.remove('active');
-        if (btnDriver) btnDriver.classList.add('active');
-        if (sidebarBrandRole) sidebarBrandRole.textContent = 'Пульт водителя';
-        if (topBarRoleIndicator) topBarRoleIndicator.textContent = 'Водитель на линии';
-        if (mobileRoleBtn) mobileRoleBtn.textContent = 'Режим: Водитель';
-        if (driverHeroBanner) driverHeroBanner.style.display = 'flex';
-        if (profileAvatar) profileAvatar.textContent = 'ВО';
-        if (profileRoleBadge) profileRoleBadge.textContent = 'Водитель • Рейс BL-5715';
-        if (typeof document !== 'undefined') {
-          document.querySelectorAll('.carrier-only-action').forEach(el => { el.style.display = 'none'; });
+      if (typeof document !== 'undefined') {
+        if (role === 'driver') {
+          if (document.body && document.body.classList) {
+            document.body.classList.remove('role-carrier');
+            document.body.classList.add('role-driver');
+          }
+          if (sidebarBrandRole) sidebarBrandRole.textContent = 'Пульт водителя';
+          if (topBarRoleIndicator) topBarRoleIndicator.textContent = 'Водитель на линии';
+          if (driverHeroBanner) driverHeroBanner.style.display = 'flex';
+          if (profileAvatar) profileAvatar.textContent = 'ВО';
+          if (profileRoleBadge) profileRoleBadge.textContent = 'Водитель • Рейс BL-5715';
+          document.querySelectorAll('.carrier-only-action').forEach(el => { if (el.style) el.style.display = 'none'; });
+        } else {
+          if (document.body && document.body.classList) {
+            document.body.classList.remove('role-driver');
+            document.body.classList.add('role-carrier');
+          }
+          if (sidebarBrandRole) sidebarBrandRole.textContent = 'Кабинет перевозчика';
+          if (topBarRoleIndicator) topBarRoleIndicator.textContent = 'Перевозчик';
+          if (driverHeroBanner) driverHeroBanner.style.display = 'none';
+          if (profileAvatar) profileAvatar.textContent = 'ПЕ';
+          if (profileRoleBadge) profileRoleBadge.textContent = 'Перевозчик • 3 микроавтобуса';
+          document.querySelectorAll('.carrier-only-action').forEach(el => { if (el.style) el.style.display = ''; });
         }
-        showToast('Активирован мобильный пульт водителя', 'forest', 'Быстрая посадка и звонки пассажирам в 1 клик');
-      } else {
-        if (btnCarrier) btnCarrier.classList.add('active');
-        if (btnDriver) btnDriver.classList.remove('active');
-        if (sidebarBrandRole) sidebarBrandRole.textContent = 'Кабинет перевозчика';
-        if (topBarRoleIndicator) topBarRoleIndicator.textContent = 'Перевозчик';
-        if (mobileRoleBtn) mobileRoleBtn.textContent = 'Режим: Перевозчик';
-        if (driverHeroBanner) driverHeroBanner.style.display = 'none';
-        if (profileAvatar) profileAvatar.textContent = 'ПЕ';
-        if (profileRoleBadge) profileRoleBadge.textContent = 'Перевозчик • 3 микроавтобуса';
-        if (typeof document !== 'undefined') {
-          document.querySelectorAll('.carrier-only-action').forEach(el => { el.style.display = ''; });
-        }
-        showToast('Активирован кабинет перевозчика', 'forest', 'Управление всеми рейсами, тарифами и финансами');
       }
     }
 
-    function toggleMobileRole() {
-      setUserRole(userRole === 'carrier' ? 'driver' : 'carrier');
-    }
-
-    /* SCREEN SWITCHER */
+    /* SCREEN SWITCHER & EMBEDDED NAV */
     function switchScreen(screenId) {
       document.querySelectorAll('.screen-pane').forEach(el => el.classList.remove('active-pane'));
       document.querySelectorAll('.nav-item-btn, .mobile-nav-btn').forEach(btn => btn.classList.remove('active'));
 
       const targetPane = document.getElementById(`screen-${screenId}`);
-      if (targetPane) targetPane.classList.add('active-pane');
+      if (targetPane) {
+        targetPane.classList.add('active-pane');
+        if (screenId === 'cockpit') {
+          const banner = document.getElementById('driverHeroBanner');
+          if (banner) banner.style.display = 'flex';
+          renderCockpitView();
+        }
+      }
 
       document.querySelectorAll(`[data-screen="${screenId}"]`).forEach(btn => btn.classList.add('active'));
 
       const titleMap = {
         dashboard: "Обзор",
+        cockpit: "Пульт рейса",
         trips: "Рейсы",
         schedule: "Расписание",
         bookings: "Пассажиры",
         finances: "Финансы",
         settings: "Автопарк"
       };
-      document.getElementById('headerCrumbTitle').textContent = titleMap[screenId] || "Панель";
-      window.location.hash = screenId;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const crumb = document.getElementById('headerCrumbTitle');
+      if (crumb) crumb.textContent = titleMap[screenId] || "Панель";
+      if (typeof window !== 'undefined' && window.location) window.location.hash = screenId;
+      if (typeof window !== 'undefined' && window.scrollTo) window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function navTo(screenId) {
+      switchScreen(screenId);
     }
 
     /* STATUS PILL HELPER */
@@ -3639,8 +3800,8 @@
               <span class="roster-phone">${b.phone} • Билет ${b.id}</span>
               <div style="margin-top: 4px;">
                 ${b.payment === 'paid'
-                  ? '<span class="status-badge status-forest" style="font-size:11px; padding:2px 8px;">Оплачено онлайн</span>'
-                  : `<span class="status-badge status-alert-pill" style="font-size:11px; padding:2px 8px;">Оплата водителю: ${b.amount || 85} BYN</span>`}
+                  ? '<span class="status-pill status-forest-pill" style="font-size:11px; padding:2px 8px;">Оплачено онлайн</span>'
+                  : `<span class="status-pill status-alert-pill" style="font-size:11px; padding:2px 8px;">Оплата водителю: ${b.amount || 85} BYN</span>`}
               </div>
             </div>
             <div class="roster-actions-box">
@@ -3650,7 +3811,7 @@
                 </svg>
               </a>
               <button class="btn-checkin-toggle ${b.status === 'boarded' ? 'boarded' : ''}" onclick="toggleCheckin('${b.id}')">
-                ${b.status === 'boarded' ? '✓ В салоне' : 'Посадить'}
+                ${b.status === 'boarded' ? '✓ Билет принят • В салоне' : 'Принять билет'}
               </button>
             </div>
           </div>
@@ -3666,20 +3827,218 @@
       currentActiveTripForDrawer = null;
     }
 
+    /* COCKPIT AUDIO & HAPTIC SYNTHESIZER */
+    window.CockpitAudio = {
+      ctx: null,
+      getAudioContext() {
+        if (!this.ctx) {
+          const AudioContextClass = typeof window !== 'undefined' ? (window.AudioContext || window.webkitAudioContext) : null;
+          if (AudioContextClass) this.ctx = new AudioContextClass();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+        return this.ctx;
+      },
+      playBoardSuccess() {
+        try {
+          const ctx = this.getAudioContext();
+          if (!ctx) return;
+          const now = ctx.currentTime;
+          [523.25, 783.99].forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.03);
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.03);
+            osc.stop(now + 0.2);
+          });
+          if (typeof navigator !== 'undefined' && navigator.vibrate) {
+            navigator.vibrate([15, 30, 20]);
+          }
+        } catch(e) {}
+      },
+      playBoardUndo() {
+        try {
+          const ctx = this.getAudioContext();
+          if (!ctx) return;
+          const now = ctx.currentTime;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(330, now);
+          osc.frequency.exponentialRampToValueAtTime(220, now + 0.14);
+          gain.gain.setValueAtTime(0.07, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.16);
+          if (typeof navigator !== 'undefined' && navigator.vibrate) {
+            navigator.vibrate(25);
+          }
+        } catch(e) {}
+      }
+    };
+
     function toggleCheckin(bookingId) {
       const b = bookings.find(x => x.id === bookingId);
       if (!b) return null;
-      b.status = b.status === 'boarded' ? 'confirmed' : 'boarded';
+      const wasBoarded = b.status === 'boarded';
+      b.status = wasBoarded ? 'confirmed' : 'boarded';
       saveStore();
       if (typeof calculateFinancials === 'function') calculateFinancials();
       if (typeof renderBookings === 'function') renderBookings();
+      if (typeof renderCockpitView === 'function') renderCockpitView();
       if (currentActiveTripForDrawer && typeof openTripDetails === 'function') {
         openTripDetails(currentActiveTripForDrawer.id);
       }
-      if (typeof showToast === 'function') {
-        showToast(b.status === 'boarded' ? `Пассажир ${b.name} в салоне` : `Посадка пассажира ${b.name} отменена`, 'forest');
+      if (!wasBoarded) {
+        if (window.CockpitAudio) window.CockpitAudio.playBoardSuccess();
+        if (typeof showToast === 'function') {
+          showToast(`Пассажир ${b.name} в салоне`, 'forest', `Место ${b.seat} • Билет принят`);
+        }
+      } else {
+        if (window.CockpitAudio) window.CockpitAudio.playBoardUndo();
+        if (typeof showToast === 'function') {
+          showToast(`Посадка пассажира ${b.name} отменена`, 'forest', `Место ${b.seat} освобождено`);
+        }
       }
       return b.status;
+    }
+
+    function toggleSeatCheckin(seatNum) {
+      const b = bookings.find(x => x.tripId === 'BL-5715' && (parseInt(x.seat) === seatNum || x.seat === String(seatNum)));
+      if (b) {
+        toggleCheckin(b.id);
+      } else {
+        showToast(`Место ${seatNum} свободно`, 'forest', 'На это место еще нет бронирования');
+      }
+    }
+
+    function boardAllPresent() {
+      const tripBookings = bookings.filter(b => b.tripId === 'BL-5715');
+      let newlyBoarded = 0;
+      tripBookings.forEach(b => {
+        if (b.status !== 'boarded') {
+          b.status = 'boarded';
+          newlyBoarded++;
+        }
+      });
+      saveStore();
+      if (typeof calculateFinancials === 'function') calculateFinancials();
+      if (typeof renderTrips === 'function') renderTrips();
+      if (typeof renderBookings === 'function') renderBookings();
+      if (typeof renderCockpitView === 'function') renderCockpitView();
+      if (currentActiveTripForDrawer && typeof openTripDetails === 'function') {
+        openTripDetails(currentActiveTripForDrawer.id);
+      }
+      if (window.CockpitAudio) window.CockpitAudio.playBoardSuccess();
+      showToast(`Посажено пассажиров: ${tripBookings.length}`, 'forest', 'Все явившиеся пассажиры отмечены в салоне');
+    }
+
+    function renderCockpitView() {
+      if (typeof document === 'undefined') return;
+      const tripBookings = bookings.filter(b => b.tripId === 'BL-5715');
+      const boardedCount = tripBookings.filter(b => b.status === 'boarded').length;
+      const cashBookings = tripBookings.filter(b => b.payment !== 'paid');
+      const cashTotal = cashBookings.reduce((sum, b) => sum + (b.amount || 85), 0);
+
+      const kpiBoarded = document.getElementById('cockpitKpiBoarded');
+      if (kpiBoarded) kpiBoarded.textContent = `${boardedCount} / ${tripBookings.length}`;
+      const kpiRemaining = document.getElementById('cockpitKpiRemaining');
+      if (kpiRemaining) kpiRemaining.textContent = `Осталось посадить: ${tripBookings.length - boardedCount} чел`;
+      const kpiCash = document.getElementById('cockpitKpiCash');
+      if (kpiCash) kpiCash.textContent = `${cashTotal} BYN`;
+      const cabinBadge = document.getElementById('cockpitCabinBadge');
+      if (cabinBadge) cabinBadge.textContent = `${boardedCount} из ${tripBookings.length} в салоне`;
+      const occBadge = document.getElementById('cockpitOccupancyBadge');
+      if (occBadge) occBadge.textContent = `${tripBookings.length} из 20 занято`;
+      const rosterBadge = document.getElementById('cockpitRosterCountBadge');
+      if (rosterBadge) rosterBadge.textContent = `${tripBookings.length} пассажиров`;
+
+      renderCockpitSeatsGrid(tripBookings);
+      renderCockpitRosterList(tripBookings);
+    }
+
+    function renderCockpitSeatsGrid(tripBookings) {
+      const container = document.getElementById('cockpitSeatsGrid');
+      if (!container) return;
+      let html = '';
+      for (let seat = 1; seat <= 20; seat++) {
+        const b = tripBookings.find(x => parseInt(x.seat) === seat || x.seat === String(seat));
+        if (!b) {
+          html += `
+            <div class="seat-box" onclick="toggleSeatCheckin(${seat})" title="Место ${seat}: Свободно">
+              <span class="seat-num">${seat}</span>
+            </div>`;
+        } else {
+          const isBoarded = b.status === 'boarded';
+          html += `
+            <div class="seat-box occupied ${isBoarded ? 'boarded' : ''}"
+                 onclick="toggleCheckin('${b.id}')"
+                 title="Место ${seat}: ${b.name} (${isBoarded ? 'В салоне' : 'К посадке'})">
+              <span class="seat-num">${seat}</span>
+            </div>`;
+        }
+      }
+      container.innerHTML = html;
+    }
+
+    function renderCockpitRosterList(tripBookings) {
+      const rosterList = document.getElementById('cockpitRosterList');
+      if (!rosterList) return;
+      const searchInput = document.getElementById('cockpitPassengerSearch');
+      const term = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+      const filtered = tripBookings.filter(b => {
+        if (!term) return true;
+        return b.name.toLowerCase().includes(term) ||
+               b.phone.includes(term) ||
+               b.id.toLowerCase().includes(term);
+      });
+
+      if (filtered.length === 0) {
+        rosterList.innerHTML = `<div style="padding: 24px; text-align: center; color: var(--text-muted);">Пассажиры не найдены</div>`;
+        return;
+      }
+
+      rosterList.innerHTML = filtered.map(b => `
+        <div class="roster-item" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--border-hairline); gap: 12px; flex-wrap: wrap;">
+          <div class="roster-passenger-info" style="flex: 1; min-width: 200px;">
+            <span class="roster-name" style="font-weight: 700; font-size: 15px;">
+              ${b.name} <span class="vehicle-cell-plate" style="margin-left: 6px;">Место ${b.seat}</span>
+            </span>
+            <div class="roster-phone" style="font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+              ${b.phone} • Билет ${b.id}
+            </div>
+            <div style="margin-top: 6px;">
+              ${b.payment === 'paid'
+                ? '<span class="status-pill status-forest-pill" style="font-size: 11px; padding: 3px 8px;">Оплачено онлайн</span>'
+                : `<span class="status-pill status-alert-pill" style="font-size: 11px; padding: 3px 8px;">Оплата водителю: ${b.amount || 85} BYN</span>`}
+            </div>
+          </div>
+          <div class="roster-actions-box" style="display: flex; align-items: center; gap: 8px;">
+            <a href="tel:${sanitizePhoneNumber(b.phone)}" class="btn-call-passenger" style="min-width: 48px; min-height: 48px; width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; background: var(--canvas-bone); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); color: var(--text-primary);" title="Позвонить ${b.name}">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </a>
+            <button class="btn-checkin-toggle ${b.status === 'boarded' ? 'boarded' : ''}" style="min-height: 48px; padding: 10px 16px; font-weight: 600;" onclick="toggleCheckin('${b.id}')">
+              ${b.status === 'boarded' ? '✓ Билет принят • В салоне' : 'Принять билет'}
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterCockpitRoster() {
+      const tripBookings = bookings.filter(b => b.tripId === 'BL-5715');
+      renderCockpitRosterList(tripBookings);
     }
 
     function printPassengerManifest() {
@@ -3892,10 +4251,13 @@
       calculateFinancials();
       initCursorFollower();
       setUserRole(userRole);
+      renderCockpitView();
 
-      const hash = window.location.hash.replace('#', '');
+      const hash = window.location.hash.replace('#', '') || 'cockpit';
       if (hash && document.getElementById(`screen-${hash}`)) {
         switchScreen(hash);
+      } else {
+        switchScreen('cockpit');
       }
     });
   </script>
