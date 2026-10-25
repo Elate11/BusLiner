@@ -2574,6 +2574,12 @@
       }
     }
 
+  .presentation-side-rail {
+      touch-action: none !important;
+      user-select: none !important;
+      overflow: hidden !important;
+      overscroll-behavior: none !important;
+    }
   </style>
 </head>
 <body>
@@ -3300,7 +3306,7 @@
     const WHEEL_LOCK_MS = 400;
 
     window.addEventListener('wheel', (e) => {
-      if (e.target.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay')) {
+      if (e.target.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay, .presentation-side-rail')) {
         return;
       }
 
@@ -3345,6 +3351,7 @@
     let isTouchActive = false;
 
     window.addEventListener('touchstart', (e) => {
+      if (e.target.closest('.presentation-side-rail')) return;
       if (e.touches && e.touches.length > 0) {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
@@ -3405,7 +3412,7 @@
 
     window.addEventListener('pointerdown', (e) => {
       if (e.pointerType === 'mouse' && e.buttons !== 1) return;
-      if (e.target.closest('input, textarea, select, button, a, [role="button"], .partner-calc-slider, .mobile-dock-btn')) return;
+      if (e.target.closest('input, textarea, select, button, a, [role="button"], .partner-calc-slider, .mobile-dock-btn, .presentation-side-rail')) return;
       pointerStartX = e.clientX;
       pointerStartY = e.clientY;
       isPointerDown = true;

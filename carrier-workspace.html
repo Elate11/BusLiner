@@ -239,9 +239,14 @@
       position: sticky;
       top: 0;
       height: 100dvh;
+      max-height: 100dvh;
       flex-shrink: 0;
       z-index: 100;
-      overflow: hidden;
+      overflow: hidden !important;
+      overflow-y: hidden !important;
+      overscroll-behavior: none !important;
+      touch-action: none !important;
+      user-select: none;
       transition: width 0.25s var(--ease-fluid);
     }
 
@@ -362,16 +367,19 @@
     /* NAV LINKS */
     .sidebar-nav {
       flex: 1;
-      padding: 14px 12px;
+      padding: 10px 10px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      overflow-y: hidden;
+      gap: 2px;
+      overflow: hidden !important;
+      overflow-y: hidden !important;
+      overscroll-behavior: none !important;
       min-height: 0;
     }
     @media (max-height: 520px) {
       .sidebar-nav {
-        overflow-y: auto;
+        overflow: hidden !important;
+        overflow-y: hidden !important;
       }
     }
 
@@ -5522,6 +5530,19 @@
       calculateFinancials();
       initCursorFollower();
       setUserRole(userRole);
+
+      // Freeze sidebar from any scrolling or gesture bubbling
+      const appSidebar = document.getElementById('appSidebar');
+      if (appSidebar) {
+        appSidebar.addEventListener('wheel', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }, { passive: false });
+        appSidebar.addEventListener('touchmove', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }, { passive: false });
+      }
 
       const hash = window.location.hash.replace('#', '');
       if (hash && document.getElementById(`screen-${hash}`)) {
