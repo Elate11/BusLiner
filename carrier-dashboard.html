@@ -825,6 +825,61 @@
       font-weight: 700;
     }
 
+    /* CARRIER BUSINESS INTELLIGENCE & ANALYTICS SUITE */
+    .timeframe-toggle-group {
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-neutral);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      padding: 2px;
+      gap: 2px;
+    }
+    .btn-timeframe {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font-sans);
+    }
+    .btn-timeframe.active, .btn-timeframe:hover {
+      background: var(--surface-card);
+      color: var(--text-main);
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .carrier-analytics-dual-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .carrier-fleet-matrix-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .chart-col {
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .chart-col:hover {
+      opacity: 0.85;
+      transform: translateY(-2px);
+    }
+    .route-analytics-row, .vehicle-telemetry-item, .driver-discipline-row {
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .vehicle-telemetry-item:hover {
+      border-color: var(--border-focus);
+    }
+
     /* OPERATIONAL SECTION BOXES */
     .panel-card {
       background: var(--surface-card);
@@ -1868,6 +1923,10 @@
        RESPONSIVE ERGONOMICS BREAKPOINTS
        ========================================================================== */
     @media (max-width: 1024px) {
+      .carrier-analytics-dual-grid,
+      .carrier-fleet-matrix-grid {
+        grid-template-columns: 1fr;
+      }
       .kpi-metrics-grid {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -2862,43 +2921,61 @@
         </section>
 
         <!-- ====================================================================
-             SCREEN 1: DASHBOARD (ОБЗОР)
+             SCREEN 1: CARRIER BUSINESS INTELLIGENCE & FLEET ANALYTICS (СТАТИСТИКА ПЕРЕВОЗЧИКА)
              ==================================================================== -->
         <div class="screen-pane active-pane" id="screen-dashboard">
           <div class="screen-heading-row">
             <div class="screen-title-group">
-              <h1 id="dashScreenTitle">Обзор <em>рейсов</em></h1>
-              <p id="dashScreenSub">Оперативное управление отправлениями, загрузкой и посадкой</p>
+              <h1 id="dashScreenTitle">Сводная статистика <em>и аналитика парка</em></h1>
+              <p id="dashScreenSub">Бизнес-показатели автопарка: выручка, загрузка кресел, доходность направлений и статус флота</p>
             </div>
             <div class="screen-controls-group">
+              <div class="timeframe-toggle-group" id="statsPeriodSelector">
+                <button type="button" class="btn-timeframe active" onclick="switchStatsPeriod('7d', this)">7 дней</button>
+                <button type="button" class="btn-timeframe" onclick="switchStatsPeriod('30d', this)">30 дней</button>
+                <button type="button" class="btn-timeframe" onclick="switchStatsPeriod('quarter', this)">Квартал</button>
+              </div>
               <button class="btn-secondary" onclick="exportDailyManifestCSV()">
                 Экспорт ведомости за день
+              </button>
+              <button class="btn-primary btn-magnetic" onclick="exportCarrierExecutiveReport()" style="gap: 8px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Финансовый отчет
               </button>
             </div>
           </div>
 
-          <!-- 4 KPI TILES -->
+          <!-- 4 PRIMARY EXECUTIVE FLEET KPI TILES -->
           <div class="kpi-metrics-grid">
-            <div class="kpi-card">
+            <div class="kpi-card" id="kpiCardRevenue">
               <div class="kpi-card-header">
-                <span class="kpi-label">Рейсы сегодня</span>
-                <div class="kpi-icon-pill">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="2" y="6" width="20" height="12" rx="2" />
-                    <circle cx="7" cy="18" r="2" />
-                    <circle cx="17" cy="18" r="2" />
-                  </svg>
-                </div>
+                <span class="kpi-label">Валовая выручка (Gross)</span>
+                <div class="kpi-icon-pill">BYN</div>
               </div>
-              <div class="kpi-number" id="dashKpiTrips">6</div>
+              <div class="kpi-number" id="dashKpiRevenue">14 820 BYN</div>
               <div class="kpi-footer-note">
-                <span class="trend-up">3 завершено</span> • 2 в пути • 1 по графику
+                <span class="trend-up">&uarr; +14.2%</span> к пред. периоду • <span id="dashKpiTicketsNote">336 билетов</span>
               </div>
             </div>
 
             <div class="kpi-card">
               <div class="kpi-card-header">
-                <span class="kpi-label">Средняя загрузка</span>
+                <span class="kpi-label">Чистая выплата на р/с</span>
+                <div class="kpi-icon-pill" style="color: var(--status-forest); background: var(--status-forest-bg);">&check;</div>
+              </div>
+              <div class="kpi-number" id="dashKpiNetPayout" style="color: var(--status-forest);">14 079 BYN</div>
+              <div class="kpi-footer-note">
+                <span class="trend-up">&check; IBAN подтвержден</span> • Комиссия сервиса 5%
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-card-header">
+                <span class="kpi-label">Средняя загрузка кресел</span>
                 <div class="kpi-icon-pill">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -2907,24 +2984,15 @@
                   </svg>
                 </div>
               </div>
-              <div class="kpi-number" id="dashKpiLoad">89.4%</div>
+              <div class="kpi-number" id="dashKpiLoad">92.4%</div>
               <div class="kpi-footer-note">
-                <span class="trend-up">↑ 4.2%</span> к прошлой неделе
+                <span class="trend-up">&uarr; +5.1%</span> • Пик 98.3% в пятницу
               </div>
-            </div>
-
-            <div class="kpi-card" id="kpiCardRevenue">
-              <div class="kpi-card-header">
-                <span class="kpi-label">Выручка за сутки</span>
-                <div class="kpi-icon-pill">BYN</div>
-              </div>
-              <div class="kpi-number" id="dashKpiRevenue">1 840 BYN</div>
-              <div class="kpi-footer-note">92 проданных билета</div>
             </div>
 
             <div class="kpi-card">
               <div class="kpi-card-header">
-                <span class="kpi-label">Посадка</span>
+                <span class="kpi-label">Рейсы и надежность</span>
                 <div class="kpi-icon-pill" style="color: var(--status-forest); background: var(--status-forest-bg);">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10" />
@@ -2932,9 +3000,378 @@
                   </svg>
                 </div>
               </div>
-              <div class="kpi-number" style="color: var(--accent-primary);" id="dashKpiAlerts">BL-5715</div>
+              <div class="kpi-number" id="dashKpiTrips">48</div>
               <div class="kpi-footer-note">
-                <span class="trend-attention">Через 25 минут</span> • 2 свободных места
+                <span class="trend-up" id="dashKpiAlerts">99.4% вовремя</span> • 0 отмен рейсов
+              </div>
+            </div>
+          </div>
+
+          <!-- ANALYTICS DUAL GRID: WEEKLY REVENUE CHART & ROUTE YIELD BREAKDOWN -->
+          <div class="carrier-analytics-dual-grid">
+            
+            <!-- 1. INTERACTIVE WEEKLY REVENUE & LOAD FACTOR VECTOR CHART -->
+            <div class="panel-card carrier-chart-card" style="margin-bottom: 0;">
+              <div class="panel-card-header">
+                <div>
+                  <h2 class="panel-title">Динамика выручки <em>и пассажиропотока</em></h2>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">7-дневная сводка по выполненным отправлениям автопарка</div>
+                </div>
+                <div class="chart-legend-row" style="display: flex; align-items: center; gap: 14px; font-size: 11.5px; font-family: var(--font-mono);">
+                  <span style="display: inline-flex; align-items: center; gap: 6px;">
+                    <span style="width: 10px; height: 10px; border-radius: 2px; background: var(--color-forest);"></span> Выручка BYN
+                  </span>
+                  <span style="display: inline-flex; align-items: center; gap: 6px;">
+                    <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent-brass);"></span> Загрузка %
+                  </span>
+                </div>
+              </div>
+
+              <!-- Pure SVG Responsive Chart with Quiet Luxury Styling -->
+              <div class="carrier-chart-container" style="padding: 16px 20px 20px;">
+                <div class="carrier-chart-kpis-summary" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border-hairline);">
+                  <div>
+                    <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Лучший день недели</div>
+                    <div style="font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--color-forest);">Суббота • 3 240 BYN</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Средний чек рейса</div>
+                    <div style="font-family: var(--font-mono); font-size: 15px; font-weight: 700;">642 BYN / рейс</div>
+                  </div>
+                  <div>
+                    <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Средний чек места</div>
+                    <div style="font-family: var(--font-mono); font-size: 15px; font-weight: 700;">44.1 BYN</div>
+                  </div>
+                </div>
+
+                <div class="carrier-svg-chart-wrap" style="position: relative; width: 100%; height: 190px;">
+                  <!-- Responsive SVG Bar + Line Trend Graph -->
+                  <svg viewBox="0 0 700 180" width="100%" height="100%" preserveAspectRatio="none" style="overflow: visible;">
+                    <defs>
+                      <linearGradient id="forestBarGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#2D5A3C" stop-opacity="0.95" />
+                        <stop offset="100%" stop-color="#1B3826" stop-opacity="0.75" />
+                      </linearGradient>
+                      <linearGradient id="forestBarGradHover" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#3D7550" />
+                        <stop offset="100%" stop-color="#224831" />
+                      </linearGradient>
+                    </defs>
+
+                    <!-- Horizontal Grid lines -->
+                    <line x1="0" y1="30" x2="700" y2="30" stroke="var(--border-hairline)" stroke-dasharray="3 3" opacity="0.6"/>
+                    <line x1="0" y1="80" x2="700" y2="80" stroke="var(--border-hairline)" stroke-dasharray="3 3" opacity="0.6"/>
+                    <line x1="0" y1="130" x2="700" y2="130" stroke="var(--border-hairline)" stroke-dasharray="3 3" opacity="0.6"/>
+
+                    <!-- Grid labels -->
+                    <text x="4" y="26" font-size="9" fill="var(--text-muted)" font-family="var(--font-mono)">3 500 BYN</text>
+                    <text x="4" y="76" font-size="9" fill="var(--text-muted)" font-family="var(--font-mono)">2 000 BYN</text>
+                    <text x="4" y="126" font-size="9" fill="var(--text-muted)" font-family="var(--font-mono)">1 000 BYN</text>
+
+                    <!-- Monday (1 820 BYN, 88%) -->
+                    <g class="chart-col" data-day="Пн" data-rev="1 820" data-load="88%">
+                      <rect x="50" y="75" width="48" height="65" rx="3" fill="url(#forestBarGrad)"/>
+                      <text x="74" y="156" font-size="11" fill="var(--text-muted)" font-family="var(--font-sans)" font-weight="600" text-anchor="middle">Пн 19</text>
+                      <text x="74" y="68" font-size="10" fill="var(--text-main)" font-family="var(--font-mono)" font-weight="600" text-anchor="middle">1.8k</text>
+                    </g>
+
+                    <!-- Tuesday (1 950 BYN, 90%) -->
+                    <g class="chart-col" data-day="Вт" data-rev="1 950" data-load="90%">
+                      <rect x="145" y="70" width="48" height="70" rx="3" fill="url(#forestBarGrad)"/>
+                      <text x="169" y="156" font-size="11" fill="var(--text-muted)" font-family="var(--font-sans)" font-weight="600" text-anchor="middle">Вт 20</text>
+                      <text x="169" y="63" font-size="10" fill="var(--text-main)" font-family="var(--font-mono)" font-weight="600" text-anchor="middle">1.9k</text>
+                    </g>
+
+                    <!-- Wednesday (2 140 BYN, 91%) -->
+                    <g class="chart-col" data-day="Ср" data-rev="2 140" data-load="91%">
+                      <rect x="240" y="62" width="48" height="78" rx="3" fill="url(#forestBarGrad)"/>
+                      <text x="264" y="156" font-size="11" fill="var(--text-muted)" font-family="var(--font-sans)" font-weight="600" text-anchor="middle">Ср 21</text>
+                      <text x="264" y="55" font-size="10" fill="var(--text-main)" font-family="var(--font-mono)" font-weight="600" text-anchor="middle">2.1k</text>
+                    </g>
+
+                    <!-- Thursday (2 380 BYN, 93%) -->
+                    <g class="chart-col" data-day="Чт" data-rev="2 380" data-load="93%">
+                      <rect x="335" y="52" width="48" height="88" rx="3" fill="url(#forestBarGrad)"/>
+                      <text x="359" y="156" font-size="11" fill="var(--text-muted)" font-family="var(--font-sans)" font-weight="600" text-anchor="middle">Чт 22</text>
+                      <text x="359" y="45" font-size="10" fill="var(--text-main)" font-family="var(--font-mono)" font-weight="600" text-anchor="middle">2.4k</text>
+                    </g>
+
+                    <!-- Friday (2 910 BYN, 97%) -->
+                    <g class="chart-col" data-day="Пт" data-rev="2 910" data-load="97%">
+                      <rect x="430" y="32" width="48" height="108" rx="3" fill="url(#forestBarGrad)"/>
+                      <text x="454" y="156" font-size="11" fill="var(--text-muted)" font-family="var(--font-sans)" font-weight="600" text-anchor="middle">Пт 23</text>
+                      <text x="454" y="25" font-size="10" fill="var(--color-forest)" font-family="var(--font-mono)" font-weight="700" text-anchor="middle">2.9k</text>
+                    </g>
+
+                    <!-- Saturday (3 240 BYN, 98% Peak) -->
+                    <g class="chart-col" data-day="Сб" data-rev="3 240" data-load="98%">
+                      <rect x="525" y="20" width="48" height="120" rx="3" fill="url(#forestBarGradHover)"/>
+                      <text x="549" y="156" font-size="11" fill="var(--color-forest)" font-family="var(--font-sans)" font-weight="700" text-anchor="middle">Сб 24</text>
+                      <text x="549" y="13" font-size="10" fill="var(--color-forest)" font-family="var(--font-mono)" font-weight="700" text-anchor="middle">3.2k &starf;</text>
+                    </g>
+
+                    <!-- Sunday (2 380 BYN, 94%) -->
+                    <g class="chart-col" data-day="Вс" data-rev="2 380" data-load="94%">
+                      <rect x="620" y="52" width="48" height="88" rx="3" fill="url(#forestBarGrad)"/>
+                      <text x="644" y="156" font-size="11" fill="var(--text-muted)" font-family="var(--font-sans)" font-weight="600" text-anchor="middle">Вс 25</text>
+                      <text x="644" y="45" font-size="10" fill="var(--text-main)" font-family="var(--font-mono)" font-weight="600" text-anchor="middle">2.4k</text>
+                    </g>
+
+                    <!-- Smooth Brass Occupancy Polyline overlay -->
+                    <polyline points="74,58 169,54 264,50 359,42 454,28 549,22 644,38" fill="none" stroke="var(--accent-brass)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="74" cy="58" r="3.5" fill="var(--canvas-ivory)" stroke="var(--accent-brass)" stroke-width="2"/>
+                    <circle cx="169" cy="54" r="3.5" fill="var(--canvas-ivory)" stroke="var(--accent-brass)" stroke-width="2"/>
+                    <circle cx="264" cy="50" r="3.5" fill="var(--canvas-ivory)" stroke="var(--accent-brass)" stroke-width="2"/>
+                    <circle cx="359" cy="42" r="3.5" fill="var(--canvas-ivory)" stroke="var(--accent-brass)" stroke-width="2"/>
+                    <circle cx="454" cy="28" r="3.5" fill="var(--canvas-ivory)" stroke="var(--accent-brass)" stroke-width="2"/>
+                    <circle cx="549" cy="22" r="4.5" fill="var(--color-forest)" stroke="var(--accent-brass)" stroke-width="2"/>
+                    <circle cx="644" cy="38" r="3.5" fill="var(--canvas-ivory)" stroke="var(--accent-brass)" stroke-width="2"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. ROUTE MARGIN & YIELD BREAKDOWN -->
+            <div class="panel-card carrier-routes-card" style="margin-bottom: 0;">
+              <div class="panel-card-header">
+                <div>
+                  <h2 class="panel-title">Маржинальность <em>направлений</em></h2>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Выручка и загрузка по регулярным линиям</div>
+                </div>
+                <button class="btn-secondary link-subtle-cta" onclick="switchScreen('finances')">
+                  Все цифры &rarr;
+                </button>
+              </div>
+
+              <div class="route-analytics-list" style="padding: 16px 20px; display: flex; flex-direction: column; gap: 14px;">
+                <!-- Route 1 -->
+                <div class="route-analytics-row" style="padding-bottom: 12px; border-bottom: 1px solid var(--border-hairline);">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px;">
+                    <div>
+                      <strong style="font-size: 14px;">Минск &rarr; Варшава</strong>
+                      <span class="status-pill status-forest-pill" style="margin-left: 6px; font-size: 10px;">Флагман 98.3%</span>
+                    </div>
+                    <div style="font-family: var(--font-mono); font-weight: 700; color: var(--color-forest); font-size: 14px;">
+                      28 320 BYN
+                    </div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); margin-bottom: 6px;">
+                    <span>12 рейсов • 236 пассажиров</span>
+                    <span>120 BYN / билет • 17.3 BYN/км</span>
+                  </div>
+                  <div class="progress-bar-track" style="height: 5px; background: var(--bg-neutral); border-radius: 3px; overflow: hidden;">
+                    <div style="width: 98.3%; height: 100%; background: var(--color-forest); border-radius: 3px;"></div>
+                  </div>
+                </div>
+
+                <!-- Route 2 -->
+                <div class="route-analytics-row" style="padding-bottom: 12px; border-bottom: 1px solid var(--border-hairline);">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px;">
+                    <div>
+                      <strong style="font-size: 14px;">Минск &rarr; Вильнюс</strong>
+                      <span class="status-pill status-forest-pill" style="margin-left: 6px; font-size: 10px;">Загрузка 96.5%</span>
+                    </div>
+                    <div style="font-family: var(--font-mono); font-weight: 700; color: var(--color-forest); font-size: 14px;">
+                      18 340 BYN
+                    </div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); margin-bottom: 6px;">
+                    <span>14 рейсов • 262 пассажира</span>
+                    <span>70 BYN / билет • 31.8 BYN/км</span>
+                  </div>
+                  <div class="progress-bar-track" style="height: 5px; background: var(--bg-neutral); border-radius: 3px; overflow: hidden;">
+                    <div style="width: 96.5%; height: 100%; background: var(--color-forest); border-radius: 3px;"></div>
+                  </div>
+                </div>
+
+                <!-- Route 3 -->
+                <div class="route-analytics-row" style="padding-bottom: 12px; border-bottom: 1px solid var(--border-hairline);">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px;">
+                    <div>
+                      <strong style="font-size: 14px;">Минск &rarr; Гродно</strong>
+                      <span class="status-pill status-neutral-pill" style="margin-left: 6px; font-size: 10px;">Экспресс 91.1%</span>
+                    </div>
+                    <div style="font-family: var(--font-mono); font-weight: 700; font-size: 14px;">
+                      17 850 BYN
+                    </div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); margin-bottom: 6px;">
+                    <span>28 рейсов • 510 пассажиров</span>
+                    <span>35 BYN / билет • 17.8 BYN/км</span>
+                  </div>
+                  <div class="progress-bar-track" style="height: 5px; background: var(--bg-neutral); border-radius: 3px; overflow: hidden;">
+                    <div style="width: 91.1%; height: 100%; background: var(--accent-brass); border-radius: 3px;"></div>
+                  </div>
+                </div>
+
+                <!-- Route 4 -->
+                <div class="route-analytics-row">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px;">
+                    <div>
+                      <strong style="font-size: 14px;">Минск &rarr; Брест</strong>
+                      <span class="status-pill status-neutral-pill" style="margin-left: 6px; font-size: 10px;">Регулярный 90%</span>
+                    </div>
+                    <div style="font-family: var(--font-mono); font-weight: 700; font-size: 14px;">
+                      9 490 BYN
+                    </div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); margin-bottom: 6px;">
+                    <span>18 рейсов • 250 пассажиров</span>
+                    <span>38 BYN / билет • 10.6 BYN/км</span>
+                  </div>
+                  <div class="progress-bar-track" style="height: 5px; background: var(--bg-neutral); border-radius: 3px; overflow: hidden;">
+                    <div style="width: 90.0%; height: 100%; background: var(--text-muted); border-radius: 3px;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FLEET VEHICLES & DRIVER COMPLIANCE TELEMETRY MATRIX -->
+          <div class="carrier-fleet-matrix-grid">
+            
+            <!-- Fleet Telemetry Card -->
+            <div class="panel-card" style="margin-bottom: 0;">
+              <div class="panel-card-header">
+                <div>
+                  <h2 class="panel-title">Мониторинг <em>автопарка</em></h2>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Статус бортов, суточный пробег и регламент ТО</div>
+                </div>
+                <button class="btn-secondary link-subtle-cta" onclick="switchScreen('settings')">
+                  Управление парком &rarr;
+                </button>
+              </div>
+
+              <div class="fleet-telemetry-list" style="padding: 16px 20px; display: flex; flex-direction: column; gap: 14px;">
+                <!-- Vehicle 1 -->
+                <div class="vehicle-telemetry-item" style="padding: 12px 14px; border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); background: var(--canvas-ivory);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="vehicle-cell-plate" style="font-weight: 700;">7 TAX 8812</span>
+                      <strong style="font-size: 13.5px;">Sprinter 519 CDI (20 мест)</strong>
+                    </div>
+                    <span class="status-pill status-forest-pill">На линии</span>
+                  </div>
+                  <div style="font-size: 12px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 12px; font-family: var(--font-mono);">
+                    <span>Экипаж: Володин С. И.</span>
+                    <span>Рейс: Минск &rarr; Вильнюс (18:45)</span>
+                    <span>Пробег сегодня: 412 км</span>
+                    <span style="color: var(--color-forest);">ТО через 6 400 км</span>
+                  </div>
+                </div>
+
+                <!-- Vehicle 2 -->
+                <div class="vehicle-telemetry-item" style="padding: 12px 14px; border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); background: var(--canvas-ivory);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="vehicle-cell-plate" style="font-weight: 700;">7 TAX 4109</span>
+                      <strong style="font-size: 13.5px;">Crafter 50 2.0 TDI (19 мест)</strong>
+                    </div>
+                    <span class="status-pill status-forest-pill">На линии</span>
+                  </div>
+                  <div style="font-size: 12px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 12px; font-family: var(--font-mono);">
+                    <span>Экипаж: Смирнов А. В.</span>
+                    <span>Рейс: Минск &rarr; Гродно (19:30)</span>
+                    <span>Пробег сегодня: 280 км</span>
+                    <span style="color: var(--color-forest);">ТО через 11 200 км</span>
+                  </div>
+                </div>
+
+                <!-- Vehicle 3 -->
+                <div class="vehicle-telemetry-item" style="padding: 12px 14px; border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); background: var(--canvas-ivory);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="vehicle-cell-plate" style="font-weight: 700;">7 TAX 1904</span>
+                      <strong style="font-size: 13.5px;">Sprinter 316 CDI (16 мест)</strong>
+                    </div>
+                    <span class="status-pill status-neutral-pill">На базе / Резерв</span>
+                  </div>
+                  <div style="font-size: 12px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 12px; font-family: var(--font-mono);">
+                    <span>Экипаж: Ковалев Д. М.</span>
+                    <span>Локация: Минск-Центральный</span>
+                    <span>Готов к подмене</span>
+                    <span>Диагностика OK</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Driver Crew Performance & Quality Scorecard -->
+            <div class="panel-card" style="margin-bottom: 0;">
+              <div class="panel-card-header">
+                <div>
+                  <h2 class="panel-title">Дисциплина <em>водителей</em></h2>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Рейтинг пассажиров, точность QR-посадки и безопасность</div>
+                </div>
+                <span class="panel-title-badge">3 экипажа</span>
+              </div>
+
+              <div class="driver-discipline-list" style="padding: 16px 20px; display: flex; flex-direction: column; gap: 14px;">
+                <!-- Driver 1 -->
+                <div class="driver-discipline-row" style="padding-bottom: 12px; border-bottom: 1px solid var(--border-hairline);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div class="driver-monogram-circle" style="width: 32px; height: 32px; border-radius: 50%; background: var(--status-forest-bg); color: var(--color-forest); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono);">ВC</div>
+                      <div>
+                        <strong style="font-size: 13.5px;">Володин Сергей И.</strong>
+                        <div style="font-size: 11.5px; color: var(--text-muted);">Борт 7 TAX 8812 • Стаж 11 лет</div>
+                      </div>
+                    </div>
+                    <div style="text-align: right;">
+                      <div style="font-family: var(--font-mono); font-weight: 700; color: var(--color-forest); font-size: 14px;">4.98 / 5.0</div>
+                      <div style="font-size: 11px; color: var(--text-muted);">28 рейсов за месяц</div>
+                    </div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); padding-left: 42px;">
+                    <span>Чек-ин по QR: 100%</span>
+                    <span>Пунктуальность: 99.6%</span>
+                    <span style="color: var(--color-forest);">&check; Безаварийно</span>
+                  </div>
+                </div>
+
+                <!-- Driver 2 -->
+                <div class="driver-discipline-row" style="padding-bottom: 12px; border-bottom: 1px solid var(--border-hairline);">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div class="driver-monogram-circle" style="width: 32px; height: 32px; border-radius: 50%; background: var(--status-forest-bg); color: var(--color-forest); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono);">СА</div>
+                      <div>
+                        <strong style="font-size: 13.5px;">Смирнов Андрей В.</strong>
+                        <div style="font-size: 11.5px; color: var(--text-muted);">Борт 7 TAX 4109 • Стаж 8 лет</div>
+                      </div>
+                    </div>
+                    <div style="text-align: right;">
+                      <div style="font-family: var(--font-mono); font-weight: 700; color: var(--color-forest); font-size: 14px;">4.95 / 5.0</div>
+                      <div style="font-size: 11px; color: var(--text-muted);">24 рейса за месяц</div>
+                    </div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); padding-left: 42px;">
+                    <span>Чек-ин по QR: 98.8%</span>
+                    <span>Пунктуальность: 99.1%</span>
+                    <span style="color: var(--color-forest);">&check; Безаварийно</span>
+                  </div>
+                </div>
+
+                <!-- Driver 3 -->
+                <div class="driver-discipline-row">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div class="driver-monogram-circle" style="width: 32px; height: 32px; border-radius: 50%; background: var(--status-forest-bg); color: var(--color-forest); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono);">КД</div>
+                      <div>
+                        <strong style="font-size: 13.5px;">Ковалев Дмитрий М.</strong>
+                        <div style="font-size: 11.5px; color: var(--text-muted);">Борт 7 TAX 1904 • Стаж 14 лет</div>
+                      </div>
+                    </div>
+                    <div style="text-align: right;">
+                      <div style="font-family: var(--font-mono); font-weight: 700; color: var(--color-forest); font-size: 14px;">4.92 / 5.0</div>
+                      <div style="font-size: 11px; color: var(--text-muted);">16 рейсов за месяц</div>
+                    </div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); padding-left: 42px;">
+                    <span>Чек-ин по QR: 99.2%</span>
+                    <span>Пунктуальность: 99.5%</span>
+                    <span style="color: var(--color-forest);">&check; Безаварийно</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2942,12 +3379,15 @@
           <!-- UPCOMING DEPARTURES PANEL -->
           <div class="panel-card">
             <div class="panel-card-header">
-              <h2 class="panel-title">
-                Ближайшие рейсы
-                <span class="panel-title-badge">Сегодня</span>
-              </h2>
+              <div>
+                <h2 class="panel-title">
+                  Оперативный суточный план
+                  <span class="panel-title-badge">Сегодня</span>
+                </h2>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Текущие отправления, назначенные борта и экипажи</div>
+              </div>
               <button class="btn-secondary" onclick="switchScreen('trips')">
-                Все рейсы →
+                Все рейсы &rarr;
               </button>
             </div>
 
@@ -3930,6 +4370,8 @@
         if (elNote) elNote.textContent = `${totalPassengers} пассажиров за период`;
         const elDashRev = document.getElementById('dashKpiRevenue');
         if (elDashRev) elDashRev.textContent = `${totalGross.toLocaleString('ru-RU')} BYN`;
+        const elDashNet = document.getElementById('dashKpiNetPayout');
+        if (elDashNet) elDashNet.textContent = `${netPayout.toLocaleString('ru-RU')} BYN`;
         const elDashTrips = document.getElementById('dashKpiTrips');
         if (elDashTrips) elDashTrips.textContent = list.length;
         const totalCap = list.reduce((sum, t) => sum + (t.capacity || 0), 0);
@@ -3942,6 +4384,49 @@
       }
 
       return { totalGross, platformFee, netPayout, avgTicket, totalPassengers };
+    }
+
+    /* CARRIER STATS PERIOD CONTROLLER & REPORT EXPORTER */
+    function switchStatsPeriod(period, btn) {
+      if (!btn) return;
+      const group = btn.closest('.timeframe-toggle-group');
+      if (group) {
+        group.querySelectorAll('.btn-timeframe').forEach(b => b.classList.remove('active'));
+      }
+      btn.classList.add('active');
+
+      const elRev = document.getElementById('dashKpiRevenue');
+      const elNet = document.getElementById('dashKpiNetPayout');
+      const elTrips = document.getElementById('dashKpiTrips');
+      const elLoad = document.getElementById('dashKpiLoad');
+      const elTickets = document.getElementById('dashKpiTicketsNote');
+
+      if (period === '7d') {
+        if (elRev) elRev.textContent = '14 820 BYN';
+        if (elNet) elNet.textContent = '14 079 BYN';
+        if (elTrips) elTrips.textContent = '48';
+        if (elLoad) elLoad.textContent = '92.4%';
+        if (elTickets) elTickets.textContent = '336 билетов';
+        showToast('Период: 7 дней', 'forest', 'Сводка за последние 7 дней обновлена');
+      } else if (period === '30d') {
+        if (elRev) elRev.textContent = '58 450 BYN';
+        if (elNet) elNet.textContent = '55 527 BYN';
+        if (elTrips) elTrips.textContent = '192';
+        if (elLoad) elLoad.textContent = '94.1%';
+        if (elTickets) elTickets.textContent = '1 380 билетов';
+        showToast('Период: 30 дней', 'forest', 'Аналитика за 30 дней сформирована');
+      } else if (period === 'quarter') {
+        if (elRev) elRev.textContent = '172 200 BYN';
+        if (elNet) elNet.textContent = '163 590 BYN';
+        if (elTrips) elTrips.textContent = '564';
+        if (elLoad) elLoad.textContent = '93.8%';
+        if (elTickets) elTickets.textContent = '4 110 билетов';
+        showToast('Период: Квартал', 'forest', 'Квартальный баланс и статистика загрузки');
+      }
+    }
+
+    function exportCarrierExecutiveReport() {
+      showToast('Отчет подготовлен', 'forest', 'Аналитический отчет и ведомость автопарка готовы к экспорту');
     }
 
     /* MINIBUS 20 SEAT CAPABILITY HELPER */
