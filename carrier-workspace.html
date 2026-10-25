@@ -364,6 +364,62 @@
       box-shadow: 0 2px 6px rgba(35, 49, 42, 0.25);
     }
 
+    /* PROMINENT ROLE SWITCHER CONTROLS */
+    .btn-role-switch-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 38px;
+      padding: 0 14px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s var(--ease-snappy);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .btn-role-switch-top:hover {
+      background: var(--surface-subtle);
+      border-color: var(--border-subtle);
+      transform: translateY(-1px);
+    }
+    .btn-role-switch-top:active {
+      transform: translateY(0);
+    }
+    .btn-sidebar-role-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      font-family: var(--font-body);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s var(--ease-snappy);
+      text-align: center;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .btn-sidebar-role-toggle:hover {
+      background: var(--canvas-sand);
+      border-color: var(--border-subtle);
+      transform: translateY(-1px);
+    }
+    .btn-sidebar-role-toggle:active {
+      transform: translateY(0);
+    }
+
     /* NAV LINKS */
     .sidebar-nav {
       flex: 1;
@@ -2394,6 +2450,18 @@
           </div>
         </div>
 
+        <div class="sidebar-role-toggle-box" style="margin-top: 10px; margin-bottom: 10px;">
+          <button type="button" class="btn-sidebar-role-toggle" id="btnSidebarRoleToggle" onclick="toggleUserRole()" title="Переключить режим работы">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="6" width="20" height="12" rx="2" />
+              <circle cx="7" cy="18" r="2" />
+              <circle cx="17" cy="18" r="2" />
+              <path d="M15 11l2 2 4-4" />
+            </svg>
+            <span id="btnSidebarRoleToggleLabel">Пульт водителя</span>
+          </button>
+        </div>
+
 
 
         <a href="passenger-cabinet.html" class="passenger-site-link">
@@ -2425,7 +2493,15 @@
         </div>
 
         <div class="header-right-actions">
-
+          <button type="button" class="btn-role-switch-top" id="btnRoleSwitchTop" onclick="toggleUserRole()" title="Переключить роль (Перевозчик / Водитель)">
+            <svg class="role-switch-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="6" width="20" height="12" rx="2" />
+              <circle cx="7" cy="18" r="2" />
+              <circle cx="17" cy="18" r="2" />
+              <path d="M15 11l2 2 4-4" />
+            </svg>
+            <span id="btnRoleSwitchTopLabel">Пульт водителя</span>
+          </button>
 
           <div class="telemetry-clock">
             <span class="clock-pulse"></span>
@@ -3754,7 +3830,9 @@
     if (!bookings.some(x => x.id === 'BL-5715-07')) {
       bookings.unshift({ id: "BL-5715-07", tripId: "BL-5715", name: "Александр Нестеров", phone: "+375291234567", seat: "07", status: "confirmed", payment: "paid", amount: 28.0, ticketCode: "BL-5715-07-VIP" });
     }
-    let userRole = localStorage.getItem('busliner_user_role') || 'carrier'; // 'carrier' or 'driver'
+    const urlParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+    const paramRole = urlParams.get('role');
+    let userRole = (paramRole === 'driver' || (typeof window !== 'undefined' && window.location.hash === '#cockpit')) ? 'driver' : 'carrier'; // Always default to carrier mode unless driver role explicitly requested
     let selectedTripIds = new Set();
     let currentFilterRoute = 'all';
     let currentFilterStatus = 'all';
@@ -3951,6 +4029,18 @@
     }
 
     /* ROLE CONTROLLER */
+    function toggleUserRole() {
+      if (userRole === 'carrier') {
+        setUserRole('driver');
+        switchScreen('cockpit');
+        showToast('Включен режим водителя', 'forest', 'Активирован пульт рейса BL-5715 и сканер посадки');
+      } else {
+        setUserRole('carrier');
+        switchScreen('dashboard');
+        showToast('Включен кабинет перевозчика', 'forest', 'Активирован обзор флота, рейсов и финансов');
+      }
+    }
+
     function setUserRole(role) {
       userRole = role;
       saveStore();
@@ -3960,6 +4050,9 @@
       const driverHeroBanner = document.getElementById('driverHeroBanner');
       const profileAvatar = document.getElementById('profileAvatarMonogram');
       const profileRoleBadge = document.getElementById('profileRoleBadgeText');
+      const profileDisplayName = document.getElementById('profileDisplayName');
+      const btnTopLabel = document.getElementById('btnRoleSwitchTopLabel');
+      const btnSidebarLabel = document.getElementById('btnSidebarRoleToggleLabel');
 
       if (typeof document !== 'undefined') {
         if (role === 'driver') {
@@ -3971,7 +4064,10 @@
           if (topBarRoleIndicator) topBarRoleIndicator.textContent = 'Водитель на линии';
           if (driverHeroBanner) driverHeroBanner.style.display = 'flex';
           if (profileAvatar) profileAvatar.textContent = 'ВО';
+          if (profileDisplayName) profileDisplayName.textContent = 'Водитель Александр';
           if (profileRoleBadge) profileRoleBadge.textContent = 'Водитель • Рейс BL-5715';
+          if (btnTopLabel) btnTopLabel.textContent = 'Кабинет перевозчика';
+          if (btnSidebarLabel) btnSidebarLabel.textContent = 'Кабинет перевозчика';
           document.querySelectorAll('.carrier-only-action').forEach(el => { if (el.style) el.style.display = 'none'; });
         } else {
           if (document.body && document.body.classList) {
@@ -3982,7 +4078,10 @@
           if (topBarRoleIndicator) topBarRoleIndicator.textContent = 'Перевозчик';
           if (driverHeroBanner) driverHeroBanner.style.display = 'none';
           if (profileAvatar) profileAvatar.textContent = 'ПЕ';
-          if (profileRoleBadge) profileRoleBadge.textContent = 'Перевозчик • 3 микроавтобуса';
+          if (profileDisplayName) profileDisplayName.textContent = 'ИП Александр';
+          if (profileRoleBadge) profileRoleBadge.textContent = 'Перевозчик • 3 авто';
+          if (btnTopLabel) btnTopLabel.textContent = 'Пульт водителя';
+          if (btnSidebarLabel) btnSidebarLabel.textContent = 'Пульт водителя';
           document.querySelectorAll('.carrier-only-action').forEach(el => { if (el.style) el.style.display = ''; });
         }
       }
@@ -5547,7 +5646,15 @@
       const hash = window.location.hash.replace('#', '');
       if (hash && document.getElementById(`screen-${hash}`)) {
         switchScreen(hash);
-      if (hash === 'cockpit' && window.Sprinter3D) window.Sprinter3D.onResize();
+        if (hash === 'cockpit') {
+          setUserRole('driver');
+          if (window.Sprinter3D) window.Sprinter3D.onResize();
+        }
+      } else if (userRole === 'driver') {
+        switchScreen('cockpit');
+        if (window.Sprinter3D) window.Sprinter3D.onResize();
+      } else {
+        switchScreen('dashboard');
       }
     });
   </script>

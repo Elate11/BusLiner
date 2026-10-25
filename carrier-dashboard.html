@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#F5F1EA">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>Пульт водителя на линии — BusLiner</title>
+  <title>Кабинет перевозчика — BusLiner</title>
 
   <!-- TYPOGRAPHY FONTS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -362,6 +362,62 @@
       background: var(--accent-primary);
       color: var(--canvas-ivory);
       box-shadow: 0 2px 6px rgba(35, 49, 42, 0.25);
+    }
+
+    /* PROMINENT ROLE SWITCHER CONTROLS */
+    .btn-role-switch-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 38px;
+      padding: 0 14px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s var(--ease-snappy);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .btn-role-switch-top:hover {
+      background: var(--surface-subtle);
+      border-color: var(--border-subtle);
+      transform: translateY(-1px);
+    }
+    .btn-role-switch-top:active {
+      transform: translateY(0);
+    }
+    .btn-sidebar-role-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      font-family: var(--font-body);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s var(--ease-snappy);
+      text-align: center;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .btn-sidebar-role-toggle:hover {
+      background: var(--canvas-sand);
+      border-color: var(--border-subtle);
+      transform: translateY(-1px);
+    }
+    .btn-sidebar-role-toggle:active {
+      transform: translateY(0);
     }
 
     /* NAV LINKS */
@@ -2296,11 +2352,11 @@
     <!-- DESKTOP / TABLET SIDEBAR NAVIGATION -->
     <aside class="app-sidebar" id="appSidebar">
       <div class="sidebar-header">
-        <a href="#cockpit" class="brand-mark" onclick="navTo('cockpit')">
+        <a href="#dashboard" class="brand-mark" onclick="switchScreen('dashboard')">
           <div class="brand-logo-icon">B</div>
           <div class="brand-text">
             <span class="brand-name">BusLiner</span>
-            <span class="brand-label" id="sidebarBrandRole">Пульт водителя</span>
+            <span class="brand-label" id="sidebarBrandRole">Кабинет перевозчика</span>
           </div>
         </a>
       </div>
@@ -2308,18 +2364,7 @@
       <nav class="sidebar-nav">
         <div class="nav-section-title">Навигация</div>
 
-        <button class="nav-item-btn active" data-screen="cockpit" onclick="navTo('cockpit')">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="6" width="20" height="12" rx="2" />
-            <circle cx="7" cy="18" r="2" />
-            <circle cx="17" cy="18" r="2" />
-            <path d="M15 11l2 2 4-4" />
-          </svg>
-          <span>Пульт рейса</span>
-          <span class="nav-badge" id="badgeCockpitAlert">Live</span>
-        </button>
-
-        <button class="nav-item-btn" data-screen="dashboard" onclick="switchScreen('dashboard')">
+        <button class="nav-item-btn active" data-screen="dashboard" onclick="switchScreen('dashboard')">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <rect x="3" y="3" width="7" height="9" rx="1" />
             <rect x="14" y="3" width="7" height="5" rx="1" />
@@ -2328,6 +2373,17 @@
           </svg>
           <span>Обзор</span>
           <span class="nav-badge" id="badgeTripsToday">6</span>
+        </button>
+
+        <button class="nav-item-btn" data-screen="cockpit" onclick="navTo('cockpit')">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="6" width="20" height="12" rx="2" />
+            <circle cx="7" cy="18" r="2" />
+            <circle cx="17" cy="18" r="2" />
+            <path d="M15 11l2 2 4-4" />
+          </svg>
+          <span>Пульт рейса</span>
+          <span class="nav-badge" id="badgeCockpitAlert">Live</span>
         </button>
 
         <button class="nav-item-btn" data-screen="trips" onclick="switchScreen('trips')">
@@ -2384,15 +2440,29 @@
 
       <div class="sidebar-footer">
         <div class="carrier-profile-card">
-          <div class="carrier-avatar" id="profileAvatarMonogram">ВО</div>
+          <div class="carrier-avatar" id="profileAvatarMonogram">ПЕ</div>
           <div class="carrier-meta">
-            <span class="carrier-name" id="profileDisplayName">Водитель Александр</span>
+            <span class="carrier-name" id="profileDisplayName">ИП Александр</span>
             <span class="carrier-subtext">
               <span class="carrier-status-dot"></span>
-              <span id="profileRoleBadgeText">Водитель • Рейс BL-5715</span>
+              <span id="profileRoleBadgeText">Перевозчик • 3 авто</span>
             </span>
           </div>
         </div>
+
+        <div class="sidebar-role-toggle-box" style="margin-top: 10px; margin-bottom: 10px;">
+          <button type="button" class="btn-sidebar-role-toggle" id="btnSidebarRoleToggle" onclick="toggleUserRole()" title="Переключить режим работы">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="6" width="20" height="12" rx="2" />
+              <circle cx="7" cy="18" r="2" />
+              <circle cx="17" cy="18" r="2" />
+              <path d="M15 11l2 2 4-4" />
+            </svg>
+            <span id="btnSidebarRoleToggleLabel">Пульт водителя</span>
+          </button>
+        </div>
+
+
 
         <a href="passenger-cabinet.html" class="passenger-site-link">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2417,12 +2487,21 @@
       <!-- TOP APPLICATION BAR -->
       <header class="top-app-bar">
         <div class="header-breadcrumb">
-          <span class="crumb-root" id="topBarRoleIndicator">Водитель на линии</span>
+          <span class="crumb-root" id="topBarRoleIndicator">Перевозчик</span>
           <span class="crumb-separator">/</span>
-          <span class="crumb-current" id="headerCrumbTitle">Пульт рейса</span>
+          <span class="crumb-current" id="headerCrumbTitle">Обзор</span>
         </div>
 
         <div class="header-right-actions">
+          <button type="button" class="btn-role-switch-top" id="btnRoleSwitchTop" onclick="toggleUserRole()" title="Переключить роль (Перевозчик / Водитель)">
+            <svg class="role-switch-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="6" width="20" height="12" rx="2" />
+              <circle cx="7" cy="18" r="2" />
+              <circle cx="17" cy="18" r="2" />
+              <path d="M15 11l2 2 4-4" />
+            </svg>
+            <span id="btnRoleSwitchTopLabel">Пульт водителя</span>
+          </button>
 
           <div class="telemetry-clock">
             <span class="clock-pulse"></span>
@@ -2445,7 +2524,7 @@
         <!-- ====================================================================
              DRIVER ACTIVE TRIP HERO BANNER (SHOWN WHEN IN DRIVER MODE)
              ==================================================================== -->
-        <div class="driver-active-trip-banner" id="driverHeroBanner" style="display:flex;">
+        <div class="driver-active-trip-banner" id="driverHeroBanner" style="display:none;">
           <div class="driver-banner-top">
             <div>
               <div class="driver-banner-badge">Ваш рейс прямо сейчас</div>
@@ -2502,7 +2581,7 @@
         <!-- ====================================================================
              SCREEN COCKPIT: DEDICATED EMBEDDED DRIVER COCKPIT (ПУЛЬТ РЕЙСА)
              ==================================================================== -->
-        <section id="screen-cockpit" class="screen-pane workspace-screen active-pane">
+        <section id="screen-cockpit" class="screen-pane workspace-screen">
           <div class="screen-heading-row">
             <div class="screen-title-group">
               <h1>Пульт рейса <em>и мобильная посадка</em></h1>
@@ -2782,7 +2861,7 @@
         <!-- ====================================================================
              SCREEN 1: DASHBOARD (ОБЗОР)
              ==================================================================== -->
-        <div class="screen-pane" id="screen-dashboard">
+        <div class="screen-pane active-pane" id="screen-dashboard">
           <div class="screen-heading-row">
             <div class="screen-title-group">
               <h1 id="dashScreenTitle">Обзор <em>рейсов</em></h1>
@@ -3254,17 +3333,7 @@
        ========================================================================== -->
   <div class="mobile-bottom-nav-bar">
     <div class="mobile-bottom-nav-grid">
-      <button class="mobile-nav-btn nav-tab-btn active" data-screen="cockpit" onclick="navTo('cockpit')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="2" y="6" width="20" height="12" rx="2" />
-          <circle cx="7" cy="18" r="2" />
-          <circle cx="17" cy="18" r="2" />
-          <path d="M15 11l2 2 4-4" />
-        </svg>
-        <span>Пульт</span>
-      </button>
-
-      <button class="mobile-nav-btn nav-tab-btn" data-screen="dashboard" onclick="switchScreen('dashboard')">
+      <button class="mobile-nav-btn nav-tab-btn active" data-screen="dashboard" onclick="switchScreen('dashboard')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="3" y="3" width="7" height="9" rx="1" />
           <rect x="14" y="3" width="7" height="5" rx="1" />
@@ -3272,6 +3341,16 @@
           <rect x="3" y="16" width="7" height="5" rx="1" />
         </svg>
         <span>Обзор</span>
+      </button>
+
+      <button class="mobile-nav-btn nav-tab-btn" data-screen="cockpit" onclick="navTo('cockpit')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="6" width="20" height="12" rx="2" />
+          <circle cx="7" cy="18" r="2" />
+          <circle cx="17" cy="18" r="2" />
+          <path d="M15 11l2 2 4-4" />
+        </svg>
+        <span>Пульт</span>
       </button>
 
       <button class="mobile-nav-btn nav-tab-btn" data-screen="trips" onclick="switchScreen('trips')">
@@ -3751,7 +3830,9 @@
     if (!bookings.some(x => x.id === 'BL-5715-07')) {
       bookings.unshift({ id: "BL-5715-07", tripId: "BL-5715", name: "Александр Нестеров", phone: "+375291234567", seat: "07", status: "confirmed", payment: "paid", amount: 28.0, ticketCode: "BL-5715-07-VIP" });
     }
-    let userRole = localStorage.getItem('busliner_user_role') || 'driver'; // 'carrier' or 'driver'
+    const urlParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+    const paramRole = urlParams.get('role');
+    let userRole = (paramRole === 'driver' || (typeof window !== 'undefined' && window.location.hash === '#cockpit')) ? 'driver' : 'carrier'; // Always default to carrier mode unless driver role explicitly requested
     let selectedTripIds = new Set();
     let currentFilterRoute = 'all';
     let currentFilterStatus = 'all';
@@ -3948,6 +4029,18 @@
     }
 
     /* ROLE CONTROLLER */
+    function toggleUserRole() {
+      if (userRole === 'carrier') {
+        setUserRole('driver');
+        switchScreen('cockpit');
+        showToast('Включен режим водителя', 'forest', 'Активирован пульт рейса BL-5715 и сканер посадки');
+      } else {
+        setUserRole('carrier');
+        switchScreen('dashboard');
+        showToast('Включен кабинет перевозчика', 'forest', 'Активирован обзор флота, рейсов и финансов');
+      }
+    }
+
     function setUserRole(role) {
       userRole = role;
       saveStore();
@@ -3957,6 +4050,9 @@
       const driverHeroBanner = document.getElementById('driverHeroBanner');
       const profileAvatar = document.getElementById('profileAvatarMonogram');
       const profileRoleBadge = document.getElementById('profileRoleBadgeText');
+      const profileDisplayName = document.getElementById('profileDisplayName');
+      const btnTopLabel = document.getElementById('btnRoleSwitchTopLabel');
+      const btnSidebarLabel = document.getElementById('btnSidebarRoleToggleLabel');
 
       if (typeof document !== 'undefined') {
         if (role === 'driver') {
@@ -3968,7 +4064,10 @@
           if (topBarRoleIndicator) topBarRoleIndicator.textContent = 'Водитель на линии';
           if (driverHeroBanner) driverHeroBanner.style.display = 'flex';
           if (profileAvatar) profileAvatar.textContent = 'ВО';
+          if (profileDisplayName) profileDisplayName.textContent = 'Водитель Александр';
           if (profileRoleBadge) profileRoleBadge.textContent = 'Водитель • Рейс BL-5715';
+          if (btnTopLabel) btnTopLabel.textContent = 'Кабинет перевозчика';
+          if (btnSidebarLabel) btnSidebarLabel.textContent = 'Кабинет перевозчика';
           document.querySelectorAll('.carrier-only-action').forEach(el => { if (el.style) el.style.display = 'none'; });
         } else {
           if (document.body && document.body.classList) {
@@ -3979,7 +4078,10 @@
           if (topBarRoleIndicator) topBarRoleIndicator.textContent = 'Перевозчик';
           if (driverHeroBanner) driverHeroBanner.style.display = 'none';
           if (profileAvatar) profileAvatar.textContent = 'ПЕ';
-          if (profileRoleBadge) profileRoleBadge.textContent = 'Перевозчик • 3 микроавтобуса';
+          if (profileDisplayName) profileDisplayName.textContent = 'ИП Александр';
+          if (profileRoleBadge) profileRoleBadge.textContent = 'Перевозчик • 3 авто';
+          if (btnTopLabel) btnTopLabel.textContent = 'Пульт водителя';
+          if (btnSidebarLabel) btnSidebarLabel.textContent = 'Пульт водителя';
           document.querySelectorAll('.carrier-only-action').forEach(el => { if (el.style) el.style.display = ''; });
         }
       }
@@ -5540,15 +5642,19 @@
           e.stopPropagation();
         }, { passive: false });
       }
-      renderCockpitView();
-      initSprinter3DView();
 
-      const hash = window.location.hash.replace('#', '') || 'cockpit';
+      const hash = window.location.hash.replace('#', '');
       if (hash && document.getElementById(`screen-${hash}`)) {
         switchScreen(hash);
-      if (hash === 'cockpit' && window.Sprinter3D) window.Sprinter3D.onResize();
-      } else {
+        if (hash === 'cockpit') {
+          setUserRole('driver');
+          if (window.Sprinter3D) window.Sprinter3D.onResize();
+        }
+      } else if (userRole === 'driver') {
         switchScreen('cockpit');
+        if (window.Sprinter3D) window.Sprinter3D.onResize();
+      } else {
+        switchScreen('dashboard');
       }
     });
   </script>

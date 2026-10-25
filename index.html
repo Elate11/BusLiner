@@ -2252,7 +2252,7 @@
         height: 100% !important;
         height: 100dvh !important;
         overflow: hidden !important;
-        touch-action: pan-y !important;
+        touch-action: none !important;
         -webkit-tap-highlight-color: transparent !important;
         -webkit-text-size-adjust: 100% !important;
       }
@@ -2263,7 +2263,7 @@
         height: 100% !important;
         height: 100dvh !important;
         overflow: hidden !important;
-        touch-action: pan-y !important;
+        touch-action: none !important;
       }
 
       .deck-slide {
@@ -2272,8 +2272,8 @@
         width: 100% !important;
         height: 100% !important;
         height: 100dvh !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
+        overflow: hidden !important;
+        touch-action: none !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
@@ -3230,7 +3230,8 @@
               <li><a href="#" onclick="openClientAuthModal(); return false;" style="color: #E8E2D6; text-decoration: none;">Вход для клиентов (Личный кабинет)</a></li>
               <li><a href="seat-picker-3d-demo.html" style="color: #E8E2D6; text-decoration: none;">3D Выбор кресла (Спринтеры и лайнеры)</a></li>
               <li><a href="driver-terminal.html" style="color: #E8E2D6; text-decoration: none;">Войти в терминал посадки экипажа</a></li>
-              <li><a href="carrier-dashboard.html" style="color: #E8E2D6; text-decoration: none;">Диспетчерская перевозчика</a></li>
+              <li><a href="carrier-workspace.html?role=carrier" style="color: #E8E2D6; text-decoration: none;">Кабинет перевозчика</a></li>
+              <li><a href="carrier-workspace.html?role=driver#cockpit" style="color: #E8E2D6; text-decoration: none;">Пульт водителя на рейсе</a></li>
               <li><span style="color: #8F887D;">Лист ожидания (перехват 0.38с)</span></li>
               <li><a href="https://t.me/BusLinerPassBot" target="_blank" rel="noopener noreferrer" style="color: #E8E2D6; text-decoration: none;">Telegram бот пассажира: @BusLinerPassBot &rarr;</a></li>
             </ul>
@@ -3619,75 +3620,94 @@
       }
     });
 
-    // 3. ROCK-SOLID TOUCH SWIPE ENGINE (iOS SAFARI, CHROME, REAL HARDWARE)
+    // 3. ROCK-SOLID TOUCH SWIPE ENGINE (iOS SAFARI, CHROME ANDROID, REAL HARDWARE)
     let touchStartX = 0;
     let touchStartY = 0;
-    let touchStartTime = 0;
+    let touchCurrentX = 0;
+    let touchCurrentY = 0;
     let isTouchActive = false;
+    let lastTouchActionTime = 0;
 
     window.addEventListener('touchstart', (e) => {
-      if (e.target.closest('.presentation-side-rail')) return;
+      // Don't intercept inside open dialogs/popovers or desktop side rail
+      if (e.target.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay, .presentation-side-rail')) {
+        return;
+      }
       if (e.touches && e.touches.length > 0) {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
-        touchStartTime = performance.now();
+        touchCurrentX = touchStartX;
+        touchCurrentY = touchStartY;
         isTouchActive = true;
       }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isTouchActive || !e.touches || e.touches.length === 0) return;
+      touchCurrentX = e.touches[0].clientX;
+      touchCurrentY = e.touches[0].clientY;
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
       if (!isTouchActive) return;
       isTouchActive = false;
-      if (!e.changedTouches || e.changedTouches.length === 0) return;
+      lastTouchActionTime = performance.now();
 
-      // Allow typing in inputs or dragging range sliders without flipping
-      if (e.target.closest('input, textarea, select, .partner-calc-slider, .mobile-dock-btn')) {
+      // Ignore touches that ended on interactive elements like sliders or open text typing
+      if (e.target.closest('textarea, select, input:not([readonly]), .partner-calc-slider, .mobile-dock-btn')) {
         return;
       }
 
-      const touchEndX = e.changedTouches[0].clientX;
-      const touchEndY = e.changedTouches[0].clientY;
-      const diffX = touchStartX - touchEndX;
-      const diffY = touchStartY - touchEndY;
-      const elapsed = performance.now() - touchStartTime;
+      if (e.changedTouches && e.changedTouches.length > 0) {
+        touchCurrentX = e.changedTouches[0].clientX;
+        touchCurrentY = e.changedTouches[0].clientY;
+      }
 
-      const SWIPE_THRESHOLD = 32;
+      const diffX = touchStartX - touchCurrentX;
+      const diffY = touchStartY - touchCurrentY;
+      const absX = Math.abs(diffX);
+      const absY = Math.abs(diffY);
+      const SWIPE_THRESHOLD = 26; // Ultra-smooth, responsive threshold
 
-      // Vertical swipe (up/down flick)
-      if (Math.abs(diffY) >= SWIPE_THRESHOLD && Math.abs(diffY) >= Math.abs(diffX) * 0.75) {
-        // If slide is internally scrolled, allow scrolling to boundaries first
-        const activeSlide = slides[currentSlide];
-        if (activeSlide && activeSlide.scrollHeight > activeSlide.clientHeight + 10) {
-          if (diffY > 0 && activeSlide.scrollTop + activeSlide.clientHeight < activeSlide.scrollHeight - 14) {
-            return; // let it scroll down
-          }
-          if (diffY < 0 && activeSlide.scrollTop > 14) {
-            return; // let it scroll up
-          }
-        }
-
+      // Vertical swipe flick (up = next slide, down = prev slide)
+      if (absY >= SWIPE_THRESHOLD && absY >= absX * 0.55) {
         if (diffY > 0) nextSlide();
         else prevSlide();
       }
-      // Horizontal swipe (carousel flick)
-      else if (Math.abs(diffX) >= SWIPE_THRESHOLD && Math.abs(diffX) > Math.abs(diffY)) {
+      // Horizontal swipe flick (left = next slide, right = prev slide)
+      else if (absX >= SWIPE_THRESHOLD && absX > absY) {
         if (diffX > 0) nextSlide();
         else prevSlide();
       }
     }, { passive: true });
 
     window.addEventListener('touchcancel', () => {
-      isTouchActive = false;
+      if (isTouchActive) {
+        lastTouchActionTime = performance.now();
+        const diffX = touchStartX - touchCurrentX;
+        const diffY = touchStartY - touchCurrentY;
+        const absX = Math.abs(diffX);
+        const absY = Math.abs(diffY);
+        const SWIPE_THRESHOLD = 26;
+        if (absY >= SWIPE_THRESHOLD && absY >= absX * 0.55) {
+          if (diffY > 0) nextSlide();
+          else prevSlide();
+        } else if (absX >= SWIPE_THRESHOLD) {
+          if (diffX > 0) nextSlide();
+          else prevSlide();
+        }
+        isTouchActive = false;
+      }
     }, { passive: true });
 
-    // 4. POINTER EVENTS (CHROME DEVTOOLS EMULATION & TOUCHPAD FLING)
+    // 4. POINTER EVENTS (DEVTOOLS MOBILE TOUCH SIMULATION & MOUSE DRAG)
     let pointerStartX = 0;
     let pointerStartY = 0;
     let isPointerDown = false;
 
     window.addEventListener('pointerdown', (e) => {
       if (e.pointerType === 'mouse' && e.buttons !== 1) return;
-      if (e.target.closest('input, textarea, select, button, a, [role="button"], .partner-calc-slider, .mobile-dock-btn, .presentation-side-rail')) return;
+      if (e.target.closest('input:not([readonly]), textarea, select, button, a, [role="button"], .partner-calc-slider, .mobile-dock-btn, .presentation-side-rail, #clientAuthModal, .booking-modal-overlay')) return;
       pointerStartX = e.clientX;
       pointerStartY = e.clientY;
       isPointerDown = true;
@@ -3696,14 +3716,18 @@
     window.addEventListener('pointerup', (e) => {
       if (!isPointerDown) return;
       isPointerDown = false;
+      if (performance.now() - lastTouchActionTime < 450) return; // Prevent double trigger from emulated touch
+
       const diffX = pointerStartX - e.clientX;
       const diffY = pointerStartY - e.clientY;
-      const DRAG_THRESHOLD = 35;
+      const absX = Math.abs(diffX);
+      const absY = Math.abs(diffY);
+      const DRAG_THRESHOLD = 30;
 
-      if (Math.abs(diffY) >= DRAG_THRESHOLD && Math.abs(diffY) >= Math.abs(diffX) * 0.75) {
+      if (absY >= DRAG_THRESHOLD && absY >= absX * 0.55) {
         if (diffY > 0) nextSlide();
         else prevSlide();
-      } else if (Math.abs(diffX) >= DRAG_THRESHOLD && Math.abs(diffX) > Math.abs(diffY)) {
+      } else if (absX >= DRAG_THRESHOLD && absX > absY) {
         if (diffX > 0) nextSlide();
         else prevSlide();
       }
