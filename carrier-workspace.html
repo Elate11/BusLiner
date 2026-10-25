@@ -2158,6 +2158,117 @@
       color: var(--color-forest);
     }
 
+
+    /* ERGONOMIC LARGE QR SCANNER BUTTON */
+    .btn-qr-scanner-large {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 56px;
+      padding: 10px 22px;
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+      border: 1px solid rgba(245, 241, 234, 0.15);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-family: var(--font-body);
+      text-decoration: none;
+      transition: all 0.2s var(--ease-fluid);
+      box-shadow: 0 4px 14px rgba(35, 49, 42, 0.15);
+      position: relative;
+    }
+    .btn-qr-scanner-large:hover {
+      background: #2D3E35;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(35, 49, 42, 0.22);
+    }
+    .btn-qr-scanner-large:active {
+      transform: scale(0.985);
+      box-shadow: 0 2px 8px rgba(35, 49, 42, 0.12);
+    }
+    .qr-scanner-icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      background: rgba(245, 241, 234, 0.12);
+      flex-shrink: 0;
+      color: var(--canvas-ivory);
+    }
+    .qr-scanner-text-col {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      line-height: 1.25;
+    }
+    .qr-scanner-main-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--canvas-ivory);
+    }
+    .qr-scanner-sub-desc {
+      font-size: 11.5px;
+      color: rgba(245, 241, 234, 0.72);
+      margin-top: 2px;
+    }
+    .qr-scanner-status-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(245, 241, 234, 0.12);
+      border: 1px solid rgba(245, 241, 234, 0.2);
+      font-size: 11px;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--canvas-ivory);
+      margin-left: 6px;
+    }
+    .qr-scanner-status-tag .pulse-indicator {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4ADE80;
+      box-shadow: 0 0 6px #4ADE80;
+      animation: pulseGreenDot 1.8s infinite;
+    }
+    @keyframes pulseGreenDot {
+      0% { transform: scale(0.85); opacity: 0.6; }
+      50% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(0.85); opacity: 0.6; }
+    }
+    .scanner-tool-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--canvas-ivory);
+      background: rgba(35, 49, 42, 0.85);
+      border: 1px solid rgba(245, 241, 234, 0.2);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: all 0.15s ease;
+      min-height: 32px;
+    }
+    .scanner-tool-btn:hover {
+      background: rgba(46, 79, 62, 0.95);
+      border-color: rgba(245, 241, 234, 0.4);
+    }
+    @media (max-width: 640px) {
+      .btn-qr-scanner-large {
+        width: 100%;
+        justify-content: space-between;
+        min-height: 58px;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -2350,6 +2461,19 @@
           </div>
 
           <div class="driver-banner-controls">
+            <button class="btn-driver-hero primary btn-magnetic" onclick="openDriverQrScannerModal()" title="Сканировать QR-код билета" style="min-height: 52px; background: var(--color-forest); color: var(--canvas-ivory); display: inline-flex; align-items: center; gap: 10px;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+                <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+                <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+                <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+                <rect x="7" y="7" width="4" height="4" rx="1"/>
+                <rect x="13" y="7" width="4" height="4" rx="1"/>
+                <rect x="7" y="13" width="4" height="4" rx="1"/>
+                <rect x="13" y="13" width="4" height="4" rx="1"/>
+              </svg>
+              <span style="font-weight: 700; font-size: 15px;">Сканер QR билетов</span>
+            </button>
             <button class="btn-driver-hero primary btn-magnetic" onclick="openTripDetails('BL-5715'); navTo('cockpit');">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -2479,16 +2603,30 @@
             </div>
           </div>
 
-          <!-- QUICK ACTION CONTROLS -->
-          <div class="cockpit-quick-actions-bar" style="display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap;">
-            <button type="button" class="btn-primary link-subtle-cta btn-magnetic" style="min-height: 48px; padding: 10px 18px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; background: var(--color-forest); color: var(--canvas-ivory);" onclick="openDriverQrScannerModal()" title="Сканировать QR-код посадочного талона">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="7" height="7"/>
-                <rect x="14" y="3" width="7" height="7"/>
-                <rect x="3" y="14" width="7" height="7"/>
-                <rect x="14" y="14" width="7" height="7"/>
-              </svg>
-              <span>Сканер QR билетов</span>
+                    <!-- QUICK ACTION CONTROLS -->
+          <div class="cockpit-quick-actions-bar" style="display: flex; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; align-items: stretch;">
+            <!-- ERGONOMIC LARGE QR SCANNER BUTTON -->
+            <button type="button" class="btn-qr-scanner-large btn-magnetic" onclick="openDriverQrScannerModal()" title="Сканировать QR-код посадочного талона пассажира">
+              <div class="qr-scanner-icon-wrap">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+                  <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+                  <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+                  <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+                  <rect x="7" y="7" width="4" height="4" rx="1"/>
+                  <rect x="13" y="7" width="4" height="4" rx="1"/>
+                  <rect x="7" y="13" width="4" height="4" rx="1"/>
+                  <rect x="13" y="13" width="4" height="4" rx="1"/>
+                </svg>
+              </div>
+              <div class="qr-scanner-text-col">
+                <span class="qr-scanner-main-title">Сканировать QR билетов</span>
+                <span class="qr-scanner-sub-desc">Камера смартфона • Автопосадка в салон</span>
+              </div>
+              <span class="qr-scanner-status-tag">
+                <span class="pulse-indicator"></span>
+                <span>Камера</span>
+              </span>
             </button>
             <button class="btn-primary link-subtle-cta btn-magnetic" style="min-height: 48px; padding: 10px 18px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;" onclick="boardAllPresent()">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -3377,10 +3515,115 @@
     </div>
   </div>
 
+  <!-- ==========================================================================
+       MODAL: DRIVER REAL-TIME LIVE CAMERA QR BOARDING SCANNER
+       ========================================================================== -->
+  <div class="modal-overlay" id="driverQrScannerModal" onclick="handleDriverScannerBackdrop(event)">
+    <div class="modal-window" role="dialog" aria-modal="true" aria-label="Сканер QR билетов" style="max-width: 540px; padding: 24px;" onclick="event.stopPropagation()">
+      <div class="modal-header" style="margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border-hairline);">
+        <div>
+          <span class="kicker-tag" style="color: var(--color-forest);">Терминал посадки экипажа</span>
+          <h3 class="modal-title" style="font-size: 22px; margin-top: 2px;">
+            Сканер QR-билетов пассажиров
+          </h3>
+          <div style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 2px;">
+            Рейс BL-5715 • Mercedes Sprinter 7TAX-8891 VIP
+          </div>
+        </div>
+        <button type="button" class="drawer-close-btn" onclick="closeDriverQrScannerModal()" title="Закрыть сканер">✕</button>
+      </div>
+
+      <!-- SCANNER VIEWFINDER WITH LIVE CAMERA VIDEO -->
+      <div class="driver-scanner-viewfinder" id="scannerViewfinderBox" style="position: relative; width: 100%; height: 280px; background: #1B2620; border-radius: var(--radius-sm); overflow: hidden; display: flex; align-items: center; justify-content: center; border: 2px solid var(--border-hairline);">
+        <!-- LIVE WEBCAM VIDEO STREAM -->
+        <video id="driverScannerVideo" playsinline autoplay muted style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
+        
+        <!-- Animated Scanning Laser Line -->
+        <div class="scanner-laser-line" id="scannerLaser"></div>
+
+        <!-- Target Reticle Corners -->
+        <div class="scanner-reticle-box">
+          <div class="reticle-corner tl"></div>
+          <div class="reticle-corner tr"></div>
+          <div class="reticle-corner bl"></div>
+          <div class="reticle-corner br"></div>
+        </div>
+
+        <!-- Flash Overlay on successful QR capture -->
+        <div id="scannerSuccessFlash" style="position: absolute; inset: 0; background: rgba(74, 222, 128, 0.35); opacity: 0; pointer-events: none; transition: opacity 0.2s ease;"></div>
+
+        <!-- Camera Switch & Flashlight Toolbar -->
+        <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 6px; z-index: 10;">
+          <button type="button" class="scanner-tool-btn" onclick="switchCameraFacing()" title="Переключить камеру">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 16v4a2 2 0 0 1-2 2h-4"/>
+              <path d="M4 8V4a2 2 0 0 1 2-2h4"/>
+              <path d="M14 2h6v6"/>
+              <path d="M10 22H4v-6"/>
+            </svg>
+            <span>Камера</span>
+          </button>
+          <button type="button" class="scanner-tool-btn" id="btnScannerTorch" onclick="toggleScannerTorch()" title="Включить подсветку" style="display: none;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            <span>Свет</span>
+          </button>
+        </div>
+
+        <!-- Live Status Prompt HUD -->
+        <div id="scannerStatusPrompt" style="position: absolute; bottom: 14px; left: 14px; right: 14px; text-align: center; color: var(--canvas-ivory); font-size: 12px; background: rgba(35, 49, 42, 0.88); padding: 7px 14px; border-radius: var(--radius-pill); backdrop-filter: blur(6px); border: 1px solid rgba(245, 241, 234, 0.15); pointer-events: none; z-index: 8;">
+          Инициализация камеры...
+        </div>
+      </div>
+
+      <!-- SCAN RESULT HUD (APPEARS ON SUCCESS) -->
+      <div id="scannerSuccessHud" style="display: none; background: rgba(46, 79, 62, 0.12); border: 1px solid var(--color-forest); border-radius: var(--radius-sm); padding: 12px 16px; margin-top: 14px;">
+        <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--color-forest); font-size: 14px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="scannerHudStatusText">Посадка успешно подтверждена</span>
+        </div>
+        <div style="margin-top: 6px; font-size: 13px; color: var(--text-primary);" id="scannerHudPassengerText">
+          Пассажир: Александр Нестеров • Место 07, У окна
+        </div>
+        <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px; font-family: var(--font-mono);" id="scannerHudMetaText">
+          Билет #BL-5715-07 • Оплачено онлайн • Записано в БД
+        </div>
+      </div>
+
+      <!-- QUICK TEST SIMULATION BUTTONS -->
+      <div style="margin-top: 16px;">
+        <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 8px;">
+          Быстрое сканирование для демонстрации:
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button type="button" class="btn-scanner-quick" onclick="simulateDriverScanTicket('BL-5715-07')">
+            <span>Билет Александра: BL-5715-07</span>
+          </button>
+          <button type="button" class="btn-scanner-quick" onclick="simulateDriverScanTicket('TKT-8801')">
+            <span>Билет: Место 04A (TKT-8801)</span>
+          </button>
+          <button type="button" class="btn-scanner-quick" onclick="simulateDriverScanTicket('TKT-8804')">
+            <span>Билет: Место 05B (TKT-8804)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- MANUAL CODE ENTRY -->
+      <div style="margin-top: 16px; display: flex; gap: 8px;">
+        <input type="text" id="manualTicketInput" class="form-input" placeholder="Код билета или QR (напр. BL-5715-07)" style="flex: 1; height: 44px; font-size: 14px;" onkeydown="if(event.key==='Enter'){handleManualDriverScan();event.preventDefault();}">
+        <button type="button" class="btn-primary" style="height: 44px; min-height: 44px; padding: 0 18px;" onclick="handleManualDriverScan()">
+          <span>Проверить</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPT ENGINE -->
     <script src="assets/three.min.js"></script>
   <script src="assets/OrbitControls.js"></script>
   <script src="assets/sprinter-3d-model.js"></script>
+  <script src="assets/jsqr.min.js"></script>
   <script>
     /* DATA SEED */
     const DEFAULT_TRIPS = [
@@ -4299,31 +4542,186 @@
 
 
     /* ==========================================================================
-       DRIVER REAL-TIME QR SCANNER & CROSS-ROLE SYNCHRONIZATION
+       DRIVER REAL-TIME LIVE CAMERA QR SCANNER & CROSS-ROLE SYNCHRONIZATION
        ========================================================================== */
-    function openDriverQrScannerModal() {
+    let driverCameraStream = null;
+    let scannerScanActive = false;
+    let scannerLoopRafId = null;
+    let scannerFacingMode = 'environment';
+    let lastScannedCode = null;
+    let lastScanTimestamp = 0;
+    let scannerOffscreenCanvas = null;
+    let scannerOffscreenCtx = null;
+    let nativeBarcodeDetector = null;
+
+    if ('BarcodeDetector' in window) {
+      try {
+        nativeBarcodeDetector = new BarcodeDetector({ formats: ['qr_code'] });
+      } catch(e) {}
+    }
+
+    async function openDriverQrScannerModal() {
       const modal = document.getElementById('driverQrScannerModal');
       if (modal) {
         modal.classList.add('open');
-        modal.style.display = 'flex';
       }
       const hud = document.getElementById('scannerSuccessHud');
       if (hud) hud.style.display = 'none';
       const prompt = document.getElementById('scannerStatusPrompt');
-      if (prompt) prompt.textContent = 'Наведите камеру на QR-код пассажира или нажмите быстрый тест';
+      if (prompt) prompt.textContent = 'Подключение к камере устройства...';
+
+      await startDriverCamera();
     }
 
     function closeDriverQrScannerModal() {
+      stopDriverCamera();
       const modal = document.getElementById('driverQrScannerModal');
       if (modal) {
         modal.classList.remove('open');
-        modal.style.display = 'none';
       }
     }
 
     function handleDriverScannerBackdrop(e) {
       if (e.target && e.target.id === 'driverQrScannerModal') {
         closeDriverQrScannerModal();
+      }
+    }
+
+    async function startDriverCamera() {
+      const video = document.getElementById('driverScannerVideo');
+      const prompt = document.getElementById('scannerStatusPrompt');
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        if (prompt) prompt.textContent = 'Камера не поддерживается вашим браузером. Используйте ручной ввод';
+        return;
+      }
+
+      stopDriverCamera();
+
+      try {
+        const constraints = {
+          video: {
+            facingMode: { ideal: scannerFacingMode },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          },
+          audio: false
+        };
+        driverCameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+        if (video) {
+          video.srcObject = driverCameraStream;
+          video.setAttribute('playsinline', 'true');
+          await video.play();
+          video.style.display = 'block';
+        }
+        if (prompt) prompt.textContent = 'Наведите камеру на QR-код билета пассажира';
+        scannerScanActive = true;
+        startScannerLoop();
+
+        const track = driverCameraStream.getVideoTracks()[0];
+        const btnTorch = document.getElementById('btnScannerTorch');
+        if (track && track.getCapabilities && track.getCapabilities().torch && btnTorch) {
+          btnTorch.style.display = 'inline-flex';
+        }
+      } catch (err) {
+        if (video) video.style.display = 'none';
+        if (prompt) {
+          prompt.textContent = 'Камера недоступна (разрешение не получено). Доступен быстрый тест и ручной ввод';
+        }
+      }
+    }
+
+    function stopDriverCamera() {
+      scannerScanActive = false;
+      if (scannerLoopRafId) {
+        cancelAnimationFrame(scannerLoopRafId);
+        scannerLoopRafId = null;
+      }
+      if (driverCameraStream) {
+        driverCameraStream.getTracks().forEach(t => t.stop());
+        driverCameraStream = null;
+      }
+      const video = document.getElementById('driverScannerVideo');
+      if (video) {
+        video.pause();
+        video.srcObject = null;
+        video.style.display = 'none';
+      }
+    }
+
+    async function switchCameraFacing() {
+      scannerFacingMode = (scannerFacingMode === 'environment') ? 'user' : 'environment';
+      await startDriverCamera();
+    }
+
+    let torchActive = false;
+    async function toggleScannerTorch() {
+      if (!driverCameraStream) return;
+      const track = driverCameraStream.getVideoTracks()[0];
+      if (!track || !track.applyConstraints) return;
+      try {
+        torchActive = !torchActive;
+        await track.applyConstraints({ advanced: [{ torch: torchActive }] });
+      } catch(e) {}
+    }
+
+    function flashScannerSuccess() {
+      const flash = document.getElementById('scannerSuccessFlash');
+      if (flash) {
+        flash.style.opacity = '1';
+        setTimeout(() => { flash.style.opacity = '0'; }, 300);
+      }
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate([30, 50, 30]);
+      }
+    }
+
+    async function startScannerLoop() {
+      if (!scannerScanActive) return;
+      const video = document.getElementById('driverScannerVideo');
+
+      if (video && video.readyState >= 2 && video.videoWidth > 0) {
+        const now = Date.now();
+        if (now - lastScanTimestamp > 1800) {
+          let detected = null;
+
+          if (nativeBarcodeDetector) {
+            try {
+              const barcodes = await nativeBarcodeDetector.detect(video);
+              if (barcodes && barcodes.length > 0) {
+                detected = barcodes[0].rawValue;
+              }
+            } catch(e) {}
+          }
+
+          if (!detected && typeof jsQR === 'function') {
+            if (!scannerOffscreenCanvas) {
+              scannerOffscreenCanvas = document.createElement('canvas');
+              scannerOffscreenCtx = scannerOffscreenCanvas.getContext('2d', { willReadFrequently: true });
+            }
+            const w = Math.min(video.videoWidth, 640);
+            const h = Math.round(w * (video.videoHeight / video.videoWidth));
+            scannerOffscreenCanvas.width = w;
+            scannerOffscreenCanvas.height = h;
+            scannerOffscreenCtx.drawImage(video, 0, 0, w, h);
+            const imgData = scannerOffscreenCtx.getImageData(0, 0, w, h);
+            const qrResult = jsQR(imgData.data, w, h, { inversionAttempts: 'dontInvert' });
+            if (qrResult && qrResult.data) {
+              detected = qrResult.data;
+            }
+          }
+
+          if (detected) {
+            lastScanTimestamp = Date.now();
+            lastScannedCode = detected;
+            flashScannerSuccess();
+            processDriverScannedTicket(detected);
+          }
+        }
+      }
+
+      if (scannerScanActive) {
+        scannerLoopRafId = requestAnimationFrame(startScannerLoop);
       }
     }
 
@@ -4341,18 +4739,29 @@
       processDriverScannedTicket(ticketId);
     }
 
-    function processDriverScannedTicket(ticketCode) {
-      if (!ticketCode) return;
-      const cleanCode = ticketCode.trim().toUpperCase();
+    function processDriverScannedTicket(rawCode) {
+      if (!rawCode) return;
+      const clean = String(rawCode).trim().toUpperCase();
 
-      let b = bookings.find(x => x.id.toUpperCase() === cleanCode || (x.ticketCode && x.ticketCode.toUpperCase().includes(cleanCode)));
+      let ticketId = clean;
+      if (clean.includes('BUSLINER-TICKET:')) {
+        const parts = clean.split(':');
+        if (parts[1]) ticketId = parts[1];
+      }
+
+      let b = bookings.find(x => x.id.toUpperCase() === ticketId || (x.ticketCode && x.ticketCode.toUpperCase() === ticketId));
       if (!b) {
-        b = bookings.find(x => cleanCode.includes(x.id.toUpperCase()) || (cleanCode.includes(x.tripId) && cleanCode.includes(x.seat)));
+        b = bookings.find(x => ticketId.includes(x.id.toUpperCase()) || (x.ticketCode && ticketId.includes(x.ticketCode.toUpperCase())));
+      }
+      if (!b) {
+        b = bookings.find(x => (ticketId.includes(x.tripId) && ticketId.includes(x.seat)));
       }
 
       if (!b) {
         playScannerAudio(false);
-        showToast('Билет не найден в базе данных', 'forest', cleanCode);
+        showToast('Билет не найден в базе данных', 'forest', rawCode);
+        const prompt = document.getElementById('scannerStatusPrompt');
+        if (prompt) prompt.textContent = 'Билет не найден в манифесте рейса: ' + rawCode;
         return;
       }
 
@@ -4369,8 +4778,10 @@
           const passEl = document.getElementById('scannerHudPassengerText');
           if (passEl) passEl.textContent = `Пассажир: ${b.name} • Место ${b.seat}`;
           const metaEl = document.getElementById('scannerHudMetaText');
-          if (metaEl) metaEl.textContent = `Билет #${b.id} • Повторное сканирование`;
+          if (metaEl) metaEl.textContent = `Билет #${b.id} • Повторное сканирование (${b.boardedAt || 'ранее'})`;
         }
+        const prompt = document.getElementById('scannerStatusPrompt');
+        if (prompt) prompt.textContent = `Пассажир ${b.name} (место ${b.seat}) уже в салоне`;
         return;
       }
 
@@ -4392,13 +4803,15 @@
         if (metaEl) metaEl.textContent = `Билет #${b.id} • ${b.payment === 'paid' ? 'Оплачено онлайн' : 'К оплате: ' + b.amount + ' BYN'} • Записано в БД`;
       }
 
+      const prompt = document.getElementById('scannerStatusPrompt');
+      if (prompt) prompt.textContent = `✓ Посажен: ${b.name} (место ${b.seat})! Следующий пассажир...`;
+
       if (typeof calculateFinancials === 'function') calculateFinancials();
       if (typeof renderTrips === 'function') renderTrips();
       if (typeof renderBookings === 'function') renderBookings();
       if (typeof renderCockpitView === 'function') renderCockpitView();
       if (typeof initSprinter3DView === 'function') initSprinter3DView();
 
-      // Broadcast real-time event to all roles and tabs!
       const eventPayload = {
         type: 'PASSENGER_BOARDED',
         ticketId: b.id,
