@@ -4403,6 +4403,19 @@
        ========================================================================== */
     let currentSelectedInspectionSeat = null;
 
+    
+    const minibusSeatMaterials = {
+      boarded: '#23312A',
+      waiting: '#E8E2D6',
+      free: '#FAF8F5'
+    };
+
+    function syncCockpit3DSeatStates(tripBookings) {
+      if (window.Sprinter3D && typeof window.Sprinter3D.updateBookings === 'function') {
+        window.Sprinter3D.updateBookings(tripBookings);
+      }
+    }
+
     function initSprinter3DView() {
       if (window.Sprinter3D && typeof window.Sprinter3D.init === 'function') {
         window.Sprinter3D.init('three-canvas-container');

@@ -2171,7 +2171,8 @@
       document.querySelectorAll(`[data-tab="${tabId}"]`).forEach(btn => btn.classList.add('active'));
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      if (tabId === 'trips') renderTripsFeed();
+      if (tabId === 'trips') renderAviasalesDateStrip();
+      renderTripsFeed();
       if (tabId === 'order') renderOrderTab();
     }
 
@@ -2185,79 +2186,335 @@
     }
 
     // FUNCTION 1: RENDER TRIPS FEED
-    function renderTripsFeed() {
-      const grid = document.getElementById('tripsFeedGrid');
-      if (!grid) return;
-      allTrips = getStoredTrips();
+    
+    /* ==========================================================================
+       AVIASALES LUXURY ENGINE (DATE STRIP, SMART SORT, HOLD TIMER, EXPAND ACCORDION)
+       ========================================================================== */
+    let currentSortMode = 'cheapest';
+    let holdTimerInterval = null;
+    let holdTimerSeconds = 600; // 10 minutes hold
 
-      const badgeCount = document.getElementById('badgeTripsCount');
-      if (badgeCount) badgeCount.textContent = allTrips.length;
-
-      const filtered = currentFilterRoute === 'all'
-        ? allTrips
-        : allTrips.filter(t => t.route.includes(currentFilterRoute));
-
-      if (filtered.length === 0) {
-        grid.innerHTML = `
-          <div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-muted); background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-hairline);">
-            По выбранному направлению на сегодня нет активных рейсов
-          </div>
-        `;
-        return;
+    function setAviasalesSort(mode) {
+      currentSortMode = mode;
+      ['btnSortCheapest', 'btnSortFastest', 'btnSortOptimal'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.classList.remove('active');
+      });
+      if (mode === 'cheapest') {
+        const b = document.getElementById('btnSortCheapest');
+        if (b) b.classList.add('active');
+      } else if (mode === 'fastest') {
+        const b = document.getElementById('btnSortFastest');
+        if (b) b.classList.add('active');
+      } else if (mode === 'optimal') {
+        const b = document.getElementById('btnSortOptimal');
+        if (b) b.classList.add('active');
       }
+      renderAviasalesDateStrip();
+      renderTripsFeed();
+    }
 
-      grid.innerHTML = filtered.map(t => {
-        const freeSeats = Math.max(0, t.capacity - t.occupied);
-        const isFull = freeSeats === 0;
-        const occPercent = Math.round((t.occupied / t.capacity) * 100);
+    function renderAviasalesDateStrip() {
+      const container = document.getElementById('aviasalesDateStrip');
+      if (!container) return;
 
+      const dateItems = [
+        { title: 'Чт, 22 окт', price: 45, tag: 'Выгодно' },
+        { title: 'Пт, 23 окт', price: 50, tag: '' },
+        { title: 'Сб, 24 окт', price: 45, isToday: true, tag: 'Сегодня' },
+        { title: 'Вс, 25 окт', price: 85, tag: 'Популярно' },
+        { title: 'Пн, 26 окт', price: 45, tag: 'Выгодно' },
+        { title: 'Вт, 27 окт', price: 45, tag: '' },
+        { title: 'Ср, 28 окт', price: 45, tag: '' }
+      ];
+
+      container.innerHTML = dateItems.map((item, idx) => {
+        const isActive = item.isToday;
         return `
-          <div class="trip-card-item">
-            <div>
-              <div class="trip-header-row">
-                <div>
-                  <div class="trip-time-lead mono">${t.time}</div>
-                  <div class="kicker-tag" style="margin-top: 2px;">${t.date}</div>
-                </div>
-                <div class="trip-fare-badge mono">${t.fare.toFixed(1)} BYN</div>
-              </div>
-
-              <div class="trip-route-name">${t.route}</div>
-              <div class="trip-station-desc">
-                <span>Отправление: <strong>${t.origin}</strong></span>
-                <span>Прибытие: <strong>${t.destination}</strong></span>
-              </div>
-
-              <div class="trip-progress-box">
-                <div style="display: flex; justify-content: space-between; font-size: 12px;">
-                  <span style="color: var(--text-muted);">Заполняемость рейса</span>
-                  <span style="font-weight: 700; color: var(--color-forest);">${freeSeats > 0 ? `Свободно ${freeSeats} мест` : 'Все места заняты'}</span>
-                </div>
-                <div class="progress-bar-track">
-                  <div class="progress-bar-fill" style="width: ${occPercent}%;"></div>
-                </div>
-              </div>
-            </div>
-
-            <button type="button" class="btn-primary link-subtle-cta btn-book-trip-cta" ${isFull ? 'disabled' : ''} onclick="openBookingModal('${t.id}')">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
-              </svg>
-              <span>${isFull ? 'Все места заняты' : 'Записаться на рейс'}</span>
-            </button>
+          <div class="aviasales-date-card ${isActive ? 'active' : ''}" onclick="selectDateStripCard(this, '${item.title}')">
+            <div class="date-day-title">${item.title}</div>
+            <div class="date-day-price">${item.price} BYN</div>
+            ${item.tag ? `<span class="date-cheapest-tag">${item.tag}</span>` : ''}
           </div>
         `;
       }).join('');
     }
 
-    function filterTripsFeed(routeFilter, btn) {
-      currentFilterRoute = routeFilter;
-      document.querySelectorAll('.filter-chip-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
+    function selectDateStripCard(el, title) {
+      document.querySelectorAll('.aviasales-date-card').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+      showNotification(`Выбрана дата рейса: ${title}`);
+      renderAviasalesDateStrip();
       renderTripsFeed();
     }
 
+    function toggleTripAccordion(tripId) {
+      const acc = document.getElementById(`accordion-${tripId}`);
+      const btn = document.getElementById(`accBtn-${tripId}`);
+      if (!acc) return;
+      const isOpen = acc.classList.contains('open');
+      if (isOpen) {
+        acc.classList.remove('open');
+        if (btn) btn.innerHTML = `Подробнее о рейсе ▾`;
+      } else {
+        acc.classList.add('open');
+        if (btn) btn.innerHTML = `Свернуть детали ▴`;
+      }
+    }
+
+    function startHoldTimer() {
+      if (holdTimerInterval) clearInterval(holdTimerInterval);
+      holdTimerSeconds = 600;
+      updateHoldTimerUI();
+      holdTimerInterval = setInterval(() => {
+        holdTimerSeconds--;
+        if (holdTimerSeconds <= 0) {
+          clearInterval(holdTimerInterval);
+          holdTimerSeconds = 0;
+          showNotification('Время удержания места истекло. Пожалуйста, подтвердите заказ заново.');
+        }
+        updateHoldTimerUI();
+      }, 1000);
+    }
+
+    function updateHoldTimerUI() {
+      const el = document.getElementById('holdTimerDisplay');
+      if (!el) return;
+      const m = Math.floor(holdTimerSeconds / 60);
+      const s = holdTimerSeconds % 60;
+      el.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function autofillFromProfile() {
+      const nameInput = document.getElementById('bookingPassengerName');
+      const phoneInput = document.getElementById('bookingPassengerPhone');
+      if (nameInput) nameInput.value = userProfile.name || 'Александр Константинович';
+      if (phoneInput) phoneInput.value = userProfile.phone || '+375 29 190-20-26';
+      showNotification('Данные автоматически заполнены из вашего профиля BusLiner');
+    }
+
+    function renderTripsFeed() {
+      const grid = document.getElementById('tripsFeedGrid');
+      if (!grid) return;
+
+      allTrips = getStoredTrips();
+
+      const fromVal = bzdSearchFrom.trim().toLowerCase();
+      const toVal = bzdSearchTo.trim().toLowerCase();
+
+      // Update route title
+      const routeTitleEl = document.getElementById('bzdResultsRouteTitle');
+      const metaNoteEl = document.getElementById('bzdResultsMetaNote');
+
+      const routeDisplay = (bzdSearchFrom && bzdSearchTo)
+        ? `${bzdSearchFrom} → ${bzdSearchTo}`
+        : (bzdSearchFrom ? `Из: ${bzdSearchFrom}` : (bzdSearchTo ? `В: ${bzdSearchTo}` : "Все направления"));
+
+      if (routeTitleEl) routeTitleEl.textContent = `Билеты на микроавтобусы: ${routeDisplay}`;
+
+      // Filter logic
+      let matched = allTrips.filter(t => {
+        const tOrigin = (t.originCity || t.origin || "").toLowerCase();
+        const tDest = (t.destinationCity || t.destination || "").toLowerCase();
+        const tRoute = (t.route || "").toLowerCase();
+
+        const matchFrom = !fromVal || tOrigin.includes(fromVal) || tRoute.split(/➔|→|—/)[0].includes(fromVal);
+        const matchTo = !toVal || tDest.includes(toVal) || (tRoute.split(/➔|→|—/)[1] && tRoute.split(/➔|→|—/)[1].includes(toVal));
+
+        return matchFrom && matchTo;
+      });
+
+      // Aviasales Smart Sorting
+      if (currentSortMode === 'cheapest') {
+        matched.sort((a, b) => (a.fare || 0) - (b.fare || 0));
+      } else if (currentSortMode === 'fastest') {
+        const parseDuration = (d) => {
+          if (!d) return 999;
+          const hMatch = d.match(/(\d+)\s*ч/);
+          const mMatch = d.match(/(\d+)\s*мин/);
+          const hours = hMatch ? parseInt(hMatch[1], 10) : 0;
+          const mins = mMatch ? parseInt(mMatch[1], 10) : 0;
+          return hours * 60 + mins;
+        };
+        matched.sort((a, b) => parseDuration(a.duration) - parseDuration(b.duration));
+      } else if (currentSortMode === 'optimal') {
+        // Optimal: daytime departure (10:00 - 19:00) with good availability and low price
+        matched.sort((a, b) => {
+          const aHour = parseInt((a.time || "00").split(':')[0], 10);
+          const bHour = parseInt((b.time || "00").split(':')[0], 10);
+          const aDayScore = (aHour >= 9 && aHour <= 19) ? 0 : 50;
+          const bDayScore = (bHour >= 9 && bHour <= 19) ? 0 : 50;
+          return (a.fare + aDayScore) - (b.fare + bDayScore);
+        });
+      }
+
+      const badgeTrips = document.getElementById('badgeTripsCount');
+      if (badgeTrips) badgeTrips.textContent = matched.length;
+      if (metaNoteEl) {
+        metaNoteEl.textContent = `Найдено рейсов: ${matched.length} • Прямые рейсы без пересадок`;
+      }
+
+      if (matched.length === 0) {
+        grid.innerHTML = `
+          <div style="padding: 40px 24px; text-align: center; background: var(--surface-card); border-radius: var(--radius-md); border: 1px dashed var(--border-hairline); margin-bottom: 24px;">
+            <div style="width: 54px; height: 54px; border-radius: 50%; background: var(--canvas-bone); display: inline-flex; align-items: center; justify-content: center; color: var(--color-terracotta); margin-bottom: 14px;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </div>
+            <h3 style="font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px;">
+              На выбранную дату прямых рейсов не найдено
+            </h3>
+            <p style="font-size: 13.5px; color: var(--text-muted); max-width: 540px; margin: 0 auto 20px;">
+              Рекомендуем выбрать соседнюю дату в верхней ленте цен Aviasales или посмотреть популярные рейсы из Минска в Вильнюс и Варшаву.
+            </p>
+            <button type="button" class="btn-book-trip-cta" style="width: auto; margin: 0 auto;" onclick="applyPopularRoute('', '')">
+              <span>Показать все доступные рейсы</span>
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      // RENDER AVIASALES MASTERPIECE TRIP CARDS
+      grid.innerHTML = matched.map(t => {
+        const freeSeats = Math.max(0, t.capacity - t.occupied);
+        const isFull = freeSeats === 0;
+
+        let statusBadge = '<span class="status-pill status-forest-pill">Посадка открыта</span>';
+        if (t.status === 'in_route') {
+          statusBadge = '<span class="status-pill status-forest-pill">В пути</span>';
+        } else if (t.status === 'delayed') {
+          statusBadge = `<span class="status-pill status-alert-pill">Задержка +${t.delay || 15}м</span>`;
+        } else if (t.status === 'completed') {
+          statusBadge = '<span class="status-pill">Завершён</span>';
+        }
+
+        const fareFormatted = typeof t.fare === 'number' ? t.fare.toFixed(2) : t.fare;
+        const vehicleClean = t.vehicle ? t.vehicle.split('(')[0].trim() : 'Mercedes Sprinter';
+
+        return `
+          <div class="bzd-trip-card">
+            <div class="bzd-trip-header">
+              <div class="bzd-trip-train-badge">
+                <span class="train-num">Рейс ${t.id}</span>
+                <span class="train-type">${vehicleClean} 170" High Roof • 20 мест VIP</span>
+              </div>
+              <div class="bzd-trip-status">
+                ${statusBadge}
+              </div>
+            </div>
+
+            <div class="bzd-schedule-grid">
+              <!-- DEPARTURE -->
+              <div class="bzd-time-col departure">
+                <div class="bzd-time">${t.time}</div>
+                <div class="bzd-date">${t.date}</div>
+                <div class="bzd-station">${t.origin}</div>
+              </div>
+
+              <!-- DURATION & TRAJECTORY -->
+              <div class="bzd-duration-col">
+                <span class="bzd-duration-text">~${t.duration || '3 ч 45 мин'}</span>
+                <div class="bzd-trajectory-line">
+                  <span class="trajectory-dot"></span>
+                  <span class="trajectory-path"></span>
+                  <svg class="trajectory-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                  <span class="trajectory-dot"></span>
+                </div>
+                <span class="bzd-route-class">Прямой экспресс VIP</span>
+              </div>
+
+              <!-- ARRIVAL -->
+              <div class="bzd-time-col arrival">
+                <div class="bzd-time">${t.arrivalTime || 'По графику'}</div>
+                <div class="bzd-date">${t.date}</div>
+                <div class="bzd-station">${t.destination}</div>
+              </div>
+            </div>
+
+            <!-- AVIASALES AMENITIES & BORDER INTELLIGENCE STRIP -->
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+              <span class="amenity-pill" title="Чемодан до 20 кг и ручная кладь входят в стоимость">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="15" rx="2"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                <span>Багаж 20 кг включен</span>
+              </span>
+              <span class="amenity-pill" title="Индивидуальные розетки 220V и Type-C">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="9" y2="10"/><line x1="15" y1="7" x2="15" y2="10"/></svg>
+                <span>220V + Type-C</span>
+              </span>
+              <span class="amenity-pill" title="Высокоскоростной Wi-Fi 5G">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+                <span>Wi-Fi 5G</span>
+              </span>
+              <span class="amenity-pill" title="Климат-контроль">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"/></svg>
+                <span>Климат 2-зонный</span>
+              </span>
+              <span class="amenity-pill" style="color: var(--color-forest); font-weight: 700;" title="Прогноз прохождения границы">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>КПП: ~1 ч 15 мин (штатно)</span>
+              </span>
+            </div>
+
+            <!-- FOOTER WITH SEATS & PRICING -->
+            <div class="bzd-trip-footer">
+              <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+                <div class="bzd-seats-avail">
+                  <span class="seats-dot ${freeSeats > 0 ? 'available' : 'full'}"></span>
+                  <span>Свободно: <strong>${freeSeats} мест</strong> из ${t.capacity} (в т.ч. у окна)</span>
+                </div>
+                <button type="button" class="btn-accordion-toggle" id="accBtn-${t.id}" onclick="toggleTripAccordion('${t.id}')">
+                  <span>Подробнее о рейсе ▾</span>
+                </button>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                <div class="bzd-fare">Тариф: от <strong>${fareFormatted} BYN</strong></div>
+                <button type="button" class="btn-bzd-select-seat" onclick="openBookingModal('${t.id}')" ${isFull ? 'disabled' : ''}>
+                  <span>${isFull ? 'Все места заняты' : 'Выбрать места →'}</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- EXPANDABLE ACCORDION DETAILS (AVIASALES TRANSPARENCY) -->
+            <div class="trip-accordion-content" id="accordion-${t.id}">
+              <div style="font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 10px;">
+                График движения и промежуточные остановки:
+              </div>
+              <div class="accordion-stops-grid">
+                <div class="stop-node-item">
+                  <div class="stop-node-time">${t.time}</div>
+                  <div class="stop-node-name">${t.origin} (Посадка)</div>
+                </div>
+                <div class="stop-node-item">
+                  <div class="stop-node-time">+25 мин</div>
+                  <div class="stop-node-name">ст.м. Каменная Горка (Доп. посадка)</div>
+                </div>
+                <div class="stop-node-item">
+                  <div class="stop-node-time">+1 ч 45 мин</div>
+                  <div class="stop-node-name">КПП Каменный Лог / Мядининкай</div>
+                </div>
+                <div class="stop-node-item">
+                  <div class="stop-node-time">${t.arrivalTime || 'По графику'}</div>
+                  <div class="stop-node-name">${t.destination} (Прибытие)</div>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 12.5px; color: var(--text-muted); padding-top: 10px; border-top: 1px solid var(--border-hairline);">
+                <div><strong>Правила отмены:</strong> 100% возврат при отмене более чем за 24 ч до отправления.</div>
+                <div><strong>Перевозчик:</strong> BusLiner Fleet VIP • Лицензия Минтранса РБ #02190/8812.</div>
+                <div><strong>Сервисный сбор:</strong> 0 BYN (Никаких скрытых платежей).</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
     // FUNCTION 2: RENDER ORDER TAB (МОЙ БИЛЕТ С РАБОЧИМ SVG QR)
     function renderOrderTab() {
       allBookings = getStoredBookings();
@@ -2559,6 +2816,7 @@
 
     // BOOTSTRAP INITIALIZATION
     window.addEventListener('DOMContentLoaded', () => {
+      renderAviasalesDateStrip();
       renderTripsFeed();
       renderOrderTab();
       initTripStatusSync();
