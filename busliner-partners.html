@@ -2,7 +2,7 @@
 <html lang="ru" class="no-js">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover, interactive-widget=resizes-content">
   <title>BusLiner для перевозчиков — Монетизация и автоматизация автопарков</title>
   
   <meta name="description" content="BusLiner для перевозчиков — Полноэкранная интерактивная экосистема: 100% онлайн-продажи, нулевой No-Show, перехват свободных мест за 0.38с роботом Снайпер и ежедневные выплаты на IBAN.">
@@ -2330,6 +2330,225 @@
       }
     }
 
+  
+    /* ==========================================================================
+       MOBILE NATIVE DECK & TOUCH ARCHITECTURE (EMIL KOWALSKI STANDARD)
+       ========================================================================== */
+    @media (max-width: 900px) {
+      html, body {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 100dvh !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scroll-behavior: smooth !important;
+        scroll-snap-type: y proximity !important;
+        -webkit-tap-highlight-color: transparent !important;
+        -webkit-text-size-adjust: 100% !important;
+      }
+
+      .presentation-deck-stage {
+        position: relative !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 100dvh !important;
+        overflow: visible !important;
+      }
+
+      .deck-slide {
+        position: relative !important;
+        inset: auto !important;
+        width: 100% !important;
+        min-height: 85svh !important;
+        height: auto !important;
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        pointer-events: auto !important;
+        scroll-snap-align: start !important;
+        scroll-snap-stop: normal !important;
+        padding: calc(env(safe-area-inset-top, 0px) + 74px) 16px calc(env(safe-area-inset-bottom, 0px) + 96px) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
+      }
+
+      .deck-slide.prev,
+      .deck-slide.next {
+        opacity: 1 !important;
+        transform: none !important;
+        pointer-events: auto !important;
+      }
+
+      /* Slide 1 hero video background container on mobile */
+      #slide1 .hero-video-container {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: 1 !important;
+      }
+
+      /* Hide desktop-only elements on mobile */
+      .presentation-side-rail,
+      .deck-bottom-bar,
+      .custom-cursor-follower {
+        display: none !important;
+      }
+
+      /* Mobile Floating Section Pager Dock */
+      .mobile-deck-dock {
+        position: fixed;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+        left: 14px;
+        right: 14px;
+        z-index: 9999;
+        display: block !important;
+        pointer-events: auto;
+      }
+
+      .mobile-dock-inner {
+        background: rgba(28, 27, 26, 0.94);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border: 1px solid rgba(232, 226, 214, 0.28);
+        border-radius: 9999px;
+        padding: 6px 8px 6px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      }
+
+      .mobile-dock-tracker {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .mobile-dock-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #5CB85C;
+        box-shadow: 0 0 8px #5CB85C;
+        flex-shrink: 0;
+      }
+
+      .mobile-dock-step {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 700;
+        color: #E8E2D6;
+        letter-spacing: 0.08em;
+        flex-shrink: 0;
+      }
+
+      .mobile-dock-title {
+        font-family: var(--font-body);
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #F5F1EA;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .mobile-dock-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+
+      .mobile-dock-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(245, 241, 234, 0.12);
+        border: 1px solid rgba(245, 241, 234, 0.25);
+        color: #F5F1EA;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        outline: none;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+        transition: transform 0.12s ease, background 0.12s ease;
+      }
+
+      .mobile-dock-btn:active {
+        transform: scale(0.92);
+        background: rgba(245, 241, 234, 0.28);
+      }
+
+      .mobile-dock-btn-next {
+        background: #E8E2D6;
+        color: #1E1D1B;
+        border-color: #E8E2D6;
+        font-weight: 700;
+      }
+
+      .mobile-dock-btn-next:active {
+        background: #D9CDB8;
+      }
+
+      /* Mobile Typography & Layout */
+      .hero-deck-title {
+        font-size: clamp(24px, 7vw, 34px) !important;
+        line-height: 1.2 !important;
+      }
+      .manifesto-lead-quote {
+        font-size: clamp(20px, 5.5vw, 28px) !important;
+        line-height: 1.35 !important;
+      }
+      .deck-principles-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+      }
+      .concierge-deck-split {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+      }
+      .calculator-deck-grid {
+        grid-template-columns: 1fr !important;
+        gap: 18px !important;
+      }
+      .partner-reviews-form-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+      }
+      .partner-hero-metric-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+      }
+      .hero-actions-row {
+        flex-direction: column !important;
+        width: 100% !important;
+      }
+      .hero-actions-row .btn-primary-deck,
+      .hero-actions-row .btn-outline-deck {
+        width: 100% !important;
+        justify-content: center !important;
+        text-align: center !important;
+      }
+      .concierge-features-pills {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+      }
+    }
+
+    @media (min-width: 901px) {
+      .mobile-deck-dock {
+        display: none !important;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -2901,11 +3120,35 @@
       </div>
     </section>
 
+  
+  <!-- Mobile Floating Section Pager Dock (Emil Kowalski Touch Navigation) -->
+  <nav class="mobile-deck-dock" id="mobileDeckDock" aria-label="Навигация по разделам">
+    <div class="mobile-dock-inner">
+      <div class="mobile-dock-tracker">
+        <span class="mobile-dock-dot"></span>
+        <span class="mobile-dock-step" id="mobileDockStep">01 / 06</span>
+        <span class="mobile-dock-title" id="mobileDockTitle">Обложка</span>
+      </div>
+      <div class="mobile-dock-actions">
+        <button type="button" class="mobile-dock-btn" onclick="prevSlide()" aria-label="Предыдущий раздел" title="Предыдущий раздел">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+          </svg>
+        </button>
+        <button type="button" class="mobile-dock-btn mobile-dock-btn-next" onclick="nextSlide()" aria-label="Следующий раздел" title="Следующий раздел">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
   </main>
 
   <!-- JAVASCRIPT CONTROLLER -->
   <script>
-    // 1. PRESENTATION SLIDE CONTROLLER
+        // 1. PRESENTATION SLIDE CONTROLLER (DESKTOP KEYNOTE + MOBILE NATIVE SCROLL)
     const slides = document.querySelectorAll('.deck-slide');
     const railItems = document.querySelectorAll('.deck-rail-item');
     const siteHeader = document.getElementById('siteHeader');
@@ -2914,6 +3157,26 @@
     let currentSlide = 0;
     let isTransitioning = false;
     const totalSlides = slides.length;
+
+    const slideTitles = [
+      'Обложка',
+      'Манифест',
+      'Снайпер',
+      'Пульт',
+      'Калькулятор',
+      'Договор'
+    ];
+
+    function isMobileMode() {
+      return window.innerWidth <= 900;
+    }
+
+    function updateMobileDock(index) {
+      const stepEl = document.getElementById('mobileDockStep');
+      const titleEl = document.getElementById('mobileDockTitle');
+      if (stepEl) stepEl.innerText = '0' + (index + 1) + ' / 06';
+      if (titleEl) titleEl.innerText = slideTitles[index] || '';
+    }
 
     function runCountUpAnimations(slideElement) {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -2948,7 +3211,7 @@
       if (newIndex < 0 || newIndex >= totalSlides) return;
       isTransitioning = true;
 
-      // Update slide states
+      // Update slide states (Desktop mode)
       slides.forEach((slide, idx) => {
         slide.classList.remove('active', 'prev', 'next');
         if (idx === newIndex) {
@@ -2981,6 +3244,7 @@
       }
 
       currentSlide = newIndex;
+      updateMobileDock(newIndex);
 
       setTimeout(() => {
         isTransitioning = false;
@@ -2988,26 +3252,38 @@
     }
 
     window.jumpToSlide = function(idx) {
-      if (isTransitioning || idx === currentSlide) return;
-      updateDeckState(idx);
+      if (idx < 0 || idx >= totalSlides) return;
+      if (isMobileMode()) {
+        const targetSlide = slides[idx];
+        if (targetSlide) {
+          targetSlide.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          currentSlide = idx;
+          updateMobileDock(idx);
+          runCountUpAnimations(targetSlide);
+        }
+      } else {
+        if (isTransitioning || idx === currentSlide) return;
+        updateDeckState(idx);
+      }
     };
 
     window.nextSlide = function() {
-      if (isTransitioning || currentSlide >= totalSlides - 1) return;
-      updateDeckState(currentSlide + 1);
+      if (currentSlide >= totalSlides - 1) return;
+      jumpToSlide(currentSlide + 1);
     };
 
     window.prevSlide = function() {
-      if (isTransitioning || currentSlide <= 0) return;
-      updateDeckState(currentSlide - 1);
+      if (currentSlide <= 0) return;
+      jumpToSlide(currentSlide - 1);
     };
 
-    // Kinetic Wheel Debounce
+    // Kinetic Wheel Debounce (Desktop Only)
     let lastWheelTime = 0;
     const WHEEL_LOCK_MS = 480;
 
     window.addEventListener('wheel', (e) => {
-      // Allow internal scrolling on smaller screens if slide overflows
+      if (isMobileMode()) return; // Let native smooth scroll handle mobile
+
       const activeSlide = slides[currentSlide];
       if (activeSlide && activeSlide.scrollHeight > activeSlide.clientHeight + 10) {
         if (e.deltaY > 0 && activeSlide.scrollTop + activeSlide.clientHeight < activeSlide.scrollHeight - 10) {
@@ -3041,22 +3317,64 @@
       }
     });
 
-    // Touch Swipe Navigation
+    // Mobile Horizontal Swipe & Quick Flick Gesture
+    let touchStartX = 0;
     let touchStartY = 0;
-    let touchEndY = 0;
+    let touchStartTime = 0;
 
     window.addEventListener('touchstart', (e) => {
-      touchStartY = e.changedTouches[0].screenY;
+      if (e.touches.length > 0) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = performance.now();
+      }
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
-      touchEndY = e.changedTouches[0].screenY;
+      if (e.changedTouches.length === 0) return;
+      if (e.target.closest('input, select, textarea, button, a, [role="button"]')) return;
+
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const diffX = touchStartX - touchEndX;
       const diffY = touchStartY - touchEndY;
-      if (Math.abs(diffY) > 48) {
-        if (diffY > 0) nextSlide();
+      const elapsed = performance.now() - touchStartTime;
+
+      // Horizontal swipe (carousel style)
+      if (Math.abs(diffX) > 56 && Math.abs(diffX) > Math.abs(diffY) * 1.4 && elapsed < 500) {
+        if (diffX > 0) nextSlide();
         else prevSlide();
       }
     }, { passive: true });
+
+    // IntersectionObserver for Mobile Native Smooth Scroll Tracking
+    if ('IntersectionObserver' in window) {
+      const slideObserver = new IntersectionObserver((entries) => {
+        if (!isMobileMode()) return;
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const index = Array.from(slides).indexOf(entry.target);
+            if (index !== -1) {
+              currentSlide = index;
+              updateMobileDock(index);
+              runCountUpAnimations(entry.target);
+
+              // Update site header dark class based on slide
+              const isDarkSlide = (index === 0 || index === 2 || index === 3 || index === 5);
+              if (siteHeader) {
+                if (isDarkSlide) siteHeader.classList.add('on-dark-slide');
+                else siteHeader.classList.remove('on-dark-slide');
+              }
+            }
+          }
+        });
+      }, {
+        threshold: 0.35
+      });
+
+      slides.forEach(slide => slideObserver.observe(slide));
+    }
+
 
     // Custom Lerp Cursor
     const cursor = document.getElementById('customCursor');
