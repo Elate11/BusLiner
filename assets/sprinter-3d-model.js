@@ -181,12 +181,12 @@ const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra 
     let container = document.getElementById('three-canvas-container');
     const tooltipEl = document.getElementById('tooltip-3d');
 
-    const CAM_OVERVIEW = { pos: [1.5, 9.2, 0.0], target: [1.5, 0.6, 0.0] };
+    const CAM_OVERVIEW = { pos: [1.5, 7.8, 0.0], target: [1.5, 0.6, 0.0] };
 
     const CAM_PRESETS = {
-      all: { pos: [1.5, 9.2, 0.0], target: [1.5, 0.6, 0.0] },
-      front: { pos: [3.4, 4.0, 0.0], target: [3.4, 0.6, 0.0] },
-      rear: { pos: [-0.6, 4.0, 0.0], target: [-0.6, 0.6, 0.0] }
+      all: { pos: [1.5, 7.8, 0.0], target: [1.5, 0.6, 0.0] },
+      front: { pos: [3.4, 3.8, 0.0], target: [3.4, 0.6, 0.0] },
+      rear: { pos: [-0.6, 3.8, 0.0], target: [-0.6, 0.6, 0.0] }
     };
 
     let targetCamPos = [...CAM_OVERVIEW.pos];

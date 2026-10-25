@@ -2246,6 +2246,30 @@
       overflow-y: auto;
     }
 
+    #bookingModal .modal-window-card {
+      max-width: 960px;
+      width: 95vw;
+      padding: 28px 32px;
+    }
+
+    #booking3DContainer {
+      height: 440px !important;
+      min-height: 380px !important;
+    }
+
+    @media (max-width: 768px) {
+      #bookingModal .modal-window-card {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 20px 16px calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+        max-height: 92vh !important;
+      }
+      #booking3DContainer {
+        height: 330px !important;
+        min-height: 290px !important;
+      }
+    }
+
     .modal-backdrop.open .modal-window-card {
       transform: scale(1);
     }
@@ -3406,7 +3430,7 @@
         </div>
 
         <!-- 3D INTERACTIVE MINIBUS VIEWPORT -->
-        <div id="booking3DContainer" class="booking-3d-viewport" style="width: 100%; height: 260px; border-radius: var(--radius-sm); border: 1px solid var(--border-hairline); overflow: hidden; position: relative; background: var(--surface-card);">
+        <div id="booking3DContainer" class="booking-3d-viewport" style="width: 100%; height: 440px; border-radius: var(--radius-sm); border: 1px solid var(--border-hairline); overflow: hidden; position: relative; background: var(--surface-card);">
           <div id="three-canvas-container" style="width: 100%; height: 100%;"></div>
 
           <!-- 3D Camera Controls Overlay -->
@@ -3439,22 +3463,24 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Пассажир</label>
-        <input type="text" class="form-input" id="bookingPassengerName" value="Александр Константинович Нестеров">
-      </div>
+      <div class="booking-form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 16px;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Пассажир</label>
+          <input type="text" class="form-input" id="bookingPassengerName" value="Александр Константинович Нестеров">
+        </div>
 
-      <div class="form-group">
-        <label class="form-label">Телефон для SMS и билета</label>
-        <input type="tel" class="form-input" id="bookingPassengerPhone" value="+375 29 987-65-43">
-      </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Телефон для SMS и билета</label>
+          <input type="tel" class="form-input" id="bookingPassengerPhone" value="+375 29 987-65-43">
+        </div>
 
-      <div class="form-group">
-        <label class="form-label">Способ оплаты</label>
-        <select class="form-select" id="bookingPaymentMethod">
-          <option value="online">Оплачено онлайн (Банковская карта / ЕРИП)</option>
-          <option value="cash">Оплата водителю при посадке в автобус</option>
-        </select>
+        <div class="form-group" style="margin-bottom: 0; grid-column: 1 / -1;">
+          <label class="form-label">Способ оплаты</label>
+          <select class="form-select" id="bookingPaymentMethod">
+            <option value="online">Оплачено онлайн (Банковская карта / ЕРИП)</option>
+            <option value="cash">Оплата водителю при посадке в автобус</option>
+          </select>
+        </div>
       </div>
 
             <!-- AVIASALES TRANSPARENT SUMMARY (ZERO-DECEPTION) -->
@@ -4263,6 +4289,12 @@
 
       document.getElementById('bookingModal').classList.add('open');
       switchSeatPickerMode('3d');
+      setTimeout(() => {
+        if (window.Sprinter3D && typeof window.Sprinter3D.onResize === 'function') {
+          window.Sprinter3D.onResize();
+          window.Sprinter3D.resetToOverview();
+        }
+      }, 70);
     }
 
     function selectBookingSeat(seatNum, seatCode) {
