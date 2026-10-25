@@ -2240,6 +2240,40 @@
       background: var(--surface-subtle);
     }
 
+    
+    .btn-seat-view-mode {
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-seat-view-mode.active {
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+      box-shadow: 0 1px 4px rgba(35, 49, 42, 0.2);
+    }
+    .btn-3d-cam {
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--canvas-ivory);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      transition: all 0.15s ease;
+    }
+    .btn-3d-cam:hover {
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+    }
+
     /* 20-SEAT SPRINTER INTERACTIVE PICKER GRID */
     .seatmap-sprinter-box {
       background: var(--canvas-ivory);
@@ -2539,14 +2573,7 @@
           <span class="mono">1 450 миль</span>
         </div>
 
-        <a href="carrier-workspace.html" class="header-link-office" title="Кабинет перевозчика">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="3" width="20" height="14" rx="2"/>
-            <line x1="8" y1="21" x2="16" y2="21"/>
-            <line x1="12" y1="17" x2="12" y2="21"/>
-          </svg>
-          <span>Офис перевозчика</span>
-        </a>
+
       </div>
     </div>
   </header>
@@ -3249,16 +3276,56 @@
         </div>
       </div>
 
-      <!-- 20-SEAT SPRINTER INTERACTIVE MAP -->
+      <!-- 20-SEAT SPRINTER INTERACTIVE MAP WITH 3D MINIBUS -->
       <div class="seatmap-sprinter-box">
-        <div class="sprinter-cockpit-indicator">
-          <span style="font-weight: 600;">Кабина водителя</span>
-          <span>Проход 2+1 • Салон 20 мест</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+          <div class="sprinter-cockpit-indicator" style="margin: 0;">
+            <span style="font-weight: 700; color: var(--color-forest);">Mercedes-Benz Sprinter 170" High Roof</span>
+            <span style="font-size: 11.5px; color: var(--text-muted);">Салон 20 мест VIP • 3D обзор 360°</span>
+          </div>
+
+          <!-- 3D / 2D MODE TOGGLE PILLS -->
+          <div class="seat-view-mode-toggle" style="display: inline-flex; background: var(--canvas-bone); padding: 2px; border-radius: var(--radius-pill); border: 1px solid var(--border-hairline);">
+            <button type="button" class="btn-seat-view-mode active" id="btnMode3D" onclick="switchSeatPickerMode('3d')">
+              <span>3D Маршрутка</span>
+            </button>
+            <button type="button" class="btn-seat-view-mode" id="btnMode2D" onclick="switchSeatPickerMode('2d')">
+              <span>Схема 2D</span>
+            </button>
+          </div>
         </div>
-        <div class="sprinter-seats-matrix" id="bookingSeatsGrid"></div>
+
+        <!-- 3D INTERACTIVE MINIBUS VIEWPORT -->
+        <div id="booking3DContainer" class="booking-3d-viewport" style="width: 100%; height: 260px; border-radius: var(--radius-sm); border: 1px solid var(--border-hairline); overflow: hidden; position: relative; background: var(--surface-card);">
+          <div id="three-canvas-container" style="width: 100%; height: 100%;"></div>
+
+          <!-- 3D Camera Controls Overlay -->
+          <div style="position: absolute; bottom: 8px; left: 8px; display: flex; gap: 4px; z-index: 10;">
+            <button type="button" class="btn-3d-cam" onclick="set3DPreset('all')" title="Общий вид салона">Обзор</button>
+            <button type="button" class="btn-3d-cam" onclick="set3DPreset('front')" title="Передние ряды">Нос</button>
+            <button type="button" class="btn-3d-cam" onclick="set3DPreset('rear')" title="Задние ряды VIP">Корма</button>
+            <button type="button" class="btn-3d-cam" onclick="toggle3DRoof()" id="btn3DRoof" title="Снять / надеть крышу кузова">Крыша</button>
+          </div>
+
+          <!-- Floating 3D Tooltip -->
+          <div id="tooltip-3d" class="floating-tooltip" style="display: none; position: absolute; pointer-events: none; z-index: 20; background: var(--color-forest); color: var(--canvas-ivory); padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+            <div id="tt-num">Место 1</div>
+            <div id="tt-type" style="opacity: 0.8; font-size: 10px;">Салон 2+1</div>
+          </div>
+
+          <div style="position: absolute; top: 8px; right: 8px; font-size: 10px; color: var(--text-muted); background: rgba(245, 241, 234, 0.85); padding: 3px 8px; border-radius: var(--radius-pill); pointer-events: none; border: 1px solid var(--border-subtle);">
+            Вращение 360° • Кликните по креслу в 3D
+          </div>
+        </div>
+
+        <!-- 2D SPRINTER INTERACTIVE MAP -->
+        <div id="booking2DContainer" style="display: none;">
+          <div class="sprinter-seats-matrix" id="bookingSeatsGrid"></div>
+        </div>
+
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 11.5px; color: var(--text-muted);">
-          <span>Выбрано: <strong id="selectedSeatLabel" style="color: var(--color-forest);">07A</strong></span>
-          <span>Бесплатный выбор места в тарифе Prestige</span>
+          <span>Выбрано: <strong id="selectedSeatLabel" style="color: var(--color-forest); font-size: 13px;">07A</strong></span>
+          <span>Одиночные у окна: 3, 6, 9, 12, 15 • Бесплатный выбор</span>
         </div>
       </div>
 
@@ -3349,6 +3416,10 @@
   <div class="toast-capsule" id="toastCapsule" role="status" aria-live="polite"></div>
 
   <!-- SCRIPT ENGINE -->
+  <!-- 3D MINIBUS GRAPHICS ENGINE & ORBIT CONTROLS -->
+  <script src="assets/three.min.js"></script>
+  <script src="assets/OrbitControls.js"></script>
+  <script src="assets/sprinter-3d-model.js"></script>
   <script src="assets/qrcode-svg-clean.js"></script>
   <script>
     /* ==========================================================================
@@ -3506,6 +3577,7 @@
     let allTrips = getStoredTrips();
     let allBookings = getStoredBookings();
     let passengerProfile = getStoredProfile();
+    let userProfile = passengerProfile;
     let currentFilterRoute = 'all';
     let selectedTripForBooking = null;
     let selectedSeatForBooking = "07A";
@@ -4027,6 +4099,7 @@
       }
 
       document.getElementById('bookingModal').classList.add('open');
+      switchSeatPickerMode('3d');
     }
 
     function selectBookingSeat(seatNum, seatCode) {
@@ -4224,7 +4297,155 @@
     }
 
     // BOOTSTRAP INITIALIZATION
+    
+    // 3D MINIBUS CONTROLLER & REAL-TIME EVENT ENGINE
+    let threeInitialized = false;
+    let seatPickerMode = '3d';
+    let is3DRoofRemoved = false;
+
+    function switchSeatPickerMode(mode) {
+      seatPickerMode = mode;
+      const btn3D = document.getElementById('btnMode3D');
+      const btn2D = document.getElementById('btnMode2D');
+      const box3D = document.getElementById('booking3DContainer');
+      const box2D = document.getElementById('booking2DContainer');
+
+      if (mode === '3d') {
+        if (btn3D) btn3D.classList.add('active');
+        if (btn2D) btn2D.classList.remove('active');
+        if (box3D) box3D.style.display = 'block';
+        if (box2D) box2D.style.display = 'none';
+        initSprinter3DInBooking();
+      } else {
+        if (btn3D) btn3D.classList.remove('active');
+        if (btn2D) btn2D.classList.add('active');
+        if (box3D) box3D.style.display = 'none';
+        if (box2D) box2D.style.display = 'block';
+      }
+    }
+
+    function initSprinter3DInBooking() {
+      if (typeof THREE === 'undefined') return;
+      if (window.Sprinter3D && typeof window.Sprinter3D.init === 'function') {
+        if (!threeInitialized) {
+          threeInitialized = true;
+          window.Sprinter3D.init('three-canvas-container');
+        }
+        const currentTripId = selectedTripForBooking ? selectedTripForBooking.id : 'BL-5715';
+        const tripBookings = (allBookings || []).filter(b => b.tripId === currentTripId);
+        window.Sprinter3D.updateBookings(tripBookings);
+        setTimeout(() => {
+          if (window.Sprinter3D.onResize) window.Sprinter3D.onResize();
+        }, 80);
+      }
+    }
+
+    function set3DPreset(name) {
+      if (window.Sprinter3D && typeof window.Sprinter3D.setPreset === 'function') {
+        window.Sprinter3D.setPreset(name);
+      }
+    }
+
+    function toggle3DRoof() {
+      is3DRoofRemoved = !is3DRoofRemoved;
+      const btn = document.getElementById('btn3DRoof');
+      if (window.Sprinter3D && typeof window.Sprinter3D.toggleRoof === 'function') {
+        window.Sprinter3D.toggleRoof(!is3DRoofRemoved);
+        if (btn) btn.textContent = is3DRoofRemoved ? 'С крышей' : 'Крыша';
+      }
+    }
+
+    // Connect 3D seat clicking
+    window.onSprinterSeatSelect = function(seatNum, passengerData) {
+      if (passengerData && passengerData.name) {
+        showNotification(`Место ${seatNum} уже занято: ${passengerData.name}`);
+        return;
+      }
+      selectSeatForBooking(seatNum);
+      showNotification(`Выбрано место в 3D салоне: Место ${seatNum}`);
+    };
+
+    // REAL-TIME CROSS-ROLE DATABASE & SCANNER SYNCHRONIZATION
+    function initRealtimeSync() {
+      const handleRealtimeEvent = (evt) => {
+        if (!evt || evt.type !== 'PASSENGER_BOARDED') return;
+
+        allBookings = getStoredBookings();
+        const myBooking = allBookings.find(b => b.id === evt.ticketId || (b.tripId === evt.tripId && String(b.seat) === String(evt.seat)));
+
+        if (myBooking) {
+          myBooking.tripStatus = 'boarded';
+          myBooking.status = 'boarded';
+          myBooking.boarded = true;
+          myBooking.boardedAt = evt.boardedAt || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          localStorage.setItem('busliner_passenger_bookings', JSON.stringify(allBookings));
+
+          // Real-time Miles Accrual (+150 miles)
+          passengerProfile = getStoredProfile();
+          passengerProfile.miles = (passengerProfile.miles || 1450) + 150;
+          userProfile = passengerProfile;
+          localStorage.setItem('busliner_passenger_profile', JSON.stringify(passengerProfile));
+
+          renderOrderTab();
+          updateProfileMilesUI();
+          playSuccessChime();
+
+          showNotification(`✓ Водитель подтвердил вашу посадку! Вы на борту (место ${evt.seat}). Начислено +150 миль Prestige!`);
+        }
+      };
+
+      try {
+        const bc = new BroadcastChannel('busliner_sync_channel');
+        bc.onmessage = (e) => handleRealtimeEvent(e.data);
+      } catch(e) {}
+
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'busliner_realtime_event' && e.newValue) {
+          try {
+            handleRealtimeEvent(JSON.parse(e.newValue));
+          } catch(err) {}
+        }
+      });
+
+      try {
+        const storedEvt = localStorage.getItem('busliner_realtime_event');
+        if (storedEvt) {
+          handleRealtimeEvent(JSON.parse(storedEvt));
+        }
+      } catch(e) {}
+    }
+
+    function updateProfileMilesUI() {
+      const milesHeader = document.querySelector('.miles-status-pill .mono');
+      const milesProfile = document.querySelector('.loyalty-balance-lead.mono');
+      const formatted = `${userProfile.miles.toLocaleString('ru-RU')} миль`;
+      if (milesHeader) milesHeader.textContent = formatted;
+      if (milesProfile) milesProfile.textContent = formatted;
+    }
+
+    function playSuccessChime() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const now = ctx.currentTime;
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc1.frequency.setValueAtTime(880, now);
+        osc2.frequency.setValueAtTime(1320, now + 0.1);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.1);
+        osc2.start(now + 0.1);
+        osc2.stop(now + 0.35);
+      } catch(e) {}
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      initRealtimeSync();
       renderAviasalesDateStrip();
       renderTripsFeed();
       renderOrderTab();
