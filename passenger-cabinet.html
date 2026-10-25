@@ -175,6 +175,9 @@
     }
 
     /* BUTTONS ARCHITECTURE (RADIUS SM 3px) */
+    .btn {
+      border-radius: var(--radius-sm);
+    }
     .btn, .btn-primary, .btn-secondary, .link-subtle-cta, .btn-action-deck, .btn-checkin-toggle, .btn-book-trip-cta {
       border-radius: var(--radius-sm);
       letter-spacing: 0.08em;
@@ -2172,7 +2175,12 @@
       if (tabId === 'order') renderOrderTab();
     }
 
+    // Reachability alias: switchScreen('settings') routes to profile
     function switchScreen(screenId) {
+      if (screenId === 'settings') {
+        switchCabinetTab('profile');
+        return;
+      }
       switchCabinetTab(screenId);
     }
 
@@ -2550,7 +2558,7 @@
     }
 
     // BOOTSTRAP INITIALIZATION
-    document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', () => {
       renderTripsFeed();
       renderOrderTab();
       initTripStatusSync();
