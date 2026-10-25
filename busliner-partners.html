@@ -2333,65 +2333,84 @@
   
     
     /* ==========================================================================
-       MOBILE NATIVE DECK & TOUCH ARCHITECTURE (EMIL KOWALSKI STANDARD)
+       MOBILE NATIVE REGULAR WEBSITE ARCHITECTURE
        ========================================================================== */
     @media (max-width: 900px) {
       html, body {
         width: 100% !important;
-        height: 100% !important;
-        height: 100dvh !important;
-        overflow: hidden !important;
-        touch-action: none !important;
+        height: auto !important;
+        min-height: 100% !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: auto !important;
         -webkit-tap-highlight-color: transparent !important;
         -webkit-text-size-adjust: 100% !important;
       }
 
       .presentation-deck-stage {
-        position: relative !important;
-        width: 100vw !important;
-        height: 100% !important;
-        height: 100dvh !important;
-        overflow: hidden !important;
-        touch-action: none !important;
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
+        display: block !important;
+        touch-action: auto !important;
       }
 
       .deck-slide {
-        position: absolute !important;
-        inset: 0 !important;
+        position: relative !important;
+        inset: auto !important;
         width: 100% !important;
-        height: 100% !important;
-        height: 100dvh !important;
-        overflow: hidden !important;
-        touch-action: none !important;
+        height: auto !important;
+        min-height: auto !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        filter: none !important;
+        pointer-events: auto !important;
+        overflow: visible !important;
+        touch-action: auto !important;
+        display: block !important;
+        padding: 60px 16px 48px !important;
+        box-sizing: border-box !important;
+        border-bottom: 1px solid var(--border-hairline) !important;
+        transition: none !important;
+      }
+
+      .deck-slide.active,
+      .deck-slide.prev,
+      .deck-slide.next {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        transform: none !important;
+        filter: none !important;
+        visibility: visible !important;
+        position: relative !important;
+      }
+
+      #slide1 {
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
-        padding: calc(env(safe-area-inset-top, 0px) + 60px) 16px calc(env(safe-area-inset-bottom, 0px) + 76px) !important;
-        box-sizing: border-box !important;
-        transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease, filter 0.38s ease !important;
-        will-change: transform, opacity !important;
+        padding-top: calc(env(safe-area-inset-top, 0px) + 76px) !important;
+        padding-bottom: 40px !important;
       }
 
-      .deck-slide.active {
+      .deck-slide .stagger-1,
+      .deck-slide .stagger-2,
+      .deck-slide .stagger-3,
+      .deck-slide .stagger-4,
+      .deck-slide .stagger-5,
+      .deck-slide .slide-curtain-image,
+      .deck-slide .word-inner,
+      .deck-slide .growing-line-separator {
         opacity: 1 !important;
-        pointer-events: auto !important;
-        transform: translateY(0) !important;
-        z-index: 10 !important;
-        filter: blur(0px) !important;
-      }
-
-      .deck-slide.prev {
-        opacity: 0 !important;
-        transform: translateY(-100%) !important;
-        pointer-events: none !important;
-        z-index: 5 !important;
-      }
-
-      .deck-slide.next {
-        opacity: 0 !important;
-        transform: translateY(100%) !important;
-        pointer-events: none !important;
-        z-index: 15 !important;
+        transform: none !important;
+        clip-path: none !important;
+        transition: none !important;
       }
 
       /* Hero video background on mobile */
@@ -2403,110 +2422,28 @@
         z-index: 1 !important;
       }
 
-      /* Hide desktop controls on mobile */
+      /* Fixed header on mobile */
+      header.site-header {
+        background: rgba(30, 29, 27, 0.94) !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+        border-bottom: 1px solid rgba(232, 226, 214, 0.15) !important;
+      }
+      header.site-header .brand-wordmark,
+      header.site-header .slide-nav-link,
+      header.site-header .header-client-btn {
+        color: var(--canvas-ivory) !important;
+      }
+
+      /* Complete removal of cursor follower, slide deck pager dock and desktop rails on mobile */
       .presentation-side-rail,
       .deck-bottom-bar,
+      .mobile-deck-dock,
       .custom-cursor-follower {
         display: none !important;
-      }
-
-      /* Mobile Floating Pager Dock */
-      .mobile-deck-dock {
-        position: fixed !important;
-        bottom: calc(env(safe-area-inset-bottom, 0px) + 10px) !important;
-        left: 14px !important;
-        right: 14px !important;
-        z-index: 9999 !important;
-        display: block !important;
-        pointer-events: auto !important;
-      }
-
-      .mobile-dock-inner {
-        background: rgba(28, 27, 26, 0.94) !important;
-        backdrop-filter: blur(18px) !important;
-        -webkit-backdrop-filter: blur(18px) !important;
-        border: 1px solid rgba(232, 226, 214, 0.28) !important;
-        border-radius: 9999px !important;
-        padding: 5px 6px 5px 16px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45) !important;
-      }
-
-      .mobile-dock-tracker {
-        display: flex !important;
-        align-items: center !important;
-        gap: 8px !important;
-        min-width: 0 !important;
-      }
-
-      .mobile-dock-dot {
-        width: 7px !important;
-        height: 7px !important;
-        border-radius: 50% !important;
-        background: #5CB85C !important;
-        box-shadow: 0 0 8px #5CB85C !important;
-        flex-shrink: 0 !important;
-      }
-
-      .mobile-dock-step {
-        font-family: var(--font-mono) !important;
-        font-size: 12px !important;
-        font-weight: 700 !important;
-        color: #E8E2D6 !important;
-        letter-spacing: 0.08em !important;
-        flex-shrink: 0 !important;
-      }
-
-      .mobile-dock-title {
-        font-family: var(--font-body) !important;
-        font-size: 13px !important;
-        font-weight: 600 !important;
-        color: #F5F1EA !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-      }
-
-      .mobile-dock-actions {
-        display: flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-        flex-shrink: 0 !important;
-      }
-
-      .mobile-dock-btn {
-        width: 44px !important;
-        height: 44px !important;
-        border-radius: 50% !important;
-        background: rgba(245, 241, 234, 0.12) !important;
-        border: 1px solid rgba(245, 241, 234, 0.25) !important;
-        color: #F5F1EA !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        cursor: pointer !important;
-        outline: none !important;
-        touch-action: manipulation !important;
-        -webkit-tap-highlight-color: transparent !important;
-        transition: transform 0.12s ease, background 0.12s ease !important;
-      }
-
-      .mobile-dock-btn:active {
-        transform: scale(0.92) !important;
-        background: rgba(245, 241, 234, 0.28) !important;
-      }
-
-      .mobile-dock-btn-next {
-        background: #E8E2D6 !important;
-        color: #1E1D1B !important;
-        border-color: #E8E2D6 !important;
-        font-weight: 700 !important;
-      }
-
-      .mobile-dock-btn-next:active {
-        background: #D9CDB8 !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
       }
 
       /* Compact Typography */
@@ -3301,12 +3238,13 @@
       updateDeckState(currentSlide - 1);
     };
 
-    // 1. WHEEL SCROLL (DESKTOP & DEVTOOLS MOUSE)
+    // 1. WHEEL SCROLL (DESKTOP PRESENTATION DECK)
     let lastWheelTime = 0;
     const WHEEL_LOCK_MS = 400;
 
     window.addEventListener('wheel', (e) => {
-      if (e.target.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay, .presentation-side-rail')) {
+      if (window.innerWidth <= 900) return; // Allow 100% native document scrolling on mobile
+      if (e.target.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay, .presentation-side-rail, #partnerModal')) {
         return;
       }
 
@@ -3334,6 +3272,7 @@
 
     // 2. KEYBOARD NAVIGATION
     window.addEventListener('keydown', (e) => {
+      if (window.innerWidth <= 900) return; // Allow native mobile interactions
       if (e.target.matches('input, textarea, select')) return;
       if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
         e.preventDefault();
@@ -3344,7 +3283,7 @@
       }
     });
 
-    // 3. ROCK-SOLID TOUCH SWIPE ENGINE (iOS SAFARI, CHROME ANDROID, REAL HARDWARE)
+    // 3. DESKTOP TOUCH/GESTURE ENGINE
     let touchStartX = 0;
     let touchStartY = 0;
     let touchCurrentX = 0;
@@ -3353,7 +3292,7 @@
     let lastTouchActionTime = 0;
 
     window.addEventListener('touchstart', (e) => {
-      // Don't intercept inside open dialogs or desktop side rail
+      if (window.innerWidth <= 900) return; // Mobile uses 100% native smooth inertia scrolling
       if (e.target.closest('#partnerModal, .presentation-side-rail')) {
         return;
       }
@@ -3367,12 +3306,14 @@
     }, { passive: true });
 
     window.addEventListener('touchmove', (e) => {
+      if (window.innerWidth <= 900) return;
       if (!isTouchActive || !e.touches || e.touches.length === 0) return;
       touchCurrentX = e.touches[0].clientX;
       touchCurrentY = e.touches[0].clientY;
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
+      if (window.innerWidth <= 900) return;
       if (!isTouchActive) return;
       isTouchActive = false;
       lastTouchActionTime = performance.now();
@@ -3391,21 +3332,19 @@
       const diffY = touchStartY - touchCurrentY;
       const absX = Math.abs(diffX);
       const absY = Math.abs(diffY);
-      const SWIPE_THRESHOLD = 26; // Ultra-smooth, responsive threshold
+      const SWIPE_THRESHOLD = 26;
 
-      // Vertical swipe flick (up = next slide, down = prev slide)
       if (absY >= SWIPE_THRESHOLD && absY >= absX * 0.55) {
         if (diffY > 0) nextSlide();
         else prevSlide();
-      }
-      // Horizontal swipe flick (left = next slide, right = prev slide)
-      else if (absX >= SWIPE_THRESHOLD && absX > absY) {
+      } else if (absX >= SWIPE_THRESHOLD && absX > absY) {
         if (diffX > 0) nextSlide();
         else prevSlide();
       }
     }, { passive: true });
 
     window.addEventListener('touchcancel', () => {
+      if (window.innerWidth <= 900) return;
       if (isTouchActive) {
         lastTouchActionTime = performance.now();
         const diffX = touchStartX - touchCurrentX;
@@ -3424,12 +3363,13 @@
       }
     }, { passive: true });
 
-    // 4. POINTER EVENTS (DEVTOOLS MOBILE TOUCH SIMULATION & MOUSE DRAG)
+    // 4. POINTER EVENTS
     let pointerStartX = 0;
     let pointerStartY = 0;
     let isPointerDown = false;
 
     window.addEventListener('pointerdown', (e) => {
+      if (window.innerWidth <= 900) return;
       if (e.pointerType === 'mouse' && e.buttons !== 1) return;
       if (e.target.closest('input:not([readonly]), textarea, select, button, a, [role="button"], .partner-calc-slider, .mobile-dock-btn, .presentation-side-rail, #partnerModal')) return;
       pointerStartX = e.clientX;
@@ -3438,9 +3378,10 @@
     }, { passive: true });
 
     window.addEventListener('pointerup', (e) => {
+      if (window.innerWidth <= 900) return;
       if (!isPointerDown) return;
       isPointerDown = false;
-      if (performance.now() - lastTouchActionTime < 450) return; // Prevent double trigger from emulated touch
+      if (performance.now() - lastTouchActionTime < 450) return;
 
       const diffX = pointerStartX - e.clientX;
       const diffY = pointerStartY - e.clientY;
@@ -3457,27 +3398,43 @@
       }
     }, { passive: true });
 
-    // Custom Lerp Cursor
+    // Custom Lerp Cursor (Desktop only)
     const cursor = document.getElementById('customCursor');
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let cursorX = mouseX;
-    let cursorY = mouseY;
+    if (cursor) {
+      if (window.innerWidth <= 900 || window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window) {
+        cursor.remove();
+      } else {
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let cursorX = mouseX;
+        let cursorY = mouseY;
 
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
+        window.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+        });
 
-    function renderCursor() {
-      if (cursor) {
-        cursorX += (mouseX - cursorX) * 0.22;
-        cursorY += (mouseY - cursorY) * 0.22;
-        cursor.style.transform = `translate3d(${cursorX - 13}px, ${cursorY - 13}px, 0)`;
+        function renderCursor() {
+          if (cursor) {
+            cursorX += (mouseX - cursorX) * 0.22;
+            cursorY += (mouseY - cursorY) * 0.22;
+            cursor.style.transform = `translate3d(${cursorX - 13}px, ${cursorY - 13}px, 0)`;
+          }
+          requestAnimationFrame(renderCursor);
+        }
+        requestAnimationFrame(renderCursor);
       }
-      requestAnimationFrame(renderCursor);
     }
-    requestAnimationFrame(renderCursor);
+
+    // Initialize telemetry values on mobile
+    if (window.innerWidth <= 900) {
+      document.querySelectorAll('.count-up-number').forEach(counter => {
+        const target = counter.getAttribute('data-count');
+        const prefix = counter.getAttribute('data-prefix') || '';
+        const suffix = counter.getAttribute('data-suffix') || '';
+        if (target) counter.innerText = prefix + target + suffix;
+      });
+    }
 
     // Interactive Financial Calculator Logic
     function recalcPartnerProfit() {

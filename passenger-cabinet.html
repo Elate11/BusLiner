@@ -151,6 +151,14 @@
       transition: width 0.28s var(--ease-drive), height 0.28s var(--ease-drive), border-color 0.28s ease, background 0.28s ease;
       opacity: 0.85;
     }
+    @media (max-width: 900px), (hover: none), (pointer: coarse) {
+      .custom-cursor-follower {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
+    }
 
     /* TYPOGRAPHIC ACCENTS & MONO TELEMETRY */
     em {
@@ -4435,7 +4443,11 @@
     function initCursorFollower() {
       if (typeof window === 'undefined' || typeof document === 'undefined') return;
       const cursorFollower = document.getElementById('cursorFollower');
-      if (!cursorFollower || window.innerWidth < 768) return;
+      if (!cursorFollower) return;
+      if (window.innerWidth <= 900 || window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window) {
+        cursorFollower.remove();
+        return;
+      }
       window.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;

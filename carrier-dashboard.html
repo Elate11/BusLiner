@@ -188,9 +188,12 @@
       border-color: var(--color-forest);
       background: rgba(35, 49, 42, 0.08);
     }
-    @media (max-width: 768px), (pointer: coarse) {
+    @media (max-width: 900px), (hover: none), (pointer: coarse) {
       .custom-cursor-follower {
         display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
       }
     }
 
@@ -3952,7 +3955,11 @@
     function initCursorFollower() {
       if (typeof window === 'undefined' || typeof document === 'undefined') return;
       const cursorFollower = document.getElementById('cursorFollower');
-      if (!cursorFollower || window.innerWidth < 768) return;
+      if (!cursorFollower) return;
+      if (window.innerWidth <= 900 || window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window) {
+        cursorFollower.remove();
+        return;
+      }
       window.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
