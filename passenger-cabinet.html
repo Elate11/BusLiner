@@ -1604,10 +1604,31 @@
       100% { transform: scale(0.9); opacity: 0.7; }
     }
 
-    /* CONCIERGE PRESTIGE STYLES */
+    /* CONCIERGE PRESTIGE & AI SNIPER STYLES */
+    .sniper-live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(35, 49, 42, 0.08);
+      border: 1px solid var(--border-hairline);
+      font-size: 11.5px;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--color-forest);
+    }
+    .sniper-live-badge .pulse-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ADE80;
+      box-shadow: 0 0 6px #4ADE80;
+      animation: pulseGreenDot 1.6s infinite;
+    }
     .concierge-master-grid {
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-columns: 1.25fr 0.75fr;
       gap: 24px;
     }
     @media (max-width: 900px) {
@@ -2819,7 +2840,7 @@
                   <div class="telemetry-cell">
                     <span class="telemetry-cell-label">Стоимость & Оплата</span>
                     <div class="telemetry-cell-val mono">28.0 BYN</div>
-                    <span class="telemetry-cell-sub badge-payment">✓ Оплачено онлайн • Оплата водителю доступна</span>
+                    <span class="telemetry-cell-sub badge-payment">&check; Оплачено онлайн • Оплата водителю доступна</span>
                   </div>
                 </div>
               </div>
@@ -2899,7 +2920,7 @@
                   Александр Константинович Нестеров
                 </h2>
               </div>
-              <span class="hero-meta-badge">✓ Верифицирован</span>
+              <span class="hero-meta-badge">&check; Верифицирован</span>
             </div>
 
             <div>
@@ -3029,7 +3050,7 @@
 
           <div class="history-trip-row">
             <div>
-              <div style="font-size: 16px; font-weight: 700;">Минск ➔ Брест</div>
+              <div style="font-size: 16px; font-weight: 700;">Минск &rarr; Брест</div>
               <div style="font-size: 12.5px; color: var(--text-muted); font-family: var(--font-mono);">
                 14 октября 2026 • 15:30 • Билет BL-4102 • Место 04A
               </div>
@@ -3049,7 +3070,7 @@
 
           <div class="history-trip-row">
             <div>
-              <div style="font-size: 16px; font-weight: 700;">Минск ➔ Витебск</div>
+              <div style="font-size: 16px; font-weight: 700;">Минск &rarr; Витебск</div>
               <div style="font-size: 12.5px; color: var(--text-muted); font-family: var(--font-mono);">
                 28 сентября 2026 • 09:00 • Билет BL-3891 • Место 07A
               </div>
@@ -3069,7 +3090,7 @@
 
           <div class="history-trip-row">
             <div>
-              <div style="font-size: 16px; font-weight: 700;">Гродно ➔ Минск</div>
+              <div style="font-size: 16px; font-weight: 700;">Гродно &rarr; Минск</div>
               <div style="font-size: 12.5px; color: var(--text-muted); font-family: var(--font-mono);">
                 12 сентября 2026 • 19:15 • Билет BL-3104 • Место 03A
               </div>
@@ -3090,53 +3111,116 @@
       </section>
 
       <!-- ====================================================================
-           FUNCTION 4: КОНСЬЕРЖ-СЕРВИС 24/7 (ПРЕСТИЖ-ПОДДЕРЖКА & ТАМОЖНЯ)
+           FUNCTION 4: КОНСЬЕРЖ-СНАЙПЕР BUSLINER (АВТОМАТИЧЕСКИЙ ПЕРЕХВАТ БИЛЕТОВ)
            ==================================================================== -->
       <section class="tab-pane" id="pane-concierge">
         <div class="concierge-master-grid">
+          <!-- CONCIERGE RADAR & INTERCEPTOR HERO CARD -->
           <div class="concierge-hero-card">
-            <span class="kicker-tag">BusLiner VIP Concierge</span>
-            <h2 style="font-family: var(--font-display); font-size: 26px; font-weight: 600; color: var(--text-primary); margin: 6px 0 10px;">
-              Персональный консьерж в пути и на границе
-            </h2>
-            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 20px;">
-              Круглосуточное сопровождение для пассажиров тарифа Prestige: решение любых вопросов с багажом, таможенным декларированием, пересадками и трансфером до отеля.
-            </p>
-
-            <div class="concierge-channels-row">
-              <a href="https://t.me/busliner_concierge" target="_blank" rel="noopener noreferrer" class="concierge-channel-btn">
-                <div class="concierge-channel-title">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="22" y1="2" x2="11" y2="13"/>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                  </svg>
-                  <span>Telegram Concierge</span>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <span class="kicker-tag" style="color: var(--color-forest);">BusLiner VIP Concierge</span>
+                <h2 style="font-family: var(--font-display); font-size: 26px; font-weight: 600; color: var(--text-primary); margin: 6px 0 6px;">
+                  Консьерж-Снайпер: автоперехват мест на аншлаговые рейсы
+                </h2>
+                <div style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5; max-width: 680px;">
+                  Нужный рейс раскуплен? Настройте снайпер: бот круглосуточно сканирует базы 42 перевозчиков и за 0.38 секунды выкупает отказной билет на ваше имя и реквизиты без наценок и переплат.
                 </div>
-                <div style="font-size: 12px; color: var(--text-muted);">Ответ дежурного менеджера за 60 секунд</div>
-              </a>
-
-              <a href="tel:+375291902026" class="concierge-channel-btn">
-                <div class="concierge-channel-title">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                  </svg>
-                  <span>Прямая линия VIP</span>
-                </div>
-                <div style="font-size: 12px; color: var(--text-muted);">+375 29 190-20-26 (Круглосуточно)</div>
-              </a>
+              </div>
+              <div class="sniper-live-badge">
+                <span class="pulse-indicator"></span>
+                <span>Радар активен (300 мс)</span>
+              </div>
             </div>
 
+            <!-- ACTIVE INTERCEPTOR RADAR STATUS MONOLITH -->
+            <div class="sniper-radar-monolith" id="sniperActiveRadarBox" style="margin-top: 20px; background: var(--canvas-bone); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 18px 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--border-taupe); padding-bottom: 12px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span class="mono" style="font-size: 12px; font-weight: 700; color: var(--color-forest); text-transform: uppercase;">
+                    Задача автоперехвата #SNIPER-884
+                  </span>
+                  <span class="status-pill status-forest-pill" id="sniperStatusLabel">Мониторинг отказов</span>
+                </div>
+                <div class="mono" style="font-size: 11.5px; color: var(--text-muted);">
+                  Опрос баз: каждые 0.3 с &bull; Канал: Telegram Push
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px;">
+                <div>
+                  <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Направление</div>
+                  <div style="font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--text-primary); margin-top: 2px;" id="sniperRouteTarget">
+                    Минск &rarr; Вильнюс (18:45)
+                  </div>
+                </div>
+
+                <div>
+                  <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Дата и окно времени</div>
+                  <div class="mono" style="font-size: 13.5px; font-weight: 600; color: var(--text-primary); margin-top: 4px;" id="sniperTimeWindow">
+                    Сегодня &bull; 17:00 &mdash; 22:00
+                  </div>
+                </div>
+
+                <div>
+                  <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Кресло и пассажир</div>
+                  <div style="font-size: 13.5px; font-weight: 600; color: var(--text-primary); margin-top: 4px;" id="sniperSeatTarget">
+                    У окна &bull; Александр Нестеров
+                  </div>
+                </div>
+              </div>
+
+              <!-- SIMULATE INTERCEPTION BUTTON -->
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-top: 14px; border-top: 1px solid var(--border-hairline);">
+                <div style="font-size: 12.5px; color: var(--text-muted);">
+                  Проверьте работу алгоритма в режиме реального времени:
+                </div>
+                <button type="button" class="btn-primary" onclick="simulateConciergeSniperIntercept()" id="btnSimulateSniper" style="min-height: 44px; padding: 10px 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>Смоделировать появление отказа (0.38с)</span>
+                </button>
+              </div>
+
+              <!-- INTERCEPTED RESULT BANNER (SHOWN UPON SNIPER SUCCESS) -->
+              <div id="sniperSuccessBanner" style="display: none; margin-top: 14px; background: rgba(46, 79, 62, 0.15); border: 1.5px solid var(--color-forest); border-radius: var(--radius-sm); padding: 14px 18px;">
+                <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--color-forest); font-size: 15px;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>БИЛЕТ УСПЕШНО ПЕРЕХВАЧЕН БОТОМ ЗА 0.38 СЕКУНДЫ</span>
+                </div>
+                <div style="font-size: 13.5px; color: var(--text-primary); margin-top: 6px;">
+                  Отказ пассажира на рейс BL-5715 мгновенно выкуплен на имя <strong>Александра Нестерова</strong>. Назначено место <strong>07 (У окна)</strong>. Билет добавлен во вкладку &laquo;Мой билет&raquo;.
+                </div>
+              </div>
+            </div>
+
+            <!-- SPEED METRICS -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 24px;">
+              <div style="background: var(--surface-card); border: 1px solid var(--border-hairline); padding: 16px; border-radius: var(--radius-sm);">
+                <div class="mono" style="font-size: 26px; font-weight: 700; color: var(--color-forest);">0.38 с</div>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Скорость автоперехвата с момента возврата</div>
+              </div>
+              <div style="background: var(--surface-card); border: 1px solid var(--border-hairline); padding: 16px; border-radius: var(--radius-sm);">
+                <div class="mono" style="font-size: 26px; font-weight: 700; color: var(--color-forest);">99.4%</div>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Вероятность успешного выкупа билета</div>
+              </div>
+              <div style="background: var(--surface-card); border: 1px solid var(--border-hairline); padding: 16px; border-radius: var(--radius-sm);">
+                <div class="mono" style="font-size: 26px; font-weight: 700; color: var(--color-forest);">0 BYN</div>
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Комиссия консьержа в тарифе Prestige</div>
+              </div>
+            </div>
+
+            <!-- HOW IT WORKS EXPLANATION -->
             <div style="margin-top: 24px;">
               <h3 style="font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px;">
-                Чем может помочь консьерж-служба:
+                Как работает автоперехватчик BusLiner:
               </h3>
               <div class="concierge-services-list">
                 <div class="concierge-service-item">
                   <div style="color: var(--color-forest); font-weight: 700; font-size: 16px;">01</div>
                   <div>
-                    <div style="font-size: 13.5px; font-weight: 600; color: var(--text-primary);">Таможня и правила провоза (КПП)</div>
+                    <div style="font-size: 13.5px; font-weight: 600; color: var(--text-primary);">Вы указываете рейс и диапазон дат</div>
                     <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
-                      Оперативная консультация по лимитам провоза валюты, покупкам Tax Free, рецептурным медикаментам и нормам ввоза в страны ЕС.
+                      Даже если на сайте горит статус &laquo;Мест нет&raquo;, бот встаёт на круглосуточное дежурство по вашему маршруту.
                     </div>
                   </div>
                 </div>
@@ -3144,9 +3228,9 @@
                 <div class="concierge-service-item">
                   <div style="color: var(--color-forest); font-weight: 700; font-size: 16px;">02</div>
                   <div>
-                    <div style="font-size: 13.5px; font-weight: 600; color: var(--text-primary);">Индивидуальный трансфер и такси к трапу</div>
+                    <div style="font-size: 13.5px; font-weight: 600; color: var(--text-primary);">Молниеносный перехват возврата (0.38с)</div>
                     <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
-                      Подача автомобиля бизнес-класса ко времени прибытия микроавтобуса в Вильнюсе, Варшаве или Минске.
+                      Как только другой пассажир сдаёт билет или перевозчик выпускает дополнительный Спринтер, бот выкупает место быстрее живых пользователей.
                     </div>
                   </div>
                 </div>
@@ -3154,9 +3238,9 @@
                 <div class="concierge-service-item">
                   <div style="color: var(--color-forest); font-weight: 700; font-size: 16px;">03</div>
                   <div>
-                    <div style="font-size: 13.5px; font-weight: 600; color: var(--text-primary);">Аренда всего микроавтобуса под ключ</div>
+                    <div style="font-size: 13.5px; font-weight: 600; color: var(--text-primary);">Автоматическое оформление на ваше имя</div>
                     <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
-                      Заказ Mercedes-Benz Sprinter 170" High Roof для корпоративной поездки или семейного путешествия по индивидуальному маршруту.
+                      Билет мгновенно фискализируется на ваши паспортные данные, появляется в кабинете и отправляется в Telegram-бот.
                     </div>
                   </div>
                 </div>
@@ -3164,37 +3248,55 @@
             </div>
           </div>
 
-          <!-- CONCIERGE QUICK REQUEST FORM -->
+          <!-- CONCIERGE SNIPER BOT CONFIGURATION FORM -->
           <div class="profile-card-monograph">
-            <span class="kicker-tag">Срочный запрос</span>
+            <span class="kicker-tag">Настройка снайпера</span>
             <h3 style="font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 6px 0 14px;">
-              Написать дежурному консьержу
+              Поставить бота на перехват
             </h3>
 
-            <form onsubmit="handleConciergeRequest(event)" style="display: flex; flex-direction: column; gap: 14px;">
+            <form onsubmit="handleSniperSetupSubmit(event)" style="display: flex; flex-direction: column; gap: 14px;">
               <div class="form-group">
-                <label class="form-label" for="conciergeTopic">Тема обращения</label>
-                <select class="form-select" id="conciergeTopic" style="height: 48px; min-height: 48px; font-size: 16px;">
-                  <option value="customs">Вопрос по прохождению КПП и таможне</option>
-                  <option value="luggage">Негабаритный или дополнительный багаж</option>
-                  <option value="transfer">Заказ индивидуального трансфера в аэропорт</option>
-                  <option value="charter">Аренда микроавтобуса Mercedes Sprinter</option>
-                  <option value="other">Другой вопрос</option>
+                <label class="form-label" for="sniperRouteSelect">Маршрут перехвата</label>
+                <select class="form-select" id="sniperRouteSelect" style="height: 48px; min-height: 48px; font-size: 16px;">
+                  <option value="Минск — Вильнюс">Минск &rarr; Вильнюс (Центральный АВ &bull; 18:45)</option>
+                  <option value="Минск — Гродно">Минск &rarr; Гродно (АВ Восточный &bull; 19:30)</option>
+                  <option value="Минск — Брест">Минск &rarr; Брест (Центральный АВ &bull; 20:15)</option>
+                  <option value="Гродно — Минск">Гродно &rarr; Минск (Автовокзал &bull; 07:00)</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label class="form-label" for="conciergeMessage">Сообщение</label>
-                <textarea class="form-input" id="conciergeMessage" rows="4" placeholder="Опишите ваш запрос или вопрос по поездке..." required style="min-height: 90px; padding: 12px; font-size: 16px; resize: vertical;"></textarea>
+                <label class="form-label" for="sniperDateInput">Дата поездки</label>
+                <input type="date" class="form-input mono-cell" id="sniperDateInput" required style="height: 48px; min-height: 48px; font-size: 16px;">
               </div>
 
               <div class="form-group">
-                <label class="form-label" for="conciergeContactMethod">Как с вами связаться</label>
-                <input type="text" class="form-input" id="conciergeContactMethod" value="+375 29 987-65-43 (Telegram / Звонок)" required style="height: 48px; min-height: 48px; font-size: 16px;">
+                <label class="form-label" for="sniperTimePreference">Временное окно выезда</label>
+                <select class="form-select" id="sniperTimePreference" style="height: 48px; min-height: 48px; font-size: 16px;">
+                  <option value="Вечер (17:00–22:00)">Вечерние рейсы (17:00 &mdash; 22:00)</option>
+                  <option value="Утро (06:00–11:00)">Утренние рейсы (06:00 &mdash; 11:00)</option>
+                  <option value="День (12:00–16:00)">Дневные рейсы (12:00 &mdash; 16:00)</option>
+                  <option value="Любое время дня">Любой освободившийся рейс за день</option>
+                </select>
               </div>
 
-              <button type="submit" class="btn-primary" style="min-height: 48px; width: 100%; margin-top: 6px;">
-                <span>Отправить запрос консьержу</span>
+              <div class="form-group">
+                <label class="form-label" for="sniperSeatPreference">Предпочтение по креслу</label>
+                <select class="form-select" id="sniperSeatPreference" style="height: 48px; min-height: 48px; font-size: 16px;">
+                  <option value="У окна">Место у окна (Ряд 2–4)</option>
+                  <option value="Одиночный ряд VIP">Одиночный ряд VIP (без соседей)</option>
+                  <option value="Любое место">Любое свободное место в салоне</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="sniperPassengerData">Пассажир для выкупа билета</label>
+                <input type="text" class="form-input" id="sniperPassengerData" value="Александр Нестеров • +375 29 987-65-43" required style="height: 48px; min-height: 48px; font-size: 16px;">
+              </div>
+
+              <button type="submit" class="btn-primary" style="min-height: 52px; width: 100%; margin-top: 6px; font-weight: 700; font-size: 15px;">
+                <span>Запустить бота-перехватчика билетов</span>
               </button>
             </form>
           </div>
@@ -3785,8 +3887,8 @@
         const tDest = (t.destinationCity || t.destination || "").toLowerCase();
         const tRoute = (t.route || "").toLowerCase();
 
-        const matchFrom = !fromVal || tOrigin.includes(fromVal) || tRoute.split(/➔|→|—/)[0].includes(fromVal);
-        const matchTo = !toVal || tDest.includes(toVal) || (tRoute.split(/➔|→|—/)[1] && tRoute.split(/➔|→|—/)[1].includes(toVal));
+        const matchFrom = !fromVal || tOrigin.includes(fromVal) || tRoute.split(/&rarr;|→|—/)[0].includes(fromVal);
+        const matchTo = !toVal || tDest.includes(toVal) || (tRoute.split(/&rarr;|→|—/)[1] && tRoute.split(/&rarr;|→|—/)[1].includes(toVal));
 
         return matchFrom && matchTo;
       });
@@ -3987,6 +4089,59 @@
       const msgEl = document.getElementById('conciergeMessage');
       if (msgEl) msgEl.value = '';
       showNotification('Запрос отправлен дежурному консьержу. С вами свяжутся в течение 2 минут.');
+    }
+
+    function simulateConciergeSniperIntercept() {
+      const btn = document.getElementById('btnSimulateSniper');
+      const banner = document.getElementById('sniperSuccessBanner');
+      const statusLabel = document.getElementById('sniperStatusLabel');
+      
+      if (btn) btn.disabled = true;
+      if (statusLabel) {
+        statusLabel.textContent = 'Обнаружен отказ... Перехват!';
+        statusLabel.style.background = 'var(--status-amber)';
+      }
+
+      showNotification('Радар зафиксировал отказной билет на рейс BL-5715! Запуск автоперехвата...');
+
+      setTimeout(() => {
+        if (banner) banner.style.display = 'block';
+        if (statusLabel) {
+          statusLabel.textContent = 'Билет перехвачен';
+          statusLabel.style.background = 'var(--status-forest)';
+        }
+        if (btn) btn.disabled = false;
+
+        playSuccessChime();
+        showNotification('Успех: бот перехватил билет на имя Александра Нестерова за 0.38 с!');
+
+        allBookings = getStoredBookings();
+        const b = allBookings.find(x => x.id === 'BL-5715-07');
+        if (b) {
+          b.status = 'confirmed';
+          b.tripStatus = 'scheduled';
+        }
+        renderOrderTab();
+      }, 750);
+    }
+
+    function handleSniperSetupSubmit(e) {
+      if (e) e.preventDefault();
+      const route = document.getElementById('sniperRouteSelect').value;
+      const date = document.getElementById('sniperDateInput').value || 'Завтра';
+      const time = document.getElementById('sniperTimePreference').value;
+      const seat = document.getElementById('sniperSeatPreference').value;
+      
+      const routeTarget = document.getElementById('sniperRouteTarget');
+      const timeTarget = document.getElementById('sniperTimeWindow');
+      const seatTarget = document.getElementById('sniperSeatTarget');
+      
+      if (routeTarget) routeTarget.textContent = route;
+      if (timeTarget) timeTarget.textContent = `${date} • ${time}`;
+      if (seatTarget) seatTarget.textContent = `${seat} • Александр Нестеров`;
+
+      playSuccessChime();
+      showNotification(`Снайпер-бот поставлен на перехват: ${route} (${date}). Вы получите пуш в момент появления отказа!`);
     }
 
         // FUNCTION 2: RENDER ORDER TAB (МОЙ БИЛЕТ С РАБОЧИМ SVG QR)
@@ -4390,7 +4545,7 @@
           updateProfileMilesUI();
           playSuccessChime();
 
-          showNotification(`✓ Водитель подтвердил вашу посадку! Вы на борту (место ${evt.seat}). Начислено +150 миль Prestige!`);
+          showNotification(`&check; Водитель подтвердил вашу посадку! Вы на борту (место ${evt.seat}). Начислено +150 миль Prestige!`);
         }
       };
 

@@ -2442,7 +2442,7 @@
             <div>
               <div class="driver-banner-badge">Ваш рейс прямо сейчас</div>
               <h2 style="font-family: var(--font-display); font-size: 26px; font-weight:600; margin-top:6px;">
-                Минск ➔ Вильнюс • 18:45
+                Минск &rarr; Вильнюс • 18:45
               </h2>
               <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
                 Mercedes Sprinter <span class="vehicle-cell-plate">7TAX-8891</span> • Перрон 3, Центральный АВ
@@ -2542,7 +2542,7 @@
             <div class="kpi-card">
               <div class="kpi-card-header">
                 <span class="kpi-label">Посадка пассажиров</span>
-                <div class="kpi-icon-pill" style="color: var(--status-forest); background: var(--status-forest-bg);">✓</div>
+                <div class="kpi-icon-pill" style="color: var(--status-forest); background: var(--status-forest-bg);">&check;</div>
               </div>
               <div class="kpi-number" id="cockpitKpiBoarded" style="color: var(--color-forest);">14 / 18</div>
               <div class="kpi-footer-note" id="cockpitKpiRemaining">Осталось посадить: 4 человека</div>
@@ -3086,7 +3086,7 @@
             <div class="kpi-card">
               <div class="kpi-card-header">
                 <span class="kpi-label">К выплате на р/с</span>
-                <div class="kpi-icon-pill" style="color: var(--status-forest); background: var(--status-forest-bg);">✓</div>
+                <div class="kpi-icon-pill" style="color: var(--status-forest); background: var(--status-forest-bg);">&check;</div>
               </div>
               <div class="kpi-number" id="finKpiNet" style="color: var(--status-forest);">11 856 BYN</div>
               <div class="kpi-footer-note">Выплата каждый вторник на IBAN</div>
@@ -3120,21 +3120,21 @@
                 </thead>
                 <tbody id="financesTableBody">
                   <tr>
-                    <td class="col-left"><strong>Минск ➔ Вильнюс</strong></td>
+                    <td class="col-left"><strong>Минск &rarr; Вильнюс</strong></td>
                     <td class="col-left mono-cell">14</td>
                     <td class="col-left mono-cell">268 чел.</td>
                     <td class="col-left mono-cell">95.7%</td>
                     <td class="col-right mono-cell" style="font-weight:700;">6 840 BYN</td>
                   </tr>
                   <tr>
-                    <td class="col-left"><strong>Минск ➔ Гродно</strong></td>
+                    <td class="col-left"><strong>Минск &rarr; Гродно</strong></td>
                     <td class="col-left mono-cell">12</td>
                     <td class="col-left mono-cell">210 чел.</td>
                     <td class="col-left mono-cell">87.5%</td>
                     <td class="col-right mono-cell" style="font-weight:700;">3 150 BYN</td>
                   </tr>
                   <tr>
-                    <td class="col-left"><strong>Минск ➔ Брест</strong></td>
+                    <td class="col-left"><strong>Минск &rarr; Брест</strong></td>
                     <td class="col-left mono-cell">8</td>
                     <td class="col-left mono-cell">144 чел.</td>
                     <td class="col-left mono-cell">90.0%</td>
@@ -3321,10 +3321,10 @@
       </div>
       <div class="drawer-header">
         <div class="drawer-title-group">
-          <h2 id="drawerTripRoute">Минск ➔ Вильнюс</h2>
+          <h2 id="drawerTripRoute">Минск &rarr; Вильнюс</h2>
           <div class="drawer-subtitle" id="drawerTripSubtitle">Рейс BL-5715 • 18:45 • Sprinter 7TAX-8891</div>
         </div>
-        <button class="drawer-close-btn" onclick="closeTripDetails()">✕</button>
+        <button class="drawer-close-btn" onclick="closeTripDetails()">&times;</button>
       </div>
 
       <div class="drawer-body">
@@ -3396,7 +3396,7 @@
     <div class="modal-window" onclick="event.stopPropagation()">
       <div class="modal-header">
         <h3 class="modal-title">Создание нового рейса</h3>
-        <button class="drawer-close-btn" onclick="closeModalCreateTrip()">✕</button>
+        <button class="drawer-close-btn" onclick="closeModalCreateTrip()">&times;</button>
       </div>
 
       <form id="createTripForm" onsubmit="handleCreateTripSubmit(event)">
@@ -3404,10 +3404,10 @@
           <div class="form-group">
             <label class="form-label" for="tripRouteSelect">Маршрут рейса</label>
             <select class="form-select" id="tripRouteSelect" required onblur="saveCreateTripDraft()">
-              <option value="Минск — Вильнюс">Минск — Вильнюс (Центральный АВ ➔ Оро уостас)</option>
-              <option value="Минск — Гродно">Минск — Гродно (АВ Восточный ➔ Автовокзал Гродно)</option>
-              <option value="Минск — Брест">Минск — Брест (Центральный АВ ➔ АВ Брест)</option>
-              <option value="Минск — Могилев">Минск — Могилев (Институт Культуры ➔ АВ Могилев)</option>
+              <option value="Минск — Вильнюс">Минск — Вильнюс (Центральный АВ &rarr; Оро уостас)</option>
+              <option value="Минск — Гродно">Минск — Гродно (АВ Восточный &rarr; Автовокзал Гродно)</option>
+              <option value="Минск — Брест">Минск — Брест (Центральный АВ &rarr; АВ Брест)</option>
+              <option value="Минск — Могилев">Минск — Могилев (Институт Культуры &rarr; АВ Могилев)</option>
             </select>
           </div>
 
@@ -3468,7 +3468,7 @@
     <div class="modal-window" onclick="event.stopPropagation()">
       <div class="modal-header">
         <h3 class="modal-title">Оформление билета</h3>
-        <button class="drawer-close-btn" onclick="closeModalAddBooking()">✕</button>
+        <button class="drawer-close-btn" onclick="closeModalAddBooking()">&times;</button>
       </div>
 
       <form id="addBookingForm" onsubmit="handleAddBookingSubmit(event)">
@@ -3527,7 +3527,7 @@
             Рейс BL-5715 • Mercedes Sprinter 7TAX-8891 VIP
           </div>
         </div>
-        <button type="button" class="drawer-close-btn" onclick="closeDriverQrScannerModal()" title="Закрыть сканер">✕</button>
+        <button type="button" class="drawer-close-btn" onclick="closeDriverQrScannerModal()" title="Закрыть сканер">&times;</button>
       </div>
 
       <!-- SCANNER VIEWFINDER WITH LIVE CAMERA VIDEO -->
@@ -3730,11 +3730,11 @@
     ];
 
     const DEFAULT_SCHEDULE = [
-      { time: "07:00", route: "Минск ➔ Вильнюс", days: "Ежедневно", vehicle: "Sprinter (7TAX-8891)", fare: "85 BYN", recurrence: "Активно" },
-      { time: "09:30", route: "Минск ➔ Гродно", days: "Пн, Ср, Пт, Сб", vehicle: "Crafter (5TAX-1204)", fare: "25 BYN", recurrence: "Активно" },
-      { time: "14:30", route: "Минск ➔ Вильнюс", days: "Ежедневно", vehicle: "Sprinter (7TAX-8891)", fare: "85 BYN", recurrence: "Активно" },
-      { time: "18:45", route: "Минск ➔ Вильнюс", days: "Ежедневно", vehicle: "Sprinter (7TAX-8891)", fare: "85 BYN", recurrence: "Активно" },
-      { time: "20:15", route: "Минск ➔ Брест", days: "Пт, Сб, Вс", vehicle: "Tourismo (3TAX-7740)", fare: "32 BYN", recurrence: "Сезонный" }
+      { time: "07:00", route: "Минск &rarr; Вильнюс", days: "Ежедневно", vehicle: "Sprinter (7TAX-8891)", fare: "85 BYN", recurrence: "Активно" },
+      { time: "09:30", route: "Минск &rarr; Гродно", days: "Пн, Ср, Пт, Сб", vehicle: "Crafter (5TAX-1204)", fare: "25 BYN", recurrence: "Активно" },
+      { time: "14:30", route: "Минск &rarr; Вильнюс", days: "Ежедневно", vehicle: "Sprinter (7TAX-8891)", fare: "85 BYN", recurrence: "Активно" },
+      { time: "18:45", route: "Минск &rarr; Вильнюс", days: "Ежедневно", vehicle: "Sprinter (7TAX-8891)", fare: "85 BYN", recurrence: "Активно" },
+      { time: "20:15", route: "Минск &rarr; Брест", days: "Пт, Сб, Вс", vehicle: "Tourismo (3TAX-7740)", fare: "32 BYN", recurrence: "Сезонный" }
     ];
 
     /* APP STATE */
@@ -3881,10 +3881,10 @@
 
     /* ROUTE PROFITABILITY & FLEET DATA */
     const ROUTE_PROFITABILITY = [
-      { route: 'Минск ➔ Вильнюс', trips: 14, passengers: 262, load: '93.6%', revenue: '18 340 BYN' },
-      { route: 'Минск ➔ Варшава', trips: 12, passengers: 236, load: '98.3%', revenue: '28 320 BYN' },
-      { route: 'Минск ➔ Гродно', trips: 28, passengers: 510, load: '91.1%', revenue: '17 850 BYN' },
-      { route: 'Минск ➔ Брест', trips: 8, passengers: 144, load: '90.0%', revenue: '2 490 BYN' }
+      { route: 'Минск &rarr; Вильнюс', trips: 14, passengers: 262, load: '93.6%', revenue: '18 340 BYN' },
+      { route: 'Минск &rarr; Варшава', trips: 12, passengers: 236, load: '98.3%', revenue: '28 320 BYN' },
+      { route: 'Минск &rarr; Гродно', trips: 28, passengers: 510, load: '91.1%', revenue: '17 850 BYN' },
+      { route: 'Минск &rarr; Брест', trips: 8, passengers: 144, load: '90.0%', revenue: '2 490 BYN' }
     ];
 
     function renderRouteProfitability() {
@@ -4070,7 +4070,7 @@
               <span style="font-size:11px; color:var(--text-dim); margin-left:6px;">${trip.date}</span>
             </td>
             <td class="col-left">
-              <div class="route-cell-title">${trip.route.replace('—', '<span class="route-arrow">➔</span>')}</div>
+              <div class="route-cell-title">${trip.route.replace('—', '<span class="route-arrow">&rarr;</span>')}</div>
               <div style="font-size:11px; color:var(--text-muted);">${trip.id} • ${trip.origin}</div>
             </td>
             <td class="col-left">
@@ -4100,7 +4100,7 @@
             <div>
               <span class="trip-card-time">${trip.time}</span>
               <span style="font-size:11px; color:var(--text-dim); margin-left:6px;">${trip.date}</span>
-              <div class="trip-card-route">${trip.route.replace('—', '➔')}</div>
+              <div class="trip-card-route">${trip.route.replace('—', '&rarr;')}</div>
             </div>
             <div>${renderStatusPill(trip.status)}</div>
           </div>
@@ -4128,7 +4128,7 @@
         <tr onclick="openTripDetails('${trip.id}')">
           <td class="col-left mono-cell"><span class="time-slot-badge">${trip.time}</span></td>
           <td class="col-left">
-            <div class="route-cell-title">${trip.route.replace('—', '➔')}</div>
+            <div class="route-cell-title">${trip.route.replace('—', '&rarr;')}</div>
             <div style="font-size:11px; color:var(--text-muted);">${trip.origin}</div>
           </td>
           <td class="col-left">
@@ -4151,7 +4151,7 @@
           <div class="trip-card-header">
             <div>
               <span class="trip-card-time">${trip.time}</span>
-              <div class="trip-card-route">${trip.route.replace('—', '➔')}</div>
+              <div class="trip-card-route">${trip.route.replace('—', '&rarr;')}</div>
             </div>
             <div>${renderStatusPill(trip.status)}</div>
           </div>
@@ -4418,7 +4418,7 @@
       if (!trip) return;
       currentActiveTripForDrawer = trip;
 
-      document.getElementById('drawerTripRoute').innerHTML = trip.route.replace('—', '➔');
+      document.getElementById('drawerTripRoute').innerHTML = trip.route.replace('—', '&rarr;');
       document.getElementById('drawerTripSubtitle').textContent = `Рейс ${trip.id} • ${trip.time} • ${trip.vehicle} (${trip.plate})`;
       document.getElementById('drawerOccupancyBadge').textContent = `${trip.occupied} из ${trip.capacity} занято`;
 
@@ -4463,7 +4463,7 @@
                 </svg>
               </a>
               <button class="btn-checkin-toggle ${b.status === 'boarded' ? 'boarded' : ''}" onclick="toggleCheckin('${b.id}')">
-                ${b.status === 'boarded' ? '✓ Билет принят • В салоне' : 'Принять билет'}
+                ${b.status === 'boarded' ? '&check; Билет принят • В салоне' : 'Принять билет'}
               </button>
             </div>
           </div>
@@ -4793,7 +4793,7 @@
         hud.style.display = 'block';
         hud.style.borderColor = 'var(--color-forest)';
         const statusEl = document.getElementById('scannerHudStatusText');
-        if (statusEl) statusEl.textContent = '✓ Посадка успешно подтверждена';
+        if (statusEl) statusEl.textContent = '&check; Посадка успешно подтверждена';
         const passEl = document.getElementById('scannerHudPassengerText');
         if (passEl) passEl.textContent = `Пассажир: ${b.name} • Место ${b.seat}, У окна`;
         const metaEl = document.getElementById('scannerHudMetaText');
@@ -4801,7 +4801,7 @@
       }
 
       const prompt = document.getElementById('scannerStatusPrompt');
-      if (prompt) prompt.textContent = `✓ Посажен: ${b.name} (место ${b.seat})! Следующий пассажир...`;
+      if (prompt) prompt.textContent = `&check; Посажен: ${b.name} (место ${b.seat})! Следующий пассажир...`;
 
       if (typeof calculateFinancials === 'function') calculateFinancials();
       if (typeof renderTrips === 'function') renderTrips();
@@ -4825,7 +4825,7 @@
       } catch(e) {}
       localStorage.setItem('busliner_realtime_event', JSON.stringify(eventPayload));
 
-      showToast(`✓ Посадка подтверждена: ${b.name}`, 'forest', `Место ${b.seat} • Статус обновлен во всех кабинетах`);
+      showToast(`&check; Посадка подтверждена: ${b.name}`, 'forest', `Место ${b.seat} • Статус обновлен во всех кабинетах`);
     }
 
     function playScannerAudio(isSuccess) {
@@ -5297,7 +5297,7 @@
               </svg>
             </a>
             <button class="btn-checkin-toggle ${b.status === 'boarded' ? 'boarded' : ''}" style="min-height: 48px; padding: 10px 16px; font-weight: 600;" onclick="toggleCheckin('${b.id}')">
-              ${b.status === 'boarded' ? '✓ Билет принят • В салоне' : 'Принять билет'}
+              ${b.status === 'boarded' ? '&check; Билет принят • В салоне' : 'Принять билет'}
             </button>
           </div>
         </div>
@@ -5402,9 +5402,9 @@
         id: newId,
         time: time,
         date: "Сегодня",
-        route: route.replace('➔', '—'),
+        route: route.replace('&rarr;', '—'),
         origin: "Центральный АВ",
-        destination: route.split('➔')[1].trim(),
+        destination: route.split('&rarr;')[1].trim(),
         vehicle: "Mercedes Sprinter (7TAX-8891)",
         plate: "7TAX-8891",
         driver: "Александр (Смена 1)",
@@ -5489,7 +5489,7 @@
           <span class="toast-title">${message}</span>
           ${desc ? `<span class="toast-desc">${desc}</span>` : ''}
         </div>
-        <button class="toast-close-btn" onclick="this.parentElement.remove()">✕</button>
+        <button class="toast-close-btn" onclick="this.parentElement.remove()">&times;</button>
       `;
 
       hub.appendChild(card);
