@@ -2331,59 +2331,70 @@
     }
 
   
+    
     /* ==========================================================================
        MOBILE NATIVE DECK & TOUCH ARCHITECTURE (EMIL KOWALSKI STANDARD)
        ========================================================================== */
     @media (max-width: 900px) {
       html, body {
         width: 100% !important;
-        height: auto !important;
-        min-height: 100dvh !important;
-        overflow-x: hidden !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        scroll-behavior: smooth !important;
-        scroll-snap-type: y proximity !important;
+        height: 100% !important;
+        height: 100dvh !important;
+        overflow: hidden !important;
+        touch-action: pan-y !important;
         -webkit-tap-highlight-color: transparent !important;
         -webkit-text-size-adjust: 100% !important;
       }
 
       .presentation-deck-stage {
         position: relative !important;
-        width: 100% !important;
-        height: auto !important;
-        min-height: 100dvh !important;
-        overflow: visible !important;
+        width: 100vw !important;
+        height: 100% !important;
+        height: 100dvh !important;
+        overflow: hidden !important;
+        touch-action: pan-y !important;
       }
 
       .deck-slide {
-        position: relative !important;
-        inset: auto !important;
+        position: absolute !important;
+        inset: 0 !important;
         width: 100% !important;
-        min-height: 85svh !important;
-        height: auto !important;
-        opacity: 1 !important;
-        transform: none !important;
-        filter: none !important;
-        pointer-events: auto !important;
-        scroll-snap-align: start !important;
-        scroll-snap-stop: normal !important;
-        padding: calc(env(safe-area-inset-top, 0px) + 74px) 16px calc(env(safe-area-inset-bottom, 0px) + 96px) !important;
+        height: 100% !important;
+        height: 100dvh !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
-        overflow: visible !important;
+        padding: calc(env(safe-area-inset-top, 0px) + 60px) 16px calc(env(safe-area-inset-bottom, 0px) + 76px) !important;
         box-sizing: border-box !important;
+        transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease, filter 0.38s ease !important;
+        will-change: transform, opacity !important;
       }
 
-      .deck-slide.prev,
-      .deck-slide.next {
+      .deck-slide.active {
         opacity: 1 !important;
-        transform: none !important;
         pointer-events: auto !important;
+        transform: translateY(0) !important;
+        z-index: 10 !important;
+        filter: blur(0px) !important;
       }
 
-      /* Slide 1 hero video background container on mobile */
+      .deck-slide.prev {
+        opacity: 0 !important;
+        transform: translateY(-100%) !important;
+        pointer-events: none !important;
+        z-index: 5 !important;
+      }
+
+      .deck-slide.next {
+        opacity: 0 !important;
+        transform: translateY(100%) !important;
+        pointer-events: none !important;
+        z-index: 15 !important;
+      }
+
+      /* Hero video background on mobile */
       #slide1 .hero-video-container {
         position: absolute !important;
         inset: 0 !important;
@@ -2392,144 +2403,156 @@
         z-index: 1 !important;
       }
 
-      /* Hide desktop-only elements on mobile */
+      /* Hide desktop controls on mobile */
       .presentation-side-rail,
       .deck-bottom-bar,
       .custom-cursor-follower {
         display: none !important;
       }
 
-      /* Mobile Floating Section Pager Dock */
+      /* Mobile Floating Pager Dock */
       .mobile-deck-dock {
-        position: fixed;
-        bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
-        left: 14px;
-        right: 14px;
-        z-index: 9999;
+        position: fixed !important;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 10px) !important;
+        left: 14px !important;
+        right: 14px !important;
+        z-index: 9999 !important;
         display: block !important;
-        pointer-events: auto;
+        pointer-events: auto !important;
       }
 
       .mobile-dock-inner {
-        background: rgba(28, 27, 26, 0.94);
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
-        border: 1px solid rgba(232, 226, 214, 0.28);
-        border-radius: 9999px;
-        padding: 6px 8px 6px 16px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        background: rgba(28, 27, 26, 0.94) !important;
+        backdrop-filter: blur(18px) !important;
+        -webkit-backdrop-filter: blur(18px) !important;
+        border: 1px solid rgba(232, 226, 214, 0.28) !important;
+        border-radius: 9999px !important;
+        padding: 5px 6px 5px 16px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45) !important;
       }
 
       .mobile-dock-tracker {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        min-width: 0;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        min-width: 0 !important;
       }
 
       .mobile-dock-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: #5CB85C;
-        box-shadow: 0 0 8px #5CB85C;
-        flex-shrink: 0;
+        width: 7px !important;
+        height: 7px !important;
+        border-radius: 50% !important;
+        background: #5CB85C !important;
+        box-shadow: 0 0 8px #5CB85C !important;
+        flex-shrink: 0 !important;
       }
 
       .mobile-dock-step {
-        font-family: var(--font-mono);
-        font-size: 12px;
-        font-weight: 700;
-        color: #E8E2D6;
-        letter-spacing: 0.08em;
-        flex-shrink: 0;
+        font-family: var(--font-mono) !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        color: #E8E2D6 !important;
+        letter-spacing: 0.08em !important;
+        flex-shrink: 0 !important;
       }
 
       .mobile-dock-title {
-        font-family: var(--font-body);
-        font-size: 13.5px;
-        font-weight: 600;
-        color: #F5F1EA;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        font-family: var(--font-body) !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #F5F1EA !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
       }
 
       .mobile-dock-actions {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        flex-shrink: 0;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-shrink: 0 !important;
       }
 
       .mobile-dock-btn {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: rgba(245, 241, 234, 0.12);
-        border: 1px solid rgba(245, 241, 234, 0.25);
-        color: #F5F1EA;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        outline: none;
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
-        transition: transform 0.12s ease, background 0.12s ease;
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 50% !important;
+        background: rgba(245, 241, 234, 0.12) !important;
+        border: 1px solid rgba(245, 241, 234, 0.25) !important;
+        color: #F5F1EA !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        outline: none !important;
+        touch-action: manipulation !important;
+        -webkit-tap-highlight-color: transparent !important;
+        transition: transform 0.12s ease, background 0.12s ease !important;
       }
 
       .mobile-dock-btn:active {
-        transform: scale(0.92);
-        background: rgba(245, 241, 234, 0.28);
+        transform: scale(0.92) !important;
+        background: rgba(245, 241, 234, 0.28) !important;
       }
 
       .mobile-dock-btn-next {
-        background: #E8E2D6;
-        color: #1E1D1B;
-        border-color: #E8E2D6;
-        font-weight: 700;
+        background: #E8E2D6 !important;
+        color: #1E1D1B !important;
+        border-color: #E8E2D6 !important;
+        font-weight: 700 !important;
       }
 
       .mobile-dock-btn-next:active {
-        background: #D9CDB8;
+        background: #D9CDB8 !important;
       }
 
-      /* Mobile Typography & Layout */
+      /* Compact Typography */
       .hero-deck-title {
-        font-size: clamp(24px, 7vw, 34px) !important;
-        line-height: 1.2 !important;
+        font-size: clamp(22px, 6.5vw, 30px) !important;
+        line-height: 1.18 !important;
+        margin-bottom: 12px !important;
+      }
+      .hero-deck-lead {
+        font-size: 14.5px !important;
+        line-height: 1.55 !important;
+        margin-bottom: 16px !important;
       }
       .manifesto-lead-quote {
-        font-size: clamp(20px, 5.5vw, 28px) !important;
-        line-height: 1.35 !important;
+        font-size: clamp(19px, 5.2vw, 26px) !important;
+        line-height: 1.32 !important;
+        margin-bottom: 14px !important;
       }
       .deck-principles-grid {
         grid-template-columns: 1fr !important;
-        gap: 14px !important;
+        gap: 10px !important;
       }
-      .concierge-deck-split {
-        grid-template-columns: 1fr !important;
-        gap: 20px !important;
+      .deck-principle-card {
+        padding: 14px 16px !important;
       }
+      
       .calculator-deck-grid {
         grid-template-columns: 1fr !important;
-        gap: 18px !important;
+        gap: 14px !important;
       }
       .partner-reviews-form-grid {
         grid-template-columns: 1fr !important;
-        gap: 20px !important;
+        gap: 14px !important;
       }
       .partner-hero-metric-grid {
         grid-template-columns: 1fr !important;
-        gap: 10px !important;
+        gap: 8px !important;
+        margin-bottom: 20px !important;
+      }
+      .partner-metric-pill {
+        padding: 12px 14px !important;
       }
       .hero-actions-row {
         flex-direction: column !important;
         width: 100% !important;
+        gap: 10px !important;
       }
       .hero-actions-row .btn-primary-deck,
       .hero-actions-row .btn-outline-deck {
@@ -2538,9 +2561,11 @@
         text-align: center !important;
       }
       .concierge-features-pills {
-        grid-template-columns: 1fr !important;
+        grid-template-columns: repeat(3, 1fr) !important;
         gap: 8px !important;
+        margin-bottom: 16px !important;
       }
+    
     }
 
     @media (min-width: 901px) {
@@ -3148,7 +3173,7 @@
 
   <!-- JAVASCRIPT CONTROLLER -->
   <script>
-        // 1. PRESENTATION SLIDE CONTROLLER (DESKTOP KEYNOTE + MOBILE NATIVE SCROLL)
+        // 1. UNIVERSAL PRESENTATION CONTROLLER (DESKTOP KEYNOTE + MOBILE TOUCH FLIP)
     const slides = document.querySelectorAll('.deck-slide');
     const railItems = document.querySelectorAll('.deck-rail-item');
     const siteHeader = document.getElementById('siteHeader');
@@ -3166,10 +3191,6 @@
       'Калькулятор',
       'Договор'
     ];
-
-    function isMobileMode() {
-      return window.innerWidth <= 900;
-    }
 
     function updateMobileDock(index) {
       const stepEl = document.getElementById('mobileDockStep');
@@ -3211,11 +3232,12 @@
       if (newIndex < 0 || newIndex >= totalSlides) return;
       isTransitioning = true;
 
-      // Update slide states (Desktop mode)
+      // Update slide states
       slides.forEach((slide, idx) => {
         slide.classList.remove('active', 'prev', 'next');
         if (idx === newIndex) {
           slide.classList.add('active');
+          slide.scrollTop = 0;
           runCountUpAnimations(slide);
         } else if (idx < newIndex) {
           slide.classList.add('prev');
@@ -3230,7 +3252,14 @@
         else item.classList.remove('active');
       });
 
-      // Dark slide logic (Slide 0: Hero Video, Slide 2: Sniper, Slide 3: Cockpit, Slide 5: Reviews)
+      // Update header links
+      const navLinks = document.querySelectorAll('.slide-nav-link');
+      navLinks.forEach((link, idx) => {
+        if (idx === newIndex) link.classList.add('active');
+        else link.classList.remove('active');
+      });
+
+      // Dark header/rail logic
       const isDarkSlide = (newIndex === 0 || newIndex === 2 || newIndex === 3 || newIndex === 5);
 
       if (siteHeader) {
@@ -3248,42 +3277,34 @@
 
       setTimeout(() => {
         isTransitioning = false;
-      }, 480);
+      }, 450);
     }
 
     window.jumpToSlide = function(idx) {
-      if (idx < 0 || idx >= totalSlides) return;
-      if (isMobileMode()) {
-        const targetSlide = slides[idx];
-        if (targetSlide) {
-          targetSlide.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          currentSlide = idx;
-          updateMobileDock(idx);
-          runCountUpAnimations(targetSlide);
-        }
-      } else {
-        if (isTransitioning || idx === currentSlide) return;
-        updateDeckState(idx);
-      }
+      if (isTransitioning || idx === currentSlide) return;
+      updateDeckState(idx);
     };
 
     window.nextSlide = function() {
-      if (currentSlide >= totalSlides - 1) return;
-      jumpToSlide(currentSlide + 1);
+      if (isTransitioning || currentSlide >= totalSlides - 1) return;
+      updateDeckState(currentSlide + 1);
     };
 
     window.prevSlide = function() {
-      if (currentSlide <= 0) return;
-      jumpToSlide(currentSlide - 1);
+      if (isTransitioning || currentSlide <= 0) return;
+      updateDeckState(currentSlide - 1);
     };
 
-    // Kinetic Wheel Debounce (Desktop Only)
+    // 1. WHEEL SCROLL (DESKTOP & DEVTOOLS MOUSE)
     let lastWheelTime = 0;
-    const WHEEL_LOCK_MS = 480;
+    const WHEEL_LOCK_MS = 400;
 
     window.addEventListener('wheel', (e) => {
-      if (isMobileMode()) return; // Let native smooth scroll handle mobile
+      if (e.target.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay')) {
+        return;
+      }
 
+      // Check if internal scrollable slide has overflow
       const activeSlide = slides[currentSlide];
       if (activeSlide && activeSlide.scrollHeight > activeSlide.clientHeight + 10) {
         if (e.deltaY > 0 && activeSlide.scrollTop + activeSlide.clientHeight < activeSlide.scrollHeight - 10) {
@@ -3298,14 +3319,14 @@
       const now = performance.now();
       if (isTransitioning || (now - lastWheelTime < WHEEL_LOCK_MS)) return;
 
-      if (Math.abs(e.deltaY) > 14) {
+      if (Math.abs(e.deltaY) > 12) {
         lastWheelTime = now;
         if (e.deltaY > 0) nextSlide();
         else prevSlide();
       }
     }, { passive: false });
 
-    // Keyboard Navigation
+    // 2. KEYBOARD NAVIGATION
     window.addEventListener('keydown', (e) => {
       if (e.target.matches('input, textarea, select')) return;
       if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
@@ -3317,22 +3338,30 @@
       }
     });
 
-    // Mobile Horizontal Swipe & Quick Flick Gesture
+    // 3. ROCK-SOLID TOUCH SWIPE ENGINE (iOS SAFARI, CHROME, REAL HARDWARE)
     let touchStartX = 0;
     let touchStartY = 0;
     let touchStartTime = 0;
+    let isTouchActive = false;
 
     window.addEventListener('touchstart', (e) => {
-      if (e.touches.length > 0) {
+      if (e.touches && e.touches.length > 0) {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
         touchStartTime = performance.now();
+        isTouchActive = true;
       }
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
-      if (e.changedTouches.length === 0) return;
-      if (e.target.closest('input, select, textarea, button, a, [role="button"]')) return;
+      if (!isTouchActive) return;
+      isTouchActive = false;
+      if (!e.changedTouches || e.changedTouches.length === 0) return;
+
+      // Allow typing in inputs or dragging range sliders without flipping
+      if (e.target.closest('input, textarea, select, .partner-calc-slider, .mobile-dock-btn')) {
+        return;
+      }
 
       const touchEndX = e.changedTouches[0].clientX;
       const touchEndY = e.changedTouches[0].clientY;
@@ -3340,41 +3369,63 @@
       const diffY = touchStartY - touchEndY;
       const elapsed = performance.now() - touchStartTime;
 
-      // Horizontal swipe (carousel style)
-      if (Math.abs(diffX) > 56 && Math.abs(diffX) > Math.abs(diffY) * 1.4 && elapsed < 500) {
+      const SWIPE_THRESHOLD = 32;
+
+      // Vertical swipe (up/down flick)
+      if (Math.abs(diffY) >= SWIPE_THRESHOLD && Math.abs(diffY) >= Math.abs(diffX) * 0.75) {
+        // If slide is internally scrolled, allow scrolling to boundaries first
+        const activeSlide = slides[currentSlide];
+        if (activeSlide && activeSlide.scrollHeight > activeSlide.clientHeight + 10) {
+          if (diffY > 0 && activeSlide.scrollTop + activeSlide.clientHeight < activeSlide.scrollHeight - 14) {
+            return; // let it scroll down
+          }
+          if (diffY < 0 && activeSlide.scrollTop > 14) {
+            return; // let it scroll up
+          }
+        }
+
+        if (diffY > 0) nextSlide();
+        else prevSlide();
+      }
+      // Horizontal swipe (carousel flick)
+      else if (Math.abs(diffX) >= SWIPE_THRESHOLD && Math.abs(diffX) > Math.abs(diffY)) {
         if (diffX > 0) nextSlide();
         else prevSlide();
       }
     }, { passive: true });
 
-    // IntersectionObserver for Mobile Native Smooth Scroll Tracking
-    if ('IntersectionObserver' in window) {
-      const slideObserver = new IntersectionObserver((entries) => {
-        if (!isMobileMode()) return;
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const index = Array.from(slides).indexOf(entry.target);
-            if (index !== -1) {
-              currentSlide = index;
-              updateMobileDock(index);
-              runCountUpAnimations(entry.target);
+    window.addEventListener('touchcancel', () => {
+      isTouchActive = false;
+    }, { passive: true });
 
-              // Update site header dark class based on slide
-              const isDarkSlide = (index === 0 || index === 2 || index === 3 || index === 5);
-              if (siteHeader) {
-                if (isDarkSlide) siteHeader.classList.add('on-dark-slide');
-                else siteHeader.classList.remove('on-dark-slide');
-              }
-            }
-          }
-        });
-      }, {
-        threshold: 0.35
-      });
+    // 4. POINTER EVENTS (CHROME DEVTOOLS EMULATION & TOUCHPAD FLING)
+    let pointerStartX = 0;
+    let pointerStartY = 0;
+    let isPointerDown = false;
 
-      slides.forEach(slide => slideObserver.observe(slide));
-    }
+    window.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.buttons !== 1) return;
+      if (e.target.closest('input, textarea, select, button, a, [role="button"], .partner-calc-slider, .mobile-dock-btn')) return;
+      pointerStartX = e.clientX;
+      pointerStartY = e.clientY;
+      isPointerDown = true;
+    }, { passive: true });
 
+    window.addEventListener('pointerup', (e) => {
+      if (!isPointerDown) return;
+      isPointerDown = false;
+      const diffX = pointerStartX - e.clientX;
+      const diffY = pointerStartY - e.clientY;
+      const DRAG_THRESHOLD = 35;
+
+      if (Math.abs(diffY) >= DRAG_THRESHOLD && Math.abs(diffY) >= Math.abs(diffX) * 0.75) {
+        if (diffY > 0) nextSlide();
+        else prevSlide();
+      } else if (Math.abs(diffX) >= DRAG_THRESHOLD && Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0) nextSlide();
+        else prevSlide();
+      }
+    }, { passive: true });
 
     // Custom Lerp Cursor
     const cursor = document.getElementById('customCursor');
