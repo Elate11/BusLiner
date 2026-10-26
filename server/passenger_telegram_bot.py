@@ -2,7 +2,7 @@
 """
 BusLiner Passenger Companion — Cryptographically Secure Telegram Bot & Google Auth API
 =======================================================================================
-Bot Username: @BusLinerPassBot (Configurable via BUSLINER_PASSENGER_BOT_USERNAME)
+Bot Username: @buslinerbot (Configurable via BUSLINER_PASSENGER_BOT_USERNAME)
 Purpose: Passenger self-service registration, 1-click web authentication,
          Google email verification, digital boarding passes, 3D seat access & live bus radar.
 Zero external dependencies: Built with Python 3 standard library.
@@ -24,8 +24,23 @@ from urllib.error import URLError
 # ==============================================================================
 # CONFIGURATION & PARAMS
 # ==============================================================================
-BOT_TOKEN = os.getenv("BUSLINER_PASSENGER_BOT_TOKEN", "8750251587:AAG78r9fxqKNwPxa_LazTNv-h54mHJOJquI")
-BOT_USERNAME = os.getenv("BUSLINER_PASSENGER_BOT_USERNAME", "BusLinerPassBot")
+def load_env_token() -> str:
+    for var in ("BUSLINER_PASSENGER_BOT_TOKEN", "BUSLINER_BOT_TOKEN", "TELEGRAM_BOT_TOKEN"):
+        val = os.getenv(var)
+        if val and len(val.strip()) > 20:
+            return val.strip()
+    for p in (os.path.join(os.path.dirname(__file__), ".env"), os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env")):
+        if os.path.isfile(p):
+            with open(p, "r", encoding="utf-8") as f:
+                for line in f:
+                    if "=" in line and not line.strip().startswith("#"):
+                        k, v = line.split("=", 1)
+                        if k.strip() in ("BUSLINER_PASSENGER_BOT_TOKEN", "BUSLINER_BOT_TOKEN", "TELEGRAM_BOT_TOKEN"):
+                            return v.strip().strip('"').strip("'")
+    return ""
+
+BOT_TOKEN = load_env_token()
+BOT_USERNAME = os.getenv("BUSLINER_PASSENGER_BOT_USERNAME", "buslinerbot")
 SERVER_HOST = os.getenv("BUSLINER_PASS_HOST", "0.0.0.0")
 SERVER_PORT = int(os.getenv("BUSLINER_PASS_PORT", "8085"))
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db", "busliner.db")
@@ -128,7 +143,7 @@ def get_passenger_tickets(passenger_id: int) -> list:
 # TELEGRAM BOT POLLING ENGINE (Zero external dependencies)
 # ==============================================================================
 def telegram_api_request(method: str, payload: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-    if not BOT_TOKEN or "AAG78r9fx" not in BOT_TOKEN:
+    if not BOT_TOKEN:
         return None
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/{method}"
     data = json.dumps(payload).encode("utf-8")

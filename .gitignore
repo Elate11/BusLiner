@@ -11,12 +11,18 @@ Thumbs.db
 *.jpeg
 *.png
 !assets/*
+assets/.DS_Store
+**/.DS_Store
 
 
 # Environment & secrets
 .env
+.env.*
+*.env
+server/.env
 .env.local
 __pycache__/
+*.pyc
 generate_site_avatars.py
 
 # Local AI Agent Skills
