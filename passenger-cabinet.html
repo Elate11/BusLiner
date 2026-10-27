@@ -1697,6 +1697,186 @@
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-sm);
     }
+
+    /* AUTH GATE LOCKED STATE */
+    .auth-gate-locked {
+      filter: blur(5px) grayscale(20%);
+      pointer-events: none;
+      user-select: none;
+      opacity: 0.35;
+      transition: filter 0.35s ease, opacity 0.35s ease;
+    }
+
+    /* SNIPER RADAR SCREEN & KINETIC SWEEP */
+    @keyframes radarScanRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes radarBlipPulse {
+      0% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0.2; transform: scale(0.8); }
+    }
+    .sniper-radar-screen {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(46, 79, 62, 0.12) 0%, rgba(35, 49, 42, 0.22) 100%);
+      border: 1.5px solid var(--color-forest);
+      overflow: hidden;
+      box-shadow: inset 0 0 16px rgba(35, 49, 42, 0.25);
+      margin: 0 auto;
+    }
+    .radar-sweep-beam {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, transparent 0deg, transparent 270deg, rgba(78, 128, 98, 0.45) 360deg);
+      animation: radarScanRotate 2.4s linear infinite;
+    }
+    .radar-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px dashed rgba(78, 128, 98, 0.35);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .radar-ring-1 { width: 44px; height: 44px; }
+    .radar-ring-2 { width: 88px; height: 88px; }
+    .radar-ring-3 { width: 130px; height: 130px; }
+    .radar-blip-target {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ADE80;
+      box-shadow: 0 0 8px #4ADE80;
+      animation: radarBlipPulse 1.2s infinite ease-in-out;
+    }
+    .preset-time-chip {
+      font-size: 11.5px;
+      font-family: var(--font-mono);
+      padding: 5px 10px;
+      background: var(--canvas-bone);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-pill);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .preset-time-chip:hover {
+      background: var(--surface-card);
+      border-color: var(--color-forest);
+      color: var(--color-forest);
+    }
+
+    /* DYNAMIC HUBS: WARM INTERCEPTION POINTS */
+    .dynamic-hubs-monolith {
+      margin-top: 24px;
+      background: var(--surface-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      box-shadow: 0 4px 20px rgba(43, 42, 40, 0.04);
+    }
+    .dynamic-hubs-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+    .hub-telemetry-alert {
+      margin-top: 14px;
+      background: rgba(217, 119, 6, 0.08);
+      border: 1px solid rgba(217, 119, 6, 0.3);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+    }
+    .hub-alert-icon {
+      color: #D97706;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .warm-hubs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .warm-hub-card {
+      background: var(--canvas-ivory);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+    .warm-hub-card:hover {
+      border-color: var(--color-forest);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(35, 49, 42, 0.06);
+    }
+    .warm-hub-card.active-selected {
+      border-color: var(--color-forest);
+      background: rgba(46, 79, 62, 0.08);
+    }
+    .hub-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .hub-card-name {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 2px;
+    }
+    .hub-card-address {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .hub-distance-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      background: var(--canvas-bone);
+      color: var(--color-forest);
+      border: 1px solid var(--border-hairline);
+      white-space: nowrap;
+    }
+    .hub-perks-list {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .btn-hub-action {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      background: var(--canvas-bone);
+      color: var(--color-forest);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .btn-hub-action:hover {
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+    }
     
     /* ==========================================================================
        FUNCTION 2: МОЙ БИЛЕТ (АКТИВНЫЙ БИЛЕТ С РАБОЧИМ SVG QR & LIVE СТАТУС)
@@ -2656,23 +2836,30 @@
           </svg>
           <span class="mono">1 450 миль</span>
         </div>
+        <button type="button" class="link-subtle-cta btn-magnetic" id="headerPassengerAuthBtn" onclick="togglePassengerAuthAction()" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; font-size: 12px; background: var(--canvas-bone); border: 1px solid var(--border-hairline); border-radius: var(--radius-pill); color: var(--text-primary); cursor: pointer;" title="Управление аккаунтом">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          <span class="mono" id="headerAuthBtnLabel">Выйти</span>
+        </button>
       </div>
     </div>
   </header>
 
   <!-- MAIN CABINET WRAPPER -->
   <main class="cabinet-main">
-    <div class="container screen-content-area cabinet-viewport">
+    <div class="container screen-content-area cabinet-viewport" id="passengerAppMainViewport">
 
       <!-- WELCOME HERO STRIP -->
       <section class="passenger-hero-strip">
         <div>
           <div class="hero-deck-badge">Индивидуальный сервис • BusLiner Prestige</div>
           <h1 class="passenger-hero-title">
-            Добро пожаловать, <em>Александр Константинович</em>
+            Добро пожаловать, <em id="passengerHeroName">Гость</em>
           </h1>
           <p class="passenger-hero-meta mono">
-            Личный кабинет пассажира • Идентификатор BL-PASS-8824
+            Личный кабинет пассажира • Идентификатор <span id="passengerHeroId">BL-PASS-8824</span>
           </p>
         </div>
 
@@ -2963,6 +3150,143 @@
               </div>
             </div>
           </div>
+
+          <!-- ================================================================
+               DYNAMIC HUBS: WARM INTERCEPTION POINTS (ДИСПЕТЧЕРИЗАЦИЯ И ТЕПЛЫЕ ХАБЫ)
+               ================================================================ -->
+          <div class="dynamic-hubs-monolith" id="dynamicHubsSection">
+            <div class="dynamic-hubs-header">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span style="font-family: var(--font-display); font-size: 19px; font-weight: 600; color: var(--text-primary);">
+                  Динамические точки перехвата &bull; Теплые хабы
+                </span>
+              </div>
+              <div class="status-pill status-forest-pill" style="display: inline-flex; align-items: center; gap: 6px;">
+                <span class="pulse-indicator-dot"></span>
+                <span>Live-GPS телеметрия активна</span>
+              </div>
+            </div>
+
+            <!-- DELAY & GEOPOSITION ADVICE -->
+            <div class="hub-telemetry-alert">
+              <div style="display: flex; align-items: flex-start; gap: 12px;">
+                <div class="hub-alert-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                </div>
+                <div>
+                  <div style="font-size: 14.5px; font-weight: 700; color: var(--text-primary);">
+                    Маршрутка задерживается на 14 минут из-за затора на выезде из города
+                  </div>
+                  <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px; line-height: 1.5;">
+                    Ожидаемое время подачи к платформе 3 (Центральный АВ): <strong class="mono" style="color: var(--color-forest);">18:59</strong> (вместо 18:45).<br>
+                    Не ждите на продуваемой остановке: система построила геозону вокруг платформы и нашла 3 ближайших теплых места. Выберите точку, и мы подадим звуковой сигнал за 4 минуты до прибытия микроавтобуса.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3 WARM HUBS CARDS -->
+            <div class="warm-hubs-grid">
+              <!-- HUB 1 -->
+              <div class="warm-hub-card" id="hubCard1">
+                <div class="hub-card-top">
+                  <div>
+                    <span class="kicker-tag" style="color: var(--color-forest);">Хаб #1 &bull; 80 метров</span>
+                    <h4 class="hub-card-name">Varka Coffee</h4>
+                    <div class="hub-card-address">ул. Бобруйская, 4 (1.5 мин пешком)</div>
+                  </div>
+                  <span class="hub-distance-badge mono">1.5 мин</span>
+                </div>
+                <div class="hub-perks-list">
+                  <span>Спешелти кофе</span> &bull; <span>Розетки 220V</span> &bull; <span>Быстрый Wi-Fi</span>
+                </div>
+                <button type="button" class="btn-hub-action" onclick="activateWarmHub('Varka Coffee', 80, 1.5, 'hubCard1')">
+                  <span>Я в Varka Coffee (сигнал за 4 мин)</span>
+                </button>
+              </div>
+
+              <!-- HUB 2 -->
+              <div class="warm-hub-card" id="hubCard2">
+                <div class="hub-card-top">
+                  <div>
+                    <span class="kicker-tag" style="color: var(--color-forest);">Хаб #2 &bull; 140 метров</span>
+                    <h4 class="hub-card-name">Пекарня Тьерри</h4>
+                    <div class="hub-card-address">ул. Кирова, 2 (2.5 мин пешком)</div>
+                  </div>
+                  <span class="hub-distance-badge mono">2.5 мин</span>
+                </div>
+                <div class="hub-perks-list">
+                  <span>Свежая выпечка</span> &bull; <span>Горячий чай</span> &bull; <span>Тихий зал</span>
+                </div>
+                <button type="button" class="btn-hub-action" onclick="activateWarmHub('Пекарня Тьерри', 140, 2.5, 'hubCard2')">
+                  <span>Я в Тьерри (сигнал за 4 мин)</span>
+                </button>
+              </div>
+
+              <!-- HUB 3 -->
+              <div class="warm-hub-card" id="hubCard3">
+                <div class="hub-card-top">
+                  <div>
+                    <span class="kicker-tag" style="color: var(--color-forest);">Хаб #3 &bull; 210 метров</span>
+                    <h4 class="hub-card-name">Холл ТЦ Galileo (3 этаж)</h4>
+                    <div class="hub-card-address">ул. Бобруйская, 6 (3.5 мин пешком)</div>
+                  </div>
+                  <span class="hub-distance-badge mono">3.5 мин</span>
+                </div>
+                <div class="hub-perks-list">
+                  <span>Теплый холл</span> &bull; <span>Информационное табло</span> &bull; <span>Гардероб</span>
+                </div>
+                <button type="button" class="btn-hub-action" onclick="activateWarmHub('ТЦ Galileo', 210, 3.5, 'hubCard3')">
+                  <span>Я в Galileo (сигнал за 4 мин)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- ACTIVE WARM HUB COUNTDOWN STRIP -->
+            <div id="warmHubActiveCountdownStrip" style="display: none; margin-top: 16px; background: rgba(46, 79, 62, 0.12); border: 1px solid var(--color-forest); border-radius: var(--radius-sm); padding: 14px 18px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div>
+                  <div style="font-size: 13.5px; font-weight: 700; color: var(--color-forest); display: flex; align-items: center; gap: 8px;">
+                    <span class="pulse-indicator-dot"></span>
+                    <span>Таймер ожидания в тепле: <span id="activeHubNameDisplay">Varka Coffee</span></span>
+                  </div>
+                  <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                    Время пешего подхода к платформе: <strong id="activeHubWalkTimeDisplay">1.5 мин</strong>. Сигнал на выход прозвучит за 4 мин до прибытия микроавтобуса.
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <div style="text-align: right;">
+                    <div style="font-size: 10.5px; text-transform: uppercase; color: var(--text-muted);">Сигнал через</div>
+                    <div class="mono" style="font-size: 20px; font-weight: 700; color: var(--color-forest);" id="warmHubCountdownDisplay">10:00</div>
+                  </div>
+                  <button type="button" class="btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="cancelWarmHubTracking()">Отмена</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- ISOCHRONE MAP TRIGGER BAR -->
+            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border-hairline); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div style="font-size: 12.5px; color: var(--text-muted);">
+                Изохронный расчет пеших радиусов (OpenStreetMap / Яндекс Карты):
+              </div>
+              <button type="button" class="btn-secondary" onclick="openIsochroneModal()" style="display: inline-flex; align-items: center; gap: 8px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+                  <line x1="8" y1="2" x2="8" y2="18"/>
+                  <line x1="16" y1="6" x2="16" y2="22"/>
+                </svg>
+                <span>Схема изохроны подхода на карте</span>
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -3203,7 +3527,7 @@
             </div>
 
             <!-- ACTIVE INTERCEPTOR RADAR STATUS MONOLITH -->
-            <div class="sniper-radar-monolith" id="sniperActiveRadarBox" style="margin-top: 20px; background: var(--canvas-bone); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 18px 20px;">
+            <div class="sniper-radar-monolith" id="sniperActiveRadarBox" style="margin-top: 20px; background: var(--canvas-bone); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 20px;">
               <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--border-taupe); padding-bottom: 12px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
                   <span class="mono" style="font-size: 12px; font-weight: 700; color: var(--color-forest); text-transform: uppercase;">
@@ -3213,6 +3537,33 @@
                 </div>
                 <div class="mono" style="font-size: 11.5px; color: var(--text-muted);">
                   Опрос баз: каждые 0.3 с &bull; Канал: Telegram Push
+                </div>
+              </div>
+
+              <!-- RADAR LIVE ANIMATION & QUEUE METRICS -->
+              <div style="display: grid; grid-template-columns: 150px 1fr; gap: 20px; align-items: center; margin-bottom: 18px; padding: 12px; background: var(--canvas-ivory); border-radius: var(--radius-sm); border: 1px solid var(--border-hairline);">
+                <div class="sniper-radar-screen">
+                  <div class="radar-sweep-beam"></div>
+                  <div class="radar-ring radar-ring-1"></div>
+                  <div class="radar-ring radar-ring-2"></div>
+                  <div class="radar-ring radar-ring-3"></div>
+                  <div class="radar-blip-target" style="top: 35px; left: 85px;"></div>
+                  <div class="radar-blip-target" style="top: 80px; left: 40px; animation-delay: 0.6s;"></div>
+                </div>
+
+                <div>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span class="pulse-indicator"></span>
+                    <span id="sniperQueueStatusText" style="font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--color-forest);">
+                      Снайпер ищет билеты. В очереди перед вами: 2 человека
+                    </span>
+                  </div>
+                  <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px; line-height: 1.4;">
+                    Частота сканирования: <strong class="mono">300 мс</strong> &bull; Опрошено 42 перевозчика &bull; Готовность автосписания: <strong style="color: var(--color-forest);">100%</strong>
+                  </div>
+                  <div style="font-size: 11.5px; color: var(--text-faint); margin-top: 2px;">
+                    При обнаружении отказного билета бот мгновенно фискализирует место на ваше имя.
+                  </div>
                 </div>
               </div>
 
@@ -3227,14 +3578,14 @@
                 <div>
                   <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Дата и окно времени</div>
                   <div class="mono" style="font-size: 13.5px; font-weight: 600; color: var(--text-primary); margin-top: 4px;" id="sniperTimeWindow">
-                    Сегодня &bull; 17:00 &mdash; 22:00
+                    Сегодня &bull; 17:00 &mdash; 19:00
                   </div>
                 </div>
 
                 <div>
                   <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Кресло и пассажир</div>
                   <div style="font-size: 13.5px; font-weight: 600; color: var(--text-primary); margin-top: 4px;" id="sniperSeatTarget">
-                    У окна &bull; Александр Нестеров
+                    У окна &bull; Пассажир
                   </div>
                 </div>
               </div>
@@ -3259,14 +3610,29 @@
                 </div>
               </div>
 
-              <!-- INTERCEPTED RESULT BANNER (SHOWN UPON SNIPER SUCCESS) -->
-              <div id="sniperSuccessBanner" style="display: none; margin-top: 14px; background: rgba(46, 79, 62, 0.15); border: 1.5px solid var(--color-forest); border-radius: var(--radius-sm); padding: 14px 18px;">
+              <!-- INTERCEPTED RESULT BANNER WITH NOTION & OBSIDIAN EXPORTS -->
+              <div id="sniperSuccessBanner" style="display: none; margin-top: 16px; background: rgba(46, 79, 62, 0.15); border: 1.5px solid var(--color-forest); border-radius: var(--radius-sm); padding: 18px 20px;">
                 <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--color-forest); font-size: 15px;">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                   <span>БИЛЕТ УСПЕШНО ПЕРЕХВАЧЕН БОТОМ ЗА 0.38 СЕКУНДЫ</span>
                 </div>
-                <div style="font-size: 13.5px; color: var(--text-primary); margin-top: 6px;">
-                  Отказ пассажира на рейс BL-5715 мгновенно выкуплен на имя <strong>Александра Нестерова</strong>. Назначено место <strong>07 (У окна)</strong>. Билет добавлен во вкладку &laquo;Мой билет&raquo;.
+                <div style="font-size: 13.5px; color: var(--text-primary); margin-top: 6px;" id="sniperSuccessText">
+                  Отказ пассажира на рейс BL-5715 мгновенно выкуплен. Назначено место <strong>07A (У окна)</strong>. Билет добавлен во вкладку &laquo;Мой билет&raquo;.
+                </div>
+
+                <!-- INSTANT EXPORTS DOCK -->
+                <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--color-forest); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                  <div style="font-size: 12px; color: var(--text-primary); font-weight: 600;">
+                    Мгновенный экспорт билета и точки посадки:
+                  </div>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="btn-primary" onclick="exportSniperToNotion()" style="padding: 7px 14px; font-size: 12.5px;">
+                      <span>Экспорт в Notion</span>
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="exportSniperToObsidian()" style="padding: 7px 14px; font-size: 12.5px;">
+                      <span>Экспорт в Obsidian (.md)</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3349,14 +3715,25 @@
                 <input type="date" class="form-input mono-cell" id="sniperDateInput" required style="height: 48px; min-height: 48px; font-size: 16px;">
               </div>
 
+              <!-- CUSTOM TIME WINDOW (НАПРИМЕР: С 17:00 ДО 19:00) -->
               <div class="form-group">
-                <label class="form-label" for="sniperTimePreference">Временное окно выезда</label>
-                <select class="form-select" id="sniperTimePreference" style="height: 48px; min-height: 48px; font-size: 16px;">
-                  <option value="Вечер (17:00–22:00)">Вечерние рейсы (17:00 &mdash; 22:00)</option>
-                  <option value="Утро (06:00–11:00)">Утренние рейсы (06:00 &mdash; 11:00)</option>
-                  <option value="День (12:00–16:00)">Дневные рейсы (12:00 &mdash; 16:00)</option>
-                  <option value="Любое время дня">Любой освободившийся рейс за день</option>
-                </select>
+                <label class="form-label">Окно времени выезда (Любой рейс в интервале)</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                  <div>
+                    <label style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">С какого времени</label>
+                    <input type="time" class="form-input mono" id="sniperTimeFrom" value="17:00" required style="height: 48px; min-height: 48px; font-size: 16px;">
+                  </div>
+                  <div>
+                    <label style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 4px;">По какое время</label>
+                    <input type="time" class="form-input mono" id="sniperTimeTo" value="19:00" required style="height: 48px; min-height: 48px; font-size: 16px;">
+                  </div>
+                </div>
+                <div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">
+                  <button type="button" class="preset-time-chip" onclick="setSniperTimePreset('17:00', '19:00')">17:00 — 19:00 (Вечер)</button>
+                  <button type="button" class="preset-time-chip" onclick="setSniperTimePreset('19:00', '22:00')">19:00 — 22:00 (Поздний)</button>
+                  <button type="button" class="preset-time-chip" onclick="setSniperTimePreset('06:00', '11:00')">06:00 — 11:00 (Утро)</button>
+                  <button type="button" class="preset-time-chip" onclick="setSniperTimePreset('00:00', '23:59')">Любой рейс за день</button>
+                </div>
               </div>
 
               <div class="form-group">
@@ -3370,7 +3747,22 @@
 
               <div class="form-group">
                 <label class="form-label" for="sniperPassengerData">Пассажир для выкупа билета</label>
-                <input type="text" class="form-input" id="sniperPassengerData" value="Александр Нестеров • +375 29 987-65-43" required style="height: 48px; min-height: 48px; font-size: 16px;">
+                <input type="text" class="form-input" id="sniperPassengerData" value="Пассажир" required style="height: 48px; min-height: 48px; font-size: 16px;">
+              </div>
+
+              <!-- ANTI-SPAM SAFEGUARD CHECKBOX -->
+              <div class="form-group" style="background: var(--canvas-ivory); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 12px 14px;">
+                <label for="sniperAutoDebitConsent" style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; user-select: none;">
+                  <input type="checkbox" id="sniperAutoDebitConsent" required style="width: 20px; height: 20px; accent-color: var(--color-forest); margin-top: 2px; flex-shrink: 0; cursor: pointer;">
+                  <div>
+                    <span style="font-size: 13.5px; font-weight: 600; color: var(--text-primary); line-height: 1.4; display: block;">
+                      Я согласен на автоматическое списание средств, если билет будет найден
+                    </span>
+                    <span style="font-size: 11.5px; color: var(--text-muted); line-height: 1.4; display: block; margin-top: 4px;">
+                      Защита от спама: средства холдируются банком только при 100% подтверждении места. Если билет не найден — списание 0 BYN.
+                    </span>
+                  </div>
+                </label>
               </div>
 
               <button type="submit" class="btn-primary" style="min-height: 52px; width: 100%; margin-top: 6px; font-weight: 700; font-size: 15px;">
@@ -3601,6 +3993,177 @@
       <div style="text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-muted);">
         Предъявите этот QR-код водителю при посадке в автобус.<br>
         <span class="mono" style="font-weight: 700; color: var(--text-primary);">Билет #BL-5715-07 • Место 07, У окна</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: PASSENGER MANDATORY AUTH / REGISTRATION GATE -->
+  <div class="modal-backdrop" id="passengerAuthGateModal" style="display: none;">
+    <div class="modal-window-card" role="dialog" aria-modal="true" aria-label="Авторизация пассажира" style="max-width: 520px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-hairline);">
+        <div>
+          <span class="kicker-tag" style="color: var(--color-forest);">BusLiner Passenger Club</span>
+          <h3 style="font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--text-primary); margin-top: 2px;">
+            Вход в личный кабинет
+          </h3>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+            Для доступа к бронированию мест, снайперу и билетам требуется авторизация
+          </div>
+        </div>
+      </div>
+
+      <!-- AUTH TABS TOGGLE -->
+      <div style="display: flex; background: var(--canvas-bone); border-radius: var(--radius-sm); padding: 3px; gap: 4px; margin-bottom: 18px; border: 1px solid var(--border-hairline);">
+        <button type="button" class="btn-auth-tab active" id="btnAuthTabBot" onclick="switchAuthGateTab('bot')" style="flex: 1; min-height: 40px; border: none; background: var(--surface-card); font-weight: 600; font-size: 13.5px; border-radius: var(--radius-sm); cursor: pointer; color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+          Через @buslinerbot
+        </button>
+        <button type="button" class="btn-auth-tab" id="btnAuthTabReg" onclick="switchAuthGateTab('reg')" style="flex: 1; min-height: 40px; border: none; background: transparent; font-weight: 600; font-size: 13.5px; border-radius: var(--radius-sm); cursor: pointer; color: var(--text-muted);">
+          Быстрая регистрация (+10 BYN)
+        </button>
+      </div>
+
+      <!-- PANE 1: BOT LIVE SESSION -->
+      <div id="authGatePaneBot">
+        <div style="background: var(--canvas-ivory); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 16px; text-align: center; margin-bottom: 16px;">
+          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">
+            Одноразовый проверочный код безопасности (OTP):
+          </div>
+          <div class="mono" id="passengerGateOtpCode" style="font-size: 28px; font-weight: 700; letter-spacing: 0.15em; color: var(--color-forest);">
+            884-219
+          </div>
+          <div style="font-size: 11.5px; color: var(--text-faint); margin-top: 6px;">
+            Код действует 5 минут &bull; Защита сессии HMAC-SHA256
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <a id="passengerGateBotDeepLink" href="https://t.me/buslinerbot?start=client" target="_blank" rel="noopener noreferrer" class="btn-primary" style="min-height: 48px; text-decoration: none; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            <span>Подтвердить вход в @buslinerbot</span>
+          </a>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+            <span style="font-size: 11.5px; color: var(--text-muted);" id="passengerGatePollingStatus">Ожидание подтверждения в боте...</span>
+            <button type="button" class="link-subtle" onclick="demoPassengerQuickLogin()" style="font-size: 12px; color: var(--color-forest); background: none; border: none; cursor: pointer; text-decoration: underline;">
+              Тестовый демо-вход
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANE 2: REGISTRATION FORM -->
+      <div id="authGatePaneReg" style="display: none;">
+        <form onsubmit="handlePassengerRegisterSubmit(event)" style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="regPassengerName">Имя и фамилия</label>
+            <input type="text" class="form-input" id="regPassengerName" placeholder="Например: Иван Ковалев" required style="height: 48px; min-height: 48px; font-size: 16px;">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="regPassengerPhone">Номер телефона</label>
+            <input type="tel" class="form-input mono" id="regPassengerPhone" placeholder="+375 29 123-45-67" required style="height: 48px; min-height: 48px; font-size: 16px;">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="regPassengerTelegram">Telegram username (для билетов)</label>
+            <input type="text" class="form-input mono" id="regPassengerTelegram" placeholder="@username" style="height: 48px; min-height: 48px; font-size: 16px;">
+          </div>
+
+          <div style="background: rgba(46, 79, 62, 0.08); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12px; color: var(--color-forest);">
+            Бонус: на ваш баланс миль будет мгновенно зачислено <strong>10 BYN</strong> приветственного кэшбэка на первую поездку!
+          </div>
+
+          <button type="submit" class="btn-primary" style="min-height: 48px; font-size: 15px; font-weight: 600; width: 100%;">
+            <span>Зарегистрироваться и войти</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: DYNAMIC HUBS ISOCHRONE ROUTING & MAP -->
+  <div class="modal-backdrop" id="isochroneMapModal" onclick="handleBackdropClick(event, 'isochroneMapModal')">
+    <div class="modal-window-card" role="dialog" aria-modal="true" aria-label="Изохрона пешего маршрута" style="max-width: 680px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border-hairline);">
+        <div>
+          <span class="kicker-tag" style="color: var(--color-forest);">Геозона посадочной остановки</span>
+          <h3 style="font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--text-primary); margin-top: 2px;">
+            Изохрона пешего подхода: Платформа 3 (Центральный АВ)
+          </h3>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeIsochroneModal()" title="Закрыть карту">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- VECTOR ISOCHRONE MAP CANVAS (SVG) -->
+      <div style="width: 100%; height: 320px; background: #EFEBE4; border-radius: var(--radius-sm); border: 1px solid var(--border-hairline); position: relative; overflow: hidden;">
+        <svg width="100%" height="100%" viewBox="0 0 600 320" style="display: block;">
+          <!-- MAP STREETS / GEOMETRY -->
+          <rect width="600" height="320" fill="#EAE5DC" />
+          <path d="M 0 160 L 600 160" stroke="#D8CEBD" stroke-width="26" />
+          <path d="M 300 0 L 300 320" stroke="#D8CEBD" stroke-width="32" />
+          <path d="M 120 0 L 120 320" stroke="#D8CEBD" stroke-width="18" />
+          <path d="M 480 0 L 480 320" stroke="#D8CEBD" stroke-width="18" />
+
+          <!-- ISOCHRONE WALKING RINGS -->
+          <!-- 5 MINUTE RING -->
+          <circle cx="300" cy="160" r="140" fill="rgba(110, 130, 148, 0.08)" stroke="#6E8294" stroke-width="1.5" stroke-dasharray="4 4" />
+          <text x="305" y="30" font-size="11" font-family="'JetBrains Mono', monospace" fill="#6E8294">5 мин пешком (350 м)</text>
+
+          <!-- 3 MINUTE RING -->
+          <circle cx="300" cy="160" r="90" fill="rgba(168, 103, 79, 0.08)" stroke="#A8674F" stroke-width="1.5" stroke-dasharray="3 3" />
+          <text x="305" y="80" font-size="11" font-family="'JetBrains Mono', monospace" fill="#A8674F">3 мин пешком (200 м)</text>
+
+          <!-- 1.5 MINUTE RING -->
+          <circle cx="300" cy="160" r="45" fill="rgba(35, 49, 42, 0.12)" stroke="#23312A" stroke-width="1.5" />
+          <text x="305" y="125" font-size="11" font-family="'JetBrains Mono', monospace" fill="#23312A">1.5 мин (80 м)</text>
+
+          <!-- CENTRAL PICKUP STATION PIN -->
+          <circle cx="300" cy="160" r="7" fill="#23312A" />
+          <circle cx="300" cy="160" r="14" fill="none" stroke="#23312A" stroke-width="1.5" opacity="0.6">
+            <animate attributeName="r" values="10;22;10" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.8;0;0.8" dur="2s" repeatCount="indefinite"/>
+          </circle>
+          <text x="312" y="165" font-size="12" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" fill="#23312A">Перрон 3 (Посадка)</text>
+
+          <!-- WARM HUB 1: VARKA COFFEE -->
+          <circle cx="270" cy="130" r="6" fill="#3D5A4C" />
+          <text x="180" y="124" font-size="11" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" fill="#23312A">Varka Coffee (80 м)</text>
+          <line x1="300" y1="160" x2="270" y2="130" stroke="#3D5A4C" stroke-width="2" stroke-dasharray="2 2"/>
+
+          <!-- WARM HUB 2: THIERRY -->
+          <circle cx="350" cy="110" r="6" fill="#A8674F" />
+          <text x="360" y="114" font-size="11" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" fill="#23312A">Пекарня Тьерри (140 м)</text>
+          <line x1="300" y1="160" x2="350" y2="110" stroke="#A8674F" stroke-width="2" stroke-dasharray="2 2"/>
+
+          <!-- WARM HUB 3: GALILEO -->
+          <circle cx="380" cy="210" r="6" fill="#6E8294" />
+          <text x="390" y="214" font-size="11" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" fill="#23312A">ТЦ Galileo (210 м)</text>
+          <line x1="300" y1="160" x2="380" y2="210" stroke="#6E8294" stroke-width="2" stroke-dasharray="2 2"/>
+
+          <!-- APPROACHING BUS GPS MARKER -->
+          <g id="mapMinibusMarker" transform="translate(100, 160)">
+            <circle cx="0" cy="0" r="8" fill="#D97706" />
+            <circle cx="0" cy="0" r="16" fill="none" stroke="#D97706" stroke-width="1.5">
+              <animate attributeName="r" values="8;20;8" dur="1.5s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="1;0;1" dur="1.5s" repeatCount="indefinite"/>
+            </circle>
+            <text x="-40" y="-14" font-size="10.5" font-family="'JetBrains Mono', monospace" font-weight="700" fill="#92400E">Sprinter 7TAX-8891 (14 мин)</text>
+          </g>
+        </svg>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; gap: 8px;">
+        <div>
+          <span>Расчет пеших изохрон: 4.8 км/ч &bull; Доступность по безбарьерной среде</span>
+        </div>
+        <button type="button" class="btn-secondary" onclick="closeIsochroneModal()">Закрыть</button>
       </div>
     </div>
   </div>
@@ -4182,20 +4745,39 @@
       showNotification('Запрос отправлен дежурному консьержу. С вами свяжутся в течение 2 минут.');
     }
 
+    function setSniperTimePreset(from, to) {
+      const fromEl = document.getElementById('sniperTimeFrom');
+      const toEl = document.getElementById('sniperTimeTo');
+      if (fromEl) fromEl.value = from;
+      if (toEl) toEl.value = to;
+      const timeTarget = document.getElementById('sniperTimeWindow');
+      if (timeTarget) {
+        timeTarget.textContent = `Сегодня • ${from} — ${to}`;
+      }
+      showToast(`Окно времени выезда: ${from} — ${to}`);
+    }
+
     function simulateConciergeSniperIntercept() {
       const btn = document.getElementById('btnSimulateSniper');
       const banner = document.getElementById('sniperSuccessBanner');
       const statusLabel = document.getElementById('sniperStatusLabel');
+      const queueStatus = document.getElementById('sniperQueueStatusText');
       
       if (btn) btn.disabled = true;
       if (statusLabel) {
         statusLabel.textContent = 'Обнаружен отказ... Перехват!';
         statusLabel.style.background = 'var(--status-amber)';
       }
+      if (queueStatus) {
+        queueStatus.textContent = 'Снайпер ищет билеты. В очереди перед вами: 1 человек';
+      }
 
       showNotification('Радар зафиксировал отказной билет на рейс BL-5715! Запуск автоперехвата...');
 
       setTimeout(() => {
+        if (queueStatus) {
+          queueStatus.textContent = 'Билет успешно перехвачен! В очереди перед вами: 0 человек';
+        }
         if (banner) banner.style.display = 'block';
         if (statusLabel) {
           statusLabel.textContent = 'Билет перехвачен';
@@ -4204,7 +4786,15 @@
         if (btn) btn.disabled = false;
 
         playSuccessChime();
-        showNotification('Успех: бот перехватил билет на имя Александра Нестерова за 0.38 с!');
+        showNotification('Успех: бот перехватил билет на рейс BL-5715 за 0.38 с!');
+
+        // Browser push notification API
+        if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+          new Notification('BusLiner VIP Concierge', {
+            body: 'Билет Минск — Вильнюс успешно перехвачен! Место 07A забронировано.',
+            icon: 'assets/favicon.png'
+          });
+        }
 
         allBookings = getStoredBookings();
         const b = allBookings.find(x => x.id === 'BL-5715-07');
@@ -4218,21 +4808,112 @@
 
     function handleSniperSetupSubmit(e) {
       if (e) e.preventDefault();
+      
+      const consent = document.getElementById('sniperAutoDebitConsent');
+      if (consent && !consent.checked) {
+        showToast('Необходимо согласие на автоматическое списание средств для запуска Снайпера');
+        consent.focus();
+        return;
+      }
+
       const route = document.getElementById('sniperRouteSelect').value;
-      const date = document.getElementById('sniperDateInput').value || 'Завтра';
-      const time = document.getElementById('sniperTimePreference').value;
+      const date = document.getElementById('sniperDateInput').value || 'Сегодня';
+      const timeFrom = document.getElementById('sniperTimeFrom')?.value || '17:00';
+      const timeTo = document.getElementById('sniperTimeTo')?.value || '19:00';
       const seat = document.getElementById('sniperSeatPreference').value;
+      const passenger = document.getElementById('sniperPassengerData')?.value || 'Пассажир';
       
       const routeTarget = document.getElementById('sniperRouteTarget');
       const timeTarget = document.getElementById('sniperTimeWindow');
       const seatTarget = document.getElementById('sniperSeatTarget');
+      const queueText = document.getElementById('sniperQueueStatusText');
       
       if (routeTarget) routeTarget.textContent = route;
-      if (timeTarget) timeTarget.textContent = `${date} • ${time}`;
-      if (seatTarget) seatTarget.textContent = `${seat} • Александр Нестеров`;
+      if (timeTarget) timeTarget.textContent = `${date} • ${timeFrom} — ${timeTo}`;
+      if (seatTarget) seatTarget.textContent = `${seat} • ${passenger.split('•')[0].trim()}`;
+      if (queueText) queueText.textContent = `Снайпер ищет билеты: ${route} (${timeFrom}–${timeTo}). В очереди перед вами: 2 человека`;
 
       playSuccessChime();
-      showNotification(`Снайпер-бот поставлен на перехват: ${route} (${date}). Вы получите пуш в момент появления отказа!`);
+      showNotification(`Снайпер активен: ${route} (${timeFrom}–${timeTo}). Защита от спама подтверждена.`);
+    }
+
+    // EXPORT TO NOTION
+    function exportSniperToNotion() {
+      const notionData = `### BusLiner Ticket BL-5715
+- **Маршрут**: Минск → Вильнюс
+- **Отправление**: 18:45 (Платформа 3, Центральный АВ)
+- **Место**: 07A (У окна)
+- **Транспорт**: Mercedes-Benz Sprinter 7TAX-8891 VIP
+- **Статус**: Автоперехват за 0.38с (Оплачено)
+- **Геолокация**: https://yandex.by/maps/?pt=27.5516,53.8902&z=17
+- **QR Код**: BUSLINER-TICKET:BL-5715-07A:CONFIRMED`;
+
+      if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(notionData).then(() => {
+          showToast('Билет скопирован в формате Notion Database!');
+        }).catch(() => {
+          showToast('Готово: метаданные ордера подготовлены для Notion');
+        });
+      } else {
+        showToast('Готово: метаданные ордера подготовлены для Notion');
+      }
+    }
+
+    // EXPORT TO OBSIDIAN (.md)
+    function exportSniperToObsidian() {
+      const obsidianContent = `---
+type: busliner-ticket
+flight: BL-5715
+route: "Минск — Вильнюс"
+departure: "18:45"
+station: "Центральный автовокзал, Платформа 3"
+seat: "07A (У окна)"
+vehicle: "Mercedes-Benz Sprinter (7TAX-8891)"
+passenger: "Пассажир"
+price: "28.00 BYN"
+status: confirmed
+sniper_interception: "0.38s"
+tags:
+  - travel
+  - busliner
+  - ticket
+---
+
+# Посадочный билет BusLiner BL-5715
+
+> [!INFO] Данные рейса
+> - **Откуда**: Минск (Центральный АВ • ул. Бобруйская 6, Платформа 3)
+> - **Куда**: Вильнюс (Центральный автовокзал)
+> - **Время**: Сегодня, 18:45
+> - **Место**: 07A (У окна, одноместный VIP ряд)
+
+## Точка посадки и геопозиция
+- Координаты: [53.8902, 27.5516](https://yandex.by/maps/?pt=27.5516,53.8902&z=17)
+- Теплый хаб ожидания: **Varka Coffee** (ул. Бобруйская 4, 80 м)
+
+## QR-код для посадки
+\`\`\`text
++-----------------------+
+| [QR: BL-5715-07A-OK]  |
+| SCAN DRIVER VALIDATED |
++-----------------------+
+\`\`\`
+`;
+
+      try {
+        const blob = new Blob([obsidianContent], { type: 'text/markdown;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'BusLiner_Ticket_BL-5715.md';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('Билет сохранен как BusLiner_Ticket_BL-5715.md для Obsidian!');
+      } catch (e) {
+        showToast('Экспорт Obsidian подготовлен');
+      }
     }
 
         // FUNCTION 2: RENDER ORDER TAB (МОЙ БИЛЕТ С РАБОЧИМ SVG QR)
@@ -4519,10 +5200,21 @@
       document.getElementById('qrModal').classList.remove('open');
     }
 
+    function openIsochroneModal() {
+      const modal = document.getElementById('isochroneMapModal');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeIsochroneModal() {
+      const modal = document.getElementById('isochroneMapModal');
+      if (modal) modal.classList.remove('open');
+    }
+
     function handleBackdropClick(event, modalId) {
       if (event && event.target === document.getElementById(modalId)) {
         if (modalId === 'bookingModal') closeBookingModal();
         if (modalId === 'qrModal') closeQrModal();
+        if (modalId === 'isochroneMapModal') closeIsochroneModal();
       }
     }
 
@@ -4531,8 +5223,69 @@
       if (e.key === 'Escape') {
         closeBookingModal();
         closeQrModal();
+        closeIsochroneModal();
       }
     });
+
+    // DYNAMIC HUBS: WARM INTERCEPTION POINTS
+    let warmHubTimerInterval = null;
+    let warmHubRemainingSeconds = 600; // 10 minutes
+
+    function activateWarmHub(hubName, distanceMeters, walkMinutes, cardId) {
+      document.querySelectorAll('.warm-hub-card').forEach(c => c.classList.remove('active-selected'));
+      const activeCard = document.getElementById(cardId);
+      if (activeCard) activeCard.classList.add('active-selected');
+
+      const nameEl = document.getElementById('activeHubNameDisplay');
+      const walkEl = document.getElementById('activeHubWalkTimeDisplay');
+      const banner = document.getElementById('warmHubActiveCountdownStrip');
+
+      if (nameEl) nameEl.textContent = hubName;
+      if (walkEl) walkEl.textContent = `${walkMinutes} мин (${distanceMeters} м)`;
+      if (banner) banner.style.display = 'block';
+
+      if (warmHubTimerInterval) clearInterval(warmHubTimerInterval);
+      warmHubRemainingSeconds = 600;
+      updateWarmHubTimerUI();
+
+      warmHubTimerInterval = setInterval(() => {
+        warmHubRemainingSeconds--;
+        if (warmHubRemainingSeconds <= 240 && warmHubRemainingSeconds > 238) {
+          playSuccessChime();
+          showToast(`Внимание: микроавтобус прибывает через 4 минуты! Пора выходить из ${hubName} к платформе 3.`);
+          if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+            new Notification('BusLiner: Сигнал на посадку', {
+              body: `Маршрутка подходит через 4 минуты к перрону 3. Выходите из ${hubName}.`
+            });
+          }
+        }
+        if (warmHubRemainingSeconds <= 0) {
+          clearInterval(warmHubTimerInterval);
+          warmHubRemainingSeconds = 0;
+          showToast(`Микроавтобус на платформе 3. Посадка открыта!`);
+        }
+        updateWarmHubTimerUI();
+      }, 1000);
+
+      playSuccessChime();
+      showToast(`Вы в ${hubName}. Подадим звуковой сигнал за 4 мин до прибытия микроавтобуса.`);
+    }
+
+    function cancelWarmHubTracking() {
+      if (warmHubTimerInterval) clearInterval(warmHubTimerInterval);
+      const banner = document.getElementById('warmHubActiveCountdownStrip');
+      if (banner) banner.style.display = 'none';
+      document.querySelectorAll('.warm-hub-card').forEach(c => c.classList.remove('active-selected'));
+      showToast('Отслеживание точки ожидания отключено');
+    }
+
+    function updateWarmHubTimerUI() {
+      const el = document.getElementById('warmHubCountdownDisplay');
+      if (!el) return;
+      const m = Math.floor(warmHubRemainingSeconds / 60);
+      const s = warmHubRemainingSeconds % 60;
+      el.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
 
     // REAL-TIME TRIP STATUS SYNCHRONIZATION VIA BROADCASTCHANNEL & LOCALSTORAGE
     function initTripStatusSync() {
@@ -4799,6 +5552,203 @@
       } catch(e) {}
     }
 
+    // PASSENGER MANDATORY AUTH / REGISTRATION GATE
+    let passengerGatePollingInterval = null;
+    let passengerGateSessionToken = '';
+
+    function checkPassengerAuthGate() {
+      try {
+        const stored = localStorage.getItem('busliner_client_user');
+        const viewport = document.getElementById('passengerAppMainViewport');
+        const modal = document.getElementById('passengerAuthGateModal');
+        const authBtnLabel = document.getElementById('headerAuthBtnLabel');
+
+        if (stored) {
+          // Authenticated passenger
+          if (viewport && viewport.classList) viewport.classList.remove('auth-gate-locked');
+          if (modal) {
+            if (modal.classList) modal.classList.remove('open');
+            modal.style.display = 'none';
+          }
+          if (authBtnLabel) authBtnLabel.textContent = 'Выйти';
+          if (passengerGatePollingInterval) clearInterval(passengerGatePollingInterval);
+          loadPassengerAuthProfile();
+        } else {
+          // Unauthenticated passenger -> Lock cabinet!
+          if (viewport && viewport.classList) viewport.classList.add('auth-gate-locked');
+          if (modal) {
+            if (modal.classList) modal.classList.add('open');
+            modal.style.display = 'flex';
+          }
+          if (authBtnLabel) authBtnLabel.textContent = 'Войти / Регистрация';
+          initPassengerGateTgSession();
+        }
+      } catch (e) {}
+    }
+
+    function switchAuthGateTab(tab) {
+      const btnBot = document.getElementById('btnAuthTabBot');
+      const btnReg = document.getElementById('btnAuthTabReg');
+      const paneBot = document.getElementById('authGatePaneBot');
+      const paneReg = document.getElementById('authGatePaneReg');
+
+      if (tab === 'bot') {
+        if (btnBot) {
+          btnBot.classList.add('active');
+          btnBot.style.background = 'var(--surface-card)';
+          btnBot.style.color = 'var(--text-primary)';
+        }
+        if (btnReg) {
+          btnReg.classList.remove('active');
+          btnReg.style.background = 'transparent';
+          btnReg.style.color = 'var(--text-muted)';
+        }
+        if (paneBot) paneBot.style.display = 'block';
+        if (paneReg) paneReg.style.display = 'none';
+      } else {
+        if (btnReg) {
+          btnReg.classList.add('active');
+          btnReg.style.background = 'var(--surface-card)';
+          btnReg.style.color = 'var(--text-primary)';
+        }
+        if (btnBot) {
+          btnBot.classList.remove('active');
+          btnBot.style.background = 'transparent';
+          btnBot.style.color = 'var(--text-muted)';
+        }
+        if (paneBot) paneBot.style.display = 'none';
+        if (paneReg) paneReg.style.display = 'block';
+      }
+    }
+
+    function togglePassengerAuthAction() {
+      try {
+        const stored = localStorage.getItem('busliner_client_user');
+        if (stored) {
+          logoutPassenger();
+        } else {
+          const modal = document.getElementById('passengerAuthGateModal');
+          if (modal) {
+            if (modal.classList) modal.classList.add('open');
+            modal.style.display = 'flex';
+          }
+        }
+      } catch (e) {}
+    }
+
+    function logoutPassenger() {
+      try {
+        localStorage.removeItem('busliner_client_user');
+      } catch (e) {}
+      showToast('Вы вышли из личного кабинета');
+      checkPassengerAuthGate();
+    }
+
+    function demoPassengerQuickLogin() {
+      const demoUser = {
+        name: "Александр Нестеров",
+        first_name: "Александр",
+        last_name: "Нестеров",
+        phone: "+375 29 987-65-43",
+        username: "aleksandr_nesterov",
+        role: "client"
+      };
+      try {
+        localStorage.setItem('busliner_client_user', JSON.stringify(demoUser));
+      } catch (e) {}
+      showToast('Вход выполнен в тестовом режиме');
+      checkPassengerAuthGate();
+    }
+
+    function handlePassengerRegisterSubmit(e) {
+      if (e) e.preventDefault();
+      const nameEl = document.getElementById('regPassengerName');
+      const phoneEl = document.getElementById('regPassengerPhone');
+      const tgEl = document.getElementById('regPassengerTelegram');
+
+      const name = nameEl ? nameEl.value.trim() : 'Пассажир';
+      const phone = phoneEl ? phoneEl.value.trim() : '+375 29 123-45-67';
+      const tg = tgEl ? tgEl.value.trim() : '';
+
+      const parts = name.split(' ');
+      const user = {
+        name: name,
+        first_name: parts[0] || name,
+        last_name: parts.slice(1).join(' ') || '',
+        phone: phone,
+        username: tg.replace('@', ''),
+        role: 'client',
+        bonus: 10
+      };
+
+      try {
+        localStorage.setItem('busliner_client_user', JSON.stringify(user));
+      } catch (e) {}
+
+      if (typeof fetch === 'function') {
+        fetch('/api/auth/register-passenger', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            full_name: name,
+            phone: phone,
+            username: user.username
+          })
+        }).catch(() => {});
+      }
+
+      if (typeof userProfile === 'object' && userProfile && typeof userProfile.miles === 'number') {
+        userProfile.miles += 10;
+        updateProfileMilesUI();
+      }
+
+      playSuccessChime();
+      showToast('Регистрация успешна! Начислено 10 BYN бонуса на поездки.');
+      checkPassengerAuthGate();
+    }
+
+    function initPassengerGateTgSession() {
+      if (typeof fetch !== 'function') return;
+      fetch('/api/auth/telegram/create-session?action=client_login', { credentials: 'omit' })
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.session_token) {
+            passengerGateSessionToken = data.session_token;
+            const otpEl = document.getElementById('passengerGateOtpCode');
+            const linkBtn = document.getElementById('passengerGateBotDeepLink');
+            if (otpEl && data.otp_code) otpEl.textContent = data.otp_code;
+            if (linkBtn && data.deep_link) linkBtn.href = data.deep_link;
+          }
+        })
+        .catch(() => {});
+
+      if (passengerGatePollingInterval) clearInterval(passengerGatePollingInterval);
+      passengerGatePollingInterval = setInterval(() => {
+        if (!passengerGateSessionToken || typeof fetch !== 'function') return;
+        fetch(`/api/auth/telegram/check-session?token=${passengerGateSessionToken}`, { credentials: 'omit' })
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.status === 'authorized' && data.user) {
+              clearInterval(passengerGatePollingInterval);
+              const u = data.user;
+              const clientUser = {
+                id: u.id,
+                first_name: u.first_name || u.name,
+                username: u.username,
+                role: 'client'
+              };
+              try {
+                localStorage.setItem('busliner_client_user', JSON.stringify(clientUser));
+              } catch (e) {}
+              playSuccessChime();
+              showToast('Авторизация через Telegram подтверждена!');
+              checkPassengerAuthGate();
+            }
+          })
+          .catch(() => {});
+      }, 2000);
+    }
+
     function loadPassengerAuthProfile() {
       try {
         const stored = localStorage.getItem('busliner_client_user');
@@ -4812,10 +5762,19 @@
           const phEl = document.getElementById('profilePhoneDisplay');
           const tgEl = document.getElementById('profileTelegramDisplay');
           const syncBtn = document.getElementById('btnSyncTelegramCabinet');
+          const heroName = document.getElementById('passengerHeroName');
+          const bookName = document.getElementById('bookingPassengerName');
+          const bookPhone = document.getElementById('bookingPassengerPhone');
+          const sniperPass = document.getElementById('sniperPassengerData');
 
           if (fnEl && fullName) fnEl.textContent = fullName;
           if (phEl && phone) phEl.textContent = phone;
           if (tgEl && tg) tgEl.textContent = tg;
+          if (heroName && fullName) heroName.textContent = fullName;
+          if (bookName && fullName) bookName.value = fullName;
+          if (bookPhone && phone) bookPhone.value = phone;
+          if (sniperPass && fullName) sniperPass.value = `${fullName} • ${phone || '+375 29 987-65-43'}`;
+
           if (syncBtn) {
             syncBtn.innerHTML = '<span style="color: #4E8062;">&check; Подключен к @buslinerbot</span>';
             syncBtn.style.background = 'rgba(78, 128, 98, 0.15)';
@@ -4826,7 +5785,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      loadPassengerAuthProfile();
+      checkPassengerAuthGate();
       initRealtimeSync();
       renderAviasalesDateStrip();
       renderTripsFeed();
