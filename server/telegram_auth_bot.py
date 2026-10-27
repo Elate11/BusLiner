@@ -873,18 +873,34 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             action = session.get("action", "carrier_login")
             client_ip = session.get("client_ip", "127.0.0.1")
             device_str = session.get("user_agent", "Браузер")
+            otp_code = session.get("otp_code", "")
             if len(device_str) > 40:
                 device_str = device_str[:37] + "..."
 
+            action_desc = "Вход в систему BusLiner"
+            if "client_reg" in action:
+                action_desc = "Регистрация пассажира (+10 BYN бонус)"
+            elif "client" in action:
+                action_desc = "Вход в Личный кабинет пассажира"
+            elif "driver_reg" in action:
+                action_desc = "Регистрация водителя в реестре автопарка"
+            elif "driver" in action:
+                action_desc = "Вход водителя в пульт рейса"
+            elif "carrier_reg" in action or "onboard" in action:
+                action_desc = "Регистрация автопарка перевозчика"
+            elif "carrier" in action:
+                action_desc = "Вход в Кабинет перевозчика"
+
             reply = (
                 "<b>BUSLINER SECURITY: ПОДТВЕРЖДЕНИЕ ВХОДА</b>\n\n"
-                f"Здравствуйте, {first_name}.\n"
-                f"Поступил запрос на вход в систему BusLiner:\n\n"
-                f"• Действие: <b>{action}</b>\n"
+                f"Здравствуйте, {first_name}!\n"
+                f"Поступил запрос на авторизацию в веб-системе BusLiner:\n\n"
+                f"• Назначение: <b>{action_desc}</b>\n"
+                f"• Код безопасности (OTP): <code>{otp_code}</code>\n"
                 f"• Telegram ID: <code>{user_id}</code>\n"
                 f"• Устройство: {device_str}\n"
                 f"• IP-адрес: <code>{client_ip}</code>\n\n"
-                "Для подтверждения входа нажмите кнопку ниже:"
+                "Если этот запрос инициирован вами на сайте BusLiner, подтвердите вход нажатием кнопки ниже:"
             )
             keyboard = {
                 "inline_keyboard": [
@@ -1343,6 +1359,13 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             clean_role = "carrier" if "carrier" in role else ("driver" if "driver" in role else "client")
             set_user_role(user_id, clean_role, first_name, clean_username)
 
+            if clean_role == "carrier":
+                role_label = "Кабинет перевозчика BusLiner Fleet"
+            elif clean_role == "driver":
+                role_label = "Мобильный пульт водителя BusLiner Cockpit"
+            else:
+                role_label = "Личный кабинет пассажира BusLiner Club"
+
             session["telegram_user"] = {
                 "id": user_id,
                 "first_name": first_name,
@@ -1356,9 +1379,9 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             send_telegram_api_request("answerCallbackQuery", {"callback_query_id": cb_id, "text": "Вход успешно подтвержден!"})
             conf_text = (
                 "<b>Вход успешно подтвержден!</b>\n\n"
-                f"Здравствуйте, {first_name}.\n"
-                "Авторизация в веб-системе BusLiner выполнена.\n"
-                "Окно в браузере уже открыло ваш личный кабинет."
+                f"Здравствуйте, {first_name}!\n"
+                f"Авторизация в системе <b>{role_label}</b> выполнена.\n\n"
+                "Окно в браузере автоматически обновилось и открыло ваш кабинет."
             )
             if msg_id:
                 send_telegram_api_request("editMessageText", {"chat_id": chat_id, "message_id": msg_id, "text": conf_text, "parse_mode": "HTML"})
@@ -1561,6 +1584,18 @@ class TelegramAuthHTTPHandler(SimpleHTTPRequestHandler):
                 save_or_update_user(tg_id, clean_username, full_name, "driver", phone)
 
             self._send_json_response(200, {"success": True, "message": "Водитель успешно сохранен."})
+            return
+
+        elif url.path == "/api/auth/register-passenger":
+            full_name = payload.get("full_name", "").strip() or "Пассажир"
+            phone = payload.get("phone", "").strip()
+            username = payload.get("username", "").strip().lstrip("@")
+            tg_user = payload.get("telegram_user") or {}
+            tg_id = payload.get("telegram_id") or tg_user.get("id")
+            if tg_id:
+                save_or_update_user(int(tg_id), username, full_name, "client", phone)
+
+            self._send_json_response(200, {"success": True, "message": "Пассажир успешно сохранен."})
             return
 
         self._send_json_response(404, {"error": "Endpoint not found"})

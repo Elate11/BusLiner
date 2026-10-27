@@ -172,6 +172,7 @@ const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra 
     let seatMeshMap = new Map();
     let passengers = [];
     let selectedSeatInspection = null;
+    let selectedSeatsList = [];
     let selectedSeatIds = [];
     let selectedRow = null;
     let hoveredSeat = null;
@@ -2929,10 +2930,12 @@ const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra 
             const typeEl = document.getElementById('tt-type');
             if (numEl) numEl.innerText = `Место ${seat.num}`;
             if (typeEl) {
-              if (p) {
+              if (selectedSeatsList.includes(seatNum)) {
+                typeEl.innerText = 'Выбрано вами • Нажмите для отмены';
+              } else if (p) {
                 typeEl.innerText = `${p.name} (${p.boarded ? 'На борту' : 'Ожидает'})`;
               } else {
-                typeEl.innerText = 'Свободно для посадки';
+                typeEl.innerText = 'Свободно для выбора (до 3 мест)';
               }
             }
           }
@@ -3039,11 +3042,15 @@ const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra 
         if (!meshGroup) return;
         const seatNum = parseInt(seat.num, 10);
         const p = passengers.find(item => item.seat === seatNum);
-        const isSelected = (selectedSeatInspection === seatNum);
+        const isUserSelected = selectedSeatsList.includes(seatNum);
+        const isInspection = (selectedSeatInspection === seatNum);
+        const isSelected = isUserSelected || isInspection;
 
         // Цветовые токены дизайна
         let seatColor = 0xD9CDB8; // свободно / нейтральный
-        if (p) {
+        if (isUserSelected) {
+          seatColor = 0x2E4F3E; // Forest Emerald для выбранного пассажиром места
+        } else if (p) {
           seatColor = p.boarded ? 0x23312A : 0xA8674F; // зеленый: на борту, оранжевый: ожидает
         }
 
@@ -3051,7 +3058,10 @@ const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra 
           if (child.isMesh && child.material) {
             if (child.material.isMeshPhysicalMaterial) {
               child.material.color.setHex(seatColor);
-              if (isSelected) {
+              if (isUserSelected) {
+                child.material.emissive.setHex(0x2E4F3E);
+                child.material.emissiveIntensity = 0.8;
+              } else if (isInspection) {
                 child.material.emissive.setHex(0x23312A);
                 child.material.emissiveIntensity = 0.55;
               } else {
@@ -3095,9 +3105,9 @@ const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra 
           const meshGroup = seatMeshMap.get(seat.id);
           if (!meshGroup) return;
           const seatNum = parseInt(seat.num, 10);
-          const isSelected = (selectedSeatInspection === seatNum);
-          const targetY = isSelected ? 0.565 + 0.04 : 0.565;
-          meshGroup.position.y = THREE.MathUtils.lerp(meshGroup.position.y, targetY, 0.1);
+          const isSelected = selectedSeatsList.includes(seatNum) || (selectedSeatInspection === seatNum);
+          const targetY = isSelected ? 0.565 + 0.055 : 0.565;
+          meshGroup.position.y = THREE.MathUtils.lerp(meshGroup.position.y, targetY, 0.12);
         });
       }
 
@@ -3114,6 +3124,31 @@ const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra 
         return;
       }
       initThree();
+    },
+    setSelectedSeats: function(seatsArray) {
+      if (Array.isArray(seatsArray)) {
+        selectedSeatsList = seatsArray.map(s => parseInt(s, 10)).filter(n => !isNaN(n));
+      } else {
+        selectedSeatsList = [];
+      }
+      update3DSeatsAppearance();
+    },
+    getSelectedSeats: function() {
+      return [...selectedSeatsList];
+    },
+    toggleSeatSelection: function(seatNum) {
+      const num = parseInt(seatNum, 10);
+      if (isNaN(num)) return selectedSeatsList;
+      const idx = selectedSeatsList.indexOf(num);
+      if (idx !== -1) {
+        selectedSeatsList.splice(idx, 1);
+      } else {
+        if (selectedSeatsList.length < 3) {
+          selectedSeatsList.push(num);
+        }
+      }
+      update3DSeatsAppearance();
+      return [...selectedSeatsList];
     },
     updateBookings: function(bookingsList) {
       if (Array.isArray(bookingsList)) {

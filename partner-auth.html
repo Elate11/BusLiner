@@ -1781,6 +1781,12 @@
     // =========================================================================
     // TELEGRAM CRYPTOGRAPHIC 2FA AUTH PROTOCOL & BOT INTEGRATION
     // =========================================================================
+    function getAuthApiBase() {
+      return (typeof window !== 'undefined' && window.location.origin && window.location.origin.includes('http'))
+        ? window.location.origin
+        : 'http://localhost:8080';
+    }
+
     let currentTelegramMode = 'onboard';
     let tgSessionToken = '';
     let tgSessionOtp = '';
@@ -1911,7 +1917,7 @@
       tgCountdownInterval = setInterval(updateTimer, 1000);
 
       // Request secure session with explicit action context
-      fetch(`http://localhost:8080/api/auth/telegram/create-session?action=${backendAction}`, { credentials: 'omit' })
+      fetch(`${getAuthApiBase()}/api/auth/telegram/create-session?action=${backendAction}`, { credentials: 'omit' })
         .then(res => res.json())
         .then(data => {
           if (data && data.session_token) {
@@ -1927,7 +1933,7 @@
 
       // Polling loop for authorization
       tgPollingInterval = setInterval(() => {
-        fetch(`http://localhost:8080/api/auth/telegram/check-session?token=${tgSessionToken}`, { credentials: 'omit' })
+        fetch(`${getAuthApiBase()}/api/auth/telegram/check-session?token=${tgSessionToken}`, { credentials: 'omit' })
           .then(res => res.json())
           .then(data => {
             if (data && data.status === 'authorized' && data.user) {
@@ -1952,7 +1958,7 @@
 
     window.confirmBotSession = function() {
       // Check actual session with Telegram auth backend
-      fetch(`http://localhost:8080/api/auth/telegram/check-session?token=${tgSessionToken}`, { credentials: 'omit' })
+      fetch(`${getAuthApiBase()}/api/auth/telegram/check-session?token=${tgSessionToken}`, { credentials: 'omit' })
         .then(res => res.json())
         .then(data => {
           if (data && data.status === 'authorized' && data.user) {
@@ -2005,7 +2011,7 @@
       const isPhone = val.startsWith('+') || /^\d/.test(val);
 
       if (currentTelegramMode === 'driver_reg') {
-        fetch('http://localhost:8080/api/auth/register-driver', {
+        fetch(`${getAuthApiBase()}/api/auth/register-driver`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -2125,7 +2131,7 @@
         return;
       }
 
-      fetch('http://localhost:8080/api/auth/register-driver', {
+      fetch(`${getAuthApiBase()}/api/auth/register-driver`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -2374,7 +2380,7 @@
         storedTgUser = JSON.parse(localStorage.getItem('busliner_telegram_user') || 'null');
       } catch(ex) {}
 
-      fetch('http://localhost:8080/api/auth/register-carrier', {
+      fetch(`${getAuthApiBase()}/api/auth/register-carrier`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

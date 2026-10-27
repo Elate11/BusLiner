@@ -1590,6 +1590,12 @@
         <span id="night-mode-label">Ночь OLED</span>
       </button>
 
+      <!-- TELEGRAM DRIVER BOT ENTRYPOINT -->
+      <a href="https://t.me/buslinerbot?start=driver" target="_blank" rel="noopener noreferrer" class="cockpit-mode-btn" style="text-decoration: none; color: #93C5FD; border-color: rgba(147, 197, 253, 0.35);" title="Открыть пульт водителя в Telegram-боте">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        <span>Пульт @buslinerbot</span>
+      </a>
+
 
       <!-- DRIVER PROFILE PILL — PROMINENT IN THE CORNER -->
       <div class="profile-pill" onclick="openDriverProfileModal()" title="Нажмите, чтобы настроить профиль и посмотреть статистику водителя">
@@ -2423,6 +2429,14 @@
         if (saved) {
           const parsed = JSON.parse(saved);
           driverProfile = Object.assign(driverProfile, parsed);
+        }
+        const authSaved = localStorage.getItem('busliner_driver_user');
+        if (authSaved) {
+          const authUser = JSON.parse(authSaved);
+          if (authUser.name) driverProfile.name = authUser.name;
+          if (authUser.username) driverProfile.handle = authUser.username;
+          if (authUser.phone) driverProfile.phone = authUser.phone;
+          driverProfile.initials = computeInitials(driverProfile.name);
         }
       } catch (e) {}
       renderDriverProfileUI();

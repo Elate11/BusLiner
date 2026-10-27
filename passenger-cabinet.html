@@ -2384,6 +2384,30 @@
       border-color: var(--border-subtle);
       opacity: 0.65;
     }
+    .seat-selected-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: var(--color-forest);
+      color: var(--canvas-ivory);
+      border-radius: var(--radius-pill);
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .seat-selected-chip:hover {
+      background: #1e3529;
+      transform: translateY(-1px);
+    }
+    .chip-remove-icon {
+      font-size: 13px;
+      line-height: 1;
+      opacity: 0.8;
+      margin-left: 2px;
+    }
 
     /* FIXED MOBILE BOTTOM NAVIGATION BAR */
     .deck-bottom-bar, .mobile-bottom-nav-bar {
@@ -2619,14 +2643,19 @@
       </nav>
 
       <div class="header-right-cluster">
+        <a href="https://t.me/buslinerbot?start=client" target="_blank" rel="noopener noreferrer" class="link-subtle-cta btn-magnetic" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 12px; background: var(--canvas-bone); border: 1px solid var(--border-hairline); border-radius: var(--radius-pill); color: var(--text-primary);" title="Открыть бот @buslinerbot">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+          <span>Бот @buslinerbot</span>
+        </a>
         <div class="miles-status-pill" onclick="switchCabinetTab('profile')" title="Профиль и BusLiner Miles">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
           </svg>
           <span class="mono">1 450 миль</span>
         </div>
-
-
       </div>
     </div>
   </header>
@@ -2948,30 +2977,38 @@
             <div class="profile-card-header">
               <div>
                 <span class="kicker-tag">Персональные данные</span>
-                <h2 style="font-family: var(--font-display); font-size: 24px; font-weight: 600; color: var(--text-primary); margin-top: 4px;">
+                <h2 id="profileFullNameDisplay" style="font-family: var(--font-display); font-size: 24px; font-weight: 600; color: var(--text-primary); margin-top: 4px;">
                   Александр Константинович Нестеров
                 </h2>
               </div>
-              <span class="hero-meta-badge">&check; Верифицирован</span>
+              <span id="profileVerificationBadge" class="hero-meta-badge">&check; Верифицирован</span>
             </div>
 
             <div>
               <div class="profile-entry-row">
                 <span class="profile-entry-label">Телефон</span>
-                <span class="profile-entry-val mono">+375 29 987-65-43</span>
+                <span id="profilePhoneDisplay" class="profile-entry-val mono">+375 29 987-65-43</span>
               </div>
               <div class="profile-entry-row">
                 <span class="profile-entry-label">Google аккаунт</span>
-                <span class="profile-entry-val">aleksandr.busliner@gmail.com</span>
+                <span id="profileEmailDisplay" class="profile-entry-val">aleksandr.busliner@gmail.com</span>
               </div>
               <div class="profile-entry-row">
                 <span class="profile-entry-label">Telegram контакт</span>
-                <span class="profile-entry-val">@busliner_pass</span>
+                <span id="profileTelegramDisplay" class="profile-entry-val mono" style="color: #0284C7;">@buslinerbot</span>
               </div>
               <div class="profile-entry-row">
                 <span class="profile-entry-label">Тарифный статус</span>
                 <span class="profile-entry-val" style="color: var(--color-forest);">Prestige Member</span>
               </div>
+            </div>
+
+            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border-taupe); display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+              <span style="font-size: 12.5px; color: var(--text-muted);">Синхронизация билетов и радара:</span>
+              <a id="btnSyncTelegramCabinet" href="https://t.me/buslinerbot?start=client" target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding: 7px 14px; font-size: 12.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                <span>Подключить @buslinerbot</span>
+              </a>
             </div>
 
             <!-- NOTIFICATION PREFERENCES -->
@@ -3205,12 +3242,21 @@
               <!-- SIMULATE INTERCEPTION BUTTON -->
               <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-top: 14px; border-top: 1px solid var(--border-hairline);">
                 <div style="font-size: 12.5px; color: var(--text-muted);">
-                  Проверьте работу алгоритма в режиме реального времени:
+                  Проверьте работу алгоритма в браузере или запустите снайпер в боте:
                 </div>
-                <button type="button" class="btn-primary" onclick="simulateConciergeSniperIntercept()" id="btnSimulateSniper" style="min-height: 44px; padding: 10px 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span>Смоделировать появление отказа (0.38с)</span>
-                </button>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                  <button type="button" class="btn-primary" onclick="simulateConciergeSniperIntercept()" id="btnSimulateSniper" style="min-height: 44px; padding: 10px 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span>Смоделировать появление отказа (0.38с)</span>
+                  </button>
+                  <a href="https://t.me/buslinerbot?start=sniper" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="min-height: 44px; padding: 10px 18px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                      <line x1="22" y1="2" x2="11" y2="13"></line>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                    <span>В бот @buslinerbot &rarr;</span>
+                  </a>
+                </div>
               </div>
 
               <!-- INTERCEPTED RESULT BANNER (SHOWN UPON SNIPER SUCCESS) -->
@@ -3457,10 +3503,14 @@
           <div class="sprinter-seats-matrix" id="bookingSeatsGrid"></div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 11.5px; color: var(--text-muted);">
-          <span>Выбрано: <strong id="selectedSeatLabel" style="color: var(--color-forest); font-size: 13px;">07A</strong></span>
-          <span>Одиночные у окна: 3, 6, 9, 12, 15 • Бесплатный выбор</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 11.5px; color: var(--text-muted); flex-wrap: wrap; gap: 8px;">
+          <div>
+            <span>Выбрано: <strong id="modalSeatsCountBadge" style="color: var(--color-forest); font-weight: 700;">1 место</strong> &bull; </span>
+            <span>Кресла: <strong id="selectedSeatLabel" style="color: var(--color-forest); font-size: 13px;">07A</strong></span>
+          </div>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint);">1 пассажир до 3 мест &bull; Бесплатный выбор</span>
         </div>
+        <div id="selectedSeatsChips" style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;"></div>
       </div>
 
       <div class="booking-form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 16px;">
@@ -3507,11 +3557,18 @@
         </div>
       </div>
       
-      <div style="margin-top: 20px; display: flex; gap: 10px;">
-        <button type="button" class="btn-primary" style="flex: 1;" onclick="submitBookingOrder()">
+      <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+        <button type="button" class="btn-primary" style="flex: 1.5; min-width: 220px;" onclick="submitBookingOrder()">
           <span>Подтвердить бронирование</span>
-          <span class="mono" id="bookingModalPriceBtn">28.0 BYN</span>
+          <span class="mono" id="bookingModalPriceBtn">45.0 BYN</span>
         </button>
+        <a id="bookingModalBotBtn" href="https://t.me/buslinerbot?start=client" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; padding: 0 16px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+          <span>Оформить в @buslinerbot</span>
+        </a>
         <button type="button" class="btn-secondary" onclick="closeBookingModal()">Отмена</button>
       </div>
     </div>
@@ -4252,22 +4309,17 @@
     }
 
     // BOOKING MODAL & 20-SEAT SPRINTER LOGIC
+    let selectedSeatsForBooking = ["07A"];
+
     function openBookingModal(tripId) {
       startHoldTimer();
       allTrips = getStoredTrips();
       selectedTripForBooking = allTrips.find(t => t.id === tripId) || allTrips[0];
-      selectedSeatForBooking = "07A";
+      selectedSeatsForBooking = ["07A"];
 
       document.getElementById('bookingModalRouteTitle').textContent = selectedTripForBooking.route;
       document.getElementById('bookingModalMetaSubtitle').textContent = `${selectedTripForBooking.time} • ${selectedTripForBooking.vehicle} • ${selectedTripForBooking.fare.toFixed(1)} BYN`;
-      document.getElementById('bookingModalPriceBtn').textContent = `${selectedTripForBooking.fare.toFixed(1)} BYN`;
       
-      const fareVal = `${selectedTripForBooking.fare.toFixed(2)} BYN`;
-      const ticketFareEl = document.getElementById('modalSummaryTicketFare');
-      const totalFareEl = document.getElementById('modalSummaryTotalFare');
-      if (ticketFareEl) ticketFareEl.textContent = fareVal;
-      if (totalFareEl) totalFareEl.textContent = fareVal;
-
       // Render 20-seat interactive grid
       const seatsGrid = document.getElementById('bookingSeatsGrid');
       if (seatsGrid) {
@@ -4276,16 +4328,18 @@
           const seatCode = i < 10 ? `0${i}A` : `${i}A`;
           // Leave some seats free and mark occupied
           const isOccupied = (i === 1 || i === 2 || i === 3 || i === 5 || i === 8 || i === 11 || i === 14 || i === 18);
-          const isSelected = (seatCode === "07A");
+          const isSelected = selectedSeatsForBooking.includes(seatCode);
 
           if (isOccupied) {
-            seatsHtml += `<div class="seat-chip occupied" title="Место ${seatCode} занято">${seatCode}</div>`;
+            seatsHtml += `<div class="seat-chip occupied" data-seat-code="${seatCode}" title="Место ${seatCode} занято">${seatCode}</div>`;
           } else {
-            seatsHtml += `<div class="seat-chip ${isSelected ? 'selected' : ''}" id="seatChip_${i}" onclick="selectBookingSeat(${i}, '${seatCode}')" title="Выбрать место ${seatCode}">${seatCode}</div>`;
+            seatsHtml += `<div class="seat-chip ${isSelected ? 'selected' : ''}" id="seatChip_${i}" data-seat-code="${seatCode}" onclick="selectBookingSeat(${i}, '${seatCode}')" title="Выбрать место ${seatCode}">${seatCode}</div>`;
           }
         }
         seatsGrid.innerHTML = seatsHtml;
       }
+
+      syncBookingSeatsUI();
 
       document.getElementById('bookingModal').classList.add('open');
       switchSeatPickerMode('3d');
@@ -4294,16 +4348,114 @@
           window.Sprinter3D.onResize();
           window.Sprinter3D.resetToOverview();
         }
+        if (window.Sprinter3D && typeof window.Sprinter3D.setSelectedSeats === 'function') {
+          const numList = selectedSeatsForBooking.map(s => parseInt(s, 10)).filter(n => !isNaN(n));
+          window.Sprinter3D.setSelectedSeats(numList);
+        }
       }, 70);
     }
 
     function selectBookingSeat(seatNum, seatCode) {
-      selectedSeatForBooking = seatCode;
-      document.querySelectorAll('.seat-chip').forEach(el => el.classList.remove('selected'));
-      const activeChip = document.getElementById(`seatChip_${seatNum}`);
-      if (activeChip) activeChip.classList.add('selected');
+      if (!seatCode) {
+        seatCode = seatNum < 10 ? `0${seatNum}A` : `${seatNum}A`;
+      }
+      const idx = selectedSeatsForBooking.indexOf(seatCode);
+      if (idx !== -1) {
+        if (selectedSeatsForBooking.length === 1) {
+          showNotification('Необходимо выбрать хотя бы одно кресло');
+          return;
+        }
+        selectedSeatsForBooking.splice(idx, 1);
+        showNotification(`Место ${seatCode} снято с выбора`);
+      } else {
+        if (selectedSeatsForBooking.length >= 3) {
+          showNotification('Один пассажир может занять максимум 3 места');
+          return;
+        }
+        selectedSeatsForBooking.push(seatCode);
+        showNotification(`Место ${seatCode} выбрано (${selectedSeatsForBooking.length} из 3)`);
+      }
+
+      syncBookingSeatsUI();
+    }
+
+    function removeSelectedBookingSeat(seatCode) {
+      if (selectedSeatsForBooking.length <= 1) {
+        showNotification('Необходимо выбрать хотя бы одно кресло');
+        return;
+      }
+      const idx = selectedSeatsForBooking.indexOf(seatCode);
+      if (idx !== -1) {
+        selectedSeatsForBooking.splice(idx, 1);
+        showNotification(`Место ${seatCode} удалено из заказа`);
+        syncBookingSeatsUI();
+      }
+    }
+
+    function syncBookingSeatsUI() {
+      // 1. Update 2D chips
+      document.querySelectorAll('.seat-chip').forEach(el => {
+        const code = el.getAttribute('data-seat-code') || el.textContent.trim();
+        if (selectedSeatsForBooking.includes(code)) {
+          el.classList.add('selected');
+        } else {
+          el.classList.remove('selected');
+        }
+      });
+
+      // 2. Update 3D Sprinter model
+      if (window.Sprinter3D && typeof window.Sprinter3D.setSelectedSeats === 'function') {
+        const numList = selectedSeatsForBooking.map(s => parseInt(s, 10)).filter(n => !isNaN(n));
+        window.Sprinter3D.setSelectedSeats(numList);
+      }
+
+      // 3. Update badges and labels
       const label = document.getElementById('selectedSeatLabel');
-      if (label) label.textContent = seatCode;
+      const countBadge = document.getElementById('modalSeatsCountBadge');
+      const chipsContainer = document.getElementById('selectedSeatsChips');
+
+      if (label) {
+        label.textContent = selectedSeatsForBooking.join(', ');
+      }
+      if (countBadge) {
+        const c = selectedSeatsForBooking.length;
+        countBadge.textContent = c === 1 ? '1 место' : `${c} места`;
+      }
+      if (chipsContainer) {
+        chipsContainer.innerHTML = selectedSeatsForBooking.map(s => `
+          <span class="seat-selected-chip" onclick="removeSelectedBookingSeat('${s}')" title="Нажмите, чтобы снять место ${s}">
+            <span>Место ${s}</span>
+            <span class="chip-remove-icon">&times;</span>
+          </span>
+        `).join('');
+      }
+
+      // 4. Update financials: single fare * seat count
+      if (selectedTripForBooking) {
+        const singleFare = selectedTripForBooking.fare || 45.0;
+        const count = selectedSeatsForBooking.length;
+        const totalFare = singleFare * count;
+        const totalFareStr = `${totalFare.toFixed(2)} BYN`;
+
+        const ticketFareEl = document.getElementById('modalSummaryTicketFare');
+        const totalFareEl = document.getElementById('modalSummaryTotalFare');
+        const priceBtn = document.getElementById('bookingModalPriceBtn');
+        const botBookingBtn = document.getElementById('bookingModalBotBtn');
+
+        if (ticketFareEl) {
+          ticketFareEl.textContent = count > 1 
+            ? `${singleFare.toFixed(2)} BYN × ${count} = ${totalFareStr}`
+            : totalFareStr;
+        }
+        if (totalFareEl) totalFareEl.textContent = totalFareStr;
+        if (priceBtn) {
+          const cText = count === 1 ? '1 место' : `${count} места`;
+          priceBtn.textContent = `${totalFareStr} (${cText})`;
+        }
+        if (botBookingBtn) {
+          botBookingBtn.href = `https://t.me/buslinerbot?start=booking_${selectedTripForBooking.id}_${selectedSeatsForBooking.join('_')}`;
+        }
+      }
     }
 
     function closeBookingModal(event) {
@@ -4312,14 +4464,17 @@
     }
 
     function submitBookingOrder() {
-      if (!selectedTripForBooking) return;
+      if (!selectedTripForBooking || selectedSeatsForBooking.length === 0) return;
       const name = document.getElementById('bookingPassengerName').value.trim();
       const phone = document.getElementById('bookingPassengerPhone').value.trim();
       const payment = document.getElementById('bookingPaymentMethod').value;
+      const singleFare = selectedTripForBooking.fare || 45.0;
+      const totalFare = singleFare * selectedSeatsForBooking.length;
 
+      const seatsStr = selectedSeatsForBooking.join(', ');
       const newBooking = {
-        id: `BL-5715-${selectedSeatForBooking}`,
-        ticketCode: `BL-5715-${selectedSeatForBooking}-VIP`,
+        id: `BL-5715-${selectedSeatsForBooking.join('-')}`,
+        ticketCode: `BL-5715-${selectedSeatsForBooking.join('-')}-VIP`,
         tripId: selectedTripForBooking.id,
         route: selectedTripForBooking.route,
         origin: selectedTripForBooking.origin,
@@ -4329,18 +4484,19 @@
         departureTime: selectedTripForBooking.time,
         arrivalTime: selectedTripForBooking.arrivalTime,
         date: "Сегодня, 24 октября 2026",
-        seat: selectedSeatForBooking,
-        seatDescription: `Место ${selectedSeatForBooking}, У окна • Ряд 3 • Одноместный ряд`,
+        seat: seatsStr,
+        seatsList: [...selectedSeatsForBooking],
+        seatDescription: `Места: ${seatsStr} • Салон Mercedes Sprinter VIP`,
         passengerName: name || "Александр Константинович Нестеров",
         passengerPhone: phone || "+375 29 987-65-43",
         driverName: selectedTripForBooking.driver || "Александр Воронов",
         driverPhone: "+375291234567",
         vehicle: selectedTripForBooking.vehicle,
         vehiclePlate: selectedTripForBooking.plate,
-        fare: selectedTripForBooking.fare,
+        fare: totalFare,
         paymentStatus: payment,
         tripStatus: "scheduled",
-        qrPayload: `BUSLINER-TICKET:${selectedTripForBooking.id}-${selectedSeatForBooking}:${name}:${selectedTripForBooking.route}`
+        qrPayload: `BUSLINER-TICKET:${selectedTripForBooking.id}-${selectedSeatsForBooking.join('_')}:${name}:${selectedTripForBooking.route}`
       };
 
       allBookings.unshift(newBooking);
@@ -4349,7 +4505,7 @@
       } catch (e) {}
 
       closeBookingModal();
-      showToast(`Билет на рейс ${selectedTripForBooking.route} оформлен! Место ${selectedSeatForBooking}`);
+      showToast(`Бронирование оформлено: ${selectedSeatsForBooking.length} мест (${seatsStr}) на сумму ${totalFare.toFixed(2)} BYN`);
       switchCabinetTab('order');
     }
 
@@ -4560,8 +4716,8 @@
         showNotification(`Место ${seatNum} уже занято: ${passengerData.name}`);
         return;
       }
-      selectSeatForBooking(seatNum);
-      showNotification(`Выбрано место в 3D салоне: Место ${seatNum}`);
+      const code = seatNum < 10 ? `0${seatNum}A` : `${seatNum}A`;
+      selectBookingSeat(seatNum, code);
     };
 
     // REAL-TIME CROSS-ROLE DATABASE & SCANNER SYNCHRONIZATION
@@ -4643,7 +4799,34 @@
       } catch(e) {}
     }
 
+    function loadPassengerAuthProfile() {
+      try {
+        const stored = localStorage.getItem('busliner_client_user');
+        if (stored) {
+          const user = JSON.parse(stored);
+          const fullName = user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : (user.name || '');
+          const phone = user.phone || '';
+          const tg = user.username ? (user.username.startsWith('@') ? user.username : `@${user.username}`) : '@buslinerbot';
+
+          const fnEl = document.getElementById('profileFullNameDisplay');
+          const phEl = document.getElementById('profilePhoneDisplay');
+          const tgEl = document.getElementById('profileTelegramDisplay');
+          const syncBtn = document.getElementById('btnSyncTelegramCabinet');
+
+          if (fnEl && fullName) fnEl.textContent = fullName;
+          if (phEl && phone) phEl.textContent = phone;
+          if (tgEl && tg) tgEl.textContent = tg;
+          if (syncBtn) {
+            syncBtn.innerHTML = '<span style="color: #4E8062;">&check; Подключен к @buslinerbot</span>';
+            syncBtn.style.background = 'rgba(78, 128, 98, 0.15)';
+            syncBtn.style.borderColor = 'var(--color-forest)';
+          }
+        }
+      } catch (e) {}
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      loadPassengerAuthProfile();
       initRealtimeSync();
       renderAviasalesDateStrip();
       renderTripsFeed();

@@ -666,6 +666,10 @@
       </div>
 
       <nav class="nav-links-cluster">
+        <a href="https://t.me/buslinerbot?start=client" target="_blank" rel="noopener noreferrer" class="nav-quick-link" style="color: var(--sp-brand-forest); font-weight: 600;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          Бот @buslinerbot
+        </a>
         <a href="driver-terminal.html#manifest" class="nav-quick-link">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
           Терминал экипажа
@@ -4139,6 +4143,16 @@ function createSprinterSeat(seatData) {
       });
     }
 
+    function getSeatBaseColor(seatData) {
+      if (seatData.status === 'blocked') return 0x94A3B8;
+      if (seatData.status === 'occupied') return 0x64748B;
+      if (seatData.status === 'disabled') return 0x1D4ED8;
+      if (seatData.cat === 'vip') return 0x0F172A;
+      if (seatData.cat === 'emergency') return 0x0369A1;
+      if (seatData.cat === 'limited') return 0x475569;
+      return 0x1E293B; // Темный графит
+    }
+
     function onSeatClick(seat) {
       if (seat.status === 'occupied' || seat.status === 'blocked') return;
 
@@ -4148,7 +4162,11 @@ function createSprinterSeat(seatData) {
         if (selectedSeatIds.length === 0) selectedRow = null;
       } else {
         if (selectedSeatIds.length >= 3) {
-          // максимум 3 места
+          // максимум 3 места на одного пассажира
+          const tt = document.getElementById('tooltip-3d');
+          if (tt) {
+            document.getElementById('tt-type').innerText = 'Максимум 3 места на одного пассажира';
+          }
           return;
         }
         selectedSeatIds.push(seat.id);
@@ -4175,15 +4193,19 @@ function createSprinterSeat(seatData) {
         if (!meshGroup) return;
 
         const isSelected = selectedSeatIds.includes(seat.id);
-        const isDimmed = selectedRow !== null && seat.row !== selectedRow && !isSelected;
+        const baseCol = getSeatBaseColor(seat);
 
         meshGroup.traverse(child => {
-          if (child.isMesh && child.material) {
-            if (isSelected && child.material.isMeshPhysicalMaterial) {
-              child.material.color.setHex(0x7A2320); // Hermès Oxblood highlight
+          if (child.isMesh && child.material && child.material.isMeshPhysicalMaterial) {
+            if (isSelected) {
+              child.material.color.setHex(0x2E4F3E); // Forest Emerald highlight
+              child.material.emissive.setHex(0x2E4F3E);
+              child.material.emissiveIntensity = 0.65;
+            } else {
+              child.material.color.setHex(baseCol);
+              child.material.emissive.setHex(0x000000);
+              child.material.emissiveIntensity = 0;
             }
-            child.material.transparent = true;
-            child.material.opacity = isDimmed ? 0.35 : 1.0;
           }
         });
       });
@@ -4340,8 +4362,8 @@ function createSprinterSeat(seatData) {
         if (!meshGroup) return;
         const isSelected = selectedSeatIds.includes(seat.id);
         const baseY = currentVehicle === 'sprinter' ? 0.565 : 0.88;
-        const targetY = isSelected ? baseY + 0.035 : baseY;
-        meshGroup.position.y = THREE.MathUtils.lerp(meshGroup.position.y, targetY, 0.1);
+        const targetY = isSelected ? baseY + 0.055 : baseY;
+        meshGroup.position.y = THREE.MathUtils.lerp(meshGroup.position.y, targetY, 0.12);
       });
 
       renderer.render(scene, camera);

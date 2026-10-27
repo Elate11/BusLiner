@@ -2534,6 +2534,14 @@
           Кабинет пассажира
         </a>
 
+        <a id="sidebarBotLink" href="https://t.me/buslinerbot?start=carrier" target="_blank" rel="noopener noreferrer" class="passenger-site-link" style="color: var(--color-forest); font-weight: 600;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+          <span id="sidebarBotLabel">Telegram @buslinerbot</span>
+        </a>
+
         <a href="index.html" class="passenger-site-link">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M15 18l-6-6 6-6" />
@@ -2569,6 +2577,14 @@
             <span class="clock-pulse"></span>
             <span id="liveTimeClock">16:04:15 MSK</span>
           </div>
+
+          <a id="headerTopBotLink" href="https://t.me/buslinerbot?start=carrier" target="_blank" rel="noopener noreferrer" class="link-subtle-cta btn-magnetic" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 12px; background: var(--canvas-ivory); border: 1px solid var(--border-hairline); border-radius: var(--radius-pill); color: var(--text-primary);" title="Открыть Telegram-бот платформы">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            <span id="headerTopBotLabel">Бот @buslinerbot</span>
+          </a>
 
           <button class="btn-create-trip-primary carrier-only-action" id="btnTopCreateTrip" onclick="openModalCreateTrip()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -3763,6 +3779,14 @@
                   </button>
                 </div>
               </div>
+              <div>
+                <span class="form-label">Бот управления и уведомлений</span>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap;">
+                  <a href="https://t.me/buslinerbot?start=carrier" target="_blank" rel="noopener noreferrer" class="btn-secondary link-subtle-cta btn-magnetic" style="padding: 4px 10px; font-size: 11px; min-height: 32px; text-decoration: none;">
+                    Открыть @buslinerbot &rarr;
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -4560,6 +4584,10 @@
           if (profileRoleBadge) profileRoleBadge.textContent = 'Водитель • Рейс BL-5715';
           if (btnTopLabel) btnTopLabel.textContent = 'Кабинет перевозчика';
           if (btnSidebarLabel) btnSidebarLabel.textContent = 'Кабинет перевозчика';
+          const botLink = document.getElementById('sidebarBotLink');
+          const topBotLink = document.getElementById('headerTopBotLink');
+          if (botLink) botLink.href = 'https://t.me/buslinerbot?start=driver';
+          if (topBotLink) topBotLink.href = 'https://t.me/buslinerbot?start=driver';
           document.querySelectorAll('.carrier-only-action').forEach(el => { if (el.style) el.style.display = 'none'; });
         } else {
           if (document.body && document.body.classList) {
@@ -4574,6 +4602,10 @@
           if (profileRoleBadge) profileRoleBadge.textContent = 'Перевозчик • 3 авто';
           if (btnTopLabel) btnTopLabel.textContent = 'Пульт водителя';
           if (btnSidebarLabel) btnSidebarLabel.textContent = 'Пульт водителя';
+          const botLink = document.getElementById('sidebarBotLink');
+          const topBotLink = document.getElementById('headerTopBotLink');
+          if (botLink) botLink.href = 'https://t.me/buslinerbot?start=carrier';
+          if (topBotLink) topBotLink.href = 'https://t.me/buslinerbot?start=carrier';
           document.querySelectorAll('.carrier-only-action').forEach(el => { if (el.style) el.style.display = ''; });
         }
       }
