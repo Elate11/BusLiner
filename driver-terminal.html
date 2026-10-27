@@ -12,59 +12,18 @@
   <!-- Three.js + OrbitControls for 3D Minibus Cabin -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
     // =========================================================================
-    // COCKPIT TACTICAL AUDIO SYSTEM & NIGHT MODE TOGGLE
+    // COCKPIT HAPTIC FEEDBACK (SILENT MODE)
     // =========================================================================
     window.CockpitAudio = {
-      ctx: null,
-      getAudioContext() {
-        if (!this.ctx) {
-          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-          if (AudioContextClass) this.ctx = new AudioContextClass();
-        }
-        if (this.ctx && this.ctx.state === 'suspended') {
-          this.ctx.resume();
-        }
-        return this.ctx;
-      },
-
       playBoardSuccess() {
-        try {
-          const ctx = this.getAudioContext();
-          if (!ctx) return;
-          const now = ctx.currentTime;
-          // Dual-tone affirmative chord
-          [523.25, 783.99].forEach((freq, idx) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, now + idx * 0.03);
-            gain.gain.setValueAtTime(0.08, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start(now + idx * 0.03);
-            osc.stop(now + 0.2);
-          });
-        } catch(e) {}
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+          try { navigator.vibrate([15, 30, 20]); } catch(e) {}
+        }
       },
-
       playBoardUndo() {
-        try {
-          const ctx = this.getAudioContext();
-          if (!ctx) return;
-          const now = ctx.currentTime;
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(330, now);
-          osc.frequency.exponentialRampToValueAtTime(220, now + 0.14);
-          gain.gain.setValueAtTime(0.07, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now);
-          osc.stop(now + 0.16);
-        } catch(e) {}
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+          try { navigator.vibrate(25); } catch(e) {}
+        }
       }
     };
 
@@ -2687,28 +2646,9 @@
       } catch (e) {}
     }
 
-    // AUDIO FEEDBACK
+    // AUDIO FEEDBACK (SILENT MODE)
     function playBeep(success) {
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return;
-        const ctx = new AudioCtx();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        if (success) {
-          osc.frequency.setValueAtTime(620, ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12);
-        } else {
-          osc.frequency.setValueAtTime(320, ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.14);
-        }
-        gain.gain.setValueAtTime(0.08, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.14);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.15);
-      } catch (e) {}
+      // Audio disabled
     }
 
     // TOAST
