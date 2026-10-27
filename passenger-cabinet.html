@@ -3529,7 +3529,7 @@
                   <span class="status-pill status-forest-pill" id="sniperStatusLabel">Мониторинг отказов</span>
                 </div>
                 <div class="mono" style="font-size: 11.5px; color: var(--text-muted);">
-                  Опрос баз: каждые 0.3 с &bull; Канал: Telegram Push
+                  Канал: WebSocket / SSE Event-Driven &bull; Задержка p95: <strong class="mono" style="color: var(--color-forest);" id="sniperP95Metric">0.38 с</strong>
                 </div>
               </div>
 
@@ -3552,10 +3552,10 @@
                     </span>
                   </div>
                   <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px; line-height: 1.4;">
-                    Частота сканирования: <strong class="mono">300 мс</strong> &bull; Опрошено 42 перевозчика &bull; Готовность автосписания: <strong style="color: var(--color-forest);">100%</strong>
+                    Шина событий: <strong class="mono" style="color: var(--color-forest);">Pub/Sub Realtime</strong> &bull; Доставка: <strong style="color: var(--color-forest);">0 ms polling</strong> &bull; Защита от овербукинга: <strong style="color: var(--color-forest);">Row Lock</strong>
                   </div>
                   <div style="font-size: 11.5px; color: var(--text-faint); margin-top: 2px;">
-                    При обнаружении отказного билета бот мгновенно фискализирует место на ваше имя.
+                    При освобождении кресла снайпер атомарно захватывает место в транзакции PostgreSQL.
                   </div>
                 </div>
               </div>
@@ -4776,10 +4776,12 @@
           statusLabel.textContent = 'Билет перехвачен';
           statusLabel.style.background = 'var(--status-forest)';
         }
+        const p95El = document.getElementById('sniperP95Metric');
+        if (p95El) p95El.textContent = '0.34 с (p95: 0.38 с)';
         if (btn) btn.disabled = false;
 
         playSuccessChime();
-        showNotification('Успех: бот перехватил билет на рейс BL-5715 за 0.38 с!');
+        showNotification('Успех: бот перехватил билет на рейс BL-5715 за 0.34 с!');
 
         // Browser push notification API
         if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {

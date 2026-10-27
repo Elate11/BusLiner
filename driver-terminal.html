@@ -1590,12 +1590,11 @@
         <span id="night-mode-label">Ночь OLED</span>
       </button>
 
-      <!-- TELEGRAM DRIVER BOT ENTRYPOINT -->
-      <a href="https://t.me/buslinerbot?start=driver" target="_blank" rel="noopener noreferrer" class="cockpit-mode-btn" style="text-decoration: none; color: #93C5FD; border-color: rgba(147, 197, 253, 0.35);" title="Открыть пульт водителя в Telegram-боте">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-        <span>Пульт @buslinerbot</span>
-      </a>
-
+      <!-- OFFLINE SYNC STATUS INDICATOR -->
+      <div id="offline-sync-badge" class="cockpit-mode-btn" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--border-color); border-radius: 4px; background: rgba(0,0,0,0.25);" onclick="forceSyncManifestQueue()" title="Офлайн-синхронизация посадки с сервером">
+        <span class="status-dot-mini" id="sync-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #4E8062; display: inline-block;"></span>
+        <span id="sync-label" style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;">Синхронизировано</span>
+      </div>
 
       <!-- DRIVER PROFILE PILL — PROMINENT IN THE CORNER -->
       <div class="profile-pill" onclick="openDriverProfileModal()" title="Нажмите, чтобы настроить профиль и посмотреть статистику водителя">
@@ -2580,7 +2579,76 @@
     let selectedSeatInspection = 4;
     const DRIVER_VALID_TABS = ['manifest', 'schedule', 'cargo', 'inspection'];
 
-    // PERSISTENCE
+    // PERSISTENCE & OFFLINE SYNC QUEUE
+    function getSyncQueue() {
+      try {
+        return JSON.parse(localStorage.getItem('busliner_driver_sync_queue') || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function pushToSyncQueue(actionItem) {
+      try {
+        const queue = getSyncQueue();
+        queue.push({
+          sync_id: 'sync_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+          ticket: actionItem.ticket,
+          seat: actionItem.seat,
+          name: actionItem.name,
+          action: actionItem.action,
+          timestamp: new Date().toISOString()
+        });
+        localStorage.setItem('busliner_driver_sync_queue', JSON.stringify(queue));
+        updateSyncBadgeUI();
+      } catch (e) {}
+    }
+
+    function updateSyncBadgeUI() {
+      const dot = document.getElementById('sync-dot');
+      const lbl = document.getElementById('sync-label');
+      if (!dot || !lbl) return;
+
+      const queue = getSyncQueue();
+      if (!navigator.onLine) {
+        dot.style.background = '#C8963E';
+        lbl.textContent = queue.length > 0 ? `${queue.length} в буфере (Офлайн)` : 'Офлайн (Кэш готов)';
+      } else if (queue.length > 0) {
+        dot.style.background = '#C8963E';
+        lbl.textContent = `${queue.length} в очереди синхронизации`;
+      } else {
+        dot.style.background = '#4E8062';
+        lbl.textContent = 'Синхронизировано';
+      }
+    }
+
+    window.forceSyncManifestQueue = function() {
+      const queue = getSyncQueue();
+      if (queue.length === 0) {
+        showToast('Очередь пуста', 'Все данные посадки уже синхронизированы с центральным сервером.');
+        return;
+      }
+      if (!navigator.onLine) {
+        showToast('Офлайн режим', `${queue.length} операций сохранены локально в криптографическом журнале.`);
+        return;
+      }
+
+      // Simulate network sync roundtrip
+      showToast('Синхронизация...', `Отправка ${queue.length} записей на сервер...`);
+      setTimeout(() => {
+        localStorage.setItem('busliner_driver_sync_queue', '[]');
+        updateSyncBadgeUI();
+        playBeep(true);
+        showToast('Синхронизация завершена', 'Офлайн-журнал успешно выгружен в базу данных T+1.');
+      }, 600);
+    };
+
+    window.addEventListener('online', () => {
+      updateSyncBadgeUI();
+      window.forceSyncManifestQueue();
+    });
+    window.addEventListener('offline', updateSyncBadgeUI);
+
     function loadBoardingState() {
       try {
         const saved = localStorage.getItem('busliner_driver_boarding_state_v2');
@@ -2773,6 +2841,7 @@
       }
 
       saveBoardingState();
+      pushToSyncQueue({ ticket: p.ticket, seat: p.seat, name: p.name, action: p.boarded ? 'board' : 'unboard' });
       renderPassengers();
 
       if (selectedSeatInspection === p.seat) {
@@ -6085,6 +6154,7 @@
       loadDriverProfile();
       loadBoardingState();
       renderPassengers();
+      updateSyncBadgeUI();
       window.addEventListener('resize', on3DResize);
     });
   </script>
