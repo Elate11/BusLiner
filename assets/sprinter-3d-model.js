@@ -2976,7 +2976,11 @@ const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra 
       isAnimatingCam = true;
       clearPresetButtons();
 
-      inspectCutawaySeat(seatNum, true);
+      if (typeof window.inspectCutawaySeat === 'function') {
+        window.inspectCutawaySeat(seatNum, true);
+      } else if (typeof inspectCutawaySeat === 'function') {
+        inspectCutawaySeat(seatNum, true);
+      }
       if (typeof window.onSprinterSeatSelect === 'function') {
         const p = passengers.find(item => item.seat === seatNum);
         window.onSprinterSeatSelect(seatNum, p);
@@ -3051,7 +3055,7 @@ const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra 
         if (isUserSelected) {
           seatColor = 0x2E4F3E; // Forest Emerald для выбранного пассажиром места
         } else if (p) {
-          seatColor = p.boarded ? 0x23312A : 0xA8674F; // зеленый: на борту, оранжевый: ожидает
+          seatColor = p.boarded ? 0x23312A : (p.status === 'occupied' ? 0x8C887B : 0xA8674F); // темно-зеленый: на борту, серый taupe: занято, терракотовый: ожидает
         }
 
         meshGroup.traverse(child => {

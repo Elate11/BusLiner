@@ -2585,11 +2585,11 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 4px 10px;
+      padding: 4px 8px 4px 12px;
       background: var(--color-forest);
       color: var(--canvas-ivory);
       border-radius: var(--radius-pill);
-      font-size: 11.5px;
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.15s ease;
@@ -2599,11 +2599,23 @@
       background: #1e3529;
       transform: translateY(-1px);
     }
+    .seat-selected-chip:active {
+      transform: scale(0.97);
+    }
     .chip-remove-icon {
-      font-size: 13px;
+      font-size: 14px;
       line-height: 1;
-      opacity: 0.8;
-      margin-left: 2px;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.22);
+      transition: background 0.12s;
+    }
+    .seat-selected-chip:hover .chip-remove-icon {
+      background: rgba(255, 255, 255, 0.38);
     }
 
     /* FIXED MOBILE BOTTOM NAVIGATION BAR */
@@ -3498,67 +3510,11 @@
                 История поездок и чеки
               </h2>
             </div>
-            <span style="font-size: 13px; color: var(--text-muted); font-family: var(--font-mono);">3 завершенных поездки</span>
+            <span style="font-size: 13px; color: var(--text-muted); font-family: var(--font-mono);" id="passengerHistoryCount">Поездки загружаются...</span>
           </div>
 
-          <div class="history-trip-row">
-            <div>
-              <div style="font-size: 16px; font-weight: 700;">Минск &rarr; Брест</div>
-              <div style="font-size: 12.5px; color: var(--text-muted); font-family: var(--font-mono);">
-                14 октября 2026 • 15:30 • Билет BL-4102 • Место 04A
-              </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 14px;">
-              <span class="mono" style="font-size: 15px; font-weight: 700; color: var(--text-primary);">28.0 BYN</span>
-              <button type="button" class="btn-receipt-download" onclick="downloadFiscalReceipt('BL-4102')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                  <polyline points="7 10 12 15 17 10"/>
-                  <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-                <span>Скачать электронный чек</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="history-trip-row">
-            <div>
-              <div style="font-size: 16px; font-weight: 700;">Минск &rarr; Витебск</div>
-              <div style="font-size: 12.5px; color: var(--text-muted); font-family: var(--font-mono);">
-                28 сентября 2026 • 09:00 • Билет BL-3891 • Место 07A
-              </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 14px;">
-              <span class="mono" style="font-size: 15px; font-weight: 700; color: var(--text-primary);">25.0 BYN</span>
-              <button type="button" class="btn-receipt-download" onclick="downloadFiscalReceipt('BL-3891')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                  <polyline points="7 10 12 15 17 10"/>
-                  <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-                <span>Скачать электронный чек</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="history-trip-row">
-            <div>
-              <div style="font-size: 16px; font-weight: 700;">Гродно &rarr; Минск</div>
-              <div style="font-size: 12.5px; color: var(--text-muted); font-family: var(--font-mono);">
-                12 сентября 2026 • 19:15 • Билет BL-3104 • Место 03A
-              </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 14px;">
-              <span class="mono" style="font-size: 15px; font-weight: 700; color: var(--text-primary);">28.0 BYN</span>
-              <button type="button" class="btn-receipt-download" onclick="downloadFiscalReceipt('BL-3104')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                  <polyline points="7 10 12 15 17 10"/>
-                  <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-                <span>Скачать электронный чек</span>
-              </button>
-            </div>
+          <div id="passengerHistoryTripList">
+            <!-- Dynamic history trip rows populated by renderHistoryFeed() -->
           </div>
         </div>
       </section>
@@ -4034,7 +3990,7 @@
       </div>
       
       <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-        <button type="button" class="btn-primary" style="flex: 1.5; min-width: 220px;" onclick="submitBookingOrder()">
+        <button type="button" class="btn-primary" id="btnSubmitBooking" style="flex: 1.5; min-width: 220px;" onclick="submitBookingOrder()">
           <span>Подтвердить бронирование</span>
           <span class="mono" id="bookingModalPriceBtn">45.0 BYN</span>
         </button>
@@ -4353,6 +4309,7 @@
       if (tabId === 'trips') renderAviasalesDateStrip();
       renderTripsFeed();
       if (tabId === 'order') renderOrderTab();
+      if (tabId === 'profile') renderHistoryFeed();
     }
 
     // Reachability alias: switchScreen('settings') routes to profile
@@ -4971,19 +4928,106 @@ tags:
       }
     }
 
-        // FUNCTION 2: RENDER ORDER TAB (МОЙ БИЛЕТ С РАБОЧИМ SVG QR)
+    // DYNAMIC OCCUPIED SEATS REPOSITORY
+    function getOccupiedSeatsForTrip(tripId) {
+      const defaultOccupied = ["01A", "02A", "03A", "05A", "08A", "11A", "14A", "18A"];
+      if (!tripId) return defaultOccupied;
+      try {
+        const key = `busliner_occupied_seats_${tripId}`;
+        const raw = localStorage.getItem(key);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            return Array.from(new Set([...defaultOccupied, ...parsed]));
+          }
+        }
+      } catch (e) {}
+      return defaultOccupied;
+    }
+
+    function saveOccupiedSeatsForTrip(tripId, newlyOccupiedSeats) {
+      if (!tripId || !Array.isArray(newlyOccupiedSeats)) return;
+      const current = getOccupiedSeatsForTrip(tripId);
+      const updated = Array.from(new Set([...current, ...newlyOccupiedSeats]));
+      try {
+        localStorage.setItem(`busliner_occupied_seats_${tripId}`, JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    }
+
+    // FUNCTION 2: RENDER ORDER TAB (МОЙ БИЛЕТ С РАБОЧИМ SVG QR И ДАННЫМИ БРОНИРОВАНИЯ)
     function renderOrderTab() {
       allBookings = getStoredBookings();
       const ticket = allBookings[0] || DEFAULT_PASSENGER_BOOKINGS[0];
+      if (!ticket) return;
+
+      // Update route kicker & ticket code
+      const kickerEl = document.querySelector('#pane-order .ticket-header-strip .kicker-tag');
+      if (kickerEl) kickerEl.textContent = `Рейс ${ticket.tripId || 'BL-5715'}`;
+
+      const codeEl = document.querySelector('#pane-order .ticket-header-strip .mono');
+      if (codeEl) codeEl.textContent = `Билет #${ticket.ticketCode || ticket.id}`;
+
+      // Update departure & arrival cities
+      const cities = document.querySelectorAll('#pane-order .node-city');
+      if (cities.length >= 2) {
+        cities[0].textContent = ticket.origin || (ticket.route ? ticket.route.split(/&rarr;|→|—/)[0].trim() : 'Минск');
+        cities[1].textContent = ticket.destination || (ticket.route ? ticket.route.split(/&rarr;|→|—/)[1].trim() : 'Гродно');
+      }
+
+      // Update stations
+      const stations = document.querySelectorAll('#pane-order .node-station');
+      if (stations.length >= 2) {
+        stations[0].textContent = ticket.originStation || 'Центральный автовокзал • ул. Бобруйская 6';
+        stations[1].textContent = ticket.destinationStation || 'Автовокзал Гродно • ул. Красноармейская 7А';
+      }
+
+      // Update departure & arrival times
+      const times = document.querySelectorAll('#pane-order .node-time.mono');
+      if (times.length >= 2) {
+        times[0].textContent = ticket.departureTime || '18:45';
+        times[1].textContent = ticket.arrivalTime || '22:45';
+      }
+
+      const durationEl = document.querySelector('#pane-order .vector-duration-badge.mono');
+      if (durationEl && ticket.duration) {
+        durationEl.textContent = ticket.duration;
+      }
 
       // Update seat label
       const seatEl = document.getElementById('ticketSeatDisplay');
-      if (seatEl && ticket) {
-        seatEl.textContent = ticket.seatDescription || `Место ${ticket.seat}, У окна`;
+      if (seatEl) {
+        seatEl.textContent = ticket.seatDescription || `Место ${ticket.seat}`;
+      }
+
+      // Update vehicle & plate & fare
+      const telemetryCells = document.querySelectorAll('#pane-order .ticket-telemetry-row .telemetry-cell');
+      if (telemetryCells.length >= 3) {
+        const vName = telemetryCells[1].querySelector('.telemetry-cell-val');
+        const vPlate = telemetryCells[1].querySelector('.telemetry-cell-sub');
+        if (vName && ticket.vehicle) vName.textContent = ticket.vehicle;
+        if (vPlate && ticket.vehiclePlate) vPlate.textContent = `Госномер ${ticket.vehiclePlate}`;
+
+        const fareVal = telemetryCells[2].querySelector('.telemetry-cell-val');
+        const fareSub = telemetryCells[2].querySelector('.telemetry-cell-sub');
+        if (fareVal) fareVal.textContent = `${Number(ticket.fare).toFixed(1)} BYN`;
+        if (fareSub) {
+          if (ticket.paymentStatus === 'cash_on_board') {
+            fareSub.innerHTML = '&#9203; Оплата водителю при посадке';
+          } else {
+            fareSub.innerHTML = '&check; Оплачено онлайн • Место забронировано';
+          }
+        }
+      }
+
+      // Driver info
+      if (ticket.driverName) {
+        const driverNameEl = document.querySelector('#pane-order .ticket-driver-bar div[style*="font-size: 15px"]');
+        if (driverNameEl) driverNameEl.textContent = `Водитель экипажа: ${ticket.driverName}`;
       }
 
       // Generate dynamic vector SVG QR
-      const qrPayload = ticket ? (ticket.qrPayload || `BUSLINER-TICKET:${ticket.id}:${ticket.route}`) : "BUSLINER-PASS:BL-5715";
+      const qrPayload = ticket.qrPayload || `BUSLINER-TICKET:${ticket.id}:${ticket.route}:SEATS-${ticket.seat}`;
       const qrSvg = generatePureSvgQr(qrPayload, 5);
 
       const qrContainer = document.getElementById('ticketQrContainer');
@@ -4991,6 +5035,50 @@ tags:
 
       const modalQrContainer = document.getElementById('modalQrCodeContainer');
       if (modalQrContainer) modalQrContainer.innerHTML = generatePureSvgQr(qrPayload, 7);
+    }
+
+    // FUNCTION 3: RENDER PROFILE HISTORY FEED (ДИНАМИЧЕСКИЙ АРХИВ И ЧЕКИ)
+    function renderHistoryFeed() {
+      allBookings = getStoredBookings();
+      const listEl = document.getElementById('passengerHistoryTripList');
+      const countEl = document.getElementById('passengerHistoryCount');
+      if (countEl) {
+        const c = allBookings.length;
+        countEl.textContent = `${c} ${c === 1 ? 'поездка' : (c < 5 ? 'поездки' : 'поездок')}`;
+      }
+      if (!listEl) return;
+
+      listEl.innerHTML = allBookings.map(b => {
+        const isScheduled = b.tripStatus === 'scheduled';
+        const statusPill = isScheduled 
+          ? '<span class="status-pill status-forest-pill" style="font-size: 10px; margin-left: 6px;">Забронировано</span>'
+          : '<span class="status-pill" style="font-size: 10px; margin-left: 6px;">Завершено</span>';
+
+        return `
+          <div class="history-trip-row">
+            <div>
+              <div style="font-size: 16px; font-weight: 700; display: flex; align-items: center; flex-wrap: wrap; gap: 4px;">
+                <span>${b.route || (b.origin + ' → ' + b.destination)}</span>
+                ${statusPill}
+              </div>
+              <div style="font-size: 12.5px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 3px;">
+                ${b.date || 'Сегодня'} • ${b.departureTime || '18:45'} • Билет ${b.ticketCode || b.id} • <strong style="color: var(--color-forest);">Место ${b.seat}</strong>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <span class="mono" style="font-size: 15px; font-weight: 700; color: var(--text-primary);">${Number(b.fare).toFixed(1)} BYN</span>
+              <button type="button" class="btn-receipt-download" onclick="downloadFiscalReceipt('${b.id}')" title="Скачать электронный чек">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                <span>Электронный чек</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     // REAL VECTOR SVG QR CODE GENERATOR (ZERO-DEPENDENCY WITH FALLBACK)
@@ -5051,7 +5139,23 @@ tags:
       startHoldTimer();
       allTrips = getStoredTrips();
       selectedTripForBooking = allTrips.find(t => t.id === tripId) || allTrips[0];
-      selectedSeatsForBooking = ["07A"];
+
+      // Retrieve all occupied seats for this trip (saved + defaults)
+      const occupiedList = getOccupiedSeatsForTrip(selectedTripForBooking.id);
+
+      // Default selection: pick first available seat
+      let initialSeat = "07A";
+      if (occupiedList.includes(initialSeat)) {
+        initialSeat = null;
+        for (let i = 1; i <= 20; i++) {
+          const code = i < 10 ? `0${i}A` : `${i}A`;
+          if (!occupiedList.includes(code) && !occupiedList.includes(i) && !occupiedList.includes(String(i))) {
+            initialSeat = code;
+            break;
+          }
+        }
+      }
+      selectedSeatsForBooking = initialSeat ? [initialSeat] : [];
 
       document.getElementById('bookingModalRouteTitle').textContent = selectedTripForBooking.route;
       document.getElementById('bookingModalMetaSubtitle').textContent = `${selectedTripForBooking.time} • ${selectedTripForBooking.vehicle} • ${selectedTripForBooking.fare.toFixed(1)} BYN`;
@@ -5062,17 +5166,30 @@ tags:
         let seatsHtml = '';
         for (let i = 1; i <= 20; i++) {
           const seatCode = i < 10 ? `0${i}A` : `${i}A`;
-          // Leave some seats free and mark occupied
-          const isOccupied = (i === 1 || i === 2 || i === 3 || i === 5 || i === 8 || i === 11 || i === 14 || i === 18);
+          const isOccupied = occupiedList.includes(seatCode) || occupiedList.includes(i) || occupiedList.includes(String(i));
           const isSelected = selectedSeatsForBooking.includes(seatCode);
 
           if (isOccupied) {
-            seatsHtml += `<div class="seat-chip occupied" data-seat-code="${seatCode}" title="Место ${seatCode} занято">${seatCode}</div>`;
+            seatsHtml += `<div class="seat-chip occupied" data-seat-code="${seatCode}" title="Место ${seatCode} занято другим пассажиром">${seatCode}</div>`;
           } else {
             seatsHtml += `<div class="seat-chip ${isSelected ? 'selected' : ''}" id="seatChip_${i}" data-seat-code="${seatCode}" onclick="selectBookingSeat(${i}, '${seatCode}')" title="Выбрать место ${seatCode}">${seatCode}</div>`;
           }
         }
         seatsGrid.innerHTML = seatsHtml;
+      }
+
+      // Update 3D Sprinter model with occupied seats
+      if (window.Sprinter3D && typeof window.Sprinter3D.updateBookings === 'function') {
+        const bookingsFor3D = occupiedList.map(s => {
+          const num = parseInt(s, 10);
+          return {
+            seat: num,
+            name: 'Пассажир (занято)',
+            status: 'occupied',
+            boarded: false
+          };
+        });
+        window.Sprinter3D.updateBookings(bookingsFor3D);
       }
 
       syncBookingSeatsUI();
@@ -5095,12 +5212,16 @@ tags:
       if (!seatCode) {
         seatCode = seatNum < 10 ? `0${seatNum}A` : `${seatNum}A`;
       }
+      const tripId = selectedTripForBooking ? selectedTripForBooking.id : null;
+      const occupiedList = getOccupiedSeatsForTrip(tripId);
+      if (occupiedList.includes(seatCode) || occupiedList.includes(seatNum) || occupiedList.includes(String(seatNum))) {
+        showNotification(`Место ${seatCode} уже занято`);
+        return;
+      }
+
       const idx = selectedSeatsForBooking.indexOf(seatCode);
       if (idx !== -1) {
-        if (selectedSeatsForBooking.length === 1) {
-          showNotification('Необходимо выбрать хотя бы одно кресло');
-          return;
-        }
+        // Deselect seat
         selectedSeatsForBooking.splice(idx, 1);
         showNotification(`Место ${seatCode} снято с выбора`);
       } else {
@@ -5116,26 +5237,34 @@ tags:
     }
 
     function removeSelectedBookingSeat(seatCode) {
-      if (selectedSeatsForBooking.length <= 1) {
-        showNotification('Необходимо выбрать хотя бы одно кресло');
-        return;
-      }
       const idx = selectedSeatsForBooking.indexOf(seatCode);
       if (idx !== -1) {
         selectedSeatsForBooking.splice(idx, 1);
-        showNotification(`Место ${seatCode} удалено из заказа`);
+        showNotification(`Место ${seatCode} снято с выбора`);
         syncBookingSeatsUI();
       }
     }
 
     function syncBookingSeatsUI() {
+      const tripId = selectedTripForBooking ? selectedTripForBooking.id : null;
+      const occupiedList = getOccupiedSeatsForTrip(tripId);
+      const count = selectedSeatsForBooking.length;
+
       // 1. Update 2D chips
       document.querySelectorAll('.seat-chip').forEach(el => {
         const code = el.getAttribute('data-seat-code') || el.textContent.trim();
-        if (selectedSeatsForBooking.includes(code)) {
+        const num = parseInt(code, 10);
+        const isOccupied = occupiedList.includes(code) || occupiedList.includes(num) || occupiedList.includes(String(num));
+
+        if (isOccupied) {
+          el.classList.add('occupied');
+          el.classList.remove('selected');
+        } else if (selectedSeatsForBooking.includes(code)) {
           el.classList.add('selected');
+          el.classList.remove('occupied');
         } else {
           el.classList.remove('selected');
+          el.classList.remove('occupied');
         }
       });
 
@@ -5149,46 +5278,77 @@ tags:
       const label = document.getElementById('selectedSeatLabel');
       const countBadge = document.getElementById('modalSeatsCountBadge');
       const chipsContainer = document.getElementById('selectedSeatsChips');
+      const btnSubmit = document.getElementById('btnSubmitBooking');
+      const priceBtn = document.getElementById('bookingModalPriceBtn');
 
       if (label) {
-        label.textContent = selectedSeatsForBooking.join(', ');
+        label.textContent = count > 0 ? selectedSeatsForBooking.join(', ') : 'Не выбрано';
       }
       if (countBadge) {
-        const c = selectedSeatsForBooking.length;
-        countBadge.textContent = c === 1 ? '1 место' : `${c} места`;
+        if (count === 0) {
+          countBadge.textContent = '0 мест';
+        } else if (count === 1) {
+          countBadge.textContent = '1 место';
+        } else {
+          countBadge.textContent = `${count} места`;
+        }
       }
       if (chipsContainer) {
-        chipsContainer.innerHTML = selectedSeatsForBooking.map(s => `
-          <span class="seat-selected-chip" onclick="removeSelectedBookingSeat('${s}')" title="Нажмите, чтобы снять место ${s}">
-            <span>Место ${s}</span>
-            <span class="chip-remove-icon">&times;</span>
-          </span>
-        `).join('');
+        if (count === 0) {
+          chipsContainer.innerHTML = '<span style="color: var(--text-muted); font-size: 12px; font-style: italic; padding: 4px 0;">Нажмите на свободное кресло на схеме или в 3D для выбора</span>';
+        } else {
+          chipsContainer.innerHTML = selectedSeatsForBooking.map(s => `
+            <span class="seat-selected-chip" onclick="removeSelectedBookingSeat('${s}')" title="Нажмите, чтобы снять место ${s}">
+              <span>Место ${s}</span>
+              <span class="chip-remove-icon">&times;</span>
+            </span>
+          `).join('');
+        }
       }
 
-      // 4. Update financials: single fare * seat count
-      if (selectedTripForBooking) {
-        const singleFare = selectedTripForBooking.fare || 45.0;
-        const count = selectedSeatsForBooking.length;
-        const totalFare = singleFare * count;
-        const totalFareStr = `${totalFare.toFixed(2)} BYN`;
+      // 4. Update financials and submit button
+      const singleFare = selectedTripForBooking ? (selectedTripForBooking.fare || 45.0) : 45.0;
+      const totalFare = singleFare * count;
+      const totalFareStr = `${totalFare.toFixed(2)} BYN`;
 
-        const ticketFareEl = document.getElementById('modalSummaryTicketFare');
-        const totalFareEl = document.getElementById('modalSummaryTotalFare');
-        const priceBtn = document.getElementById('bookingModalPriceBtn');
-        const botBookingBtn = document.getElementById('bookingModalBotBtn');
+      const ticketFareEl = document.getElementById('modalSummaryTicketFare');
+      const totalFareEl = document.getElementById('modalSummaryTotalFare');
+      const botBookingBtn = document.getElementById('bookingModalBotBtn');
 
-        if (ticketFareEl) {
-          ticketFareEl.textContent = count > 1 
-            ? `${singleFare.toFixed(2)} BYN × ${count} = ${totalFareStr}`
-            : totalFareStr;
+      if (ticketFareEl) {
+        ticketFareEl.textContent = count > 1 
+          ? `${singleFare.toFixed(2)} BYN × ${count} = ${totalFareStr}`
+          : totalFareStr;
+      }
+      if (totalFareEl) totalFareEl.textContent = totalFareStr;
+
+      if (btnSubmit) {
+        if (count === 0) {
+          btnSubmit.disabled = true;
+          btnSubmit.style.opacity = '0.55';
+          btnSubmit.style.cursor = 'not-allowed';
+          const spanText = btnSubmit.querySelector('span');
+          if (spanText) spanText.textContent = 'Выберите место';
+          if (priceBtn) priceBtn.textContent = '0.00 BYN';
+        } else {
+          btnSubmit.disabled = false;
+          btnSubmit.style.opacity = '1';
+          btnSubmit.style.cursor = 'pointer';
+          const spanText = btnSubmit.querySelector('span');
+          if (spanText) spanText.textContent = 'Подтвердить бронирование';
+          if (priceBtn) {
+            const cText = count === 1 ? '1 место' : `${count} места`;
+            priceBtn.textContent = `${totalFareStr} (${cText})`;
+          }
         }
-        if (totalFareEl) totalFareEl.textContent = totalFareStr;
-        if (priceBtn) {
-          const cText = count === 1 ? '1 место' : `${count} места`;
-          priceBtn.textContent = `${totalFareStr} (${cText})`;
-        }
-        if (botBookingBtn) {
+      } else if (priceBtn) {
+        priceBtn.textContent = count === 0 ? '0.00 BYN' : totalFareStr;
+      }
+
+      if (botBookingBtn && selectedTripForBooking) {
+        if (count === 0) {
+          botBookingBtn.href = `https://t.me/buslinerbot?start=trip_${selectedTripForBooking.id}`;
+        } else {
           botBookingBtn.href = `https://t.me/buslinerbot?start=booking_${selectedTripForBooking.id}_${selectedSeatsForBooking.join('_')}`;
         }
       }
@@ -5200,48 +5360,84 @@ tags:
     }
 
     function submitBookingOrder() {
-      if (!selectedTripForBooking || selectedSeatsForBooking.length === 0) return;
+      if (!selectedTripForBooking || selectedSeatsForBooking.length === 0) {
+        showNotification('Пожалуйста, выберите хотя бы одно кресло');
+        return;
+      }
       const name = document.getElementById('bookingPassengerName').value.trim();
       const phone = document.getElementById('bookingPassengerPhone').value.trim();
       const payment = document.getElementById('bookingPaymentMethod').value;
       const singleFare = selectedTripForBooking.fare || 45.0;
-      const totalFare = singleFare * selectedSeatsForBooking.length;
-
+      const count = selectedSeatsForBooking.length;
+      const totalFare = singleFare * count;
       const seatsStr = selectedSeatsForBooking.join(', ');
+
+      // 1. Mark seats permanently as occupied for this trip
+      saveOccupiedSeatsForTrip(selectedTripForBooking.id, selectedSeatsForBooking);
+
+      // 2. Increment occupied count in trip
+      allTrips = getStoredTrips();
+      const targetTrip = allTrips.find(t => t.id === selectedTripForBooking.id);
+      if (targetTrip) {
+        targetTrip.occupied = Math.min(targetTrip.capacity || 20, (targetTrip.occupied || 14) + count);
+        try {
+          localStorage.setItem('busliner_trips', JSON.stringify(allTrips));
+        } catch (e) {}
+      }
+
+      // 3. Create rich booking object
+      const dateStr = "Сегодня, 24 октября 2026";
       const newBooking = {
         id: `BL-5715-${selectedSeatsForBooking.join('-')}`,
         ticketCode: `BL-5715-${selectedSeatsForBooking.join('-')}-VIP`,
         tripId: selectedTripForBooking.id,
         route: selectedTripForBooking.route,
-        origin: selectedTripForBooking.origin,
-        originStation: selectedTripForBooking.origin,
-        destination: selectedTripForBooking.destination,
-        destinationStation: selectedTripForBooking.destination,
+        origin: selectedTripForBooking.origin || "Минск",
+        originStation: selectedTripForBooking.originStation || "Центральный автовокзал • ул. Бобруйская 6",
+        destination: selectedTripForBooking.destination || "Гродно",
+        destinationStation: selectedTripForBooking.destinationStation || "Автовокзал Гродно • ул. Красноармейская 7А",
         departureTime: selectedTripForBooking.time,
-        arrivalTime: selectedTripForBooking.arrivalTime,
-        date: "Сегодня, 24 октября 2026",
+        arrivalTime: selectedTripForBooking.arrivalTime || "22:45",
+        duration: selectedTripForBooking.duration || "4 ч 00 мин",
+        date: dateStr,
         seat: seatsStr,
         seatsList: [...selectedSeatsForBooking],
-        seatDescription: `Места: ${seatsStr} • Салон Mercedes Sprinter VIP`,
+        seatDescription: count === 1 ? `Место ${seatsStr} • Салон Mercedes Sprinter VIP` : `Места: ${seatsStr} (${count} мест) • Салон Mercedes Sprinter VIP`,
         passengerName: name || "Александр Константинович Нестеров",
         passengerPhone: phone || "+375 29 987-65-43",
         driverName: selectedTripForBooking.driver || "Александр Воронов",
         driverPhone: "+375291234567",
-        vehicle: selectedTripForBooking.vehicle,
-        vehiclePlate: selectedTripForBooking.plate,
+        vehicle: selectedTripForBooking.vehicle || "Mercedes-Benz Sprinter",
+        vehiclePlate: selectedTripForBooking.plate || "7TAX-8891 VIP",
         fare: totalFare,
-        paymentStatus: payment,
+        paymentStatus: payment === 'cash' ? 'cash_on_board' : 'paid',
         tripStatus: "scheduled",
-        qrPayload: `BUSLINER-TICKET:${selectedTripForBooking.id}-${selectedSeatsForBooking.join('_')}:${name}:${selectedTripForBooking.route}`
+        qrPayload: `BUSLINER-TICKET:${selectedTripForBooking.id}-${selectedSeatsForBooking.join('_')}:${name || 'PASSENGER'}:${selectedTripForBooking.route}`
       };
 
+      allBookings = getStoredBookings();
       allBookings.unshift(newBooking);
       try {
         localStorage.setItem('busliner_passenger_bookings', JSON.stringify(allBookings));
       } catch (e) {}
 
+      // 4. Real-time broadcast
+      try {
+        const syncChannel = new BroadcastChannel('busliner_sync_channel');
+        syncChannel.postMessage({
+          type: 'PASSENGER_BOOKED',
+          booking: newBooking,
+          tripId: selectedTripForBooking.id,
+          seats: selectedSeatsForBooking,
+          timestamp: Date.now()
+        });
+      } catch (e) {}
+
+      // 5. Close modal, refresh views
       closeBookingModal();
-      showToast(`Бронирование оформлено: ${selectedSeatsForBooking.length} мест (${seatsStr}) на сумму ${totalFare.toFixed(2)} BYN`);
+      renderTripsFeed();
+      renderHistoryFeed();
+      showToast(`Бронирование оформлено: ${count} мест (${seatsStr}) на сумму ${totalFare.toFixed(2)} BYN`);
       switchCabinetTab('order');
     }
 
@@ -5495,8 +5691,17 @@ tags:
           window.Sprinter3D.init('three-canvas-container');
         }
         const currentTripId = selectedTripForBooking ? selectedTripForBooking.id : 'BL-5715';
-        const tripBookings = (allBookings || []).filter(b => b.tripId === currentTripId);
-        window.Sprinter3D.updateBookings(tripBookings);
+        const occupiedList = getOccupiedSeatsForTrip(currentTripId);
+        const bookingsFor3D = occupiedList.map(s => {
+          const num = parseInt(s, 10);
+          return {
+            seat: num,
+            name: 'Пассажир (занято)',
+            status: 'occupied',
+            boarded: false
+          };
+        });
+        window.Sprinter3D.updateBookings(bookingsFor3D);
         setTimeout(() => {
           if (window.Sprinter3D.onResize) window.Sprinter3D.onResize();
         }, 80);
@@ -5520,8 +5725,8 @@ tags:
 
     // Connect 3D seat clicking
     window.onSprinterSeatSelect = function(seatNum, passengerData) {
-      if (passengerData && passengerData.name) {
-        showNotification(`Место ${seatNum} уже занято: ${passengerData.name}`);
+      if (passengerData && (passengerData.name || passengerData.status === 'occupied')) {
+        showNotification(`Место ${seatNum} уже занято другим пассажиром`);
         return;
       }
       const code = seatNum < 10 ? `0${seatNum}A` : `${seatNum}A`;
@@ -5828,6 +6033,7 @@ tags:
       renderAviasalesDateStrip();
       renderTripsFeed();
       renderOrderTab();
+      renderHistoryFeed();
       initTripStatusSync();
       loadNotificationPrefs();
       initCursorFollower();
