@@ -2,7 +2,7 @@
 
 ## Architecture
 - **Ecosystem**: High-craft passenger booking platform, carrier management office, embedded driver mobile cockpit with Three.js 3D Minibus, and dedicated passenger cabinet.
-- **Authoritative Design Benchmark**: `/Users/aleksandr/BusLiner/aura-b2c-masterpiece.html` (Quiet Luxury: strictly NO BURGUNDY / NO OXBLOOD; primary CTA Deep Alpine Forest `#23312A`).
+- **Authoritative Design Benchmark**: `/Users/aleksandr/BusLiner/index.html` (Quiet Luxury: strictly NO BURGUNDY / NO OXBLOOD; primary CTA Deep Alpine Forest `#23312A`).
 - **Target Files**:
   - `/Users/aleksandr/BusLiner/carrier-workspace.html` (Carrier Office with embedded `#screen-cockpit` + Three.js 3D Minibus + real-time status broadcast).
   - `/Users/aleksandr/BusLiner/carrier-dashboard.html` (Driver Mobile Cockpit with embedded `#screen-cockpit` + Three.js 3D Minibus + real-time status broadcast).
