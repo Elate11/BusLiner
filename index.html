@@ -119,13 +119,15 @@
       left: 0;
       width: 26px;
       height: 26px;
+      margin-left: -13px;
+      margin-top: -13px;
       border: 1px solid var(--border-taupe);
       border-radius: 50%;
       pointer-events: none;
       z-index: 10000;
-      transform: translate(-50%, -50%);
-      transition: width 0.28s var(--ease-drive), height 0.28s var(--ease-drive), border-color 0.28s ease, background 0.28s ease;
-      opacity: 0.85;
+      transform: translate3d(-100px, -100px, 0);
+      transition: width 0.28s var(--ease-drive), height 0.28s var(--ease-drive), margin 0.28s var(--ease-drive), border-color 0.28s ease, background 0.28s ease;
+      opacity: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -139,15 +141,10 @@
     .custom-cursor-follower.hovering {
       width: 50px;
       height: 50px;
+      margin-left: -25px;
+      margin-top: -25px;
       border-color: var(--color-forest);
       background: rgba(35, 49, 42, 0.08);
-      animation: cursorPulse 0.35s var(--ease-elastic);
-    }
-
-    @keyframes cursorPulse {
-      0% { transform: translate(-50%, -50%) scale(0.85); }
-      50% { transform: translate(-50%, -50%) scale(1.15); }
-      100% { transform: translate(-50%, -50%) scale(1); }
     }
 
     /* Container Utility */
@@ -3548,19 +3545,8 @@
 
     window.addEventListener('wheel', (e) => {
       if (window.innerWidth <= 900) return; // Allow 100% native document scrolling on mobile
-      if (e.target.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay, .presentation-side-rail')) {
+      if (e.target && e.target.closest && e.target.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay, .presentation-side-rail')) {
         return;
-      }
-
-      // Check if internal scrollable slide has overflow
-      const activeSlide = slides[currentSlide];
-      if (activeSlide && activeSlide.scrollHeight > activeSlide.clientHeight + 10) {
-        if (e.deltaY > 0 && activeSlide.scrollTop + activeSlide.clientHeight < activeSlide.scrollHeight - 10) {
-          return;
-        }
-        if (e.deltaY < 0 && activeSlide.scrollTop > 10) {
-          return;
-        }
       }
 
       e.preventDefault();
@@ -3597,7 +3583,7 @@
 
     window.addEventListener('touchstart', (e) => {
       if (window.innerWidth <= 900) return; // Mobile uses 100% native smooth inertia scrolling
-      if (e.target.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay, .presentation-side-rail')) {
+      if (e.target && e.target.closest && e.target.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay, .presentation-side-rail')) {
         return;
       }
       if (e.touches && e.touches.length > 0) {
@@ -3711,28 +3697,44 @@
         return;
       }
 
-      let mouseX = -100;
-      let mouseY = -100;
-      let cursorX = -100;
-      let cursorY = -100;
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let cursorX = mouseX;
+      let cursorY = mouseY;
+      let isVisible = false;
 
       window.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
+        if (!isVisible) {
+          cursorX = mouseX;
+          cursorY = mouseY;
+          cursor.style.opacity = '0.9';
+          isVisible = true;
+        }
       }, { passive: true });
 
       function render() {
-        cursorX += (mouseX - cursorX) * 0.22; // High responsiveness
-        cursorY += (mouseY - cursorY) * 0.22;
-        cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+        if (isVisible) {
+          cursorX += (mouseX - cursorX) * 0.28;
+          cursorY += (mouseY - cursorY) * 0.28;
+          cursor.style.transform = `translate3d(${Math.round(cursorX)}px, ${Math.round(cursorY)}px, 0)`;
+        }
         requestAnimationFrame(render);
       }
       render();
 
-      document.querySelectorAll('[data-cursor="hover"], a, button, input').forEach(el => {
-        el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-        el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
-      });
+      document.addEventListener('mouseover', (e) => {
+        if (e.target && e.target.closest('[data-cursor="hover"], a, button, input, [role="button"], .deck-rail-item, .cal-day-cell, .dropdown-item, .cal-preset-btn, .search-preset-chip')) {
+          cursor.classList.add('hovering');
+        }
+      }, { passive: true });
+
+      document.addEventListener('mouseout', (e) => {
+        if (e.target && e.target.closest('[data-cursor="hover"], a, button, input, [role="button"], .deck-rail-item, .cal-day-cell, .dropdown-item, .cal-preset-btn, .search-preset-chip')) {
+          cursor.classList.remove('hovering');
+        }
+      }, { passive: true });
     })();
 
     // Initialize telemetry values on mobile

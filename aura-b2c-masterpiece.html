@@ -119,35 +119,28 @@
       left: 0;
       width: 26px;
       height: 26px;
-      border: 1px solid var(--border-taupe);
+      margin-left: -13px;
+      margin-top: -13px;
+      border: 1.5px solid var(--border-taupe);
       border-radius: 50%;
       pointer-events: none;
-      z-index: 10000;
-      transform: translate(-50%, -50%);
-      transition: width 0.28s var(--ease-drive), height 0.28s var(--ease-drive), border-color 0.28s ease, background 0.28s ease;
-      opacity: 0.85;
+      z-index: 100000;
+      transform: translate3d(-100px, -100px, 0);
+      transition: width 0.22s var(--ease-drive), height 0.22s var(--ease-drive), margin 0.22s var(--ease-drive), border-color 0.22s ease, background 0.22s ease, opacity 0.22s ease;
+      opacity: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: transparent;
+      will-change: transform;
     }
 
     .custom-cursor-follower.hovering {
-      width: 50px;
-      height: 50px;
+      width: 48px;
+      height: 48px;
+      margin-left: -24px;
+      margin-top: -24px;
       border-color: var(--color-forest);
-      background: rgba(35, 49, 42, 0.08);
-      animation: cursorPulse 0.35s var(--ease-elastic);
-    }
-
-    @keyframes cursorPulse {
-      0% { transform: translate(-50%, -50%) scale(0.85); }
-      50% { transform: translate(-50%, -50%) scale(1.15); }
-      100% { transform: translate(-50%, -50%) scale(1); }
+      background: rgba(35, 49, 42, 0.12);
     }
 
     /* Container Utility */
@@ -3426,33 +3419,22 @@
       updateDeckState(currentSlide - 1);
     };
 
-    // Responsive Kinetic Wheel Controller (Zero Input Latency, Boundary Aware)
+    // Responsive Kinetic Wheel Controller (Zero Input Latency, Debounced Lock)
     let lastWheelTime = 0;
-    const WHEEL_LOCK_MS = 480;
+    const WHEEL_LOCK_MS = 400;
 
     window.addEventListener('wheel', (e) => {
       if (window.innerWidth <= 900) return; // Allow 100% native document scrolling on mobile
-      // Don't intercept scroll inside modals or popovers
-      if (e.target.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay, .presentation-side-rail')) {
+      // Don't intercept scroll inside modals, calendar, or dropdowns
+      if (e.target && e.target.closest && e.target.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay, .presentation-side-rail')) {
         return;
-      }
-
-      // Check if active slide has its own scrollable overflow (e.g. on small laptops/tablets)
-      const activeSlide = slides[currentSlide];
-      if (activeSlide && activeSlide.scrollHeight > activeSlide.clientHeight + 10) {
-        if (e.deltaY > 0 && activeSlide.scrollTop + activeSlide.clientHeight < activeSlide.scrollHeight - 10) {
-          return; // Allow standard slide content scroll down
-        }
-        if (e.deltaY < 0 && activeSlide.scrollTop > 10) {
-          return; // Allow standard slide content scroll up
-        }
       }
 
       e.preventDefault();
       const now = performance.now();
       if (isTransitioning || (now - lastWheelTime < WHEEL_LOCK_MS)) return;
 
-      if (Math.abs(e.deltaY) > 14) {
+      if (Math.abs(e.deltaY) > 12) {
         lastWheelTime = now;
         if (e.deltaY > 0) {
           nextSlide();
@@ -3461,6 +3443,37 @@
         }
       }
     }, { passive: false });
+
+    // Desktop Pointer Drag Navigation Engine (Click & Drag to flip slides)
+    let isPointerDown = false;
+    let pointerStartX = 0;
+    let pointerStartY = 0;
+    let lastDragTime = 0;
+
+    window.addEventListener('pointerdown', (e) => {
+      if (window.innerWidth <= 900) return;
+      if (e.target && e.target.closest && e.target.closest('#clientAuthModal, #calendarPopover, #fromDropdown, #toDropdown, .booking-modal-overlay, .presentation-side-rail, input, select, textarea, button, a')) return;
+      pointerStartX = e.clientX;
+      pointerStartY = e.clientY;
+      isPointerDown = true;
+    }, { passive: true });
+
+    window.addEventListener('pointerup', (e) => {
+      if (window.innerWidth <= 900 || !isPointerDown) return;
+      isPointerDown = false;
+      const now = performance.now();
+      if (now - lastDragTime < 400) return;
+
+      const diffY = pointerStartY - e.clientY;
+      const diffX = pointerStartX - e.clientX;
+      const DRAG_THRESHOLD = 32;
+
+      if (Math.abs(diffY) >= DRAG_THRESHOLD && Math.abs(diffY) >= Math.abs(diffX) * 0.7) {
+        lastDragTime = now;
+        if (diffY > 0) nextSlide();
+        else prevSlide();
+      }
+    }, { passive: true });
 
     // Keyboard Controller
     window.addEventListener('keydown', (e) => {
@@ -3502,54 +3515,58 @@
 
       // Must be a predominantly vertical swipe of at least 48px
       if (Math.abs(diffY) > 48 && Math.abs(diffY) > Math.abs(diffX) * 1.3) {
-        const activeSlide = slides[currentSlide];
-        if (activeSlide) {
-          const isScrollable = activeSlide.scrollHeight > activeSlide.clientHeight + 10;
-          if (diffY > 0) {
-            // Swiping up -> nextSlide
-            if (!isScrollable || (activeSlide.scrollTop + activeSlide.clientHeight >= activeSlide.scrollHeight - 14)) {
-              nextSlide();
-            }
-          } else {
-            // Swiping down -> prevSlide
-            if (!isScrollable || (activeSlide.scrollTop <= 14)) {
-              prevSlide();
-            }
-          }
-        } else {
-          if (diffY > 0) nextSlide();
-          else prevSlide();
-        }
+        if (diffY > 0) nextSlide();
+        else prevSlide();
       }
     }, { passive: true });
 
     // 2. KINETIC LERP CURSOR WITH DYNAMIC ELASTICITY
     (function initCursor() {
       const cursor = document.getElementById('cursorFollower');
-      if (!cursor || window.innerWidth < 768) return;
+      if (!cursor) return;
+      if (window.innerWidth <= 900 || window.matchMedia('(pointer: coarse)').matches) {
+        cursor.style.display = 'none';
+        return;
+      }
 
-      let mouseX = -100;
-      let mouseY = -100;
-      let cursorX = -100;
-      let cursorY = -100;
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let cursorX = mouseX;
+      let cursorY = mouseY;
+      let isVisible = false;
 
       window.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
+        if (!isVisible) {
+          cursorX = mouseX;
+          cursorY = mouseY;
+          cursor.style.opacity = '0.9';
+          isVisible = true;
+        }
       }, { passive: true });
 
       function render() {
-        cursorX += (mouseX - cursorX) * 0.22; // High responsiveness
-        cursorY += (mouseY - cursorY) * 0.22;
-        cursor.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+        if (isVisible) {
+          cursorX += (mouseX - cursorX) * 0.28;
+          cursorY += (mouseY - cursorY) * 0.28;
+          cursor.style.transform = `translate3d(${Math.round(cursorX)}px, ${Math.round(cursorY)}px, 0)`;
+        }
         requestAnimationFrame(render);
       }
       render();
 
-      document.querySelectorAll('[data-cursor="hover"], a, button, input').forEach(el => {
-        el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-        el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
-      });
+      document.addEventListener('mouseover', (e) => {
+        if (e.target && e.target.closest('[data-cursor="hover"], a, button, input, [role="button"], .deck-rail-item, .cal-day-cell, .dropdown-item, .cal-preset-btn, .search-preset-chip')) {
+          cursor.classList.add('hovering');
+        }
+      }, { passive: true });
+
+      document.addEventListener('mouseout', (e) => {
+        if (e.target && e.target.closest('[data-cursor="hover"], a, button, input, [role="button"], .deck-rail-item, .cal-day-cell, .dropdown-item, .cal-preset-btn, .search-preset-chip')) {
+          cursor.classList.remove('hovering');
+        }
+      }, { passive: true });
     })();
 
     // 3. MAGNETIC BUTTONS (ATTRACTION UP TO 14PX)
