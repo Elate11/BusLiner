@@ -227,27 +227,42 @@
       border-color: rgba(232, 226, 214, 0.45);
     }
 
-    /* Dual Action Navigation: Client Portal & Terminal Entrance */
+    /* Dual Action Navigation: Carrier Entrance & Driver Terminal */
+    .header-carrier-btn,
+    .header-driver-btn,
     .header-client-btn {
       background: var(--canvas-bone);
       border-color: var(--border-taupe);
       cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
+    .header-carrier-btn:hover,
+    .header-driver-btn:hover,
     .header-client-btn:hover {
       background: var(--text-graphite);
       color: #FAF8F5 !important;
       border-color: var(--text-graphite);
     }
 
+    header.site-header.on-dark-slide .header-carrier-btn,
+    header.site-header.on-dark-slide .header-driver-btn,
     header.site-header.on-dark-slide .header-client-btn {
       background: rgba(232, 226, 214, 0.14);
       border-color: rgba(232, 226, 214, 0.35);
       color: #F5F1EA;
     }
 
+    header.site-header.on-dark-slide .header-carrier-btn:hover,
+    header.site-header.on-dark-slide .header-driver-btn:hover,
     header.site-header.on-dark-slide .header-client-btn:hover {
       background: #F5F1EA;
+      color: #141312 !important;
+      border-color: #F5F1EA;
+    }
       color: #141312 !important;
       border-color: #F5F1EA;
     }
@@ -2541,23 +2556,24 @@
           <span style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #D9CDB8; margin-left: 8px;">PARTNERS</span>
         </a>
 
-        <div style="display: flex; gap: 12px; align-items: center; justify-self: end;">
-          <a href="index.html" class="link-subtle-cta btn-magnetic header-client-btn" data-cursor="hover" title="На главную для пассажиров" style="text-decoration: none;">
-            <span>Пассажирам</span>
-          </a>
-          <a href="https://t.me/buslinerbot?start=carrier" target="_blank" rel="noopener noreferrer" class="link-subtle-cta btn-magnetic header-client-btn" data-cursor="hover" title="Telegram-бот перевозчика @buslinerbot" style="text-decoration: none;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-            <span>Бот @buslinerbot</span>
-          </a>
-          <a href="carrier-workspace.html?role=carrier" class="link-subtle-cta btn-magnetic header-client-btn" data-cursor="hover" title="Рабочий пульт перевозчика" style="text-decoration: none;">
+        <div style="display: flex; gap: 10px; align-items: center; justify-self: end;">
+          <a href="partner-auth.html#login" class="link-subtle-cta btn-magnetic header-carrier-btn" data-cursor="hover" title="Вход для перевозчика" style="text-decoration: none;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
             </svg>
-            <span>Кабинет перевозчика</span>
+            <span>Вход для перевозчика</span>
+          </a>
+          <a href="partner-auth.html#driver" class="link-subtle-cta btn-magnetic header-driver-btn" data-cursor="hover" title="Вход для водителя" style="text-decoration: none;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="3"></circle>
+              <line x1="12" y1="2" x2="12" y2="9"></line>
+              <line x1="12" y1="15" x2="12" y2="22"></line>
+              <line x1="2" y1="12" x2="9" y2="12"></line>
+              <line x1="15" y1="12" x2="22" y2="12"></line>
+            </svg>
+            <span>Вход для водителя</span>
           </a>
         </div>
 

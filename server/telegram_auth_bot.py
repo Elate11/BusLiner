@@ -524,7 +524,8 @@ def get_passenger_tickets_from_db(telegram_id: int) -> List[Dict[str, Any]]:
 # CRYPTOGRAPHIC SECURITY PRIMITIVES
 # ==============================================================================
 def generate_auth_token() -> str:
-    return secrets.token_hex(32)
+    # 16 bytes = 32 hex chars (ensures auth_confirm:<token> is 45 bytes <= 64 byte Telegram limit)
+    return secrets.token_hex(16)
 
 
 def generate_otp_code() -> str:
