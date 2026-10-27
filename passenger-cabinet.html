@@ -4017,16 +4017,8 @@
 
       <!-- PANE 1: BOT LIVE SESSION -->
       <div id="authGatePaneBot">
-        <div style="background: var(--canvas-ivory); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 16px; text-align: center; margin-bottom: 16px;">
-          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">
-            Одноразовый проверочный код безопасности (OTP):
-          </div>
-          <div class="mono" id="passengerGateOtpCode" style="font-size: 28px; font-weight: 700; letter-spacing: 0.15em; color: var(--color-forest);">
-            884-219
-          </div>
-          <div style="font-size: 11.5px; color: var(--text-faint); margin-top: 6px;">
-            Код действует 5 минут &bull; Защита сессии HMAC-SHA256
-          </div>
+        <div style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 16px;">
+          Мгновенное подтверждение входа через Telegram без паролей:
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -4035,7 +4027,7 @@
               <line x1="22" y1="2" x2="11" y2="13"></line>
               <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
             </svg>
-            <span>Подтвердить вход в @buslinerbot</span>
+            <span>Подтвердить вход через Telegram</span>
           </a>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
             <span style="font-size: 11.5px; color: var(--text-muted);" id="passengerGatePollingStatus">Ожидание подтверждения в боте...</span>

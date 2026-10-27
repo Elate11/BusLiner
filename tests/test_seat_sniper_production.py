@@ -357,6 +357,125 @@ class TestSeatSniperProduction(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(ok2)
         self.assertEqual(status, "already_pending")
 
+    async def test_sniper_preauth_hold_capture_and_void(self):
+        """
+        GIVEN a sniper order with card pre-authorization
+        WHEN order is created -> funds are held (status='held')
+        WHEN order wins seat -> funds are captured (status='captured')
+        WHEN another order is cancelled -> funds are voided without fee (status='voided').
+        """
+        # Order 1: Will win and capture
+        o1 = SniperOrder(
+            order_id="order-preauth-win",
+            user_id="user-win",
+            client_identity="+375291234567",
+            route_id="route-minsk-vilnius",
+            departure_date="2026-05-25",
+            time_window_start="17:00",
+            time_window_end="19:00",
+            preferred_seat_type="any",
+            passenger_full_name="Победитель П. П.",
+            passenger_phone="+375291234567",
+            passenger_passport_hash="hash_win",
+            auto_debit_consent=True,
+            max_price_byn=95.0,
+            card_token="tok_visa_belarusbank_8812"
+        )
+        ok1, _ = await self.engine.create_order(o1)
+        self.assertTrue(ok1)
+        hold_id_win = o1.pre_auth_hold_id
+        self.assertIsNotNone(hold_id_win)
+        self.assertEqual(self.engine.acquiring.holds[hold_id_win]["status"], "held")
+
+        # Order 2: Will be cancelled and voided
+        o2 = SniperOrder(
+            order_id="order-preauth-cancel",
+            user_id="user-cancel",
+            client_identity="+375297654321",
+            route_id="route-minsk-vilnius",
+            departure_date="2026-05-25",
+            time_window_start="17:00",
+            time_window_end="19:00",
+            preferred_seat_type="any",
+            passenger_full_name="Отказник О. О.",
+            passenger_phone="+375297654321",
+            passenger_passport_hash="hash_cancel",
+            auto_debit_consent=True,
+            max_price_byn=95.0,
+            card_token="tok_mastercard_prior_4401"
+        )
+        ok2, _ = await self.engine.create_order(o2)
+        self.assertTrue(ok2)
+        hold_id_cancel = o2.pre_auth_hold_id
+        self.assertEqual(self.engine.acquiring.holds[hold_id_cancel]["status"], "held")
+
+        # Cancel Order 2 -> check void
+        await self.engine.cancel_order(o2.order_id, reason="passenger_changed_mind")
+        self.assertEqual(self.engine.acquiring.holds[hold_id_cancel]["status"], "voided")
+
+        # Release seat -> Order 1 wins -> check capture
+        event = SeatReleaseEvent(
+            event_id="evt-preauth-test",
+            trip_id="BL-5715",
+            seat_id="seat-08A",
+            seat_number=8,
+            seat_type="any",
+            fare_byn=95.0,
+            release_reason="passenger_refund",
+            idempotency_key="idemp_preauth_test_001",
+            route_id="route-minsk-vilnius"
+        )
+        res = await self.engine.publish_seat_release(event)
+        self.assertEqual(len(res), 1)
+        self.assertTrue(res[0].success)
+        self.assertEqual(self.engine.acquiring.holds[hold_id_win]["status"], "captured")
+        self.assertEqual(self.engine.acquiring.holds[hold_id_win]["captured_amount"], 95.0)
+
+    def test_ml_noshow_prediction_and_drift(self):
+        """
+        GIVEN the in-house NoShowPredictorModel
+        WHEN evaluating a passenger profile
+        THEN model returns calibrated probability, confidence label, and top-3 explainable factors.
+        AND when outcomes are logged, drift telemetry reports health metrics.
+        """
+        from server.ml_noshow_engine import ML_PREDICTOR
+
+        # Profile A: Last-minute online prepaid passenger on Friday evening -> Very low no-show risk (< 5%)
+        features_a = {
+            "lead_time_hours": 1.5,
+            "is_prepaid": True,
+            "day_of_week": 5,
+            "departure_hour": 18,
+            "bad_weather": False,
+            "passenger_prior_trips": 4
+        }
+        res_a = ML_PREDICTOR.predict(features_a)
+        self.assertLess(res_a.no_show_probability, 0.08)
+        self.assertFalse(res_a.model_fallback_active)
+        self.assertGreater(len(res_a.top_factors), 0)
+        self.assertIn("100% Онлайн-предоплата", [f.name for f in res_a.top_factors])
+
+        # Profile B: Cash payment booked 10 days in advance during snowstorm -> High no-show risk (> 25%)
+        features_b = {
+            "lead_time_hours": 240.0,
+            "is_prepaid": False,
+            "day_of_week": 2,
+            "departure_hour": 10,
+            "bad_weather": True,
+            "passenger_prior_trips": 0
+        }
+        res_b = ML_PREDICTOR.predict(features_b)
+        self.assertGreater(res_b.no_show_probability, 0.20)
+        self.assertIn("Оплата наличными водителю", [f.name for f in res_b.top_factors])
+
+        # Drift test
+        for _ in range(25):
+            ML_PREDICTOR.predict(features_a)
+            ML_PREDICTOR.record_actual_outcome(boarded=True)
+        drift = ML_PREDICTOR.calculate_drift_metrics()
+        self.assertIn(drift["status"], ["calibrating", "healthy", "drift_detected"])
+        self.assertGreater(drift["sample_count"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

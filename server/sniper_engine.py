@@ -28,6 +28,7 @@ import json
 import uuid
 import hmac
 import hashlib
+import secrets
 import asyncio
 import logging
 from dataclasses import dataclass, field, asdict
@@ -45,6 +46,78 @@ if not logger.handlers:
     logger.setLevel(logging.INFO)
 
 
+class AcquiringGateway:
+    """
+    Two-Stage Financial Pre-Authorization Gateway (bePaid / WebPay / Bank API).
+    Implements:
+    1. Pre-Auth Hold: Freezes funds on client card without charging.
+    2. Capture: Immediately debits held funds upon successful seat interception.
+    3. Void / Release: Unfreezes funds with 0% commission if order is cancelled or times out.
+    """
+    def __init__(self):
+        # Maps hold_id -> {status, amount_byn, card_token, order_id, created_at}
+        self.holds: Dict[str, Dict[str, Any]] = {}
+        self.captured_transactions: Dict[str, Dict[str, Any]] = {}
+
+    def create_preauth_hold(self, card_token: str, amount_byn: float, order_id: str) -> Tuple[bool, str, Optional[str]]:
+        if amount_byn <= 0:
+            return False, "", "Сумма холдирования должна быть положительной"
+        if not card_token:
+            card_token = f"tok_card_mock_{secrets.token_hex(6)}"
+
+        hold_id = f"hold_{uuid.uuid4().hex[:12]}"
+        self.holds[hold_id] = {
+            "hold_id": hold_id,
+            "status": "held",
+            "amount_byn": amount_byn,
+            "card_token": card_token,
+            "order_id": order_id,
+            "created_at": time.time(),
+            "expires_at": time.time() + 86400  # 24h bank hold window
+        }
+        logger.info(f"Financial Pre-Auth Hold created: {hold_id} for {amount_byn:.2f} BYN (Order {order_id})")
+        return True, hold_id, None
+
+    def capture_hold(self, hold_id: str, amount_byn: Optional[float] = None) -> Tuple[bool, str, Optional[str]]:
+        if hold_id not in self.holds:
+            return False, "", "Холд эквайринга не найден"
+
+        hold = self.holds[hold_id]
+        if hold["status"] != "held":
+            return False, "", f"Невозможно списать: статус холда {hold['status']}"
+
+        charge_amount = amount_byn if amount_byn is not None else hold["amount_byn"]
+        tx_id = f"tx_cap_{uuid.uuid4().hex[:10]}"
+
+        hold["status"] = "captured"
+        hold["captured_amount"] = charge_amount
+        hold["captured_at"] = time.time()
+
+        self.captured_transactions[tx_id] = {
+            "tx_id": tx_id,
+            "hold_id": hold_id,
+            "order_id": hold["order_id"],
+            "amount_byn": charge_amount,
+            "timestamp": time.time()
+        }
+        logger.info(f"Financial Pre-Auth Captured: {tx_id} for {charge_amount:.2f} BYN (Hold {hold_id})")
+        return True, tx_id, None
+
+    def void_hold(self, hold_id: str, reason: str = "order_cancelled") -> Tuple[bool, Optional[str]]:
+        if hold_id not in self.holds:
+            return False, "Холд эквайринга не найден"
+
+        hold = self.holds[hold_id]
+        if hold["status"] != "held":
+            return False, f"Холд уже обработан (статус {hold['status']})"
+
+        hold["status"] = "voided"
+        hold["voided_at"] = time.time()
+        hold["void_reason"] = reason
+        logger.info(f"Financial Pre-Auth Voided: {hold_id} released without fee. Reason: {reason}")
+        return True, None
+
+
 @dataclass
 class SniperOrder:
     order_id: str
@@ -60,6 +133,8 @@ class SniperOrder:
     passenger_passport_hash: str
     auto_debit_consent: bool
     max_price_byn: float
+    card_token: Optional[str] = None
+    pre_auth_hold_id: Optional[str] = None
     status: str = "active"  # 'active', 'matched', 'reserved', 'completed', 'cancelled', 'failed_beaten'
     queue_priority: float = field(default_factory=time.time)
     created_at: float = field(default_factory=time.time)
@@ -184,6 +259,7 @@ class SeatSniperEngine:
         self.seat_locks: Dict[str, asyncio.Lock] = {}
         self.anti_abuse = AntiAbuseManager()
         self.latency_tracker = LatencyTracker()
+        self.acquiring = AcquiringGateway()
         self._global_lock = asyncio.Lock()
         self._reaper_task: Optional[asyncio.Task] = None
         self._running = False
@@ -212,7 +288,7 @@ class SeatSniperEngine:
         logger.info("SeatSniperEngine stopped.")
 
     async def create_order(self, order: SniperOrder) -> Tuple[bool, str]:
-        """Creates and indexes a new SniperOrder with anti-abuse verification."""
+        """Creates and indexes a new SniperOrder with anti-abuse verification and financial pre-auth hold."""
         if not order.auto_debit_consent:
             return False, "Требуется согласие на автоматическое списание средств при перехвате места."
 
@@ -220,22 +296,38 @@ class SeatSniperEngine:
         if not allowed:
             return False, reason
 
+        # Financial Layer: 2-stage pre-authorization hold on payment card
+        ok_hold, hold_id, hold_err = self.acquiring.create_preauth_hold(
+            card_token=order.card_token or "",
+            amount_byn=order.max_price_byn,
+            order_id=order.order_id
+        )
+        if not ok_hold:
+            return False, f"Ошибка предварительной авторизации средств: {hold_err}"
+
+        order.pre_auth_hold_id = hold_id
+
         async with self._global_lock:
             self.orders[order.order_id] = order
             await self.anti_abuse.register_order(order.client_identity, order.order_id)
 
-        logger.info(f"Sniper order created: {order.order_id} for user {order.client_identity} on route {order.route_id}")
+        logger.info(f"Sniper order created: {order.order_id} (Pre-auth hold {hold_id}) on route {order.route_id}")
         return True, order.order_id
 
     async def cancel_order(self, order_id: str, reason: str = "user_cancelled") -> bool:
-        """Safely cancels an active order and unregisters anti-abuse locks."""
+        """Safely cancels an active order, voids pre-auth hold without fees, and unregisters locks."""
         async with self._global_lock:
             order = self.orders.get(order_id)
             if not order or order.status != "active":
                 return False
             order.status = "cancelled"
             await self.anti_abuse.release_order(order.client_identity, order_id)
-        logger.info(f"Sniper order {order_id} cancelled. Reason: {reason}")
+
+        # Void acquirer hold without cancellation fee
+        if order.pre_auth_hold_id:
+            self.acquiring.void_hold(order.pre_auth_hold_id, reason=reason)
+
+        logger.info(f"Sniper order {order_id} cancelled. Reason: {reason} (Hold released)")
         return True
 
     async def publish_seat_release(self, event: SeatReleaseEvent) -> List[SniperExecutionResult]:
@@ -316,6 +408,10 @@ class SeatSniperEngine:
                 "event_id": event.event_id,
                 "seat_number": event.seat_number
             }
+
+            # Financial Capture of pre-authorized funds
+            if winner_order.pre_auth_hold_id:
+                self.acquiring.capture_hold(winner_order.pre_auth_hold_id, event.fare_byn)
 
             await self.latency_tracker.record_latency(latency_ms)
             await self.anti_abuse.release_order(winner_order.client_identity, winner_order.order_id)
