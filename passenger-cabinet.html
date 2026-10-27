@@ -20,7 +20,7 @@
        Palette: Warm Ivory, Bone, Sand, Alpine Forest (#23312A), Graphite (#2B2A28)
        STRICT ZERO BURGUNDY / ZERO OXBLOOD
        STRICT ZERO BITMAP IMAGE TAGS, ZERO SQUARE BRACKETS IN VISIBLE UI
-       STRICT NO PURE #FFFFFF, NO PURE #000000
+       STRICT NO PURE WHITE, NO PURE BLACK
        ========================================================================== */
     :root {
       /* Warm Neutrals (No pure white #FFF, no pure black #000) */
@@ -182,13 +182,30 @@
       font-weight: 600;
     }
 
+    /* FOCUS-VISIBLE & TACTILE PRESS SYSTEM (EMIL KOWALSKI CRAFT) */
+    :focus-visible {
+      outline: 2px solid var(--color-forest);
+      outline-offset: 2px;
+    }
+
+    button, a, [role="button"], .tappable {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    button:active, .btn:active, .btn-primary:active, .btn-secondary:active, .btn-book-trip-cta:active, .link-subtle-cta:active, .tappable:active {
+      transform: scale(0.97) !important;
+      transition: transform 0.08s var(--ease-drive) !important;
+    }
+
     /* BUTTONS ARCHITECTURE (RADIUS SM 3px) */
     .btn {
       border-radius: var(--radius-sm);
     }
     .btn, .btn-primary, .btn-secondary, .link-subtle-cta, .btn-action-deck, .btn-checkin-toggle, .btn-book-trip-cta {
       border-radius: var(--radius-sm);
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       font-family: var(--font-body);
       font-weight: 600;
       display: inline-flex;
@@ -196,7 +213,7 @@
       justify-content: center;
       gap: 8px;
       cursor: pointer;
-      transition: all 0.22s var(--ease-drive);
+      transition: background 0.2s var(--ease-drive), border-color 0.2s var(--ease-drive), transform 0.2s var(--ease-drive), box-shadow 0.2s var(--ease-drive), color 0.2s var(--ease-drive);
       text-decoration: none;
     }
 
@@ -2663,10 +2680,12 @@
       border-radius: var(--radius-sm);
       color: var(--text-primary);
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s var(--ease-drive), box-shadow 0.2s var(--ease-drive), background 0.2s ease;
     }
     .form-input:focus, .form-select:focus {
       border-color: var(--color-forest);
+      background: var(--surface-card);
+      box-shadow: 0 0 0 3px rgba(35, 49, 42, 0.08);
     }
 
     /* TOAST NOTIFICATION */
@@ -2684,13 +2703,22 @@
       box-shadow: 0 8px 24px rgba(35, 49, 42, 0.2);
       transform: translateY(100px);
       opacity: 0;
-      transition: all 0.3s var(--ease-drive);
+      transition: transform 0.28s var(--ease-drive), opacity 0.28s ease;
       pointer-events: none;
     }
     .toast-capsule.visible {
       transform: translateY(0);
       opacity: 1;
       pointer-events: auto;
+    }
+    @media (max-width: 768px) {
+      .toast-capsule {
+        bottom: calc(76px + env(safe-area-inset-bottom, 12px));
+        right: 16px;
+        left: 16px;
+        max-width: calc(100% - 32px);
+        text-align: center;
+      }
     }
 
     /* RESPONSIVE BREAKPOINTS */

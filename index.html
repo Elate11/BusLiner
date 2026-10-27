@@ -18,7 +18,7 @@
        BUSLINER // DYNAMIC QUIET LUXURY & ERGONOMICS ARCHITECTURE
        Aesthetic: Loro Piana / The Row / Bottega Veneta / Aesop
        Motion DNA: Lando Norris kinetic drive (vector direction, inertial braking)
-       Palette: Ivory, Bone, Sand, Alpine Forest (#23312A), Oxblood (#5C2E2E), Graphite (#2B2A28)
+       Palette: Ivory, Bone, Sand, Alpine Forest (#23312A), Alpine Forest (#23312A), Graphite (#2B2A28)
        Zero 3D, Zero WebGL, Zero Sound, Zero Gunshot, Zero Emojis
        ========================================================================== */
 
@@ -34,7 +34,7 @@
       --color-graphite-dark: #1E1D1B;
       --color-forest: #23312A;
       --color-forest-surface: #2C3E35;
-      --color-oxblood: #5C2E2E;
+      --color-oxblood: #23312A;
       --color-oxblood-surface: #4B2424;
       --color-terracotta: #A8674F;
       --color-dusty-blue: #6E8294;
@@ -982,7 +982,7 @@
       letter-spacing: 0.04em;
       padding: 6px 4px;
       text-align: center;
-      background: #FFFFFF;
+      background: #FAF8F5;
       border: 1px solid var(--border-taupe);
       border-radius: 3px;
       color: var(--text-graphite);
@@ -993,7 +993,7 @@
 
     .cal-preset-btn:hover {
       background: var(--color-forest);
-      color: #FFFFFF;
+      color: #F5F1EA;
       border-color: var(--color-forest);
     }
 
@@ -1016,7 +1016,7 @@
       height: 28px;
       border-radius: 50%;
       border: 1px solid var(--border-taupe);
-      background: #FFFFFF;
+      background: #FAF8F5;
       color: var(--text-graphite);
       cursor: pointer;
       display: flex;
@@ -1028,7 +1028,7 @@
 
     .cal-arrow-btn:hover {
       background: var(--text-graphite);
-      color: #FFFFFF;
+      color: #F5F1EA;
       border-color: var(--text-graphite);
     }
 
@@ -1884,6 +1884,18 @@
     }
 
     /* Accessibility / Focus Visible */
+    
+    button, a, [role="button"], .tappable {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    button:active, .btn-action-deck:active, .btn-primary:active, .tappable:active {
+      transform: scale(0.97) !important;
+      transition: transform 0.08s ease !important;
+    }
+
     :focus-visible {
       outline: 2px solid var(--color-forest);
       outline-offset: 3px;
@@ -2180,7 +2192,7 @@
 
     .client-phone-field {
       width: 100%;
-      background: #FFFFFF;
+      background: #FAF8F5;
       border: 1px solid var(--border-taupe);
       border-radius: var(--radius-sm);
       padding: 14px 16px;
@@ -2224,7 +2236,7 @@
     }
 
     .client-ticket-card-preview {
-      background: #FFFFFF;
+      background: #FAF8F5;
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-sm);
       padding: 18px 20px;
@@ -3257,7 +3269,7 @@
           <div class="client-auth-tab-pane active" id="paneTg">
             <div style="background: var(--canvas-bone); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 18px 20px; margin-bottom: 16px;">
               <div style="display: flex; gap: 14px; align-items: flex-start;">
-                <div style="width: 38px; height: 38px; border-radius: 50%; background: #2AABEE; color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <div style="width: 38px; height: 38px; border-radius: 50%; background: #2AABEE; color: #F5F1EA; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"></line>
                     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -3275,7 +3287,7 @@
               <span class="pulse-indicator"></span> Ожидание авторизации в Telegram...
             </div>
 
-            <a id="clientTgDeepLinkBtn" href="https://t.me/buslinerbot?start=client" target="_blank" rel="noopener noreferrer" class="btn-action-deck btn-magnetic" style="width: 100%; justify-content: center; background: #2AABEE; border-color: #2AABEE; color: #FFFFFF; padding: 15px 24px;" data-cursor="hover">
+            <a id="clientTgDeepLinkBtn" href="https://t.me/buslinerbot?start=client" target="_blank" rel="noopener noreferrer" class="btn-action-deck btn-magnetic" style="width: 100%; justify-content: center; background: #2AABEE; border-color: #2AABEE; color: #F5F1EA; padding: 15px 24px;" data-cursor="hover">
               <span>Войти через Telegram</span>
               <span>&rarr;</span>
             </a>
@@ -3383,7 +3395,7 @@
             </div>
             <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
               <a href="passenger-cabinet.html" class="btn-action-deck" style="flex: 1; justify-content: center; font-size: 13.5px; padding: 11px 18px; text-decoration: none;">Личный кабинет пассажира &rarr;</a>
-              <a id="regTgDeepLinkBtn" href="https://t.me/buslinerbot?start=client" target="_blank" rel="noopener noreferrer" class="link-subtle-cta" style="flex: 1; justify-content: center; font-size: 13px; min-height: 42px; padding: 6px 12px; background: #2AABEE; color: #FFFFFF; border-color: #2AABEE;">Активировать в @buslinerbot &rarr;</a>
+              <a id="regTgDeepLinkBtn" href="https://t.me/buslinerbot?start=client" target="_blank" rel="noopener noreferrer" class="link-subtle-cta" style="flex: 1; justify-content: center; font-size: 13px; min-height: 42px; padding: 6px 12px; background: #2AABEE; color: #F5F1EA; border-color: #2AABEE;">Активировать в @buslinerbot &rarr;</a>
             </div>
             <div id="regTgStatus" style="font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 10px;">
               <span class="pulse-indicator"></span> Ожидание подтверждения в @buslinerbot...

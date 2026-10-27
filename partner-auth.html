@@ -12,7 +12,7 @@
     /* ==========================================================================
        BUSLINER PARTNERS // AUTH & FLEET ONBOARDING QUIET LUXURY TOKENS
        Aesthetic: Loro Piana / Bottega Veneta / Apple craft
-       Palette: Warm Ivory (#F5F1EA), Bone (#E8E2D6), Graphite (#1C1D1C), Oxblood (#7A2320), Forest (#2E4F3E)
+       Palette: Warm Ivory (#F5F1EA), Bone (#E8E2D6), Graphite (#1C1D1C), Oxblood (#23312A), Forest (#2E4F3E)
        Zero image tags. Zero square brackets in visible UI.
        ========================================================================== */
     :root {
@@ -21,30 +21,47 @@
       --surface-subtle: #E8E2D6;
       --surface-elevated: #F5F1EA;
       --border-hairline: rgba(184, 169, 154, 0.42);
-      --border-focus: #7A2320;
+      --border-focus: #23312A;
       
       --text-primary: #1C1D1C;
       --text-muted: #5C5852;
       --text-dim: #8A847C;
       
-      --accent-institutional: #7A2320; /* Hermès Oxblood */
-      --accent-hover: #611A18;
-      --accent-soft: #F9EBEA;
-      --accent-border: #D98880;
+      --accent-institutional: #23312A; /* Hermès Oxblood */
+      --accent-hover: #2E4F3E;
+      --accent-soft: rgba(35, 49, 42, 0.08);
+      --accent-border: rgba(35, 49, 42, 0.22);
       --accent-sky: #2E4F3E;
       
       --status-available: #2E4F3E;
       --status-available-bg: #EAEFEA;
       --status-radar: #A8674F;
       --status-radar-bg: #FBF4F1;
-      --status-soldout: #7A2320;
-      --status-soldout-bg: #F9EBEA;
+      --status-soldout: #23312A;
+      --status-soldout-bg: rgba(35, 49, 42, 0.08);
 
       --font-display: 'Cormorant Garamond', Garamond, Georgia, serif;
       --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
-      --radius-card: 14px;
-      --radius-ctrl: 8px;
+      --radius-card: 6px;
+      --radius-ctrl: 3px;
+    }
+
+    
+    :focus-visible {
+      outline: 2px solid var(--accent-institutional);
+      outline-offset: 2px;
+    }
+
+    button, a, [role="button"], .tappable {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    button:active, .btn-primary:active, .btn-secondary:active, .tappable:active {
+      transform: scale(0.97) !important;
+      transition: transform 0.08s ease !important;
     }
 
     *, *::before, *::after {
@@ -159,7 +176,7 @@
       padding: 8px 15px;
       border-radius: 10px;
       border: 1px solid var(--border-hairline);
-      background: #FFFFFF;
+      background: var(--surface-card);
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .btn-nav-back:hover {
@@ -236,7 +253,7 @@
       transform: translateY(-1px);
     }
     .view-tab-btn.active {
-      background: #FFFFFF;
+      background: var(--surface-card);
       color: var(--accent-institutional);
       font-weight: 700;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -271,7 +288,7 @@
     }
     .role-card-btn {
       padding: 13px 18px;
-      background: #FFFFFF;
+      background: var(--surface-card);
       border: 1.5px solid var(--border-hairline);
       border-radius: 12px;
       cursor: pointer;
@@ -310,7 +327,7 @@
     }
     .role-card-btn.active .role-icon-box {
       background: var(--accent-institutional);
-      color: #FFFFFF;
+      color: #F5F1EA;
     }
     .role-info-title {
       font-size: 13.5px;
@@ -396,7 +413,7 @@
       justify-content: center;
       gap: 10px;
       padding: 13px 18px;
-      background: #FFFFFF;
+      background: var(--surface-card);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-ctrl);
       color: var(--text-primary);
@@ -411,7 +428,7 @@
       overflow: hidden;
     }
     .btn-oauth:hover {
-      background: #FFFFFF;
+      background: var(--surface-card);
       border-color: #94A3B8;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
       transform: translateY(-2px);
@@ -473,7 +490,7 @@
       width: 44px;
       height: 44px;
       border-radius: 50%;
-      border: 2px solid #FFFFFF;
+      border: 2px solid var(--surface-card);
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       object-fit: cover;
       flex-shrink: 0;
@@ -568,7 +585,7 @@
     .form-input {
       width: 100%;
       height: 48px;
-      background: #FFFFFF;
+      background: var(--surface-card);
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-ctrl);
       padding: 0 16px;
@@ -584,7 +601,7 @@
     }
     .form-input:focus {
       border-color: var(--accent-institutional);
-      background-color: #FFFFFF;
+      background-color: var(--surface-card);
       box-shadow: 0 0 0 3.5px rgba(30, 58, 138, 0.12), 0 2px 6px rgba(0, 0, 0, 0.03);
       transform: translateY(-1px);
     }
@@ -653,7 +670,7 @@
     }
     .btn-accent {
       background: var(--accent-institutional);
-      color: #FFFFFF;
+      color: #F5F1EA;
       border: 1px solid var(--accent-institutional);
       box-shadow: 0 4px 14px rgba(30, 58, 138, 0.2);
       overflow: hidden;
@@ -684,7 +701,7 @@
       transition: left 0.8s ease-in-out;
     }
     .btn-secondary {
-      background: #FFFFFF;
+      background: var(--surface-card);
       color: var(--text-primary);
       border: 1px solid var(--border-hairline);
     }
@@ -747,7 +764,7 @@
     .wizard-step-item.active .step-circle {
       background: var(--accent-institutional);
       border-color: var(--accent-institutional);
-      color: #FFFFFF;
+      color: #F5F1EA;
       box-shadow: 0 0 0 4px var(--accent-soft);
       animation: pulseActiveStep 2.4s infinite ease-in-out;
     }
@@ -762,7 +779,7 @@
     .wizard-step-item.done .step-circle {
       background: var(--status-available);
       border-color: var(--status-available);
-      color: #FFFFFF;
+      color: #F5F1EA;
       animation: popDoneStep 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     @keyframes popDoneStep {
@@ -917,7 +934,7 @@
       width: 46px;
       height: 46px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #7A2320, #611A18);
+      background: linear-gradient(135deg, #23312A, #2E4F3E);
       color: #F5F1EA;
       display: flex;
       align-items: center;
@@ -951,8 +968,8 @@
   <header class="app-nav">
     <a href="busliner-partners.html" class="brand-link" onclick="goBackToMain(event)">
       <svg width="26" height="26" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="28" height="28" rx="6" fill="#7A2320"/>
-        <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect width="28" height="28" rx="6" fill="#23312A"/>
+        <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#F5F1EA" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M6 9H11.5M6 19H11.5" stroke="#C29B38" stroke-width="2" stroke-linecap="round"/>
       </svg>
       <span class="brand-title">BUS<span class="brand-title-thin">LINER</span> <span class="badge-b2b font-onlyfans">partners</span></span>
@@ -1533,7 +1550,7 @@
 
   <!-- TELEGRAM AUTH MODAL (E2E HMAC-SHA256 & ANTI-REPLAY BOT SECURITY) -->
   <div id="telegram-auth-modal" style="display: none; position: fixed; inset: 0; background: rgba(20,21,24,0.65); backdrop-filter: blur(5px); z-index: 99999; align-items: center; justify-content: center; padding: 20px;" onclick="if(event.target===this) closeTelegramModal()">
-    <div style="background: #FFFFFF; border: 1px solid var(--border-hairline); border-radius: 18px; width: 100%; max-width: 450px; padding: 26px 28px; box-shadow: 0 24px 48px rgba(0,0,0,0.22); position: relative; animation: modalPop 0.28s cubic-bezier(0.16, 1, 0.3, 1);">
+    <div style="background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: 18px; width: 100%; max-width: 450px; padding: 26px 28px; box-shadow: 0 24px 48px rgba(0,0,0,0.22); position: relative; animation: modalPop 0.28s cubic-bezier(0.16, 1, 0.3, 1);">
       
       <!-- HEADER -->
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
@@ -1552,7 +1569,7 @@
 
       <!-- TABS: 1-CLICK BOT vs MANUAL / OTP -->
       <div style="display: flex; background: var(--surface-subtle); border-radius: 8px; padding: 3px; margin-bottom: 16px;">
-        <button type="button" id="tg-tab-btn-bot" onclick="switchTgTab('bot')" style="flex: 1; padding: 8px 12px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; background: #FFFFFF; color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.2s ease;">Вход через бота</button>
+        <button type="button" id="tg-tab-btn-bot" onclick="switchTgTab('bot')" style="flex: 1; padding: 8px 12px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; background: var(--surface-card); color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.2s ease;">Вход через бота</button>
         <button type="button" id="tg-tab-btn-manual" onclick="switchTgTab('manual')" style="flex: 1; padding: 8px 12px; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; background: transparent; color: var(--text-muted); transition: all 0.2s ease;">Номер или код</button>
       </div>
 
@@ -1564,7 +1581,7 @@
 
         <!-- CTA DEEP LINK BUTTON -->
         <a id="tg-deep-link-btn" href="https://t.me/buslinerbot" target="_blank" class="btn btn-accent" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px 20px; font-size: 14px; text-decoration: none; margin-bottom: 14px;">
-          <svg viewBox="0 0 24 24" fill="#FFFFFF" style="width: 18px; height: 18px;">
+          <svg viewBox="0 0 24 24" fill="#F5F1EA" style="width: 18px; height: 18px;">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
           </svg>
           <span>Открыть Telegram &rarr;</span>
@@ -1641,9 +1658,9 @@
         if (bic) {
           bicInput.style.transition = 'all 0.25s ease';
           bicInput.style.backgroundColor = '#EFF6FF';
-          bicInput.style.borderColor = '#7A2320';
+          bicInput.style.borderColor = '#23312A';
           setTimeout(() => {
-            bicInput.style.backgroundColor = '#FFFFFF';
+            bicInput.style.backgroundColor = '#FAF8F5';
             bicInput.style.borderColor = '#E2E2DC';
           }, 400);
         } else {
@@ -1724,7 +1741,7 @@
           bottom: 24px;
           right: 24px;
           background: #141518;
-          color: #FFFFFF;
+          color: #F5F1EA;
           padding: 16px 20px;
           border-radius: 12px;
           box-shadow: 0 16px 36px rgba(0,0,0,0.25);
@@ -1749,7 +1766,7 @@
       toast.innerHTML = `
         <div style="flex-shrink: 0;">${icon}</div>
         <div style="line-height: 1.35;">
-          <div style="font-weight: 700; font-size: 14px; color: #FFFFFF; margin-bottom: 2px;">${title}</div>
+          <div style="font-weight: 700; font-size: 14px; color: #F5F1EA; margin-bottom: 2px;">${title}</div>
           <div style="font-size: 13px; color: #9CA3AF;">${message}</div>
         </div>
       `;
@@ -1815,7 +1832,7 @@
 
       if (tabName === 'bot') {
         if (btnBot) {
-          btnBot.style.background = '#FFFFFF';
+          btnBot.style.background = '#FAF8F5';
           btnBot.style.color = 'var(--text-primary)';
           btnBot.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
           btnBot.style.fontWeight = '600';
@@ -1830,7 +1847,7 @@
         if (paneManual) paneManual.style.display = 'none';
       } else {
         if (btnManual) {
-          btnManual.style.background = '#FFFFFF';
+          btnManual.style.background = '#FAF8F5';
           btnManual.style.color = 'var(--text-primary)';
           btnManual.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
           btnManual.style.fontWeight = '600';

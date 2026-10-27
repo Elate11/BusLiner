@@ -55,25 +55,25 @@
     /* ==========================================================================
        BUSLINER FLEET — STRICT DRIVER DASHBOARD WORKSPACE
        Quiet Luxury & Freight Monolith Design System Compliant
-       Tokens: Warm Noble Canvas (#F7F6F2) + Crisp White (#FFFFFF) + Institutional Navy (#7A2320)
+       Tokens: Warm Noble Canvas (#F7F6F2) + Soft Surface (#FAF8F5) + Alpine Forest (#23312A)
        Hairline 1px Borders (#E2E2DC), Tabular Monospace Data, Zero Decoration
        ========================================================================== */
     :root {
       --canvas: #F7F6F2;
-      --surface-card: #FFFFFF;
+      --surface-card: #FAF8F5;
       --surface-subtle: #F0EFEA;
       --surface-elevated: #FAFAF8;
       --border-hairline: #E2E2DC;
-      --border-focus: #7A2320;
+      --border-focus: #23312A;
       
       --text-primary: #141518;
       --text-muted: #525660;
       --text-dim: #8E929B;
       
-      --accent-institutional: #7A2320;
-      --accent-hover: #611A18;
-      --accent-soft: #F9EBEA;
-      --accent-border: #D98880;
+      --accent-institutional: #23312A;
+      --accent-hover: #2E4F3E;
+      --accent-soft: rgba(35, 49, 42, 0.08);
+      --accent-border: rgba(35, 49, 42, 0.22);
       --accent-sky: #93C5FD;
       
       /* Serious, understated status tokens (no neon, no playful bubbles) */
@@ -90,14 +90,31 @@
       --font-display: var(--font-display);
       --font-body: var(--font-body);
       --font-mono: 'JetBrains Mono', SFMono-Regular, monospace;
-      --radius-card: 20px;
-      --radius-ctrl: 10px;
+      --radius-card: 6px;
+      --radius-ctrl: 3px;
     }
 
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent-institutional);
+      outline-offset: 2px;
+    }
+
+    button, a, [role="button"], .tappable {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    button:active, .btn-primary:active, .btn-secondary:active, .btn-driver-hero:active, .btn-action-icon:active, .tappable:active {
+      transform: scale(0.97) !important;
+      transition: transform 0.08s ease !important;
     }
 
     body {
@@ -191,7 +208,7 @@
       align-items: center;
       gap: 12px;
       padding: 5px 16px 5px 6px;
-      background: #FFFFFF;
+      background: #FAF8F5;
       border: 1.5px solid var(--border-hairline);
       border-radius: 40px;
       cursor: pointer;
@@ -212,7 +229,7 @@
       height: 36px;
       border-radius: 50%;
       background: var(--accent-institutional);
-      color: #FFFFFF;
+      color: #F5F1EA;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -228,7 +245,7 @@
       height: 10px;
       border-radius: 50%;
       background: var(--status-available);
-      border: 2px solid #FFFFFF;
+      border: 2px solid #FAF8F5;
     }
     .profile-name {
       font-size: 13.5px;
@@ -343,7 +360,7 @@
     }
     .btn-primary-institutional {
       background: var(--accent-institutional);
-      color: #FFFFFF;
+      color: #F5F1EA;
       border-color: var(--accent-institutional);
     }
     .btn-primary-institutional:hover {
@@ -351,7 +368,7 @@
       border-color: var(--accent-hover);
     }
     .btn-secondary-hairline {
-      background: #FFFFFF;
+      background: #FAF8F5;
       color: var(--text-primary);
       border-color: var(--border-hairline);
     }
@@ -460,7 +477,7 @@
       background: rgba(30, 58, 138, 0.04);
     }
     .dash-tab-btn.active {
-      background: #FFFFFF;
+      background: #FAF8F5;
       color: var(--accent-institutional);
       font-weight: 700;
       border: 1px solid var(--border-hairline);
@@ -533,7 +550,7 @@
       transition: all 0.15s ease;
     }
     .search-input-box input:focus {
-      background: #FFFFFF;
+      background: #FAF8F5;
       border-color: var(--accent-institutional);
       box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.08);
     }
@@ -562,7 +579,7 @@
       color: var(--text-primary);
     }
     .pill-filter-btn.active {
-      background: #FFFFFF;
+      background: #FAF8F5;
       color: var(--text-primary);
       font-weight: 700;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
@@ -593,7 +610,7 @@
       transition: all 0.15s ease;
     }
     .seg-view-btn.active {
-      background: #FFFFFF;
+      background: #FAF8F5;
       color: var(--accent-institutional);
       font-weight: 700;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
@@ -605,7 +622,7 @@
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-ctrl);
       overflow: hidden;
-      background: #FFFFFF;
+      background: #FAF8F5;
     }
     .strict-data-table {
       width: 100%;
@@ -734,7 +751,7 @@
     }
     .btn-action-board {
       background: #0F172A;
-      color: #FFFFFF;
+      color: #F5F1EA;
       border-color: #0F172A;
     }
     .btn-action-board:hover {
@@ -742,7 +759,7 @@
       border-color: #1E293B;
     }
     .btn-action-undo {
-      background: #FFFFFF;
+      background: #FAF8F5;
       color: #475569;
       border-color: #CBD5E1;
     }
@@ -760,7 +777,7 @@
       overflow-y: auto;
       padding: 0;
       border-radius: 16px;
-      background: #FFFFFF;
+      background: #FAF8F5;
       border: 1px solid var(--border-hairline);
       box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.25);
     }
@@ -785,7 +802,7 @@
       height: 32px;
       border-radius: 50%;
       background: rgba(0, 0, 0, 0.5);
-      color: #FFFFFF;
+      color: #F5F1EA;
       border: none;
       font-size: 20px;
       line-height: 1;
@@ -820,9 +837,9 @@
       width: 86px;
       height: 86px;
       border-radius: 50%;
-      background: #7A2320;
-      color: #FFFFFF;
-      border: 4px solid #FFFFFF;
+      background: #23312A;
+      color: #F5F1EA;
+      border: 4px solid #FAF8F5;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
       display: flex;
       align-items: center;
@@ -840,7 +857,7 @@
       height: 16px;
       border-radius: 50%;
       background: #166534;
-      border: 3px solid #FFFFFF;
+      border: 3px solid #FAF8F5;
     }
     .profile-hero-actions {
       padding-bottom: 4px;
@@ -852,7 +869,7 @@
       padding: 7px 18px;
       border-radius: 9999px;
       border: 1px solid var(--border-hairline);
-      background: #FFFFFF;
+      background: #FAF8F5;
       font-family: var(--font-body);
       font-size: 13px;
       font-weight: 700;
@@ -957,7 +974,7 @@
     .profile-nav-tabs {
       display: flex;
       border-bottom: 1px solid var(--border-hairline);
-      background: #FFFFFF;
+      background: #FAF8F5;
       padding: 0 16px;
     }
     .profile-nav-tab {
@@ -1030,7 +1047,7 @@
       pointer-events: none;
       z-index: 100;
       background: rgba(20, 21, 24, 0.94);
-      color: #FFFFFF;
+      color: #F5F1EA;
       padding: 8px 12px;
       border-radius: 8px;
       font-size: 12px;
@@ -1042,7 +1059,7 @@
     .tt-head {
       font-weight: 700;
       font-size: 12.5px;
-      color: #FFFFFF;
+      color: #F5F1EA;
       margin-bottom: 2px;
     }
     .tt-type {
@@ -1113,7 +1130,7 @@
     }
     .hud-pill-btn.active {
       background: var(--accent-institutional);
-      color: #FFFFFF;
+      color: #F5F1EA;
       font-weight: 700;
     }
 
@@ -1192,7 +1209,7 @@
       align-items: flex-start;
     }
     .timeline-item.active-run {
-      background: #FFFFFF;
+      background: #FAF8F5;
       border-color: var(--accent-institutional);
       box-shadow: 0 2px 10px rgba(30, 58, 138, 0.06);
     }
@@ -1221,7 +1238,7 @@
       gap: 10px;
     }
     .cargo-locker-card.occupied {
-      background: #FFFFFF;
+      background: #FAF8F5;
       border-color: var(--accent-border);
     }
 
@@ -1245,7 +1262,7 @@
       transition: all 0.15s ease;
     }
     .check-list-item:hover {
-      background: #FFFFFF;
+      background: #FAF8F5;
       border-color: var(--text-dim);
     }
     .check-list-item.checked {
@@ -1257,7 +1274,7 @@
       height: 20px;
       border-radius: 4px;
       border: 1.5px solid var(--border-hairline);
-      background: #FFFFFF;
+      background: #FAF8F5;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1269,7 +1286,7 @@
     .check-list-item.checked .check-box-strict {
       background: var(--accent-institutional);
       border-color: var(--accent-institutional);
-      color: #FFFFFF;
+      color: #F5F1EA;
     }
 
     /* MODAL OVERLAY & CARD */
@@ -1284,7 +1301,7 @@
       z-index: 2000;
     }
     .modal-card {
-      background: #FFFFFF;
+      background: #FAF8F5;
       border: 1px solid var(--border-hairline);
       border-radius: var(--radius-card);
       padding: 28px 32px;
@@ -1380,7 +1397,7 @@
       color: var(--text-primary);
       outline: none;
       transition: all 0.15s ease;
-      background: #FFFFFF;
+      background: #FAF8F5;
     }
     .form-input-strict:focus {
       border-color: var(--accent-institutional);
@@ -1393,7 +1410,7 @@
       bottom: 24px;
       right: 24px;
       background: #141518;
-      color: #FFFFFF;
+      color: #F5F1EA;
       border-radius: 10px;
       padding: 12px 18px;
       font-size: 13px;
@@ -1469,9 +1486,9 @@
       color: #D1D5DB;
     }
     body.cockpit-night-mode .btn-action-board {
-      background: #7A2320;
+      background: #23312A;
       border-color: #2563EB;
-      color: #FFFFFF;
+      color: #F5F1EA;
     }
     body.cockpit-night-mode .manifest-table th {
       background: #14161F;
@@ -1532,8 +1549,8 @@
     <div style="display: flex; align-items: center; gap: 14px;">
       <a href="carrier-dashboard.html" class="brand-link" title="BusLiner Driver">
         <svg width="26" height="26" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="28" height="28" rx="6" fill="#7A2320"/>
-          <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect width="28" height="28" rx="6" fill="#23312A"/>
+          <path d="M6 14H22M22 14L16 8.5M22 14L16 19.5" stroke="#F5F1EA" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M6 9H11.5M6 19H11.5" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
         </svg>
         <span class="brand-title">BUS<span class="brand-title-thin">LINER</span> <span class="badge-b2b font-onlyfans">driver</span></span>
@@ -3246,7 +3263,7 @@
       envCanvas.width = 1024; envCanvas.height = 512;
       const eCtx = envCanvas.getContext('2d');
       const grad = eCtx.createLinearGradient(0, 0, 0, 512);
-      grad.addColorStop(0.0, '#FFFFFF');
+      grad.addColorStop(0.0, '#F5F1EA');
       grad.addColorStop(0.35, '#E2E8F0');
       grad.addColorStop(0.5, '#F8FAFC');
       grad.addColorStop(0.52, '#94A3B8');
@@ -3717,7 +3734,7 @@
       // Отражатели линз ближнего и дальнего света
       [70, 165].forEach(cx => {
         const radGrad = hlCtx.createRadialGradient(cx, 64, 4, cx, 64, 42);
-        radGrad.addColorStop(0, '#FFFFFF');
+        radGrad.addColorStop(0, '#F5F1EA');
         radGrad.addColorStop(0.3, '#94A3B8');
         radGrad.addColorStop(0.7, '#1E293B');
         radGrad.addColorStop(1, '#090D16');
@@ -3728,7 +3745,7 @@
       });
 
       // Светодиодная дуга DRL (дневные ходовые огни)
-      hlCtx.strokeStyle = '#FFFFFF';
+      hlCtx.strokeStyle = '#F5F1EA';
       hlCtx.lineWidth = 7;
       hlCtx.lineCap = 'round';
       hlCtx.beginPath();
@@ -3922,14 +3939,14 @@
       const plateCanvas = document.createElement('canvas');
       plateCanvas.width = 256; plateCanvas.height = 64;
       const pCtx = plateCanvas.getContext('2d');
-      pCtx.fillStyle = '#FFFFFF';
+      pCtx.fillStyle = '#F5F1EA';
       pCtx.fillRect(0, 0, 256, 64);
       pCtx.strokeStyle = '#0F172A';
       pCtx.lineWidth = 4;
       pCtx.strokeRect(3, 3, 250, 58);
-      pCtx.fillStyle = '#7A2320';
+      pCtx.fillStyle = '#23312A';
       pCtx.fillRect(4, 4, 32, 56);
-      pCtx.fillStyle = '#FFFFFF';
+      pCtx.fillStyle = '#F5F1EA';
       pCtx.font = 'bold 16px sans-serif';
       pCtx.fillText('RUS', 6, 46);
       pCtx.fillStyle = '#0F172A';
@@ -4685,7 +4702,7 @@
       cCtx.beginPath();
       cCtx.arc(120, 130, 80, Math.PI * 0.75, Math.PI * 2.25);
       cCtx.stroke();
-      cCtx.fillStyle = '#FFFFFF';
+      cCtx.fillStyle = '#F5F1EA';
       cCtx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
       cCtx.textAlign = 'center';
       cCtx.fillText('90', 120, 125);
@@ -4699,7 +4716,7 @@
       cCtx.beginPath();
       cCtx.arc(392, 130, 80, Math.PI * 0.75, Math.PI * 2.25);
       cCtx.stroke();
-      cCtx.fillStyle = '#FFFFFF';
+      cCtx.fillStyle = '#F5F1EA';
       cCtx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
       cCtx.fillText('2.2', 392, 125);
       cCtx.font = '14px sans-serif';
@@ -4709,7 +4726,7 @@
       // Центральный бортовой компьютер
       cCtx.fillStyle = '#0284C7';
       cCtx.fillRect(206, 60, 100, 130);
-      cCtx.fillStyle = '#FFFFFF';
+      cCtx.fillStyle = '#F5F1EA';
       cCtx.font = 'bold 16px sans-serif';
       cCtx.fillText('D 7', 256, 95);
       cCtx.font = '13px sans-serif';
@@ -5813,12 +5830,12 @@
       const numCanvas = document.createElement('canvas');
       numCanvas.width = 128; numCanvas.height = 128;
       const ctx = numCanvas.getContext('2d');
-      ctx.fillStyle = isSelected ? '#7A2320' : '#0F172A';
+      ctx.fillStyle = isSelected ? '#23312A' : '#0F172A';
       ctx.fillRect(0, 0, 128, 128);
-      ctx.strokeStyle = isSelected ? '#93C5FD' : '#FFFFFF';
+      ctx.strokeStyle = isSelected ? '#93C5FD' : '#F5F1EA';
       ctx.lineWidth = 6;
       ctx.strokeRect(6, 6, 116, 116);
-      ctx.fillStyle = '#FFFFFF';
+      ctx.fillStyle = '#F5F1EA';
       ctx.font = '800 68px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
