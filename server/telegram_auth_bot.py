@@ -28,6 +28,17 @@ from urllib.parse import urlparse, parse_qs
 from urllib.request import Request, urlopen
 from urllib.error import URLError
 from typing import Dict, Any, Optional, List
+from datetime import datetime, timedelta
+
+# Universal Belarus Transport Sniper Integration
+try:
+    from server.external_transport_sniper import universal_sniper_manager, TransportTrip
+except ImportError:
+    try:
+        from external_transport_sniper import universal_sniper_manager, TransportTrip
+    except ImportError:
+        universal_sniper_manager = None
+        TransportTrip = None
 
 # ==============================================================================
 # SECURE CONFIGURATION & TOKEN LOADER (FROM .env / ENVIRONMENT)
@@ -797,6 +808,38 @@ def send_role_selection_menu(chat_id: int, first_name: str, edit_msg_id: Optiona
 
 
 # ==============================================================================
+# UNIVERSAL BELARUS TRANSPORT SNIPER TELEGRAM DISPATCHER
+# ==============================================================================
+def on_universal_sniper_winner(chat_id: int, task_id: str, trip: Any) -> None:
+    """Dispatches instant Telegram notification when a seat is intercepted in Belarus."""
+    msg = (
+        "<b>BUSLINER SNIPER // БИЛЕТ ПЕРЕХВАЧЕН</b>\n\n"
+        f"• Сервис: <b>{trip.provider_name}</b>\n"
+        f"• Маршрут: <b>{trip.origin} &rarr; {trip.destination}</b>\n"
+        f"• Отправление: <b>{trip.departure_time}</b>\n"
+        f"• Перевозчик: {trip.carrier_name}\n"
+        f"• Свободно мест: <b>{trip.free_seats}</b>\n"
+        f"• Тариф: <b>{trip.price_byn:.2f} BYN</b>\n\n"
+        "Место освободилось прямо сейчас! Нажмите кнопку ниже для мгновенного бронирования:"
+    )
+    keyboard = {
+        "inline_keyboard": [
+            [{"text": f"Забронировать билет ({trip.price_byn:.2f} BYN) &rarr;", "url": trip.booking_url}],
+            [{"text": "Личный кабинет BusLiner", "url": "https://elate11.github.io/BusLiner/passenger-cabinet.html"}]
+        ]
+    }
+    send_telegram_api_request("sendMessage", {
+        "chat_id": chat_id,
+        "text": msg,
+        "parse_mode": "HTML",
+        "reply_markup": keyboard
+    })
+
+if universal_sniper_manager:
+    universal_sniper_manager.telegram_callback = on_universal_sniper_winner
+
+
+# ==============================================================================
 # TELEGRAM UPDATE CONTROLLER (MESSAGES & INLINE CALLBACKS)
 # ==============================================================================
 def handle_telegram_update(update: Dict[str, Any]) -> None:
@@ -1026,19 +1069,39 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             send_telegram_api_request("sendMessage", {"chat_id": chat_id, "text": t_msg, "parse_mode": "Markdown", "reply_markup": keyboard})
             return
 
-        elif text in ("/sniper", "/concierge"):
-            sniper_msg = (
-                f"*VIP Консьерж-Снайпер // Автоперехват мест*\n\n"
+        elif text in ("/sniper", "/concierge", "/sniper_rb", "/snipe") or text.startswith("/snipe"):
+            sniper_rb_msg = (
+                f"<b>УНИВЕРСАЛЬНЫЙ СНАЙПЕР ПЕРЕВОЗОК РБ</b>\n\n"
                 f"Здравствуйте, {first_name}.\n"
-                f"Консьерж-Снайпер автоматически перехватывает отказные билеты на 100% заполненные рейсы.\n\n"
-                f"• Радар мониторинга: *Активен (цикл 300 мс)*\n"
-                f"• Скорость перехвата: *0.38 секунды*\n"
-                f"• Целевой рейс: *Минск -> Вильнюс (18:45)*\n"
-                f"• Статус: Ожидание сдачи билета пассажиром\n\n"
-                f"Как только место освободится, бот мгновенно выкупит его на ваше имя и пришлет билет сюда!"
+                f"Автоматический перехват освобождающихся мест во всех сервисах Беларуси:\n\n"
+                f"• <b>Атлас (Atlasbus.by)</b> — крупнейший агрегатор маршруток РБ\n"
+                f"• <b>Региональные маршрутки</b> (NextFree: Лида, Полоцк, Гродно, Могилев)\n"
+                f"• <b>Белорусская ЖД (RW.BY)</b> — поезда Stadler и экспрессы\n"
+                f"• <b>Автовокзалы Беларуси</b> (Ticketbus.by)\n"
+                f"• <b>Автономный Web-инспектор</b> по любой ссылке на сайт перевозчика\n\n"
+                f"Выберите популярный маршрут для запуска фонового радара:"
             )
-            keyboard = {"inline_keyboard": [[{"text": "Симуляция выкупа (0.38с)", "callback_data": "client_sniper_simulate"}]]}
-            send_telegram_api_request("sendMessage", {"chat_id": chat_id, "text": sniper_msg, "parse_mode": "Markdown", "reply_markup": keyboard})
+            keyboard = {
+                "inline_keyboard": [
+                    [
+                        {"text": "Минск -> Лида (от 22 BYN)", "callback_data": "snipe_rb:minsk_lida"},
+                        {"text": "Минск -> Гродно (от 30 BYN)", "callback_data": "snipe_rb:minsk_grodno"}
+                    ],
+                    [
+                        {"text": "Минск -> Брест (от 35 BYN)", "callback_data": "snipe_rb:minsk_brest"},
+                        {"text": "Минск -> Вильнюс (от 95 BYN)", "callback_data": "snipe_rb:minsk_vilnius"}
+                    ],
+                    [
+                        {"text": "Полоцк -> Минск (от 25 BYN)", "callback_data": "snipe_rb:polotsk_minsk"},
+                        {"text": "Мои активные снайперы", "callback_data": "snipe_rb:status"}
+                    ],
+                    [
+                        {"text": "Симуляция выкупа (0.38с)", "callback_data": "client_sniper_simulate"},
+                        {"text": "Личный кабинет", "url": "https://elate11.github.io/BusLiner/passenger-cabinet.html"}
+                    ]
+                ]
+            }
+            send_telegram_api_request("sendMessage", {"chat_id": chat_id, "text": sniper_rb_msg, "parse_mode": "HTML", "reply_markup": keyboard})
             return
 
         elif text in ("/trips", "/schedule"):
@@ -1296,6 +1359,54 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             ]}
             send_telegram_api_request("editMessageText", {"chat_id": chat_id, "message_id": msg_id, "text": msg, "parse_mode": "Markdown", "reply_markup": keyboard})
             return
+
+        elif cb_data.startswith("snipe_rb:"):
+            route_key = cb_data.replace("snipe_rb:", "").strip()
+            if route_key == "status":
+                tasks_info = []
+                if universal_sniper_manager:
+                    for t_id, t in universal_sniper_manager.active_tasks.items():
+                        if t.telegram_chat_id == chat_id:
+                            tasks_info.append(f"• <b>{t.origin} &rarr; {t.destination}</b> ({t.target_date}) &bull; Статус: {t.status} (проверок: {t.checks_count})")
+                status_text = "\n".join(tasks_info) if tasks_info else "У вас нет активных задач мониторинга."
+                msg = f"<b>АКТИВНЫЕ СНАЙПЕРЫ РБ:</b>\n\n{status_text}"
+                send_telegram_api_request("answerCallbackQuery", {"callback_query_id": cb_id})
+                send_telegram_api_request("sendMessage", {"chat_id": chat_id, "text": msg, "parse_mode": "HTML"})
+                return
+
+            route_map = {
+                "minsk_lida": ("Минск", "Лида", 25.0),
+                "minsk_grodno": ("Минск", "Гродно", 35.0),
+                "minsk_brest": ("Минск", "Брест", 35.0),
+                "minsk_vilnius": ("Минск", "Вильнюс", 95.0),
+                "polotsk_minsk": ("Полоцк", "Минск", 25.0)
+            }
+            if route_key in route_map and universal_sniper_manager:
+                orig, dest, max_p = route_map[route_key]
+                target_d = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
+                t = universal_sniper_manager.create_sniper_task(
+                    user_id=f"tg_{user_id}",
+                    telegram_chat_id=chat_id,
+                    origin=orig,
+                    destination=dest,
+                    target_date=target_d,
+                    time_window_start="06:00",
+                    time_window_end="23:59",
+                    max_price_byn=max_p,
+                    providers=["all"],
+                    passenger_name=first_name
+                )
+                ack_msg = (
+                    f"<b>СНАЙПЕР АКТИВИРОВАН // {orig} &rarr; {dest}</b>\n\n"
+                    f"• Дата мониторинга: <b>{target_d}</b>\n"
+                    f"• Максимальная цена: <b>{max_p:.2f} BYN</b>\n"
+                    f"• Охват: <b>Атлас, NextFree, RW.BY, Автовокзалы</b>\n"
+                    f"• Режим: Фоновое сканирование (каждые 20 сек)\n\n"
+                    f"Как только место появится, вы мгновенно получите сообщение со ссылкой на прямое бронирование!"
+                )
+                send_telegram_api_request("answerCallbackQuery", {"callback_query_id": cb_id, "text": f"Снайпер {orig} -> {dest} запущен!"})
+                send_telegram_api_request("sendMessage", {"chat_id": chat_id, "text": ack_msg, "parse_mode": "HTML"})
+                return
 
         elif cb_data == "client_sniper_simulate":
             send_telegram_api_request("answerCallbackQuery", {"callback_query_id": cb_id, "text": "Перехват билета за 0.38с!"})
@@ -1675,6 +1786,75 @@ class TelegramAuthHTTPHandler(SimpleHTTPRequestHandler):
             self._send_json_response(200, {"success": True, "message": "Пассажир успешно сохранен."})
             return
 
+        # ======================================================================
+        # UNIVERSAL BELARUS TRANSPORT SNIPER ENDPOINTS
+        # ======================================================================
+        elif url.path == "/api/sniper/external/create":
+            if not universal_sniper_manager:
+                self._send_json_response(500, {"success": False, "error": "Universal sniper module not loaded"})
+                return
+            orig = payload.get("origin", "Минск")
+            dest = payload.get("destination", "Лида")
+            t_date = payload.get("date", datetime.now().strftime("%Y-%m-%d"))
+            t_from = payload.get("time_from", "00:00")
+            t_to = payload.get("time_to", "23:59")
+            max_p = float(payload.get("max_price", 100.0))
+            providers = payload.get("providers", ["all"])
+            custom_url = payload.get("custom_url")
+            user_id = str(payload.get("user_id", "web_client"))
+            chat_id = payload.get("telegram_chat_id")
+
+            task = universal_sniper_manager.create_sniper_task(
+                user_id=user_id,
+                telegram_chat_id=int(chat_id) if chat_id else None,
+                origin=orig,
+                destination=dest,
+                target_date=t_date,
+                time_window_start=t_from,
+                time_window_end=t_to,
+                max_price_byn=max_p,
+                providers=providers,
+                custom_url=custom_url
+            )
+            matched = universal_sniper_manager.scan_all_providers(task)
+            self._send_json_response(200, {
+                "success": True,
+                "task_id": task.task_id,
+                "status": task.status,
+                "initial_matches_count": len(matched),
+                "initial_matches": [m.to_dict() for m in matched[:5]]
+            })
+            return
+
+        elif url.path == "/api/sniper/external/sniff":
+            if not universal_sniper_manager:
+                self._send_json_response(500, {"success": False, "error": "Universal sniper module not loaded"})
+                return
+            target_url = payload.get("url", "")
+            orig = payload.get("origin", "")
+            dest = payload.get("destination", "")
+            t_date = payload.get("date", datetime.now().strftime("%Y-%m-%d"))
+            if not target_url:
+                self._send_json_response(400, {"success": False, "error": "URL parameter required"})
+                return
+            trips = universal_sniper_manager.web_sniffer.sniff_and_extract(target_url, orig, dest, t_date)
+            self._send_json_response(200, {
+                "success": True,
+                "target_url": target_url,
+                "extracted_trips_count": len(trips),
+                "trips": [t.to_dict() for t in trips]
+            })
+            return
+
+        elif url.path == "/api/sniper/external/cancel":
+            if not universal_sniper_manager:
+                self._send_json_response(500, {"success": False, "error": "Universal sniper module not loaded"})
+                return
+            task_id = payload.get("task_id", "")
+            success = universal_sniper_manager.cancel_task(task_id)
+            self._send_json_response(200, {"success": success, "task_id": task_id})
+            return
+
         self._send_json_response(404, {"error": "Endpoint not found"})
 
     def do_GET(self):
@@ -1733,6 +1913,27 @@ class TelegramAuthHTTPHandler(SimpleHTTPRequestHandler):
             })
             return
 
+        elif url.path == "/api/sniper/external/tasks":
+            if not universal_sniper_manager:
+                self._send_json_response(500, {"success": False, "error": "Universal sniper module not loaded"})
+                return
+            tasks_data = [
+                {
+                    "task_id": t.task_id,
+                    "origin": t.origin,
+                    "destination": t.destination,
+                    "target_date": t.target_date,
+                    "time_window": f"{t.time_window_start} — {t.time_window_end}",
+                    "status": t.status,
+                    "checks_count": t.checks_count,
+                    "last_checked_at": t.last_checked_at,
+                    "winning_trip": t.winning_trip.to_dict() if t.winning_trip else None
+                }
+                for t in universal_sniper_manager.active_tasks.values()
+            ]
+            self._send_json_response(200, {"success": True, "tasks": tasks_data})
+            return
+
         elif url.path.startswith("/api/"):
             self._send_json_response(404, {"error": "Endpoint not found"})
             return
@@ -1744,12 +1945,27 @@ class TelegramAuthHTTPHandler(SimpleHTTPRequestHandler):
 # ==============================================================================
 # MAIN ENTRYPOINT & DAEMON RUNNER
 # ==============================================================================
+def universal_sniper_background_worker():
+    """Background cycle checking active sniper tasks across all providers."""
+    while True:
+        try:
+            if universal_sniper_manager:
+                universal_sniper_manager.execute_check_cycle()
+        except Exception as e:
+            print(f"[Universal Sniper Worker Error]: {e}", file=sys.stderr)
+        time.sleep(20)
+
+
 def run_auth_server(host: str = SERVER_HOST, port: int = SERVER_PORT):
     init_db()
 
     # Start Telegram background polling worker thread
     polling_thread = threading.Thread(target=telegram_polling_worker, daemon=True)
     polling_thread.start()
+
+    # Start Universal Belarus Transport Sniper worker thread
+    sniper_thread = threading.Thread(target=universal_sniper_background_worker, daemon=True)
+    sniper_thread.start()
 
     server_address = (host, port)
     httpd = HTTPServer(server_address, TelegramAuthHTTPHandler)

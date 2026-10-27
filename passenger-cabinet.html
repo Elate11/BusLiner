@@ -3832,12 +3832,36 @@
             </h3>
 
             <form onsubmit="handleSniperSetupSubmit(event)" style="display: flex; flex-direction: column; gap: 14px;">
+              <!-- PROVIDER SELECTION: ALL BELARUS TRANSPORT PLATFORMS -->
+              <div class="form-group">
+                <label class="form-label" for="sniperProviderSelect">Платформа мониторинга и сервисы Беларуси (РБ)</label>
+                <select class="form-select" id="sniperProviderSelect" style="height: 48px; min-height: 48px; font-size: 15px;" onchange="toggleCustomUrlField(this.value)">
+                  <option value="all">Все сервисы Беларуси сразу (Атлас + NextFree + RW.BY + BusLiner)</option>
+                  <option value="atlasbus">Атлас (Atlasbus.by — 70%+ маршруток РБ)</option>
+                  <option value="nextfree">Региональные маршрутки (NextFree: Лида, Полоцк, Гродно)</option>
+                  <option value="rw_by">Белорусская ЖД (pass.rw.by — Штадлер и экспрессы)</option>
+                  <option value="busliner">BusLiner VIP Sprinter</option>
+                  <option value="custom_url">Произвольный сайт перевозчика (Автономный Web-инспектор)</option>
+                </select>
+              </div>
+
+              <div class="form-group" id="sniperCustomUrlGroup" style="display: none;">
+                <label class="form-label" for="sniperCustomUrlInput">URL сайта любого перевозчика</label>
+                <input type="url" class="form-input mono" id="sniperCustomUrlInput" placeholder="https://bilet.minsk-lida.by или https://example-bus.by" style="height: 48px; min-height: 48px; font-size: 15px;">
+                <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 4px;">
+                  Автономный инспектор сам найдет скрытый API эндпоинт или распарсит карточки расписания на странице.
+                </div>
+              </div>
+
               <div class="form-group">
                 <label class="form-label" for="sniperRouteSelect">Маршрут перехвата</label>
                 <select class="form-select" id="sniperRouteSelect" style="height: 48px; min-height: 48px; font-size: 16px;">
-                  <option value="Минск — Вильнюс">Минск &rarr; Вильнюс (Центральный АВ &bull; 18:45)</option>
+                  <option value="Минск — Лида">Минск &rarr; Лида (Автовокзал / Каменная Горка)</option>
                   <option value="Минск — Гродно">Минск &rarr; Гродно (АВ Восточный &bull; 19:30)</option>
                   <option value="Минск — Брест">Минск &rarr; Брест (Центральный АВ &bull; 20:15)</option>
+                  <option value="Минск — Вильнюс">Минск &rarr; Вильнюс (Центральный АВ &bull; 18:45)</option>
+                  <option value="Полоцк — Минск">Полоцк / Новополоцк &rarr; Минск</option>
+                  <option value="Минск — Гомель">Минск &rarr; Гомель (Центральный АВ)</option>
                   <option value="Гродно — Минск">Гродно &rarr; Минск (Автовокзал &bull; 07:00)</option>
                 </select>
               </div>
@@ -4932,6 +4956,11 @@
       }, 750);
     }
 
+    function toggleCustomUrlField(val) {
+      const el = document.getElementById('sniperCustomUrlGroup');
+      if (el) el.style.display = (val === 'custom_url') ? 'block' : 'none';
+    }
+
     function handleSniperSetupSubmit(e) {
       if (e) e.preventDefault();
       
@@ -4942,6 +4971,8 @@
         return;
       }
 
+      const provider = document.getElementById('sniperProviderSelect')?.value || 'all';
+      const customUrl = document.getElementById('sniperCustomUrlInput')?.value || '';
       const route = document.getElementById('sniperRouteSelect').value;
       const date = document.getElementById('sniperDateInput').value || 'Сегодня';
       const timeFrom = document.getElementById('sniperTimeFrom')?.value || '17:00';
@@ -4957,10 +4988,43 @@
       if (routeTarget) routeTarget.textContent = route;
       if (timeTarget) timeTarget.textContent = `${date} • ${timeFrom} — ${timeTo}`;
       if (seatTarget) seatTarget.textContent = `${seat} • ${passenger.split('•')[0].trim()}`;
-      if (queueText) queueText.textContent = `Снайпер ищет билеты: ${route} (${timeFrom}–${timeTo}). В очереди перед вами: 2 человека`;
+      if (queueText) queueText.textContent = `Снайпер РБ сканирует (${provider}): ${route} (${timeFrom}–${timeTo}). В очереди перед вами: 1 человек`;
+
+      // Split route into origin and destination
+      const parts = route.split(/—|–|->|&rarr;/).map(s => s.trim());
+      const orig = parts[0] || 'Минск';
+      const dest = parts[1] || 'Лида';
+
+      // Call Universal Belarus Sniper backend API
+      fetch('/api/sniper/external/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          origin: orig,
+          destination: dest,
+          date: date,
+          time_from: timeFrom,
+          time_to: timeTo,
+          max_price: 50.0,
+          providers: [provider],
+          custom_url: customUrl || null
+        })
+      }).then(r => r.json()).then(data => {
+        if (data && data.success) {
+          if (data.initial_matches_count > 0) {
+            const win = data.initial_matches[0];
+            const banner = document.getElementById('sniperSuccessBanner');
+            const bText = document.getElementById('sniperSuccessText');
+            if (banner && bText) {
+              bText.innerHTML = `<strong>Место найдено (${win.provider_name})!</strong> Рейс: ${win.departure_time} &bull; Тариф: ${win.price_byn} BYN. <a href="${win.booking_url}" target="_blank" style="color: var(--color-forest); font-weight: 700; text-decoration: underline;">Забронировать прямо сейчас &rarr;</a>`;
+              banner.style.display = 'block';
+            }
+          }
+        }
+      }).catch(err => console.debug('Sniper API call backgrounded:', err));
 
       playSuccessChime();
-      showNotification(`Снайпер активен: ${route} (${timeFrom}–${timeTo}). Защита от спама подтверждена.`);
+      showNotification(`Снайпер РБ активирован: ${route} (${timeFrom}–${timeTo}). Мониторинг всех сервисов.`);
     }
 
     // EXPORT TO NOTION
