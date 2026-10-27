@@ -2954,7 +2954,7 @@ const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra 
       canvasContainer.addEventListener('pointerup', (e) => {
         const dx = Math.abs(e.clientX - downPos.x);
         const dy = Math.abs(e.clientY - downPos.y);
-        if (dx > 6 || dy > 6) return; // Игнорируем смещение панорамирования
+        if (dx > 14 || dy > 14) return; // Игнорируем активное панорамирование камеры
 
         const hit = getIntersectedSeat(e);
         if (hit) {
@@ -2968,22 +2968,26 @@ const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra 
 
     function on3DSeatClick(seat) {
       const seatNum = parseInt(seat.num, 10);
-      selectedSeatInspection = seatNum;
 
-      // Плавное приближение камеры строго к выбранному креслу в горизонтальной ориентации
-      targetCamPos = [seat.pos[0], 3.2, seat.pos[2]];
-      targetCamLook = [seat.pos[0], 0.65, seat.pos[2]];
-      isAnimatingCam = true;
-      clearPresetButtons();
-
-      if (typeof window.inspectCutawaySeat === 'function') {
-        window.inspectCutawaySeat(seatNum, true);
-      } else if (typeof inspectCutawaySeat === 'function') {
-        inspectCutawaySeat(seatNum, true);
-      }
       if (typeof window.onSprinterSeatSelect === 'function') {
         const p = passengers.find(item => item.seat === seatNum);
         window.onSprinterSeatSelect(seatNum, p);
+      }
+
+      if (selectedSeatsList.includes(seatNum)) {
+        selectedSeatInspection = seatNum;
+        targetCamPos = [seat.pos[0], 3.2, seat.pos[2]];
+        targetCamLook = [seat.pos[0], 0.65, seat.pos[2]];
+        isAnimatingCam = true;
+      } else {
+        selectedSeatInspection = null;
+      }
+      clearPresetButtons();
+
+      if (typeof window.inspectCutawaySeat === 'function') {
+        window.inspectCutawaySeat(seatNum, selectedSeatsList.includes(seatNum));
+      } else if (typeof inspectCutawaySeat === 'function') {
+        inspectCutawaySeat(seatNum, selectedSeatsList.includes(seatNum));
       }
       update3DSeatsAppearance();
     }
@@ -3135,6 +3139,9 @@ const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra 
       } else {
         selectedSeatsList = [];
       }
+      if (selectedSeatInspection !== null && !selectedSeatsList.includes(selectedSeatInspection)) {
+        selectedSeatInspection = null;
+      }
       update3DSeatsAppearance();
     },
     getSelectedSeats: function() {
@@ -3146,9 +3153,11 @@ const XR = -2.20; // удлиненная база Mercedes-Benz Sprinter Extra 
       const idx = selectedSeatsList.indexOf(num);
       if (idx !== -1) {
         selectedSeatsList.splice(idx, 1);
+        if (selectedSeatInspection === num) selectedSeatInspection = null;
       } else {
         if (selectedSeatsList.length < 3) {
           selectedSeatsList.push(num);
+          selectedSeatInspection = num;
         }
       }
       update3DSeatsAppearance();

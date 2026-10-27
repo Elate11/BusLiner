@@ -3931,8 +3931,19 @@
         </div>
 
         <!-- 2D SPRINTER INTERACTIVE MAP -->
-        <div id="booking2DContainer" style="display: none;">
+        <div id="booking2DContainer" style="display: none; padding: 14px; background: var(--canvas-ivory); border-radius: var(--radius-sm); border: 1px solid var(--border-hairline);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 11.5px; color: var(--text-muted); padding-bottom: 8px; border-bottom: 1px dashed var(--border-hairline); flex-wrap: wrap; gap: 8px;">
+            <span style="font-weight: 600; color: var(--color-forest);">&uarr; Передняя часть микроавтобуса (Водитель)</span>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <span style="display: inline-flex; align-items: center; gap: 5px;"><span style="width: 12px; height: 12px; border-radius: 2px; background: var(--surface-card); border: 1px solid var(--border-hairline);"></span> Свободно</span>
+              <span style="display: inline-flex; align-items: center; gap: 5px;"><span style="width: 12px; height: 12px; border-radius: 2px; background: var(--color-forest);"></span> Выбрано</span>
+              <span style="display: inline-flex; align-items: center; gap: 5px;"><span style="width: 12px; height: 12px; border-radius: 2px; background: var(--canvas-bone); border: 1px solid var(--border-subtle);"></span> Занято</span>
+            </div>
+          </div>
           <div class="sprinter-seats-matrix" id="bookingSeatsGrid"></div>
+          <div style="text-align: center; margin-top: 12px; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+            &darr; Задний ряд микроавтобуса &bull; Багажный отсек
+          </div>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 11.5px; color: var(--text-muted); flex-wrap: wrap; gap: 8px;">
@@ -4414,7 +4425,7 @@
     function selectDateStripCard(el, title) {
       document.querySelectorAll('.aviasales-date-card').forEach(c => c.classList.remove('active'));
       if (el) el.classList.add('active');
-      showNotification(`Выбрана дата рейса: ${title}`);
+      showToast(`Выбрана дата рейса: ${title}`);
       renderAviasalesDateStrip();
       renderTripsFeed();
     }
@@ -4442,7 +4453,7 @@
         if (holdTimerSeconds <= 0) {
           clearInterval(holdTimerInterval);
           holdTimerSeconds = 0;
-          showNotification('Время удержания места истекло. Пожалуйста, подтвердите заказ заново.');
+          showToast('Время удержания места истекло. Пожалуйста, подтвердите заказ заново.');
         }
         updateHoldTimerUI();
       }, 1000);
@@ -4461,7 +4472,7 @@
       const phoneInput = document.getElementById('bookingPassengerPhone');
       if (nameInput) nameInput.value = userProfile.name || 'Александр Константинович';
       if (phoneInput) phoneInput.value = userProfile.phone || '+375 29 190-20-26';
-      showNotification('Данные автоматически заполнены из вашего профиля BusLiner');
+      showToast('Данные автоматически заполнены из вашего профиля BusLiner');
     }
 
     function renderTripsFeed() {
@@ -4690,7 +4701,7 @@
       const topicEl = document.getElementById('conciergeTopic');
       const msgEl = document.getElementById('conciergeMessage');
       if (msgEl) msgEl.value = '';
-      showNotification('Запрос отправлен дежурному консьержу. С вами свяжутся в течение 2 минут.');
+      showToast('Запрос отправлен дежурному консьержу. С вами свяжутся в течение 2 минут.');
     }
 
     function setSniperTimePreset(from, to) {
@@ -4720,7 +4731,7 @@
         queueStatus.textContent = 'Снайпер ищет билеты. В очереди перед вами: 1 человек';
       }
 
-      showNotification('Радар зафиксировал отказной билет на рейс BL-5715! Запуск автоперехвата...');
+      showToast('Радар зафиксировал отказной билет на рейс BL-5715! Запуск автоперехвата...');
 
       setTimeout(() => {
         if (queueStatus) {
@@ -4736,7 +4747,7 @@
         if (btn) btn.disabled = false;
 
         playSuccessChime();
-        showNotification('Успех: бот перехватил билет на рейс BL-5715 за 0.34 с!');
+        showToast('Успех: бот перехватил билет на рейс BL-5715 за 0.34 с!');
 
         // Browser push notification API
         if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
@@ -4824,7 +4835,7 @@
       }).catch(err => console.debug('Sniper API call backgrounded:', err));
 
       playSuccessChime();
-      showNotification(`Снайпер РБ активирован: ${route} (${timeFrom}–${timeTo}). Мониторинг всех сервисов.`);
+      showToast(`Снайпер РБ активирован: ${route} (${timeFrom}–${timeTo}). Мониторинг всех сервисов.`);
     }
 
     // WEATHER-AWARE 1-TAP RESCHEDULE (FEATURE 14)
@@ -4843,7 +4854,7 @@
           box.innerHTML = `<div style="font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--color-forest); text-transform: uppercase;">Рейс успешно перенесен на ${newTime} (до непогоды)</div><div style="font-size: 12.5px; color: var(--text-primary); margin-top: 2px;">Новый электронный талон активен. Доплата: 0 BYN. Посадка в штатном режиме.</div>`;
         }
         playSuccessChime();
-        showNotification(`Рейс успешно перенесен на ${newTime} без доплаты (Weather-Aware).`);
+        showToast(`Рейс успешно перенесен на ${newTime} без доплаты (Weather-Aware).`);
       }).catch(err => {
         showToast(`Рейс перенесен на ${newTime} без доплаты.`);
       });
@@ -5195,7 +5206,7 @@ tags:
       syncBookingSeatsUI();
 
       document.getElementById('bookingModal').classList.add('open');
-      switchSeatPickerMode('3d');
+      switchSeatPickerMode(seatPickerMode || '3d');
       setTimeout(() => {
         if (window.Sprinter3D && typeof window.Sprinter3D.onResize === 'function') {
           window.Sprinter3D.onResize();
@@ -5215,7 +5226,7 @@ tags:
       const tripId = selectedTripForBooking ? selectedTripForBooking.id : null;
       const occupiedList = getOccupiedSeatsForTrip(tripId);
       if (occupiedList.includes(seatCode) || occupiedList.includes(seatNum) || occupiedList.includes(String(seatNum))) {
-        showNotification(`Место ${seatCode} уже занято`);
+        showToast(`Место ${seatCode} уже занято`);
         return;
       }
 
@@ -5223,24 +5234,25 @@ tags:
       if (idx !== -1) {
         // Deselect seat
         selectedSeatsForBooking.splice(idx, 1);
-        showNotification(`Место ${seatCode} снято с выбора`);
+        showToast(`Место ${seatCode} снято с выбора`);
       } else {
         if (selectedSeatsForBooking.length >= 3) {
-          showNotification('Один пассажир может занять максимум 3 места');
+          showToast('Один пассажир может занять максимум 3 места');
           return;
         }
         selectedSeatsForBooking.push(seatCode);
-        showNotification(`Место ${seatCode} выбрано (${selectedSeatsForBooking.length} из 3)`);
+        showToast(`Место ${seatCode} выбрано (${selectedSeatsForBooking.length} из 3)`);
       }
 
       syncBookingSeatsUI();
     }
 
     function removeSelectedBookingSeat(seatCode) {
+      if (!seatCode) return;
       const idx = selectedSeatsForBooking.indexOf(seatCode);
       if (idx !== -1) {
         selectedSeatsForBooking.splice(idx, 1);
-        showNotification(`Место ${seatCode} снято с выбора`);
+        showToast(`Место ${seatCode} снято с выбора`);
         syncBookingSeatsUI();
       }
     }
@@ -5300,7 +5312,7 @@ tags:
           chipsContainer.innerHTML = selectedSeatsForBooking.map(s => `
             <span class="seat-selected-chip" onclick="removeSelectedBookingSeat('${s}')" title="Нажмите, чтобы снять место ${s}">
               <span>Место ${s}</span>
-              <span class="chip-remove-icon">&times;</span>
+              <span class="chip-remove-icon" onclick="event.stopPropagation(); removeSelectedBookingSeat('${s}')" title="Удалить место">&times;</span>
             </span>
           `).join('');
         }
@@ -5361,7 +5373,7 @@ tags:
 
     function submitBookingOrder() {
       if (!selectedTripForBooking || selectedSeatsForBooking.length === 0) {
-        showNotification('Пожалуйста, выберите хотя бы одно кресло');
+        showToast('Пожалуйста, выберите хотя бы одно кресло');
         return;
       }
       const name = document.getElementById('bookingPassengerName').value.trim();
@@ -5618,7 +5630,7 @@ tags:
       showToast(`Электронный фискальный чек ${ticketId} загружен в формате PDF`);
     }
 
-    // TOAST DISPLAY
+    // TOAST & NOTIFICATION DISPLAY
     function showToast(message) {
       const toast = document.getElementById('toastCapsule');
       if (!toast) return;
@@ -5628,6 +5640,11 @@ tags:
         toast.classList.remove('visible');
       }, 3500);
     }
+
+    function showNotification(message) {
+      showToast(message);
+    }
+    window.showNotification = showNotification;
 
     // KINETIC CURSOR FOLLOWER (0.22 FACTOR)
     let mouseX = 0, mouseY = 0;
@@ -5726,7 +5743,7 @@ tags:
     // Connect 3D seat clicking
     window.onSprinterSeatSelect = function(seatNum, passengerData) {
       if (passengerData && (passengerData.name || passengerData.status === 'occupied')) {
-        showNotification(`Место ${seatNum} уже занято другим пассажиром`);
+        showToast(`Место ${seatNum} уже занято другим пассажиром`);
         return;
       }
       const code = seatNum < 10 ? `0${seatNum}A` : `${seatNum}A`;
@@ -5758,7 +5775,7 @@ tags:
           updateProfileMilesUI();
           playSuccessChime();
 
-          showNotification(`&check; Водитель подтвердил вашу посадку! Вы на борту (место ${evt.seat}). Начислено +150 миль Prestige!`);
+          showToast(`&check; Водитель подтвердил вашу посадку! Вы на борту (место ${evt.seat}). Начислено +150 миль Prestige!`);
         }
       };
 
