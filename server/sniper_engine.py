@@ -135,6 +135,8 @@ class SniperOrder:
     max_price_byn: float
     card_token: Optional[str] = None
     pre_auth_hold_id: Optional[str] = None
+    passenger_trust_score: float = 75.0
+    passenger_trust_tier: str = "verified"
     status: str = "active"  # 'active', 'matched', 'reserved', 'completed', 'cancelled', 'failed_beaten'
     queue_priority: float = field(default_factory=time.time)
     created_at: float = field(default_factory=time.time)
@@ -361,8 +363,8 @@ class SeatSniperEngine:
                     continue
                 matching_orders.append(o)
 
-            # Sort by FIFO queue priority (created_at)
-            matching_orders.sort(key=lambda x: x.queue_priority)
+            # Sort by bilateral reputation trust score first (Elite passengers prioritized), then FIFO (created_at)
+            matching_orders.sort(key=lambda x: (-x.passenger_trust_score, x.queue_priority))
 
         if not matching_orders:
             logger.info(f"No active sniper orders matching trip {event.trip_id} seat {event.seat_number}")

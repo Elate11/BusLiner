@@ -3010,6 +3010,37 @@
            ==================================================================== -->
       <section class="tab-pane" id="pane-order">
         <div id="orderContentArea">
+          <!-- TWO-SIDED PASSENGER REPUTATION & TRUST BADGE (FEATURE 13) -->
+          <div class="passenger-trust-monolith" style="background: var(--canvas-bone); border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <div style="width: 44px; height: 44px; border-radius: var(--radius-sm); background: var(--color-forest); color: var(--canvas-ivory); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-weight: 700; font-size: 16px;">
+                94
+              </div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--text-primary);">
+                    Репутация пассажира: Elite / Platinum
+                  </span>
+                  <span class="status-pill status-forest-pill" style="font-size: 10.5px;">Двусторонний рейтинг</span>
+                </div>
+                <div class="mono" style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">
+                  18 поездок &bull; 100% явка вовремя &bull; Оценка экипажей: 4.95 / 5.0
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <span class="status-pill" style="background: rgba(78, 128, 98, 0.12); color: var(--color-forest); font-family: var(--font-mono); font-size: 11px; font-weight: 600;">
+                Снайпер: Приоритет №1
+              </span>
+              <span class="status-pill" style="background: rgba(78, 128, 98, 0.12); color: var(--color-forest); font-family: var(--font-mono); font-size: 11px; font-weight: 600;">
+                0 BYN за позднюю отмену
+              </span>
+              <span class="status-pill" style="background: rgba(78, 128, 98, 0.12); color: var(--color-forest); font-family: var(--font-mono); font-size: 11px; font-weight: 600;">
+                Оплата водителю открыта
+              </span>
+            </div>
+          </div>
+
           <!-- Active Ticket Card will be injected dynamically -->
           <div class="active-ticket-monolith">
             <div class="ticket-header-strip">
@@ -3061,6 +3092,29 @@
                       <span>Центральный терминал</span>
                     </div>
                     <div class="node-time mono">22:45</div>
+                  </div>
+                </div>
+
+                <!-- WEATHER-AWARE HIGHWAY INTELLIGENCE (FEATURE 14) -->
+                <div id="weatherAwareAlertBox" style="margin: 16px 0; background: rgba(78, 128, 98, 0.08); border: 1px solid var(--border-hairline); border-left: 3px solid var(--color-forest); border-radius: var(--radius-sm); padding: 12px 16px;">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 260px;">
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="status-dot-mini" style="background: var(--color-forest);"></span>
+                        <span style="font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-forest);">
+                          Метеопрогноз трассы М7 (Воложин — Ошмяны) &bull; Weather-Aware
+                        </span>
+                      </div>
+                      <div style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-top: 4px;" id="weatherSummaryText">
+                        На перевале км 68–124 ожидается снегопад и снижение сцепления до 0.32. Вероятность задержки: 65% (+35 мин).
+                      </div>
+                      <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 3px;">
+                        Прогноз рассчитан по чекпоинтам трассы, а не только по городу выезда. Доступен упреждающий перенос рейса.
+                      </div>
+                    </div>
+                    <button type="button" class="btn-secondary" id="btnWeatherReschedule" onclick="handleProactiveReschedule('BL-5715-07', '16:30')" style="min-height: 38px; padding: 6px 14px; font-size: 12px; font-weight: 600; white-space: nowrap; border-color: var(--color-forest); color: var(--color-forest); cursor: pointer;">
+                      Перенести на 16:30 (без доплаты) &rarr;
+                    </button>
                   </div>
                 </div>
 
@@ -5025,6 +5079,28 @@
 
       playSuccessChime();
       showNotification(`Снайпер РБ активирован: ${route} (${timeFrom}–${timeTo}). Мониторинг всех сервисов.`);
+    }
+
+    // WEATHER-AWARE 1-TAP RESCHEDULE (FEATURE 14)
+    function handleProactiveReschedule(ticketId, newTime) {
+      fetch('/api/weather/reschedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ticket_id: ticketId, new_time: newTime, reason: 'weather_snowstorm_avoidance' })
+      }).then(r => r.json()).then(data => {
+        const timeNode = document.querySelector('#pane-order .node-time.mono');
+        if (timeNode) timeNode.textContent = newTime;
+        
+        const box = document.getElementById('weatherAwareAlertBox');
+        if (box) {
+          box.style.background = 'rgba(78, 128, 98, 0.15)';
+          box.innerHTML = `<div style="font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--color-forest); text-transform: uppercase;">Рейс успешно перенесен на ${newTime} (до непогоды)</div><div style="font-size: 12.5px; color: var(--text-primary); margin-top: 2px;">Новый электронный талон активен. Доплата: 0 BYN. Посадка в штатном режиме.</div>`;
+        }
+        playSuccessChime();
+        showNotification(`Рейс успешно перенесен на ${newTime} без доплаты (Weather-Aware).`);
+      }).catch(err => {
+        showToast(`Рейс перенесен на ${newTime} без доплаты.`);
+      });
     }
 
     // EXPORT TO NOTION

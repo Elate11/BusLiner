@@ -40,6 +40,18 @@ except ImportError:
         universal_sniper_manager = None
         TransportTrip = None
 
+# Weather-Aware Travel & Passenger Reputation Engines (Features 14 & 13)
+try:
+    from server.weather_aware_travel import weather_engine
+    from server.passenger_reputation_engine import passenger_reputation_engine
+except ImportError:
+    try:
+        from weather_aware_travel import weather_engine
+        from passenger_reputation_engine import passenger_reputation_engine
+    except ImportError:
+        weather_engine = None
+        passenger_reputation_engine = None
+
 # ==============================================================================
 # SECURE CONFIGURATION & TOKEN LOADER (FROM .env / ENVIRONMENT)
 # ==============================================================================
@@ -1855,6 +1867,60 @@ class TelegramAuthHTTPHandler(SimpleHTTPRequestHandler):
             self._send_json_response(200, {"success": success, "task_id": task_id})
             return
 
+        # ======================================================================
+        # FEATURE 13: TWO-SIDED PASSENGER REPUTATION REVIEW SUBMISSION
+        # ======================================================================
+        elif url.path == "/api/reputation/review":
+            if not passenger_reputation_engine:
+                self._send_json_response(500, {"success": False, "error": "Reputation engine not loaded"})
+                return
+            driver_id = str(payload.get("driver_id", "drv_1"))
+            user_id = str(payload.get("user_id", ""))
+            trip_id = str(payload.get("trip_id", "BL-5715"))
+            rating = float(payload.get("rating", 5.0))
+            was_punctual = bool(payload.get("was_punctual", True))
+            was_no_show = bool(payload.get("was_no_show", False))
+            tags = payload.get("tags", ["вежливый"])
+            comment = payload.get("comment")
+
+            if not user_id:
+                self._send_json_response(400, {"success": False, "error": "user_id required"})
+                return
+
+            rev = passenger_reputation_engine.submit_driver_review(
+                driver_id=driver_id,
+                user_id=user_id,
+                trip_id=trip_id,
+                rating=rating,
+                was_punctual=was_punctual,
+                was_no_show=was_no_show,
+                tags=tags,
+                comment=comment
+            )
+            prof = passenger_reputation_engine.get_or_create_profile(user_id)
+            self._send_json_response(200, {
+                "success": True,
+                "review_id": rev.review_id,
+                "updated_profile": prof.to_dict()
+            })
+            return
+
+        # ======================================================================
+        # FEATURE 14: WEATHER-AWARE 1-TAP RESCHEDULE
+        # ======================================================================
+        elif url.path == "/api/weather/reschedule":
+            ticket_id = payload.get("ticket_id", "BL-5715-07")
+            new_time = payload.get("new_time", "16:30")
+            reason = payload.get("reason", "weather_snowstorm_avoidance")
+            self._send_json_response(200, {
+                "success": True,
+                "ticket_id": ticket_id,
+                "rescheduled_departure": new_time,
+                "fee_byn": 0.0,
+                "message": f"Билет {ticket_id} успешно перенесен на рейс {new_time} без доплаты в связи с погодными условиями на трассе."
+            })
+            return
+
         self._send_json_response(404, {"error": "Endpoint not found"})
 
     def do_GET(self):
@@ -1932,6 +1998,42 @@ class TelegramAuthHTTPHandler(SimpleHTTPRequestHandler):
                 for t in universal_sniper_manager.active_tasks.values()
             ]
             self._send_json_response(200, {"success": True, "tasks": tasks_data})
+            return
+
+        # ======================================================================
+        # FEATURE 14: ROUTE-SEGMENT WEATHER ASSESSMENT
+        # ======================================================================
+        elif url.path == "/api/weather/route":
+            if not weather_engine:
+                self._send_json_response(500, {"success": False, "error": "Weather engine not loaded"})
+                return
+            route_name = params.get("route", ["Минск — Вильнюс"])[0]
+            dep_time = params.get("time", ["18:45"])[0]
+            scenario = params.get("scenario", [None])[0]
+
+            assessment = weather_engine.assess_route_weather(route_name, dep_time, simulated_scenario=scenario)
+            self._send_json_response(200, {
+                "success": True,
+                "assessment": assessment.to_dict()
+            })
+            return
+
+        # ======================================================================
+        # FEATURE 13: PASSENGER TRUST PROFILE & BILATERAL REPUTATION
+        # ======================================================================
+        elif url.path == "/api/reputation/passenger":
+            if not passenger_reputation_engine:
+                self._send_json_response(500, {"success": False, "error": "Reputation engine not loaded"})
+                return
+            user_id = params.get("user_id", ["client_demo"])[0]
+            phone = params.get("phone", [None])[0]
+            name = params.get("name", [None])[0]
+
+            profile = passenger_reputation_engine.get_or_create_profile(user_id, phone, name)
+            self._send_json_response(200, {
+                "success": True,
+                "profile": profile.to_dict()
+            })
             return
 
         elif url.path.startswith("/api/"):

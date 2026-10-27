@@ -1731,6 +1731,22 @@
     <div class="tab-pane active" id="pane-manifest">
       <div class="monolith-card">
         
+        <!-- WEATHER-AWARE CORRIDOR TELEMETRY FOR DRIVER (FEATURE 14) -->
+        <div style="margin-bottom: 14px; background: rgba(78, 128, 98, 0.08); border: 1px solid var(--border-hairline); border-left: 3px solid var(--color-forest); border-radius: var(--radius-sm); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <span class="status-dot-mini" style="background: var(--color-forest);"></span>
+            <span style="font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--color-forest);">
+              Трасса М7: Перевал Воложин — Ошмяны (км 68–124)
+            </span>
+            <span style="font-size: 12px; color: var(--text-primary);">
+              Сцепление: 0.32 &bull; Боковой ветер: 38 км/ч &bull; Рекомендуемая скорость: 70 км/ч
+            </span>
+          </div>
+          <span class="mono" style="font-size: 11px; color: var(--text-muted);">
+            Weather-Aware Active
+          </span>
+        </div>
+
         <!-- MANIFEST TOP CONTROLS -->
         <div class="manifest-controls-bar">
           <div class="search-input-box">
@@ -2834,7 +2850,10 @@
             <div class="seat-num-badge">${p.seat}</div>
           </td>
           <td>
-            <div class="passenger-name-cell">${p.name}</div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <div class="passenger-name-cell">${p.name}</div>
+              <span class="mono" style="font-size: 10px; padding: 1px 5px; border-radius: 2px; background: rgba(78, 128, 98, 0.12); color: var(--color-forest); font-weight: 700;">Trust ${p.trustScore || (90 + (p.id % 9))}</span>
+            </div>
             <div class="passenger-phone-cell">${p.phone}</div>
           </td>
           <td>
