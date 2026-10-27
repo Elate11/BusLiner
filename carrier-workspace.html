@@ -3250,6 +3250,90 @@
                 </button>
               </div>
 
+              <!-- VECTOR REGIONAL FLEET RADAR MAP -->
+              <div style="padding: 12px 20px 0;">
+                <div style="border-radius: var(--radius-sm); border: 1px solid var(--border-hairline); overflow: hidden; background: #EAE5DC;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; background: var(--canvas-ivory); border-bottom: 1px solid var(--border-hairline); flex-wrap: wrap; gap: 6px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="status-dot-mini" style="background: #4E8062;"></span>
+                      <span style="font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-forest);">
+                        Интерактивная карта флота на линии &bull; Live-GPS Телеметрия
+                      </span>
+                    </div>
+                    <span class="mono" style="font-size: 11px; color: var(--text-muted);">
+                      3 борта онлайн &bull; 92.4% средняя загрузка
+                    </span>
+                  </div>
+                  <div style="width: 100%; height: 180px; position: relative;">
+                    <svg width="100%" height="100%" viewBox="0 0 600 180" preserveAspectRatio="none" style="display: block;">
+                      <!-- MAP TERRAIN -->
+                      <rect width="600" height="180" fill="#EAE5DC"/>
+                      
+                      <!-- HIGHWAY ARTERIES (M1, M6, M7) -->
+                      <path d="M 50 160 L 300 90 L 560 40" stroke="#D3C9B8" stroke-width="12" fill="none" stroke-linecap="round"/>
+                      <path d="M 50 160 L 300 90 L 560 40" stroke="#23312A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+                      <path d="M 300 90 L 110 80" stroke="#D3C9B8" stroke-width="10" fill="none" stroke-linecap="round"/>
+                      <path d="M 300 90 L 110 80" stroke="#23312A" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+                      <path d="M 300 90 L 180 30" stroke="#D3C9B8" stroke-width="10" fill="none" stroke-linecap="round"/>
+                      <path d="M 300 90 L 180 30" stroke="#4E8062" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+                      <!-- CITIES -->
+                      <g transform="translate(300, 90)">
+                        <circle cx="0" cy="0" r="5" fill="#23312A"/>
+                        <circle cx="0" cy="0" r="9" fill="none" stroke="#23312A" stroke-width="1" opacity="0.4"/>
+                        <text x="12" y="4" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="700" fill="#23312A">Минск (Хаб)</text>
+                      </g>
+
+                      <g transform="translate(180, 30)">
+                        <circle cx="0" cy="0" r="4.5" fill="#A8674F"/>
+                        <text x="-50" y="-8" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#23312A">Вильнюс</text>
+                      </g>
+
+                      <g transform="translate(110, 80)">
+                        <circle cx="0" cy="0" r="4.5" fill="#23312A"/>
+                        <text x="-50" y="4" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#23312A">Гродно</text>
+                      </g>
+
+                      <g transform="translate(50, 160)">
+                        <circle cx="0" cy="0" r="4.5" fill="#23312A"/>
+                        <text x="10" y="14" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#23312A">Брест</text>
+                      </g>
+
+                      <!-- VEHICLE 1: SPRINTER 7 TAX 8812 (M7) -->
+                      <g transform="translate(235, 58)">
+                        <circle cx="0" cy="0" r="11" fill="rgba(78, 128, 98, 0.25)">
+                          <animate attributeName="r" values="6;16;6" dur="1.8s" repeatCount="indefinite"/>
+                          <animate attributeName="opacity" values="0.9;0.1;0.9" dur="1.8s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="0" r="5" fill="#23312A" stroke="#F5F1EA" stroke-width="1.5"/>
+                        <rect x="-42" y="-28" width="84" height="18" rx="2" fill="#23312A"/>
+                        <text x="0" y="-15" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" fill="#F5F1EA">7 TAX 8812</text>
+                      </g>
+
+                      <!-- VEHICLE 2: CRAFTER 7 TAX 4109 (M6) -->
+                      <g transform="translate(195, 84)">
+                        <circle cx="0" cy="0" r="10" fill="rgba(78, 128, 98, 0.2)">
+                          <animate attributeName="r" values="5;14;5" dur="2.2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="0" cy="0" r="4.5" fill="#23312A" stroke="#F5F1EA" stroke-width="1.5"/>
+                        <rect x="-40" y="-26" width="80" height="17" rx="2" fill="#23312A"/>
+                        <text x="0" y="-14" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8.5" font-weight="700" fill="#F5F1EA">7 TAX 4109</text>
+                      </g>
+
+                      <!-- VEHICLE 3: SPRINTER 7 TAX 1904 (M1) -->
+                      <g transform="translate(150, 132)">
+                        <circle cx="0" cy="0" r="9" fill="rgba(168, 103, 79, 0.2)"/>
+                        <circle cx="0" cy="0" r="4" fill="#A8674F" stroke="#F5F1EA" stroke-width="1.5"/>
+                        <rect x="-40" y="-25" width="80" height="17" rx="2" fill="#23312A"/>
+                        <text x="0" y="-13" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8.5" font-weight="700" fill="#F5F1EA">7 TAX 1904</text>
+                      </g>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
               <div class="fleet-telemetry-list" style="padding: 16px 20px; display: flex; flex-direction: column; gap: 14px;">
                 <!-- Vehicle 1 -->
                 <div class="vehicle-telemetry-item" style="padding: 12px 14px; border: 1px solid var(--border-hairline); border-radius: var(--radius-sm); background: var(--canvas-ivory);">
