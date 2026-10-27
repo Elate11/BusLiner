@@ -219,52 +219,44 @@
       border-color: rgba(232, 226, 214, 0.45);
     }
 
-    /* Dual Action Navigation: Client Portal & Terminal Entrance */
-    .header-client-btn {
+    /* Top Header Navigation: Carrier Entrance & Driver Terminal */
+    .header-carrier-btn,
+    .header-driver-btn {
       background: var(--canvas-bone);
       border-color: var(--border-taupe);
       cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .header-client-btn:hover {
+    .header-carrier-btn:hover,
+    .header-driver-btn:hover {
       background: var(--text-graphite);
       color: #FAF8F5 !important;
       border-color: var(--text-graphite);
     }
 
-    header.site-header.on-dark-slide .header-client-btn {
+    header.site-header.on-dark-slide .header-carrier-btn,
+    header.site-header.on-dark-slide .header-driver-btn {
       background: rgba(232, 226, 214, 0.14);
       border-color: rgba(232, 226, 214, 0.35);
       color: #F5F1EA;
     }
 
-    header.site-header.on-dark-slide .header-client-btn:hover {
+    header.site-header.on-dark-slide .header-carrier-btn:hover,
+    header.site-header.on-dark-slide .header-driver-btn:hover {
       background: #F5F1EA;
       color: #141312 !important;
       border-color: #F5F1EA;
     }
 
-    .header-terminal-btn {
-      background: transparent;
-      border-color: var(--border-taupe);
-    }
-
-    header.site-header.on-dark-slide .header-terminal-btn {
-      border-color: rgba(232, 226, 214, 0.22);
-      color: #E8E2D6;
-    }
-
-    header.site-header.on-dark-slide .header-terminal-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(232, 226, 214, 0.45);
-      color: #FFFFFF;
-    }
-
     @media (max-width: 768px) {
-      .header-client-btn, .header-terminal-btn {
-        padding: 7px 12px;
-        font-size: 12px;
-        min-height: 38px;
+      .header-carrier-btn, .header-driver-btn {
+        padding: 6px 10px;
+        font-size: 11.5px;
+        min-height: 36px;
       }
     }
 
@@ -2363,14 +2355,25 @@
           <span class="brand-wordmark">BusLiner</span>
         </a>
 
-        <div style="display: flex; gap: 12px; align-items: center; justify-self: end;">
-          <button type="button" class="link-subtle-cta btn-magnetic header-client-btn" onclick="openClientAuthModal()" data-cursor="hover" title="Личный кабинет пассажира">
+        <div style="display: flex; gap: 10px; align-items: center; justify-self: end;">
+          <a href="partner-auth.html#login" class="link-subtle-cta btn-magnetic header-carrier-btn" data-cursor="hover" title="Вход для перевозчика">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
             </svg>
-            <span>Вход для клиентов</span>
-          </button>
+            <span>Вход для перевозчика</span>
+          </a>
+          <a href="partner-auth.html#driver" class="link-subtle-cta btn-magnetic header-driver-btn" data-cursor="hover" title="Вход для водителя">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="3"></circle>
+              <line x1="12" y1="2" x2="12" y2="9"></line>
+              <line x1="12" y1="15" x2="12" y2="22"></line>
+              <line x1="2" y1="12" x2="9" y2="12"></line>
+              <line x1="15" y1="12" x2="22" y2="12"></line>
+            </svg>
+            <span>Вход для водителя</span>
+          </a>
         </div>
 
       </div>
@@ -2660,9 +2663,9 @@
                   <span style="cursor: pointer;" onclick="setPreset('Минск', 'Гродно')" data-cursor="hover">Минск &mdash; Гродно <strong>28 BYN</strong></span>
                   <span style="cursor: pointer;" onclick="setPreset('Минск', 'Брест')" data-cursor="hover">Минск &mdash; Брест <strong>32 BYN</strong></span>
                 </div>
-                <a href="seat-picker-3d-demo.html" class="btn-action-deck btn-magnetic" data-cursor="hover" style="text-decoration: none;">
+                <button type="button" onclick="handleSelectTripAndSeat(event)" class="btn-action-deck btn-magnetic" data-cursor="hover" style="border: none; cursor: pointer;">
                   <span>Выбрать рейс и кресло &rarr;</span>
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -2834,7 +2837,7 @@
             </div>
             <div class="fleet-card-foot" style="margin-top: 18px; border-top: 1px dashed var(--border-taupe); padding-top: 12px;">
               <strong class="fleet-price-tag" style="font-family: var(--font-mono);">от 28 BYN</strong>
-              <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать кресло &rarr;</a>
+              <a href="javascript:void(0)" onclick="handleSelectTripAndSeat(event)" class="link-fleet-reserve">Выбрать кресло &rarr;</a>
             </div>
           </div>
 
@@ -2848,7 +2851,7 @@
             </div>
             <div class="fleet-card-foot" style="margin-top: 18px; border-top: 1px dashed var(--border-taupe); padding-top: 12px;">
               <strong class="fleet-price-tag" style="font-family: var(--font-mono);">от 28 BYN</strong>
-              <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать кресло &rarr;</a>
+              <a href="javascript:void(0)" onclick="handleSelectTripAndSeat(event)" class="link-fleet-reserve">Выбрать кресло &rarr;</a>
             </div>
           </div>
 
@@ -2862,7 +2865,7 @@
             </div>
             <div class="fleet-card-foot" style="margin-top: 18px; border-top: 1px dashed var(--border-taupe); padding-top: 12px;">
               <strong class="fleet-price-tag" style="font-family: var(--font-mono);">от 35 BYN</strong>
-              <a href="seat-picker-3d-demo.html" class="link-fleet-reserve">Выбрать рейс &rarr;</a>
+              <a href="javascript:void(0)" onclick="handleSelectTripAndSeat(event)" class="link-fleet-reserve">Выбрать рейс &rarr;</a>
             </div>
           </div>
 
@@ -3297,7 +3300,7 @@
               Ваш персональный аккаунт создан. Вы получаете скидку 10 BYN на первую поездку, приоритетную посадку и мгновенный доступ в бот @buslinerbot.
             </div>
             <div style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
-              <a href="seat-picker-3d-demo.html" class="btn-action-deck" style="flex: 1; justify-content: center; font-size: 13.5px; padding: 11px 18px; text-decoration: none;">Выбрать кресло &rarr;</a>
+              <a href="passenger-cabinet.html" class="btn-action-deck" style="flex: 1; justify-content: center; font-size: 13.5px; padding: 11px 18px; text-decoration: none;">Личный кабинет пассажира &rarr;</a>
               <a id="regTgDeepLinkBtn" href="https://t.me/buslinerbot?start=client" target="_blank" rel="noopener noreferrer" class="link-subtle-cta" style="flex: 1; justify-content: center; font-size: 13px; min-height: 42px; padding: 6px 12px; background: #2AABEE; color: #FFFFFF; border-color: #2AABEE;">Активировать в @buslinerbot &rarr;</a>
             </div>
             <div id="regTgStatus" style="font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 10px;">
@@ -3609,8 +3612,22 @@
       if (from && to) {
         from.value = fromVal;
         to.value = toVal;
-        window.location.href = 'seat-picker-3d-demo.html';
       }
+    };
+
+    window.handleSelectTripAndSeat = function(e) {
+      if (e) e.preventDefault();
+      try {
+        const stored = localStorage.getItem('busliner_client_user');
+        if (stored) {
+          const user = JSON.parse(stored);
+          if (user && (user.name || user.phone || user.id)) {
+            window.location.href = 'passenger-cabinet.html';
+            return;
+          }
+        }
+      } catch (err) {}
+      window.openClientAuthModal('register');
     };
 
     window.simulateConcierge = function() {
@@ -3714,13 +3731,15 @@
         .catch(() => {});
     };
 
-    window.openClientAuthModal = function() {
+    window.openClientAuthModal = function(initialView = 'register') {
       const modal = document.getElementById('clientAuthModal');
       if (modal) {
-        window.showAuthView('login');
+        window.showAuthView(initialView);
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
-        window.initClientTgAuthSession('client_login');
+        if (initialView === 'login') {
+          window.initClientTgAuthSession('client_login');
+        }
       }
     };
 
@@ -3793,12 +3812,27 @@
     };
 
     window.verifyClientSmsCode = function() {
+      const phoneInput = document.getElementById('clientPhoneInput');
+      const phoneVal = (phoneInput && phoneInput.value.trim()) || '+375 (29) 123-45-67';
+      const clientUser = {
+        name: 'Пассажир',
+        phone: phoneVal,
+        role: 'passenger',
+        registered_at: new Date().toISOString(),
+        bonus_byn: 10
+      };
+      try {
+        localStorage.setItem('busliner_client_user', JSON.stringify(clientUser));
+      } catch(e) {}
       const step2 = document.getElementById('phoneStep2');
       const preview = document.getElementById('phoneActiveBooking');
       if (step2 && preview) {
         step2.style.display = 'none';
         preview.style.display = 'block';
       }
+      setTimeout(() => {
+        window.location.href = 'passenger-cabinet.html';
+      }, 900);
     };
 
     window.submitRegistration = function() {
@@ -3823,35 +3857,37 @@
         success.style.display = 'block';
       }
 
+      // Store passenger session immediately
+      const clientUser = {
+        name: nameVal,
+        phone: phoneVal,
+        username: tgVal,
+        role: 'passenger',
+        registered_at: new Date().toISOString(),
+        bonus_byn: 10
+      };
+      try {
+        localStorage.setItem('busliner_client_user', JSON.stringify(clientUser));
+      } catch(e) {}
+
       fetch(`${getApiBaseUrl()}/api/auth/register-passenger`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ full_name: nameVal, phone: phoneVal, username: tgVal })
       }).catch(() => {});
 
-      if (regStatus) regStatus.innerHTML = '<span class="pulse-indicator"></span> Ожидание подтверждения в @buslinerbot...';
+      if (regStatus) regStatus.innerHTML = '<span class="pulse-indicator"></span> Регистрация завершена! Переход в личный кабинет...';
+
+      // Auto-redirect to passenger cabinet after registration
+      setTimeout(() => {
+        window.location.href = 'passenger-cabinet.html';
+      }, 1200);
 
       fetch(`${getApiBaseUrl()}/api/auth/telegram/create-session?action=client_register`)
         .then(r => r.json())
         .then(data => {
-          if (data && data.session_token) {
-            if (regTgBtn) regTgBtn.href = data.deep_link || `https://t.me/buslinerbot?start=auth_${data.session_token}`;
-            const regPoll = setInterval(() => {
-              fetch(`${getApiBaseUrl()}/api/auth/telegram/check-session?token=${data.session_token}`)
-                .then(res => res.json())
-                .then(resData => {
-                  if (resData && resData.status === 'authorized') {
-                    clearInterval(regPoll);
-                    if (regStatus) regStatus.innerHTML = '<span style="color: var(--color-forest); font-weight: 700;">Регистрация завершена! Бонус 10 BYN начислен. Переход...</span>';
-                    try {
-                      localStorage.setItem('busliner_client_user', JSON.stringify(resData.user || { name: nameVal, phone: phoneVal }));
-                    } catch(e) {}
-                    setTimeout(() => {
-                      window.location.href = 'passenger-cabinet.html';
-                    }, 800);
-                  }
-                }).catch(() => {});
-            }, 1500);
+          if (data && data.session_token && regTgBtn) {
+            regTgBtn.href = data.deep_link || `https://t.me/buslinerbot?start=auth_${data.session_token}`;
           }
         })
         .catch(() => {
