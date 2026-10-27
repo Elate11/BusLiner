@@ -23,7 +23,7 @@ import hashlib
 import secrets
 import threading
 import sqlite3
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 from urllib.request import Request, urlopen
 from urllib.error import URLError
@@ -576,7 +576,7 @@ def send_telegram_api_request(method: str, payload: Dict[str, Any]) -> Optional[
     data = json.dumps(payload).encode("utf-8")
     req = Request(url, data=data, headers={"Content-Type": "application/json", "User-Agent": "BusLinerBot/2.0"})
     try:
-        with urlopen(req, timeout=8) as resp:
+        with urlopen(req, timeout=15) as resp:
             return json.loads(resp.read().decode("utf-8"))
     except URLError as e:
         print(f"[Telegram API Error] {method}: {e}", file=sys.stderr)
@@ -586,15 +586,17 @@ def send_telegram_api_request(method: str, payload: Dict[str, Any]) -> Optional[
 def sync_bot_identity():
     """Confirms live bot token connection and retrieves verified username."""
     global BOT_USERNAME
-    res = send_telegram_api_request("getMe", {})
-    if res and res.get("ok"):
-        result = res.get("result", {})
-        BOT_USERNAME = result.get("username", BOT_USERNAME)
-        print(f" [Telegram Bot Verified] Connected as @{BOT_USERNAME} ({result.get('first_name')})")
-        return True
-    else:
-        print(" [Telegram Bot Warning] getMe check failed; check BOT_TOKEN in .env", file=sys.stderr)
-        return False
+    for attempt in range(3):
+        res = send_telegram_api_request("getMe", {})
+        if res and res.get("ok"):
+            result = res.get("result", {})
+            BOT_USERNAME = result.get("username", BOT_USERNAME)
+            print(f" [Telegram Bot Verified] Connected as @{BOT_USERNAME} ({result.get('first_name')})")
+            return True
+        time.sleep(1.5)
+
+    print(" [Telegram Bot Warning] getMe check failed; check BOT_TOKEN in .env", file=sys.stderr)
+    return False
 
 
 # ==============================================================================
@@ -1408,18 +1410,26 @@ def telegram_polling_worker():
 
 
 # ==============================================================================
-# REST API HTTP HANDLER (SERVES WEBSITE AUTHENTICATION)
+# REST API HTTP HANDLER (SERVES WEBSITE AUTHENTICATION & STATIC FILES)
 # ==============================================================================
-class TelegramAuthHTTPHandler(BaseHTTPRequestHandler):
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+class TelegramAuthHTTPHandler(SimpleHTTPRequestHandler):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, directory=PROJECT_ROOT, **kwargs)
 
     def _send_cors_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With")
 
+    def end_headers(self):
+        self._send_cors_headers()
+        super().end_headers()
+
     def do_OPTIONS(self):
         self.send_response(204)
-        self._send_cors_headers()
         self.end_headers()
 
     def _send_json_response(self, status_code: int, data: Dict[str, Any]):
@@ -1427,7 +1437,6 @@ class TelegramAuthHTTPHandler(BaseHTTPRequestHandler):
         self.send_response(status_code)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(response_bytes)))
-        self._send_cors_headers()
         self.end_headers()
         self.wfile.write(response_bytes)
 
@@ -1612,7 +1621,12 @@ class TelegramAuthHTTPHandler(BaseHTTPRequestHandler):
             })
             return
 
-        self._send_json_response(404, {"error": "Endpoint not found"})
+        elif url.path.startswith("/api/"):
+            self._send_json_response(404, {"error": "Endpoint not found"})
+            return
+
+        # Fallback to static file server (serves HTML, CSS, JS, etc.)
+        super().do_GET()
 
 
 # ==============================================================================
