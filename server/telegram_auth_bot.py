@@ -640,16 +640,16 @@ def render_client_dashboard(chat_id: int, user_id: int, first_name: str, edit_ms
     keyboard = {
         "inline_keyboard": [
             [
-                {"text": f"🎟 Мои билеты ({max(1, ticket_count)})", "callback_data": "client_tickets"},
-                {"text": "🎯 Консьерж-Снайпер", "callback_data": "client_sniper"}
+                {"text": f"Мои билеты ({max(1, ticket_count)})", "callback_data": "client_tickets"},
+                {"text": "Консьерж-Снайпер", "callback_data": "client_sniper"}
             ],
             [
-                {"text": "🚍 Расписание и бронь", "callback_data": "client_trips"},
-                {"text": "⚡ Тест перехвата (0.38с)", "callback_data": "client_sniper_simulate"}
+                {"text": "Расписание и бронь", "callback_data": "client_trips"},
+                {"text": "Тест перехвата (0.38с)", "callback_data": "client_sniper_simulate"}
             ],
             [
-                {"text": "📱 Личный кабинет на сайте", "url": "https://elate11.github.io/BusLiner/passenger-cabinet.html"},
-                {"text": "🔄 Сменить роль", "callback_data": "switch_role"}
+                {"text": "Личный кабинет на сайте", "url": "https://elate11.github.io/BusLiner/passenger-cabinet.html"},
+                {"text": "Сменить роль", "callback_data": "switch_role"}
             ]
         ]
     }
@@ -691,15 +691,15 @@ def render_carrier_dashboard(chat_id: int, user_id: int, first_name: str, edit_m
     keyboard = {
         "inline_keyboard": [
             [
-                {"text": "📊 Детальная аналитика", "callback_data": "carrier_stats"},
-                {"text": "🚍 Мониторинг автобусов", "callback_data": "carrier_fleet"}
+                {"text": "Детальная аналитика", "callback_data": "carrier_stats"},
+                {"text": "Мониторинг автобусов", "callback_data": "carrier_fleet"}
             ],
             [
-                {"text": "👥 Добавить водителя (инвайт)", "callback_data": "carrier_drivers"},
-                {"text": "💼 Кабинет на сайте", "url": "https://elate11.github.io/BusLiner/carrier-workspace.html"}
+                {"text": "Добавить водителя (инвайт)", "callback_data": "carrier_drivers"},
+                {"text": "Кабинет на сайте", "url": "https://elate11.github.io/BusLiner/carrier-workspace.html"}
             ],
             [
-                {"text": "🔄 Сменить роль", "callback_data": "switch_role"}
+                {"text": "Сменить роль", "callback_data": "switch_role"}
             ]
         ]
     }
@@ -739,15 +739,15 @@ def render_driver_dashboard(chat_id: int, user_id: int, first_name: str, edit_ms
     keyboard = {
         "inline_keyboard": [
             [
-                {"text": "📋 Ведомость рейса", "callback_data": "driver_trip"},
-                {"text": "👥 Список пассажиров (18)", "callback_data": "driver_manifest"}
+                {"text": "Ведомость рейса", "callback_data": "driver_trip"},
+                {"text": "Список пассажиров (18)", "callback_data": "driver_manifest"}
             ],
             [
-                {"text": "⏱ Задержка +15 мин", "callback_data": "driver_delay"},
-                {"text": "📱 Пульт рейса на сайте", "url": "https://elate11.github.io/BusLiner/carrier-workspace.html#cockpit"}
+                {"text": "Задержка +15 мин", "callback_data": "driver_delay"},
+                {"text": "Пульт рейса на сайте", "url": "https://elate11.github.io/BusLiner/carrier-workspace.html#cockpit"}
             ],
             [
-                {"text": "🔄 Сменить роль", "callback_data": "switch_role"}
+                {"text": "Сменить роль", "callback_data": "switch_role"}
             ]
         ]
     }
@@ -776,9 +776,9 @@ def send_role_selection_menu(chat_id: int, first_name: str, edit_msg_id: Optiona
 
     keyboard = {
         "inline_keyboard": [
-            [{"text": "🎫 Я пассажир / клиент", "callback_data": "set_role:client"}],
-            [{"text": "🏢 Я перевозчик (автопарк)", "callback_data": "set_role:carrier"}],
-            [{"text": "🚍 Я водитель на рейсе", "callback_data": "set_role:driver"}]
+            [{"text": "Пассажир / клиент", "callback_data": "set_role:client"}],
+            [{"text": "Перевозчик (автопарк)", "callback_data": "set_role:carrier"}],
+            [{"text": "Водитель на рейсе", "callback_data": "set_role:driver"}]
         ]
     }
 
@@ -853,10 +853,23 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             return
 
         # ----------------------------------------------------------------------
-        # 2. DEEP LINK: WEB AUTHENTICATION CHALLENGE
+        # 2. DEEP LINK: WEB AUTHENTICATION CHALLENGE WITH ROLE ROUTING
         # ----------------------------------------------------------------------
         elif text.startswith("/start auth_"):
-            token = text.replace("/start auth_", "").strip()
+            raw_token = text.replace("/start auth_", "").strip()
+            role_hint = None
+            if raw_token.startswith("client_"):
+                role_hint = "client"
+                token = raw_token.replace("client_", "")
+            elif raw_token.startswith("carrier_"):
+                role_hint = "carrier"
+                token = raw_token.replace("carrier_", "")
+            elif raw_token.startswith("driver_"):
+                role_hint = "driver"
+                token = raw_token.replace("driver_", "")
+            else:
+                token = raw_token
+
             session = ACTIVE_AUTH_SESSIONS.get(token)
             now = time.time()
 
@@ -870,32 +883,35 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 send_telegram_api_request("sendMessage", {"chat_id": chat_id, "text": reply, "parse_mode": "HTML"})
                 return
 
-            action = session.get("action", "carrier_login")
+            action = session.get("action", "client_login")
+            detected_role = role_hint or session.get("role") or ("carrier" if "carrier" in action or "onboard" in action else ("driver" if "driver" in action else "client"))
+            set_user_role(user_id, detected_role, first_name, clean_username)
+
             client_ip = session.get("client_ip", "127.0.0.1")
             device_str = session.get("user_agent", "Браузер")
             otp_code = session.get("otp_code", "")
             if len(device_str) > 40:
                 device_str = device_str[:37] + "..."
 
-            action_desc = "Вход в систему BusLiner"
-            if "client_reg" in action:
-                action_desc = "Регистрация пассажира (+10 BYN бонус)"
-            elif "client" in action:
-                action_desc = "Вход в Личный кабинет пассажира"
-            elif "driver_reg" in action:
-                action_desc = "Регистрация водителя в реестре автопарка"
-            elif "driver" in action:
-                action_desc = "Вход водителя в пульт рейса"
-            elif "carrier_reg" in action or "onboard" in action:
-                action_desc = "Регистрация автопарка перевозчика"
-            elif "carrier" in action:
-                action_desc = "Вход в Кабинет перевозчика"
+            if detected_role == "carrier":
+                role_title = "ВХОД ДЛЯ ПЕРЕВОЗЧИКА"
+                action_desc = "Авторизация в Кабинете перевозчика (BusLiner Fleet)"
+                role_note = "Управление автопарком, Спринтерами, клиринг T+1 и выплаты на IBAN"
+            elif detected_role == "driver":
+                role_title = "ВХОД ДЛЯ ВОДИТЕЛЯ"
+                action_desc = "Авторизация в Пульте водителя (BusLiner Cockpit)"
+                role_note = "Посадочные ведомости рейса BL-5715, чек-ин пассажиров и радар задержек"
+            else:
+                role_title = "ВХОД ДЛЯ ПАССАЖИРА"
+                action_desc = "Авторизация в Личном кабинете пассажира (BusLiner Club)"
+                role_note = "Активные билеты, выбор до 3 мест в Спринтере и Консьерж-Снайпер"
 
             reply = (
-                "<b>BUSLINER SECURITY: ПОДТВЕРЖДЕНИЕ ВХОДА</b>\n\n"
+                f"<b>BUSLINER SECURITY // {role_title}</b>\n\n"
                 f"Здравствуйте, {first_name}!\n"
-                f"Поступил запрос на авторизацию в веб-системе BusLiner:\n\n"
+                f"Поступил запрос на вход в веб-интерфейс BusLiner:\n\n"
                 f"• Назначение: <b>{action_desc}</b>\n"
+                f"• Возможности: {role_note}\n"
                 f"• Код безопасности (OTP): <code>{otp_code}</code>\n"
                 f"• Telegram ID: <code>{user_id}</code>\n"
                 f"• Устройство: {device_str}\n"
@@ -904,7 +920,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             )
             keyboard = {
                 "inline_keyboard": [
-                    [{"text": "Подтвердить вход", "callback_data": f"auth_confirm:{token}"}],
+                    [{"text": f"Подтвердить вход ({'Перевозчик' if detected_role=='carrier' else ('Водитель' if detected_role=='driver' else 'Пассажир')})", "callback_data": f"auth_confirm:{token}"}],
                     [{"text": "Отклонить", "callback_data": f"auth_deny:{token}"}]
                 ]
             }
@@ -917,9 +933,40 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             return
 
         # ----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         # 3. EXPLICIT DEEP LINK OR COMMAND: PASSENGER / CLIENT
         # ----------------------------------------------------------------------
-        elif text in ("/start client", "/start passenger", "/client", "/passenger") or text.startswith("/start booking_") or text.startswith("/start pass"):
+        elif text.startswith("/start booking_"):
+            set_user_role(user_id, "client", first_name, clean_username)
+            raw_param = text.replace("/start booking_", "").strip()
+            parts = [p for p in raw_param.split("_") if p]
+            flight_id = parts[0] if parts else "BL-5715"
+            seat_codes = parts[1:] if len(parts) > 1 else ["07A"]
+            seat_codes = seat_codes[:3]
+            seats_str = ", ".join(seat_codes)
+            total_fare = 45.0 * len(seat_codes)
+
+            booking_msg = (
+                f"*BusLiner // Выбор мест в 3D салоне*\n\n"
+                f"Здравствуйте, {first_name}!\n"
+                f"Вы выбрали места: *{seats_str}*\n"
+                f"Количество мест: *{len(seat_codes)} из 3* (лимит 1 пассажира)\n"
+                f"Рейс: *{flight_id} • Минск -> Вильнюс*\n"
+                f"Итоговая стоимость: *{total_fare:.2f} BYN*\n\n"
+                f"Места зарезервированы за вашим профилем.\n"
+                f"Для завершения нажмите подтверждение ниже:"
+            )
+            keyboard = {
+                "inline_keyboard": [
+                    [{"text": f"Подтвердить бронь ({total_fare:.2f} BYN)", "callback_data": f"confirm_booking:{flight_id}:{'_'.join(seat_codes)}"}],
+                    [{"text": "Выбрать другие места в 3D", "url": "https://elate11.github.io/BusLiner/seat-picker-3d-demo.html"}],
+                    [{"text": "Личный кабинет", "callback_data": "set_role:client"}]
+                ]
+            }
+            send_telegram_api_request("sendMessage", {"chat_id": chat_id, "text": booking_msg, "parse_mode": "Markdown", "reply_markup": keyboard})
+            return
+
+        elif text in ("/start client", "/start passenger", "/client", "/passenger") or text.startswith("/start pass"):
             set_user_role(user_id, "client", first_name, clean_username)
             render_client_dashboard(chat_id, user_id, first_name)
             return
@@ -974,7 +1021,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                     f"• Автобус: Mercedes Sprinter 7TAX-8891\n"
                     f"• Статус: Подтвержден • Посадка открыта"
                 )
-            keyboard = {"inline_keyboard": [[{"text": "📱 Личный кабинет", "url": "https://elate11.github.io/BusLiner/passenger-cabinet.html"}]]}
+            keyboard = {"inline_keyboard": [[{"text": "Личный кабинет", "url": "https://elate11.github.io/BusLiner/passenger-cabinet.html"}]]}
             send_telegram_api_request("sendMessage", {"chat_id": chat_id, "text": t_msg, "parse_mode": "Markdown", "reply_markup": keyboard})
             return
 
@@ -989,7 +1036,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"• Статус: Ожидание сдачи билета пассажиром\n\n"
                 f"Как только место освободится, бот мгновенно выкупит его на ваше имя и пришлет билет сюда!"
             )
-            keyboard = {"inline_keyboard": [[{"text": "⚡ Симуляция выкупа (0.38с)", "callback_data": "client_sniper_simulate"}]]}
+            keyboard = {"inline_keyboard": [[{"text": "Симуляция выкупа (0.38с)", "callback_data": "client_sniper_simulate"}]]}
             send_telegram_api_request("sendMessage", {"chat_id": chat_id, "text": sniper_msg, "parse_mode": "Markdown", "reply_markup": keyboard})
             return
 
@@ -1004,7 +1051,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"{routes_text}\n\n"
                 f"Бронирование мест с 3D-схемой доступно на сайте:"
             )
-            keyboard = {"inline_keyboard": [[{"text": "🚍 Выбрать места на сайте", "url": "https://elate11.github.io/BusLiner/index.html"}]]}
+            keyboard = {"inline_keyboard": [[{"text": "Выбрать места на сайте", "url": "https://elate11.github.io/BusLiner/index.html"}]]}
             send_telegram_api_request("sendMessage", {"chat_id": chat_id, "text": msg_text, "parse_mode": "Markdown", "reply_markup": keyboard})
             return
 
@@ -1022,7 +1069,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"• Лучший день: *{FLEET_STATS['best_day']}*\n"
                 f"• Выплата на IBAN: *{FLEET_STATS['payout_schedule']}*"
             )
-            keyboard = {"inline_keyboard": [[{"text": "💼 Кабинет перевозчика", "url": "https://elate11.github.io/BusLiner/carrier-workspace.html"}]]}
+            keyboard = {"inline_keyboard": [[{"text": "Кабинет перевозчика", "url": "https://elate11.github.io/BusLiner/carrier-workspace.html"}]]}
             send_telegram_api_request("sendMessage", {"chat_id": chat_id, "text": stats_msg, "parse_mode": "Markdown", "reply_markup": keyboard})
             return
 
@@ -1063,8 +1110,8 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"Для посадки пассажиров используйте команду /manifest или камеру на сайте."
             )
             keyboard = {"inline_keyboard": [
-                [{"text": "👥 Посадочный список", "callback_data": "driver_manifest"}],
-                [{"text": "⏱ Задержка +15 мин", "callback_data": "driver_delay"}]
+                [{"text": "Посадочный список", "callback_data": "driver_manifest"}],
+                [{"text": "Задержка +15 мин", "callback_data": "driver_delay"}]
             ]}
             send_telegram_api_request("sendMessage", {"chat_id": chat_id, "text": trip_msg, "parse_mode": "Markdown", "reply_markup": keyboard})
             return
@@ -1188,6 +1235,26 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             return
 
         # Passenger Callbacks
+        elif cb_data.startswith("confirm_booking:"):
+            send_telegram_api_request("answerCallbackQuery", {"callback_query_id": cb_id, "text": "Бронирование подтверждено!"})
+            parts = cb_data.replace("confirm_booking:", "").split(":")
+            flight = parts[0] if parts else "BL-5715"
+            seats = parts[1].replace("_", ", ") if len(parts) > 1 else "07A"
+            conf_msg = (
+                f"*Бронирование успешно подтверждено!*\n\n"
+                f"Рейс: *{flight}* (Минск -> Вильнюс)\n"
+                f"Выбранные места: *{seats}*\n"
+                f"Электронный посадочный талон зарегистрирован на ваше имя.\n\n"
+                f"Посадка открывается за 20 минут до выезда по QR-коду."
+            )
+            keyboard = {"inline_keyboard": [
+                [{"text": "Открыть талон на сайте", "url": "https://elate11.github.io/BusLiner/passenger-cabinet.html"}],
+                [{"text": "« В меню пассажира", "callback_data": "set_role:client"}]
+            ]}
+            if msg_id:
+                send_telegram_api_request("editMessageText", {"chat_id": chat_id, "message_id": msg_id, "text": conf_msg, "parse_mode": "Markdown", "reply_markup": keyboard})
+            return
+
         elif cb_data == "client_tickets":
             send_telegram_api_request("answerCallbackQuery", {"callback_query_id": cb_id})
             tickets = get_passenger_tickets_from_db(user_id)
@@ -1206,7 +1273,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"• Статус рейса: Посадка открыта"
             )
             keyboard = {"inline_keyboard": [
-                [{"text": "📱 Открыть QR на сайте", "url": "https://elate11.github.io/BusLiner/passenger-cabinet.html"}],
+                [{"text": "Открыть QR на сайте", "url": "https://elate11.github.io/BusLiner/passenger-cabinet.html"}],
                 [{"text": "« Назад в меню", "callback_data": "set_role:client"}]
             ]}
             send_telegram_api_request("editMessageText", {"chat_id": chat_id, "message_id": msg_id, "text": msg, "parse_mode": "Markdown", "reply_markup": keyboard})
@@ -1223,7 +1290,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"Если пассажир откажется от поездки, бот моментально оформит билет на ваши данные!"
             )
             keyboard = {"inline_keyboard": [
-                [{"text": "⚡ Тест перехвата (0.38с)", "callback_data": "client_sniper_simulate"}],
+                [{"text": "Тест перехвата (0.38с)", "callback_data": "client_sniper_simulate"}],
                 [{"text": "« Назад в меню", "callback_data": "set_role:client"}]
             ]}
             send_telegram_api_request("editMessageText", {"chat_id": chat_id, "message_id": msg_id, "text": msg, "parse_mode": "Markdown", "reply_markup": keyboard})
@@ -1255,7 +1322,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"Билет добавлен в ваш посадочный реестр!"
             )
             keyboard = {"inline_keyboard": [
-                [{"text": "🎟 Посмотреть билет", "callback_data": "client_tickets"}],
+                [{"text": "Посмотреть билет", "callback_data": "client_tickets"}],
                 [{"text": "« В меню пассажира", "callback_data": "set_role:client"}]
             ]}
             send_telegram_api_request("editMessageText", {"chat_id": chat_id, "message_id": msg_id, "text": conf_msg, "parse_mode": "Markdown", "reply_markup": keyboard})
@@ -1266,7 +1333,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
             lines = [f"• *{t['route']}* ({t['time']}) — от {t['fare']} BYN" for t in SITE_TRIPS]
             msg = "*Регулярные рейсы BusLiner:*\n\n" + "\n".join(lines)
             keyboard = {"inline_keyboard": [
-                [{"text": "🚍 Выбрать места на сайте", "url": "https://elate11.github.io/BusLiner/index.html"}],
+                [{"text": "Выбрать места на сайте", "url": "https://elate11.github.io/BusLiner/index.html"}],
                 [{"text": "« В меню", "callback_data": "set_role:client"}]
             ]}
             send_telegram_api_request("editMessageText", {"chat_id": chat_id, "message_id": msg_id, "text": msg, "parse_mode": "Markdown", "reply_markup": keyboard})
@@ -1285,7 +1352,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"• Ближайшая выплата: *{FLEET_STATS['payout_schedule']}*"
             )
             keyboard = {"inline_keyboard": [
-                [{"text": "💼 Открыть аналитику на сайте", "url": "https://elate11.github.io/BusLiner/carrier-workspace.html"}],
+                [{"text": "Открыть аналитику на сайте", "url": "https://elate11.github.io/BusLiner/carrier-workspace.html"}],
                 [{"text": "« В меню перевозчика", "callback_data": "set_role:carrier"}]
             ]}
             send_telegram_api_request("editMessageText", {"chat_id": chat_id, "message_id": msg_id, "text": msg, "parse_mode": "Markdown", "reply_markup": keyboard})
@@ -1321,7 +1388,7 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 f"• Явка: *18 / 20 пассажиров*"
             )
             keyboard = {"inline_keyboard": [
-                [{"text": "👥 Список пассажиров", "callback_data": "driver_manifest"}],
+                [{"text": "Список пассажиров", "callback_data": "driver_manifest"}],
                 [{"text": "« В пульт", "callback_data": "set_role:driver"}]
             ]}
             send_telegram_api_request("editMessageText", {"chat_id": chat_id, "message_id": msg_id, "text": msg, "parse_mode": "Markdown", "reply_markup": keyboard})
@@ -1376,15 +1443,21 @@ def handle_telegram_update(update: Dict[str, Any]) -> None:
                 "auth_method": "telegram_bot_challenge"
             }
 
-            send_telegram_api_request("answerCallbackQuery", {"callback_query_id": cb_id, "text": "Вход успешно подтвержден!"})
+            send_telegram_api_request("answerCallbackQuery", {"callback_query_id": cb_id, "text": f"Вход как {clean_role} подтвержден!"})
             conf_text = (
                 "<b>Вход успешно подтвержден!</b>\n\n"
                 f"Здравствуйте, {first_name}!\n"
-                f"Авторизация в системе <b>{role_label}</b> выполнена.\n\n"
-                "Окно в браузере автоматически обновилось и открыло ваш кабинет."
+                f"Ваша роль: <b>{role_label}</b>.\n"
+                "Авторизация в веб-системе BusLiner завершена — окно в браузере автоматически открыло кабинет."
             )
+            keyboard = {
+                "inline_keyboard": [
+                    [{"text": f"Перейти в {role_label} в Telegram", "callback_data": f"set_role:{clean_role}"}],
+                    [{"text": "Сменить роль (/role)", "callback_data": "show_role_menu"}]
+                ]
+            }
             if msg_id:
-                send_telegram_api_request("editMessageText", {"chat_id": chat_id, "message_id": msg_id, "text": conf_text, "parse_mode": "HTML"})
+                send_telegram_api_request("editMessageText", {"chat_id": chat_id, "message_id": msg_id, "text": conf_text, "parse_mode": "HTML", "reply_markup": keyboard})
             return
 
         elif cb_data.startswith("auth_deny:"):
@@ -1470,12 +1543,14 @@ class TelegramAuthHTTPHandler(SimpleHTTPRequestHandler):
         user_agent = self.headers.get("User-Agent", "Unknown Browser")
         client_ip = self.client_address[0] if self.client_address else "127.0.0.1"
 
-        deep_link = f"https://t.me/{BOT_USERNAME}?start=auth_{token}"
+        role_tag = "carrier" if "carrier" in action or "onboard" in action else ("driver" if "driver" in action else "client")
+        deep_link = f"https://t.me/{BOT_USERNAME}?start=auth_{role_tag}_{token}"
 
         ACTIVE_AUTH_SESSIONS[token] = {
             "created_at": time.time(),
             "status": "pending",
             "action": action,
+            "role": role_tag,
             "otp_code": otp,
             "user_agent": user_agent,
             "client_ip": client_ip,
@@ -1486,6 +1561,7 @@ class TelegramAuthHTTPHandler(SimpleHTTPRequestHandler):
         self._send_json_response(200, {
             "success": True,
             "session_token": token,
+            "role": role_tag,
             "otp_code": otp,
             "deep_link": deep_link,
             "bot_username": BOT_USERNAME,
