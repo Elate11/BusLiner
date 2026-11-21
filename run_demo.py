@@ -38,35 +38,60 @@ def open_browser_delayed(url: str, delay: float = 1.2):
 
 def main():
     os.chdir(PROJECT_DIR)
-    port = DEFAULT_PORT
-    if not is_port_available(port):
-        for p in range(8081, 8095):
-            if is_port_available(p):
-                port = p
-                break
 
-    demo_url = f"http://localhost:{port}/index.html"
+    # 1. Resolve host and port from environment or defaults
+    host = os.getenv("HOST") or os.getenv("BUSLINER_AUTH_HOST", "0.0.0.0")
+    env_port = os.getenv("PORT") or os.getenv("BUSLINER_AUTH_PORT")
+
+    if env_port:
+        try:
+            port = int(env_port)
+        except ValueError:
+            port = DEFAULT_PORT
+    else:
+        port = DEFAULT_PORT
+        if not is_port_available(port, host="127.0.0.1"):
+            for p in range(8081, 8095):
+                if is_port_available(p, host="127.0.0.1"):
+                    port = p
+                    break
+
+    # 2. Detect headless execution mode (Docker, cloud container, CI/CD, or CLI flag)
+    is_headless = (
+        os.getenv("HEADLESS", "").lower() in ("1", "true", "yes") or
+        os.getenv("NO_BROWSER", "").lower() in ("1", "true", "yes") or
+        "--headless" in sys.argv or
+        "--no-browser" in sys.argv
+    )
+
+    display_host = "localhost" if host == "0.0.0.0" else host
+    demo_url = f"http://{display_host}:{port}/index.html"
 
     print("=" * 72)
     print("      BUSLINER // ЭКОСИСТЕМА МЕЖДУГОРОДНЕЙ МОБИЛЬНОСТИ")
-    print("      (Демонстрационный сервер для защиты проекта в вузе)")
+    print("      (Демонстрационный сервер для защиты проекта и облачного деплоя)")
     print("=" * 72)
-    print(f"  [+] Многопоточный HTTP & REST API сервер запущен на порту: {port}")
+    print(f"  [+] Многопоточный HTTP & REST API сервер запущен на {host}:{port}")
     print(f"  [+] Главная страница:      {demo_url}")
-    print(f"  [+] Кабинет пассажира:     http://localhost:{port}/passenger-cabinet.html")
-    print(f"  [+] Кабинет перевозчика:   http://localhost:{port}/carrier-workspace.html")
-    print(f"  [+] REST API рейсов:       http://localhost:{port}/api/trips")
+    print(f"  [+] Кабинет пассажира:     http://{display_host}:{port}/passenger-cabinet.html")
+    print(f"  [+] Кабинет перевозчика:   http://{display_host}:{port}/carrier-workspace.html")
+    print(f"  [+] REST API рейсов:       http://{display_host}:{port}/api/trips")
+    print(f"  [+] Healthcheck:           http://{display_host}:{port}/health")
+    if is_headless:
+        print("  [+] Режим без браузера активен (HEADLESS=1 / Cloud Container)")
+    else:
+        print("  [+] Открываем браузер автоматически...")
     print("=" * 72)
-    print("  Открываем браузер автоматически...")
     print("  Для остановки сервера нажмите Ctrl + C")
     print("=" * 72)
 
-    # Launch browser in separate background thread
-    t = threading.Thread(target=open_browser_delayed, args=(demo_url,), daemon=True)
-    t.start()
+    # Launch browser only if interactive desktop mode
+    if not is_headless:
+        t = threading.Thread(target=open_browser_delayed, args=(demo_url,), daemon=True)
+        t.start()
 
     # Start main server (blocking loop)
-    run_auth_server(host="0.0.0.0", port=port)
+    run_auth_server(host=host, port=port)
 
 if __name__ == "__main__":
     main()

@@ -90,8 +90,8 @@ def load_env_token() -> str:
 
 TELEGRAM_BOT_TOKEN = load_env_token()
 BOT_USERNAME = os.getenv("BUSLINER_BOT_USERNAME", "buslinerbot")
-SERVER_HOST = os.getenv("BUSLINER_AUTH_HOST", "0.0.0.0")
-SERVER_PORT = int(os.getenv("BUSLINER_AUTH_PORT", "8080"))
+SERVER_HOST = os.getenv("HOST") or os.getenv("BUSLINER_AUTH_HOST", "0.0.0.0")
+SERVER_PORT = int(os.getenv("PORT") or os.getenv("BUSLINER_AUTH_PORT", "8080"))
 AUTH_SESSION_TTL_SECONDS = 300  # 5 minutes maximum lifetime for challenge nonces
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db", "busliner.db")
 
@@ -2424,4 +2424,5 @@ def run_auth_server(host: str = SERVER_HOST, port: int = SERVER_PORT):
 
 if __name__ == "__main__":
     port_arg = int(sys.argv[1]) if len(sys.argv) > 1 else SERVER_PORT
-    run_auth_server(port=port_arg)
+    host_arg = sys.argv[2] if len(sys.argv) > 2 else SERVER_HOST
+    run_auth_server(host=host_arg, port=port_arg)
