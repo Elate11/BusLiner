@@ -4337,9 +4337,63 @@
     /* ==========================================================================
        AVIASALES LUXURY ENGINE (DATE STRIP, SMART SORT, HOLD TIMER, EXPAND ACCORDION)
        ========================================================================== */
+
+    function getApiBaseUrl() {
+      if (typeof window !== 'undefined' && window.location.origin && window.location.origin.includes('http')) {
+        return window.location.origin;
+      }
+      return 'http://localhost:8080';
+    }
+
+    function resolveInitialSearchStation(key, defaultVal) {
+      try {
+        if (typeof window !== 'undefined' && window.location.search) {
+          const params = new URLSearchParams(window.location.search);
+          const val = params.get(key);
+          if (val) return val;
+        }
+        if (typeof localStorage !== 'undefined') {
+          const stored = localStorage.getItem(`busliner_search_${key}`);
+          if (stored) return stored;
+        }
+      } catch (e) {}
+      return defaultVal;
+    }
     
-    let bzdSearchFrom = "Минск";
-    let bzdSearchTo = "Вильнюс";
+    let bzdSearchFrom = resolveInitialSearchStation("from", "Минск");
+    let bzdSearchTo = resolveInitialSearchStation("to", "Вильнюс");
+
+    let isFetchingTripsFromApi = false;
+    async function syncTripsFromApi(origin, dest, date) {
+      if (isFetchingTripsFromApi || typeof fetch !== 'function') return;
+      isFetchingTripsFromApi = true;
+      try {
+        const query = new URLSearchParams();
+        if (origin) query.set('from', origin);
+        if (dest) query.set('to', dest);
+        if (date) query.set('date', date);
+
+        const resp = await fetch(`${getApiBaseUrl()}/api/trips?${query.toString()}`, {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' },
+          credentials: 'omit'
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data && data.success && Array.isArray(data.trips) && data.trips.length > 0) {
+            allTrips = data.trips;
+            try {
+              localStorage.setItem('busliner_trips', JSON.stringify(data.trips));
+            } catch (err) {}
+            renderTripsFeed(true);
+          }
+        }
+      } catch (err) {
+        console.debug('API /api/trips unavailable, using reliable offline cache:', err);
+      } finally {
+        isFetchingTripsFromApi = false;
+      }
+    }
 
     function swapBzdStations() {
       const fromEl = document.getElementById('bzdFromInput');
@@ -4475,9 +4529,18 @@
       showToast('Данные автоматически заполнены из вашего профиля BusLiner');
     }
 
-    function renderTripsFeed() {
+    function renderTripsFeed(skipApiSync) {
       const grid = document.getElementById('tripsFeedGrid');
       if (!grid) return;
+
+      const fromEl = document.getElementById('bzdFromInput');
+      const toEl = document.getElementById('bzdToInput');
+      if (fromEl && bzdSearchFrom && fromEl.value !== bzdSearchFrom) fromEl.value = bzdSearchFrom;
+      if (toEl && bzdSearchTo && toEl.value !== bzdSearchTo) toEl.value = bzdSearchTo;
+
+      if (!skipApiSync) {
+        syncTripsFromApi(bzdSearchFrom, bzdSearchTo, typeof selectedDate !== 'undefined' ? selectedDate : '');
+      }
 
       allTrips = getStoredTrips();
 
@@ -4807,7 +4870,7 @@
       const dest = parts[1] || 'Лида';
 
       // Call Universal Belarus Sniper backend API
-      fetch('/api/sniper/external/create', {
+      fetch(`${getApiBaseUrl()}/api/sniper/external/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -4840,7 +4903,7 @@
 
     // WEATHER-AWARE 1-TAP RESCHEDULE (FEATURE 14)
     function handleProactiveReschedule(ticketId, newTime) {
-      fetch('/api/weather/reschedule', {
+      fetch(`${getApiBaseUrl()}/api/weather/reschedule`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ticket_id: ticketId, new_time: newTime, reason: 'weather_snowstorm_avoidance' })
@@ -5946,7 +6009,7 @@ tags:
       } catch (e) {}
 
       if (typeof fetch === 'function') {
-        fetch('/api/auth/register-passenger', {
+        fetch(`${getApiBaseUrl()}/api/auth/register-passenger`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -5969,7 +6032,7 @@ tags:
 
     function initPassengerGateTgSession() {
       if (typeof fetch !== 'function') return;
-      fetch('/api/auth/telegram/create-session?action=client_login', { credentials: 'omit' })
+      fetch(`${getApiBaseUrl()}/api/auth/telegram/create-session?action=client_login`, { credentials: 'omit' })
         .then(res => res.json())
         .then(data => {
           if (data && data.session_token) {
@@ -5985,7 +6048,7 @@ tags:
       if (passengerGatePollingInterval) clearInterval(passengerGatePollingInterval);
       passengerGatePollingInterval = setInterval(() => {
         if (!passengerGateSessionToken || typeof fetch !== 'function') return;
-        fetch(`/api/auth/telegram/check-session?token=${passengerGateSessionToken}`, { credentials: 'omit' })
+        fetch(`${getApiBaseUrl()}/api/auth/telegram/check-session?token=${passengerGateSessionToken}`, { credentials: 'omit' })
           .then(res => res.json())
           .then(data => {
             if (data && data.status === 'authorized' && data.user) {

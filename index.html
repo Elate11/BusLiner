@@ -3789,11 +3789,20 @@
     window.handleSelectTripAndSeat = function(e) {
       if (e) e.preventDefault();
       try {
+        const fromEl = document.getElementById('inputFrom');
+        const toEl = document.getElementById('inputTo');
+        const fromVal = fromEl && fromEl.value ? fromEl.value.split('(')[0].trim() : 'Минск';
+        const toVal = toEl && toEl.value ? toEl.value.split('(')[0].trim() : 'Вильнюс';
+        try {
+          localStorage.setItem('busliner_search_from', fromVal);
+          localStorage.setItem('busliner_search_to', toVal);
+        } catch (err) {}
+
         const stored = localStorage.getItem('busliner_client_user');
         if (stored) {
           const user = JSON.parse(stored);
           if (user && (user.name || user.phone || user.id)) {
-            window.location.href = 'passenger-cabinet.html';
+            window.location.href = `passenger-cabinet.html?from=${encodeURIComponent(fromVal)}&to=${encodeURIComponent(toVal)}`;
             return;
           }
         }

@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  busliner:
+    build: .
+    container_name: busliner_app
+    ports:
+      - "8080:8080"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8080
+      - HEADLESS=1
+      - ENVIRONMENT=production
+    restart: unless-stopped
