@@ -2977,7 +2977,7 @@
                     <line x1="8" y1="2" x2="8" y2="6"/>
                     <line x1="3" y1="10" x2="21" y2="10"/>
                   </svg>
-                  <input type="date" id="bzdDateInput" class="bzd-search-input" required>
+                  <input type="date" id="bzdDateInput" class="bzd-search-input" required onchange="onBzdDateInputChange(this.value)">
                 </div>
               </div>
 
@@ -3004,7 +3004,7 @@
                 <button type="button" class="popular-route-pill" onclick="applyPopularRoute('Минск', 'Брест')">Минск → Брест</button>
                 <button type="button" class="popular-route-pill" onclick="applyPopularRoute('', '')">Куда угодно</button>
               </div>
-              <div style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);">
+              <div id="bzdQuickStatusLine" style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);">
                 Рейсы на сегодня • Прямое сообщение
               </div>
             </div>
@@ -4359,9 +4359,121 @@
       } catch (e) {}
       return defaultVal;
     }
+
+    function resolveInitialSearchDate() {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      const todayIso = `${yyyy}-${mm}-${dd}`;
+
+      try {
+        if (typeof window !== 'undefined' && window.location.search) {
+          const params = new URLSearchParams(window.location.search);
+          const val = params.get('date');
+          if (val && /^\d{4}-\d{2}-\d{2}$/.test(val)) {
+            if (val >= todayIso) return val;
+          }
+        }
+        if (typeof localStorage !== 'undefined') {
+          const stored = localStorage.getItem('busliner_search_date');
+          if (stored && /^\d{4}-\d{2}-\d{2}$/.test(stored)) {
+            if (stored >= todayIso) return stored;
+          }
+        }
+      } catch (e) {}
+      return todayIso;
+    }
+
+    function formatIsoDateFriendly(isoStr) {
+      if (!isoStr) return 'Сегодня';
+      try {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(isoStr)) return isoStr;
+        const parts = isoStr.split('-');
+        const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const target = new Date(d);
+        target.setHours(0, 0, 0, 0);
+        const diffDays = Math.round((target - today) / (1000 * 60 * 60 * 24));
+
+        const dayNames = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+        const monthsGen = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+
+        const fullFormatted = `${d.getDate()} ${monthsGen[d.getMonth()]} ${d.getFullYear()}`;
+        if (diffDays === 0) return `Сегодня, ${fullFormatted}`;
+        if (diffDays === 1) return `Завтра, ${fullFormatted}`;
+        return `${dayNames[d.getDay()]}, ${fullFormatted}`;
+      } catch (e) {
+        return isoStr;
+      }
+    }
+
+    function formatBookingDate(isoStr) {
+      return formatIsoDateFriendly(isoStr);
+    }
+
+    function getRollingDatesForStrip(targetDateIso) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      let target = new Date(today);
+      if (targetDateIso && /^\d{4}-\d{2}-\d{2}$/.test(targetDateIso)) {
+        const parts = targetDateIso.split('-');
+        target = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      }
+      target.setHours(0, 0, 0, 0);
+
+      const diffDays = Math.round((target - today) / (1000 * 60 * 60 * 24));
+      let startOffset = 0;
+      if (diffDays > 3) {
+        startOffset = Math.max(0, diffDays - 2);
+      }
+
+      const dayNamesShortRu = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+      const monthNamesShortRu = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+
+      const items = [];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + startOffset + i);
+
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        const iso = `${yyyy}-${mm}-${dd}`;
+
+        const isToday = (d.getTime() === today.getTime());
+        const dayOfWeek = dayNamesShortRu[d.getDay()];
+        const dayMonth = `${d.getDate()} ${monthNamesShortRu[d.getMonth()]}`;
+        const title = `${dayOfWeek}, ${dayMonth}`;
+
+        const isWeekend = (d.getDay() === 0 || d.getDay() === 6);
+        let price = isWeekend ? 55 : 45;
+        let tag = '';
+        if (isToday) {
+          tag = 'Сегодня';
+        } else if (isWeekend) {
+          tag = 'Популярно';
+        } else if (d.getDay() === 2 || d.getDay() === 4) {
+          tag = 'Выгодно';
+          price = 38;
+        }
+
+        items.push({
+          isoDate: iso,
+          title,
+          price,
+          isToday,
+          tag
+        });
+      }
+      return items;
+    }
     
     let bzdSearchFrom = resolveInitialSearchStation("from", "Минск");
     let bzdSearchTo = resolveInitialSearchStation("to", "Вильнюс");
+    let selectedDate = resolveInitialSearchDate();
 
     let isFetchingTripsFromApi = false;
     async function syncTripsFromApi(origin, dest, date) {
@@ -4404,6 +4516,10 @@
       toEl.value = temp;
       bzdSearchFrom = fromEl.value;
       bzdSearchTo = toEl.value;
+      try {
+        localStorage.setItem('busliner_search_from', bzdSearchFrom);
+        localStorage.setItem('busliner_search_to', bzdSearchTo);
+      } catch (err) {}
       renderTripsFeed();
     }
 
@@ -4411,8 +4527,20 @@
       if (e && e.preventDefault) e.preventDefault();
       const fromEl = document.getElementById('bzdFromInput');
       const toEl = document.getElementById('bzdToInput');
-      if (fromEl) bzdSearchFrom = fromEl.value;
-      if (toEl) bzdSearchTo = toEl.value;
+      const dateEl = document.getElementById('bzdDateInput');
+      if (fromEl) {
+        bzdSearchFrom = fromEl.value;
+        try { localStorage.setItem('busliner_search_from', bzdSearchFrom); } catch (err) {}
+      }
+      if (toEl) {
+        bzdSearchTo = toEl.value;
+        try { localStorage.setItem('busliner_search_to', bzdSearchTo); } catch (err) {}
+      }
+      if (dateEl && dateEl.value) {
+        selectedDate = dateEl.value;
+        try { localStorage.setItem('busliner_search_date', selectedDate); } catch (err) {}
+      }
+      renderAviasalesDateStrip();
       renderTripsFeed();
     }
 
@@ -4423,6 +4551,10 @@
       if (toEl) toEl.value = to;
       bzdSearchFrom = from;
       bzdSearchTo = to;
+      try {
+        localStorage.setItem('busliner_search_from', from);
+        localStorage.setItem('busliner_search_to', to);
+      } catch (err) {}
       renderTripsFeed();
     }
 
@@ -4454,20 +4586,12 @@
       const container = document.getElementById('aviasalesDateStrip');
       if (!container) return;
 
-      const dateItems = [
-        { title: 'Чт, 22 окт', price: 45, tag: 'Выгодно' },
-        { title: 'Пт, 23 окт', price: 50, tag: '' },
-        { title: 'Сб, 24 окт', price: 45, isToday: true, tag: 'Сегодня' },
-        { title: 'Вс, 25 окт', price: 85, tag: 'Популярно' },
-        { title: 'Пн, 26 окт', price: 45, tag: 'Выгодно' },
-        { title: 'Вт, 27 окт', price: 45, tag: '' },
-        { title: 'Ср, 28 окт', price: 45, tag: '' }
-      ];
+      const dateItems = getRollingDatesForStrip(selectedDate);
 
-      container.innerHTML = dateItems.map((item, idx) => {
-        const isActive = item.isToday;
+      container.innerHTML = dateItems.map((item) => {
+        const isActive = (item.isoDate === selectedDate);
         return `
-          <div class="aviasales-date-card ${isActive ? 'active' : ''}" onclick="selectDateStripCard(this, '${item.title}')">
+          <div class="aviasales-date-card ${isActive ? 'active' : ''}" onclick="selectDateStripCard('${item.isoDate}', '${item.title}')">
             <div class="date-day-title">${item.title}</div>
             <div class="date-day-price">${item.price} BYN</div>
             ${item.tag ? `<span class="date-cheapest-tag">${item.tag}</span>` : ''}
@@ -4476,12 +4600,49 @@
       }).join('');
     }
 
-    function selectDateStripCard(el, title) {
-      document.querySelectorAll('.aviasales-date-card').forEach(c => c.classList.remove('active'));
-      if (el) el.classList.add('active');
-      showToast(`Выбрана дата рейса: ${title}`);
+    function selectDateStripCard(dateIso, title) {
+      if (dateIso) {
+        selectedDate = dateIso;
+        try {
+          localStorage.setItem('busliner_search_date', dateIso);
+        } catch (e) {}
+        const dateInput = document.getElementById('bzdDateInput');
+        if (dateInput) dateInput.value = dateIso;
+      }
+      showToast(`Выбрана дата поездки: ${title || formatIsoDateFriendly(selectedDate)}`);
       renderAviasalesDateStrip();
       renderTripsFeed();
+    }
+
+    function onBzdDateInputChange(newDate) {
+      if (!newDate) return;
+      selectedDate = newDate;
+      try {
+        localStorage.setItem('busliner_search_date', selectedDate);
+      } catch (e) {}
+      renderAviasalesDateStrip();
+      renderTripsFeed();
+      showToast(`Дата поездки: ${formatIsoDateFriendly(selectedDate)}`);
+    }
+
+    function initPassengerDateControls() {
+      const dateInput = document.getElementById('bzdDateInput');
+      if (!dateInput) return;
+
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      const todayIso = `${yyyy}-${mm}-${dd}`;
+
+      dateInput.min = todayIso;
+      if (!dateInput.value) {
+        dateInput.value = selectedDate || todayIso;
+      }
+
+      dateInput.addEventListener('change', (e) => {
+        onBzdDateInputChange(e.target.value);
+      });
     }
 
     function toggleTripAccordion(tripId) {
@@ -4535,8 +4696,10 @@
 
       const fromEl = document.getElementById('bzdFromInput');
       const toEl = document.getElementById('bzdToInput');
+      const dateEl = document.getElementById('bzdDateInput');
       if (fromEl && bzdSearchFrom && fromEl.value !== bzdSearchFrom) fromEl.value = bzdSearchFrom;
       if (toEl && bzdSearchTo && toEl.value !== bzdSearchTo) toEl.value = bzdSearchTo;
+      if (dateEl && selectedDate && dateEl.value !== selectedDate) dateEl.value = selectedDate;
 
       if (!skipApiSync) {
         syncTripsFromApi(bzdSearchFrom, bzdSearchTo, typeof selectedDate !== 'undefined' ? selectedDate : '');
@@ -4550,12 +4713,15 @@
       // Update route title
       const routeTitleEl = document.getElementById('bzdResultsRouteTitle');
       const metaNoteEl = document.getElementById('bzdResultsMetaNote');
+      const quickStatusEl = document.getElementById('bzdQuickStatusLine');
 
       const routeDisplay = (bzdSearchFrom && bzdSearchTo)
         ? `${bzdSearchFrom} → ${bzdSearchTo}`
         : (bzdSearchFrom ? `Из: ${bzdSearchFrom}` : (bzdSearchTo ? `В: ${bzdSearchTo}` : "Все направления"));
 
       if (routeTitleEl) routeTitleEl.textContent = `Билеты на микроавтобусы: ${routeDisplay}`;
+      const dateFriendly = formatIsoDateFriendly(selectedDate);
+      if (quickStatusEl) quickStatusEl.textContent = `Рейсы: ${dateFriendly} • Прямое сообщение`;
 
       // Filter logic
       let matched = allTrips.filter(t => {
@@ -4596,7 +4762,7 @@
       const badgeTrips = document.getElementById('badgeTripsCount');
       if (badgeTrips) badgeTrips.textContent = matched.length;
       if (metaNoteEl) {
-        metaNoteEl.textContent = `Найдено рейсов: ${matched.length} • Прямые рейсы без пересадок`;
+        metaNoteEl.textContent = `Найдено рейсов: ${matched.length} • ${dateFriendly} • Прямые рейсы без пересадок`;
       }
 
       if (matched.length === 0) {
@@ -4638,6 +4804,9 @@
 
         const fareFormatted = typeof t.fare === 'number' ? t.fare.toFixed(2) : t.fare;
         const vehicleClean = t.vehicle ? t.vehicle.split('(')[0].trim() : 'Mercedes Sprinter';
+        const tripDateFormatted = (selectedDate && /^\d{4}-\d{2}-\d{2}$/.test(selectedDate))
+          ? formatIsoDateFriendly(selectedDate)
+          : (t.date || "Сегодня");
 
         return `
           <div class="bzd-trip-card">
@@ -4655,7 +4824,7 @@
               <!-- DEPARTURE -->
               <div class="bzd-time-col departure">
                 <div class="bzd-time">${t.time}</div>
-                <div class="bzd-date">${t.date}</div>
+                <div class="bzd-date">${tripDateFormatted}</div>
                 <div class="bzd-station">${t.origin}</div>
               </div>
 
@@ -4676,7 +4845,7 @@
               <!-- ARRIVAL -->
               <div class="bzd-time-col arrival">
                 <div class="bzd-time">${t.arrivalTime || 'По графику'}</div>
-                <div class="bzd-date">${t.date}</div>
+                <div class="bzd-date">${tripDateFormatted}</div>
                 <div class="bzd-station">${t.destination}</div>
               </div>
 
@@ -5049,6 +5218,13 @@ tags:
         cities[1].textContent = ticket.destination || (ticket.route ? ticket.route.split(/&rarr;|→|—/)[1].trim() : 'Гродно');
       }
 
+      // Update departure & arrival kickers with ticket date
+      const journeyKickers = document.querySelectorAll('#pane-order .route-journey-visual .kicker-tag');
+      if (journeyKickers.length >= 2 && ticket.date) {
+        journeyKickers[0].textContent = `Отправление • ${ticket.date}`;
+        journeyKickers[1].textContent = `Прибытие • ${ticket.date}`;
+      }
+
       // Update stations
       const stations = document.querySelectorAll('#pane-order .node-station');
       if (stations.length >= 2) {
@@ -5232,7 +5408,8 @@ tags:
       selectedSeatsForBooking = initialSeat ? [initialSeat] : [];
 
       document.getElementById('bookingModalRouteTitle').textContent = selectedTripForBooking.route;
-      document.getElementById('bookingModalMetaSubtitle').textContent = `${selectedTripForBooking.time} • ${selectedTripForBooking.vehicle} • ${selectedTripForBooking.fare.toFixed(1)} BYN`;
+      const displayDate = formatIsoDateFriendly(selectedDate || (selectedTripForBooking && selectedTripForBooking.date));
+      document.getElementById('bookingModalMetaSubtitle').textContent = `${displayDate} • ${selectedTripForBooking.time} • ${selectedTripForBooking.vehicle} • ${selectedTripForBooking.fare.toFixed(1)} BYN`;
       
       // Render 20-seat interactive grid
       const seatsGrid = document.getElementById('bookingSeatsGrid');
@@ -5461,7 +5638,7 @@ tags:
       }
 
       // 3. Create rich booking object
-      const dateStr = "Сегодня, 24 октября 2026";
+      const dateStr = formatBookingDate(selectedDate || "Сегодня");
       const newBooking = {
         id: `BL-5715-${selectedSeatsForBooking.join('-')}`,
         ticketCode: `BL-5715-${selectedSeatsForBooking.join('-')}-VIP`,
@@ -6110,6 +6287,7 @@ tags:
     window.addEventListener('DOMContentLoaded', () => {
       checkPassengerAuthGate();
       initRealtimeSync();
+      initPassengerDateControls();
       renderAviasalesDateStrip();
       renderTripsFeed();
       renderOrderTab();

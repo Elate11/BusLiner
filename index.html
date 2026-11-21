@@ -3798,11 +3798,22 @@
           localStorage.setItem('busliner_search_to', toVal);
         } catch (err) {}
 
+        let dateQuery = '';
+        try {
+          if (typeof selectedCalYear !== 'undefined' && typeof selectedCalMonth !== 'undefined' && typeof selectedCalDay !== 'undefined') {
+            const mm = String(selectedCalMonth + 1).padStart(2, '0');
+            const dd = String(selectedCalDay).padStart(2, '0');
+            const dateIso = `${selectedCalYear}-${mm}-${dd}`;
+            localStorage.setItem('busliner_search_date', dateIso);
+            dateQuery = `&date=${encodeURIComponent(dateIso)}`;
+          }
+        } catch (err) {}
+
         const stored = localStorage.getItem('busliner_client_user');
         if (stored) {
           const user = JSON.parse(stored);
           if (user && (user.name || user.phone || user.id)) {
-            window.location.href = `passenger-cabinet.html?from=${encodeURIComponent(fromVal)}&to=${encodeURIComponent(toVal)}`;
+            window.location.href = `passenger-cabinet.html?from=${encodeURIComponent(fromVal)}&to=${encodeURIComponent(toVal)}${dateQuery}`;
             return;
           }
         }
