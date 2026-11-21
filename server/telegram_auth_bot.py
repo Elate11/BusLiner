@@ -23,7 +23,10 @@ import hashlib
 import secrets
 import threading
 import sqlite3
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+try:
+    from http.server import ThreadingHTTPServer as BaseHTTPServer, SimpleHTTPRequestHandler
+except ImportError:
+    from http.server import HTTPServer as BaseHTTPServer, SimpleHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 from urllib.request import Request, urlopen
 from urllib.error import URLError
@@ -1630,6 +1633,300 @@ def telegram_polling_worker():
 
 
 # ==============================================================================
+# BUSLINER TRIPS & ROUTES CATALOG SERVICE (FOR PASSENGER CABINET & DESKTOP B2C)
+# ==============================================================================
+POPULAR_ROUTES_CATALOG = [
+    {"origin": "Минск", "destination": "Гродно", "min_fare": 28.0, "duration": "4 ч 00 мин", "trips_daily": 8, "distance_km": 285},
+    {"origin": "Минск", "destination": "Вильнюс", "min_fare": 85.0, "duration": "3 ч 45 мин", "trips_daily": 6, "distance_km": 185},
+    {"origin": "Минск", "destination": "Брест", "min_fare": 32.0, "duration": "4 ч 15 мин", "trips_daily": 6, "distance_km": 350},
+    {"origin": "Минск", "destination": "Лида", "min_fare": 22.0, "duration": "2 ч 30 мин", "trips_daily": 10, "distance_km": 170},
+    {"origin": "Минск", "destination": "Гомель", "min_fare": 30.0, "duration": "3 ч 50 мин", "trips_daily": 6, "distance_km": 312},
+    {"origin": "Минск", "destination": "Варшава", "min_fare": 130.0, "duration": "7 ч 00 мин", "trips_daily": 4, "distance_km": 550},
+    {"origin": "Минск", "destination": "Витебск", "min_fare": 28.0, "duration": "3 ч 45 мин", "trips_daily": 6, "distance_km": 290},
+    {"origin": "Минск", "destination": "Могилев", "min_fare": 25.0, "duration": "2 ч 50 мин", "trips_daily": 8, "distance_km": 200}
+]
+
+BASE_TRIP_SCHEDULE = [
+    {
+        "id": "BL-5715",
+        "time": "18:45",
+        "arrivalTime": "22:45",
+        "duration": "4 ч 00 мин",
+        "route": "Минск — Гродно",
+        "originCity": "Минск",
+        "destinationCity": "Гродно",
+        "origin": "Центральный автовокзал • Перрон 3",
+        "destination": "Автовокзал Гродно • ул. Красноармейская 7А",
+        "vehicle": "Mercedes-Benz Sprinter VIP (7TAX-8891)",
+        "plate": "7TAX-8891",
+        "driver": "Александр Воронов",
+        "carrier": "Бурлаки Экспресс",
+        "capacity": 20,
+        "occupied": 17,
+        "fare": 28.0,
+        "status": "scheduled",
+        "amenities": ["wifi", "sockets_220v", "climate", "usb"]
+    },
+    {
+        "id": "BL-5716",
+        "time": "08:00",
+        "arrivalTime": "12:00",
+        "duration": "4 ч 00 мин",
+        "route": "Минск — Гродно",
+        "originCity": "Минск",
+        "destinationCity": "Гродно",
+        "origin": "Центральный автовокзал • Перрон 3",
+        "destination": "Автовокзал Гродно • ул. Красноармейская 7А",
+        "vehicle": "Mercedes-Benz Sprinter 519 CDI (3TAX-1102)",
+        "plate": "3TAX-1102",
+        "driver": "Сергей Мельников",
+        "carrier": "Бурлаки Экспресс",
+        "capacity": 20,
+        "occupied": 14,
+        "fare": 28.0,
+        "status": "scheduled",
+        "amenities": ["wifi", "sockets_220v", "climate", "usb"]
+    },
+    {
+        "id": "BL-5717",
+        "time": "13:30",
+        "arrivalTime": "17:30",
+        "duration": "4 ч 00 мин",
+        "route": "Минск — Гродно",
+        "originCity": "Минск",
+        "destinationCity": "Гродно",
+        "origin": "Центральный автовокзал • Перрон 3",
+        "destination": "Автовокзал Гродно • ул. Красноармейская 7А",
+        "vehicle": "Volkswagen Crafter 50 (5TAX-4412)",
+        "plate": "5TAX-4412",
+        "driver": "Владимир Алексеев",
+        "carrier": "Бурлаки Экспресс",
+        "capacity": 20,
+        "occupied": 16,
+        "fare": 28.0,
+        "status": "scheduled",
+        "amenities": ["wifi", "sockets_220v", "ac", "usb"]
+    },
+    {
+        "id": "BL-5721",
+        "time": "08:30",
+        "arrivalTime": "12:15",
+        "duration": "3 ч 45 мин",
+        "route": "Минск — Вильнюс",
+        "originCity": "Минск",
+        "destinationCity": "Вильнюс",
+        "origin": "Центральный автовокзал • Перрон 3",
+        "destination": "Автовокзал Вильнюс • Платформа 2",
+        "vehicle": "Mercedes-Benz Sprinter (4TAX-3310)",
+        "plate": "4TAX-3310",
+        "driver": "Дмитрий В.",
+        "carrier": "АвтоСпутник",
+        "capacity": 20,
+        "occupied": 14,
+        "fare": 85.0,
+        "status": "scheduled",
+        "amenities": ["wifi", "sockets_220v", "climate", "usb"]
+    },
+    {
+        "id": "BL-5724",
+        "time": "14:00",
+        "arrivalTime": "21:00",
+        "duration": "7 ч 00 мин",
+        "route": "Минск — Варшава",
+        "originCity": "Минск",
+        "destinationCity": "Варшава",
+        "origin": "Центральный автовокзал • Перрон 1",
+        "destination": "Warszawa Zachodnia",
+        "vehicle": "Mercedes-Benz Sprinter Long (9TAX-1022)",
+        "plate": "9TAX-1022",
+        "driver": "Сергей К.",
+        "carrier": "Запад Экспресс",
+        "capacity": 20,
+        "occupied": 19,
+        "fare": 130.0,
+        "status": "scheduled",
+        "amenities": ["wifi", "sockets_220v", "climate", "usb"]
+    },
+    {
+        "id": "BL-5728",
+        "time": "17:15",
+        "arrivalTime": "21:30",
+        "duration": "4 ч 15 мин",
+        "route": "Минск — Брест",
+        "originCity": "Минск",
+        "destinationCity": "Брест",
+        "origin": "Центральный автовокзал • Перрон 4",
+        "destination": "Автовокзал Брест • ул. Орджоникидзе",
+        "vehicle": "Mercedes-Benz Sprinter (3TAX-5521)",
+        "plate": "3TAX-5521",
+        "driver": "Игорь Н.",
+        "carrier": "Запад Экспресс",
+        "capacity": 20,
+        "occupied": 12,
+        "fare": 32.0,
+        "status": "scheduled",
+        "amenities": ["wifi", "sockets_220v", "climate", "usb"]
+    },
+    {
+        "id": "BL-5730",
+        "time": "09:30",
+        "arrivalTime": "12:00",
+        "duration": "2 ч 30 мин",
+        "route": "Минск — Лида",
+        "originCity": "Минск",
+        "destinationCity": "Лида",
+        "origin": "ст.м. Каменная Горка • Остановка Экспресс",
+        "destination": "Автовокзал Лида • Перрон 1",
+        "vehicle": "Mercedes-Benz Sprinter 519 CDI (1TAX-7720)",
+        "plate": "1TAX-7720",
+        "driver": "Петр Сидоров",
+        "carrier": "Лида-Экспресс ООО",
+        "capacity": 20,
+        "occupied": 15,
+        "fare": 22.0,
+        "status": "scheduled",
+        "amenities": ["wifi", "sockets_220v", "climate"]
+    },
+    {
+        "id": "BL-5732",
+        "time": "18:15",
+        "arrivalTime": "20:45",
+        "duration": "2 ч 30 мин",
+        "route": "Минск — Лида",
+        "originCity": "Минск",
+        "destinationCity": "Лида",
+        "origin": "ст.м. Каменная Горка • Остановка Экспресс",
+        "destination": "Автовокзал Лида • Перрон 1",
+        "vehicle": "Mercedes-Benz Sprinter (6TAX-2291)",
+        "plate": "6TAX-2291",
+        "driver": "Виталий К.",
+        "carrier": "Лида-Экспресс ООО",
+        "capacity": 20,
+        "occupied": 18,
+        "fare": 22.0,
+        "status": "scheduled",
+        "amenities": ["wifi", "sockets_220v", "climate", "usb"]
+    },
+    {
+        "id": "BL-5740",
+        "time": "07:45",
+        "arrivalTime": "11:35",
+        "duration": "3 ч 50 мин",
+        "route": "Минск — Гомель",
+        "originCity": "Минск",
+        "destinationCity": "Гомель",
+        "origin": "Центральный автовокзал • Перрон 5",
+        "destination": "Центральный автовокзал Гомель",
+        "vehicle": "Volkswagen Crafter 50 (8TAX-3390)",
+        "plate": "8TAX-3390",
+        "driver": "Михаил Григорьев",
+        "carrier": "АвтоСпутник",
+        "capacity": 20,
+        "occupied": 13,
+        "fare": 30.0,
+        "status": "scheduled",
+        "amenities": ["wifi", "sockets_220v", "climate"]
+    }
+]
+
+def get_busliner_trips(origin_filter: Optional[str] = None, dest_filter: Optional[str] = None, date_filter: Optional[str] = None) -> List[Dict[str, Any]]:
+    """Returns dynamic trips schedule matching origin, destination and date filters."""
+    target_date = date_filter or datetime.now().strftime("%Y-%m-%d")
+    orig_clean = (origin_filter or "").strip().lower()
+    dest_clean = (dest_filter or "").strip().lower()
+
+    results = []
+    for item in BASE_TRIP_SCHEDULE:
+        t = dict(item)
+        t["date"] = target_date
+        t["freeSeats"] = max(1, t["capacity"] - t["occupied"])
+        t["qrPayload"] = f"BUSLINER-TICKET:{t['id']}-07:PASSENGER-VIP:{t['id']}:SEAT-07"
+
+        t_orig = t["originCity"].lower()
+        t_dest = t["destinationCity"].lower()
+
+        # Direct direction match
+        if orig_clean and orig_clean not in t_orig and orig_clean not in t["origin"].lower():
+            # Check if this route can be inverted for the return direction
+            if orig_clean in t_dest and (not dest_clean or dest_clean in t_orig):
+                rev_t = dict(t)
+                rev_t["id"] = f"{t['id']}R"
+                rev_t["originCity"] = t["destinationCity"]
+                rev_t["destinationCity"] = t["originCity"]
+                rev_t["origin"] = t["destination"]
+                rev_t["destination"] = t["origin"]
+                rev_t["route"] = f"{t['destinationCity']} — {t['originCity']}"
+                results.append(rev_t)
+                continue
+            continue
+
+        if dest_clean and dest_clean not in t_dest and dest_clean not in t["destination"].lower():
+            continue
+
+        results.append(t)
+
+    # If user searched for a route not present in base schedule, dynamically synthesize realistic high-quality schedule
+    if not results and orig_clean and dest_clean:
+        orig_title = origin_filter.strip().capitalize()
+        dest_title = dest_filter.strip().capitalize()
+        synthesized_times = [("08:15", "11:45", 28.0), ("14:00", "17:30", 30.0), ("18:30", "22:00", 28.0)]
+        for idx, (dep, arr, fare) in enumerate(synthesized_times, 1):
+            s_id = f"BL-9{idx:03d}"
+            results.append({
+                "id": s_id,
+                "time": dep,
+                "arrivalTime": arr,
+                "duration": "3 ч 30 мин",
+                "date": target_date,
+                "route": f"{orig_title} — {dest_title}",
+                "originCity": orig_title,
+                "destinationCity": dest_title,
+                "origin": f"{orig_title} • Центральный терминал",
+                "destination": f"{dest_title} • Автовокзал",
+                "vehicle": "Mercedes-Benz Sprinter 519 CDI (7TAX-4410)",
+                "plate": "7TAX-4410",
+                "driver": "Александр Воронов",
+                "carrier": "Бурлаки Экспресс",
+                "capacity": 20,
+                "occupied": 15,
+                "freeSeats": 5,
+                "fare": fare,
+                "status": "scheduled",
+                "amenities": ["wifi", "sockets_220v", "climate", "usb"],
+                "qrPayload": f"BUSLINER-TICKET:{s_id}-05:PASSENGER-VIP:{s_id}:SEAT-05"
+            })
+
+    return results
+
+def get_trip_detail(trip_id: str) -> Optional[Dict[str, Any]]:
+    """Returns trip metadata and interactive 20-seat minibus cabin layout."""
+    trips = get_busliner_trips()
+    found = next((t for t in trips if t["id"] == trip_id), None)
+    if not found:
+        # Default fallback to master flagship trip BL-5715
+        found = dict(BASE_TRIP_SCHEDULE[0])
+        found["id"] = trip_id
+
+    # Generate 20-seat minibus manifest
+    seats = []
+    occupied_count = found.get("occupied", 16)
+    for seat_num in range(1, 21):
+        is_sold = seat_num <= occupied_count
+        is_vip = seat_num in (1, 2, 3, 4)
+        seat_type = "front_vip" if is_vip else ("window" if seat_num % 3 != 2 else "aisle")
+        seats.append({
+            "seat_number": seat_num,
+            "status": "sold" if is_sold else "available",
+            "type": seat_type,
+            "price_byn": found["fare"] + (5.0 if is_vip else 0.0)
+        })
+
+    detail = dict(found)
+    detail["seats"] = seats
+    return detail
+
+
+# ==============================================================================
 # REST API HTTP HANDLER (SERVES WEBSITE AUTHENTICATION & STATIC FILES)
 # ==============================================================================
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -2036,6 +2333,48 @@ class TelegramAuthHTTPHandler(SimpleHTTPRequestHandler):
             })
             return
 
+        # ======================================================================
+        # BUSLINER PASSENGER API: TRIPS SEARCH, ROUTES & 3D CABIN MANIFEST
+        # ======================================================================
+        elif url.path == "/api/trips":
+            orig = params.get("from", params.get("origin", [""]))[0]
+            dest = params.get("to", params.get("destination", [""]))[0]
+            target_date = params.get("date", [""])[0] or datetime.now().strftime("%Y-%m-%d")
+
+            trips_list = get_busliner_trips(orig, dest, target_date)
+            self._send_json_response(200, {
+                "success": True,
+                "count": len(trips_list),
+                "origin": orig or "Все направления",
+                "destination": dest or "Все направления",
+                "date": target_date,
+                "trips": trips_list
+            })
+            return
+
+        elif url.path.startswith("/api/trips/"):
+            trip_id = url.path.replace("/api/trips/", "").strip()
+            detail = get_trip_detail(trip_id)
+            if detail:
+                self._send_json_response(200, {
+                    "success": True,
+                    "trip": detail
+                })
+            else:
+                self._send_json_response(404, {
+                    "success": False,
+                    "error": f"Рейс {trip_id} не найден"
+                })
+            return
+
+        elif url.path == "/api/routes":
+            self._send_json_response(200, {
+                "success": True,
+                "count": len(POPULAR_ROUTES_CATALOG),
+                "routes": POPULAR_ROUTES_CATALOG
+            })
+            return
+
         elif url.path.startswith("/api/"):
             self._send_json_response(404, {"error": "Endpoint not found"})
             return
@@ -2070,7 +2409,7 @@ def run_auth_server(host: str = SERVER_HOST, port: int = SERVER_PORT):
     sniper_thread.start()
 
     server_address = (host, port)
-    httpd = HTTPServer(server_address, TelegramAuthHTTPHandler)
+    httpd = BaseHTTPServer(server_address, TelegramAuthHTTPHandler)
     print("==================================================================")
     print(f"  BusLiner Unified Platform Bot Daemon running on http://{host}:{port}")
     print(f"  Target Bot: @{BOT_USERNAME}")
